@@ -4,11 +4,11 @@ function add() {
 
         layer.open({
             type: 2,
-            title: '新增考勤机',
+            title: '新增车辆',
             content: '/dhoa/CarEdit',
             shadeClose: true,
             shade: 0.8,
-            area: ['600px', '300px'],
+            area: ['1000px', '350px'],
 
             end: function () {
                 searchRecord();
@@ -18,17 +18,19 @@ function add() {
         alert(e);
     }
 }
-function edit(id) {
-  
+function edit() {
+    var selected = pubselects();
+    if (selected == undefined)
+        return;
     try {
 
         layer.open({
             type: 2,
-            title: '修改考勤机',
-            content: '/dhoa/AttendanceMachineEdit?id=' + id,
+            title: '修改车辆',
+            content: '/dhoa/CarEdit?id=' + selected.id,
             shadeClose: true,
             shade: 0.8,
-            area: ['600px', '300px'],
+            area: ['1000px','75%'],
             end: function () {
                 searchRecord();
             }
@@ -40,16 +42,16 @@ function edit(id) {
 }
 
 function Del(id) {
-   layer.confirm("是否确认删除考勤机", { icon: 3, title: '提示' }, function (index) {
-       ajaxTpl('/dhoa/AttendanceMachineDelete' , {
-           id: id
-       }, function (data) {
+   layer.confirm("是否确认删除", { icon: 3, title: '提示' }, function (index) {
+       //ajaxTpl('/dhoa/AttendanceMachineDelete' , {
+       //    id: id
+       //}, function (data) {
 
-           if (data.msg) {
-               layer.msg(data.msg);
-           }
-             searchRecord();
-        });
+       //    if (data.msg) {
+       //        layer.msg(data.msg);
+       //    }
+       //      searchRecord();
+       // });
         layer.close(index);
     });
 }

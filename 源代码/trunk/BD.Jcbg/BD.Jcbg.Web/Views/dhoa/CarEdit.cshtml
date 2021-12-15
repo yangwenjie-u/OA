@@ -13,7 +13,7 @@
         }
 
         .m-role {
-            width: 40%;
+            width: 45%;
         }
 
             .m-role .xb {
@@ -143,12 +143,12 @@
         <div class="m-role">
             <label>
                 <span>购买时间：</span>
-                <input type="datetime" name="buytime" id="buytime" />
+                <input type="date" name="buytime" id="buytime" />
             </label>
         </div>
         <div class="m-role">
             <label>
-                <span>报废年限：</span>
+                <span>报废年限(年)：</span>
                 <input type="text" name="scrapyears" id="scrapyears" oninput="value=value.replace(/[^\d]/g,'')" />
             </label>
         </div>
@@ -172,37 +172,53 @@
     <script>
         var carId = "@ViewBag.id";
 
+        console.log(carId);
         $(function () {
-            if (machineId)
+            if (carId)
             {
-                $("#serialnumber").attr("readonly", true);
-                $("#serialnumber").css({ background: "lightgray" })
+                $("#brand").attr("readonly", true);
+                $("#brand").css({ background: "lightgray" })
+
+                $("#type").attr("readonly", true);
+                $("#type").css({ background: "lightgray" })
+
+                $("#carid").attr("readonly", true);
+                $("#carid").css({ background: "lightgray" })
             }
-            if (machineId) {
-                $('#name').val('@ViewBag.name');
-                $('#installposition').val('@ViewBag.installposition');
-                $('#serialnumber').val('@ViewBag.serialnumber');
+            if (carId) {
+                $('#brand').val('@ViewBag.brand');
+                $('#type').val('@ViewBag.type');
+                $('#carid').val('@ViewBag.carid');
+                $('#price').val('@ViewBag.price');
+                $('#buytime').val('@ViewBag.buytime');
+                $('#scrapyears').val('@ViewBag.scrapyears');
+                $('#remark').val('@ViewBag.remark');
+                $('#drivinglicense').val('@ViewBag.drivinglicense');
             }
         })
 
         $("#dataView .save").click(function () {
-            var name = $('#name').val();
-            var installposition = $('#installposition').val();
-            var installposition = $('#installposition').val();
-            var installposition = $('#installposition').val();
-            var installposition = $('#installposition').val();
-            var installposition = $('#installposition').val();
-            var installposition = $('#installposition').val();
-            var installposition = $('#installposition').val();
-            var installposition = $('#installposition').val();
-            var serialnumber = $('#serialnumber').val();
+            var brand = $('#brand').val();
+            var type = $('#type').val();
+            var carid = $('#carid').val();
+            var price = $('#price').val();
+            var buytime = $('#buytime').val();
+            var scrapyears = $('#scrapyears').val();
+            var remark = $('#remark').val();
+            var drivinglicense = $('#drivinglicense').val();
 
-            if (name.length && installposition.length && serialnumber.length) {
+            if (brand.length && carid.length && type.length
+                && buytime.length && scrapyears.length) {
                 var obj = {
-                    id: machineId,
-                    name: name,
-                    installposition: installposition,
-                    serialnumber: serialnumber
+                    id: carId,
+                    brand: brand,
+                    type: type,
+                    carid: carid,
+                    price: price,
+                    buytime: buytime,
+                    scrapyears: scrapyears,
+                    remark: remark,
+                    drivinglicense: drivinglicense
                 };
                 save(obj)
 
@@ -215,7 +231,7 @@
         });
 
         function save(obj) {
-            ajaxTpl('/dhoa/AttendanceMachineUpdate', obj, function (data) {
+            ajaxTpl('/dhoa/CarUpdate', obj, function (data) {
                 if (data.code =='1') {
                     layer.alert('保存成功');
                     try {

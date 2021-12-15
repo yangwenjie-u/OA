@@ -13263,9 +13263,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:40010/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:40010/</IISAppRootUrl>
+          <IISUrl>http://localhost:41000/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

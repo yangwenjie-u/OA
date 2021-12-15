@@ -828,12 +828,13 @@ namespace BD.Jcbg.Web.Controllers
         [LoginAuthorize]
         public ActionResult CarEdit()
         {
-            string id = Request["carId"].GetSafeString();
+            string id = Request["id"].GetSafeString();
 
-            string sql = "select  * from OA_CarIUseRecord where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "' and id='" + id + "'";
+            string sql = " select  * from OA_CarInfomation where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "' and id='" + id + "'";
             IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
             for (int i = 0; i < dt.Count; i++)
             {
+                ViewBag.id = id;
                 ViewBag.brand = dt[i]["brand"];
                 ViewBag.type = dt[i]["type"];
                 ViewBag.carid = dt[i]["carid"];
@@ -846,6 +847,76 @@ namespace BD.Jcbg.Web.Controllers
 
             return View();
         }
+
+        /// <summary>
+        /// 更新车辆信息
+        /// </summary>
+        public void CarUpdate()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+
+                string dataId = Request["id"].GetSafeString();
+                string brand = Request["brand"].GetSafeString();
+                string type = Request["type"].GetSafeString();
+                string carId = Request["carid"].GetSafeString();
+                string price = Request["price"].GetSafeString();
+                string buyTime = Request["buytime"].GetSafeString();
+                int scrapYears = Request["scrapyears"].GetSafeInt();
+                string remark = Request["remark"].GetSafeString();
+                string drivingLicense = Request["drivinglicense"].GetSafeString();
+                IList<string> sqls = new List<string>();
+
+                //是否报废
+                string isScrap = "1";
+                if (buyTime.GetSafeDate().AddYears(scrapYears) > DateTime.Now)
+                {
+                    isScrap = "0";
+                }
+
+                if (string.IsNullOrEmpty(dataId))
+                {
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_CarInfomation](" +
+                        "[Brand],[Type],[CarID],[IsScrap],[IsGoout],[Price]," +
+                        "[CreateTime],[Creator],[UpdateTime],[JCJGBH],[Updater],[Remark],[Status],[IsUsing],[Destination]," +
+                        "[BuyTime],[ScrapYears],[DrivingLicense]" +
+                        " )VALUES ('{0}' , '{1}', '{2}', '{3}', '{4}', '{5}'," +
+                        " getdate(), '{6}',getdate(), '{7}' , '{8}', '{9}', '1', 0,null, " +
+                        "'{10}','{11}','{12}')",
+                        brand, type, carId, isScrap, "0", price,
+                        CurrentUser.UserName, CurrentUser.Qybh, CurrentUser.UserName, remark,
+                        buyTime, scrapYears, drivingLicense);
+                }
+                else
+                {
+                    sqlStr = "update OA_CarInfomation set Brand='" + brand + "', Type='" + type + "', price='" + price + "'" +
+                        ", buyTime='" + buyTime + "'" +
+                        ", scrapYears='" + scrapYears + "'" +
+                        ", drivingLicense='" + drivingLicense + "'" +
+                        ", remark='" + remark + "',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where id=" + dataId;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "1" : "0", msg));
+                Response.End();
+            }
+        }
+
         #endregion
         #endregion
     }
