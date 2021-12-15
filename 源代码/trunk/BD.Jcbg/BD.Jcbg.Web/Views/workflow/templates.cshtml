@@ -1,0 +1,716 @@
+﻿@{
+    Layout = "~/Views/workflow/_workflow.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+	var workflow_templates_g_pageSize = 20;
+
+	var workflow_templates_g_edit_companys = null;
+	var workflow_templates_g_search_companys = null;
+	var workflow_templates_g_default_company = null;
+	var workflow_templates_g_edit_htmltypes = [{ "id": "1", "text": "有" }, { "id": "0", "text": "无" }];
+	var workflow_templates_g_edit_templatetypes = [{"id": "0", "text": "无" },{ "id": "2", "text": "WORD模板" }, { "id": "3", "text": "EXCEL模板"}];
+	var workflow_templates_g_search_templatetypes = [{ "id": "", "text": "不限" }, { "id": "1", "text": "HTML模板" }, { "id": "2", "text": "WORD模板" }, { "id": "3", "text": "EXCEL模板" }];
+	var workflow_templates_g_edit_displaysteptypes = [{ "id": "1", "text": "顺序号" }, { "id": "2", "text": "ID" }];
+	var workflow_templates_g_defalut_templatetype = workflow_templates_g_edit_templatetypes[0].id;
+	$(function () {
+		try {
+			workflow_templates_initDs();
+			workflow_templates_initFormCtrlType();
+			workflow_templates_initKeydown();
+			$("#workflow_templates_edit_info_div").dialog({
+				title: "修改表单信息",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: true,
+				draggable: true,
+				closable: true,
+				modal: true,
+				fit: false,
+				width: 650,
+				closed: true
+			});
+			$('#workflow_templates_maintable').datagrid({
+				title: '流程表单管理',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/workflow/gettemplates?rows=' + workflow_templates_g_pageSize + '&_=' + Math.random(),
+				rownumbers: true,
+				nowrap: true,
+				idField: 'Templateid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: workflow_templates_g_pageSize,
+				pageList: [workflow_templates_g_pageSize, 40, 50, 100, 1000, 10000],
+				columns: [[
+				{ field: 'CompanyId', title: '所属单位', width: 200, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						return row.CompanyName;
+					}
+				},
+				{ field: 'TemplateName', title: '模板名称', width: 200, sortable: true, align: "center", editor: { type: 'validatebox', options: { required: true, validType: 'maxLength[100]'}} },
+				{ field: 'TemplateTypeHtml', title: 'HTML模板', width: 80, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var templateType = row.TemplateType;
+						return templateType.indexOf("1") > -1 ? "√" : "";
+					}
+				},
+				{ field: 'TemplateTypeOffice', title: 'Office模板', width: 100, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var templateType = row.TemplateType;
+						if (templateType.indexOf("2") > -1)
+							return "WORD模板";
+						if (templateType.indexOf("3") > -1)
+							return "EXCEL模板";
+					}
+				},
+                {
+                    field: 'DisplayStepType', title: '显示步骤类型', width: 100, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						
+					    if (value == "2")
+							return "ID";
+						return "顺序号";
+					}
+				},
+				{ field: 'UserRealName', title: '创建人', width: 100, sortable: true, align: "center" },
+				{ field: 'CreateTime', title: '创建时间', width: 120, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var timeVal = row.CreateTime;
+						if (timeVal == null || timeVal == "")
+							return "";
+						var dt = eval("new " + timeVal.substr(1, timeVal.length - 2));
+						return dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+					}
+				}
+				]],
+				toolbar: "#workflow_templates_tb",
+				onClickRow: function (rowIndex, rowData) {
+					workflow_templates_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					workflow_templates_editRecord();
+				}
+			});
+
+			workflow_templates_initSearch();
+		} catch (e) {
+			$.messager.alert('初始化页面异常', e.message, 'warning');
+		}
+
+	});
+	function workflow_templates_initDs() {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/workflow/getcompanys",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					workflow_templates_g_edit_companys = new Array();
+
+					workflow_templates_g_search_companys = [{ "CompanyId": "", "CompanyName": "不限"}];
+					if (data == null || data.length == 0)
+						workflow_templates_g_edit_companys = [{ "CompanyId": "", "CompanyName": "请选择单位"}];
+					else {
+						for (var i = 0; i < data.length; i++) {
+							workflow_templates_g_edit_companys[workflow_templates_g_edit_companys.length] = data[i];
+							workflow_templates_g_search_companys[workflow_templates_g_search_companys.length] = data[i];
+						}
+					}
+					workflow_templates_g_default_company = workflow_templates_g_edit_companys[0];
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载单位数据...");
+				}
+			});
+		} catch (e) {
+			$.messager.alert('加载初始化数据集异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_initSearch() {
+		try {
+			$("#workflow_templates_search_companys").combobox({
+				valueField: "CompanyId",
+				textField: "CompanyName",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_templates_g_search_companys
+			});
+			$("#workflow_templates_search_templatetype").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_templates_g_search_templatetypes
+			});
+		} catch (e) {
+			$.messager.alert('初始化查询控件异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_search() {
+		try {
+			workflow_templates_gridReload();
+		} catch (e) {
+			$.messager.alert('查找记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_showToolbar(rowData) {
+		try {
+			$("#workflow_templates_btnedit").linkbutton('enable');
+			$("#workflow_templates_btndelete").linkbutton('enable');
+
+			if (rowData.TemplateType.indexOf("1") > -1) {
+				$("#workflow_templates_btneditcontent").linkbutton('enable');
+				$("#workflow_templates_btnview").linkbutton('enable');
+			}
+			else {
+				$("#workflow_templates_btneditcontent").linkbutton('disable');
+				$("#workflow_templates_btnview").linkbutton('disable');
+			}
+			if (rowData.TemplateType.indexOf("2") > -1 ||
+				rowData.TemplateType.indexOf("3") > -1) {
+				$("#workflow_templates_btneditoffice").linkbutton('enable');
+			}
+			else {
+				$("#workflow_templates_btneditoffice").linkbutton('disable');
+			}
+				
+			
+		} catch (e) {
+			$.messager.alert('显示工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_showNoRecToolbar() {
+		try {
+			$("#workflow_templates_maintable").datagrid('unselectAll');
+			$("#workflow_templates_btnedit").linkbutton('disable');
+			$("#workflow_templates_btnview").linkbutton('disable');
+			$("#workflow_templates_btndelete").linkbutton('disable');
+			$("#workflow_templates_btneditoffice").linkbutton('disable');
+			$("#workflow_templates_btneditcontent").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('显示无记录工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_addRecord() {
+		try {
+			workflow_templates_initFormCtrlValue();
+			$("#workflow_templates_edit_info_div").dialog({
+				title: "新建表单模板",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: true,
+				draggable: true,
+				closable: true,
+				modal: true,
+				fit: false,
+				closed: false,
+				width: 650,
+				buttons: [{
+					text: "保存",
+					iconCls: "icon-save",
+					id: "workflow_templates_edit_btn_save",
+					handler: function () {
+						workflow_templates_saveRecord();
+					}
+				},
+				{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_templates_edit_btn_cancel",
+					handler: function () {
+						$("#workflow_templates_edit_info_div").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('添加记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_editRecord() {
+		try {
+			var rec = $('#workflow_templates_maintable').datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			workflow_templates_loadFormCtrlValue(rec);
+			$("#workflow_templates_edit_info_div").dialog({
+				title: "修改表单模板",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: true,
+				draggable: true,
+				closable: true,
+				modal: true,
+				fit: false,
+				closed: false,
+				width: 650,
+				buttons: [{
+					text: "保存",
+					iconCls: "icon-save",
+					id: "workflow_templates_edit_btn_save",
+					handler: function () {
+						workflow_templates_saveRecord();
+					}
+				},
+				{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_templates_edit_btn_cancel",
+					handler: function () {
+						$("#workflow_templates_edit_info_div").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('修改记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_deleteRecord() {
+		try {
+			var rec = $("#workflow_templates_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$.messager.confirm('提示', '确定要删除选中的记录吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/workflow/deletetemplate?id=" + rec.Templateid,
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									var index = $("#workflow_templates_maintable").datagrid('getRowIndex', rec);
+									$("#workflow_templates_maintable").datagrid('deleteRow', index);
+									$('#workflow_templates_maintable').datagrid('acceptChanges');
+									workflow_templates_showNoRecToolbar();
+									$.messager.alert('提示', '删除成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e.message, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在删除...");
+						}
+					});
+				}
+			});
+		} catch (e) {
+			$.messager.alert('删除记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_gridReload() {
+		try {
+			$('#workflow_templates_maintable').datagrid('load', {
+				companyid: $("#workflow_templates_search_companys").combobox("getValue"),
+				templatetype: $("#workflow_templates_search_templatetype").combobox("getValue"),
+				templatename: $("#workflow_templates_search_templatename").val()
+			});
+			workflow_templates_showNoRecToolbar();
+		} catch (e) {
+			$.messager.alert('加载表格异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_saveRecord() {
+		try {
+			var rec = $("#workflow_templates_maintable").datagrid('getSelected');
+			var editIndex = -1;
+			if (rec != null)
+				editIndex = $("#workflow_templates_maintable").datagrid('getRowIndex', rec);
+
+			$('#workflow_templates_frm_info').form('submit', {
+				url: "/workflow/savetemplate",
+				onSubmit: function () {
+					var isValid = $("#workflow_templates_frm_info").form('validate');
+					if (!isValid) {
+						$.messager.alert('提示', '请把鼠标移到红三角感叹号上查看错误提示', 'warning');
+						return false;
+					}
+					if ($("#workflow_templates_edit_info_templatename").val() == "" ||
+						$("#workflow_templates_edit_info_templatename").val().length > 100) {
+						$.messager.alert('提示', '请输入模板名称，模板名称长度为100个汉字以内', 'warning');
+						return false;
+					}
+					if ($("#workflow_templates_edit_info_html").combobox("getValue") == "0" &&
+						$("#workflow_templates_edit_info_office").combobox("getValue") == "0") {
+						$.messager.alert('提示', 'HTML模板和Office模板至少有一种', 'warning');
+						return false;
+					}
+					var companyname = $("#workflow_templates_edit_info_companyid").combobox("getText");
+
+					$("#workflow_templates_edit_info_companyname").val(companyname);
+					$("body").mask("正在保存...");
+					return true;
+
+				},
+				success: function (data) {
+					$("body").unmask();
+					var data = eval('(' + data + ')');
+					try {
+						if (data.code != "0") {
+							$.messager.alert('提示', '保存失败，请稍后再试', 'info');
+						}
+						else {
+							if (editIndex != -1) {
+								$('#workflow_templates_maintable').datagrid('getRows')[editIndex] = data.record[0];
+								$('#workflow_templates_maintable').datagrid('refreshRow', editIndex);
+								$('#workflow_templates_maintable').datagrid('selectRow', editIndex);
+							} else {
+								$('#workflow_templates_maintable').datagrid('insertRow', {
+									index: 0,
+									row: data.record[0]
+								});
+								$('#workflow_templates_maintable').datagrid('refreshRow', 0);
+								$('#workflow_templates_maintable').datagrid('selectRow', 0);
+							}
+							$("#workflow_templates_edit_info_div").dialog("close");
+							workflow_templates_showToolbar(data.record[0]);
+						}
+					} catch (e) {
+						$.messager.alert('保存表单数据返回结果处理异常', e.message, 'warning');
+					}
+				}
+			});  
+
+		}
+		catch (e) {
+			$.messager.alert('保存表单数据异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_editHtml() {
+		try {
+
+			var rec = $("#workflow_templates_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			var url = "";
+			if (rec.TemplateType.indexOf("1")>-1)
+				url = "/workflow/templatehtmledit?id=" + rec.Templateid + "&_=" + Math.random();
+			$("#workflow_templates_edit").dialog({
+				title: "编辑" + rec.TemplateName + "模板内容",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				content: "<iframe width='100%' height='99%' name='workflow_templates_frm_html_edit' id='workflow_templates_frm_html_edit' frameborder='0' scrolling='auto' src='" + url + "'></iframe>",
+				buttons: [{
+					text: "保存",
+					iconCls: "icon-save",
+					id: "workflow_templates_btn_save",
+					handler: function () {
+					    var dataChange = window.frames["workflow_templates_frm_html_edit"].isDataChange();
+						if (dataChange) {
+						    var data = window.frames["workflow_templates_frm_html_edit"].getData();
+							$("#workflow_templates_edit_html").val(data);
+							$("#workflow_templates_edit_id").val(rec.Templateid);
+							$("#workflow_templates_frm_content").form("submit", {
+								url: "/workflow/savetemplatecontenthtml",
+								success: function (data) {
+									$("#workflow_templates_edit").dialog("close");
+									$.messager.alert('提示', "保存成功", 'info');
+
+								},
+								onSubmit: function () {
+								}
+							});
+						}
+						else {
+							$("#workflow_templates_edit").dialog("close");
+							$.messager.alert('提示', "内容未更改，不需要保存", 'info');
+						}
+
+					}
+				}, {
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_templates_btn_cancel",
+					handler: function () {
+						$("#workflow_templates_edit").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('表单模板编辑异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_editOffice() {
+		try {
+
+			var rec = $("#workflow_templates_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			var url = "";
+			if (rec.TemplateType.indexOf("2")>-1)
+			    url = "/workflow/templateiwebofficeedit?type=.doc&id=" + rec.Templateid + "&_=" + Math.random();
+			else if (rec.TemplateType.indexOf("3") > -1)
+			    url = "/workflow/templateiwebofficeedit?type=.xls&id=" + rec.Templateid + "&_=" + Math.random();
+			
+			$("#workflow_templates_edit").dialog({
+				title: "编辑" + rec.TemplateName + "模板内容",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				content: "<iframe width='100%' height='99%' name='workflow_templates_frm_office_edit' id='workflow_templates_frm_office_edit' frameborder='0' scrolling='auto' src='" + url + "'></iframe>",
+				buttons: [{
+					text: "保存",
+					iconCls: "icon-save",
+					id: "workflow_templates_btn_save",
+					handler: function () {
+					    if (window.frames["workflow_templates_frm_office_edit"].Save())
+							$("#workflow_templates_edit").dialog("close");
+						else
+							$.messager.alert('表单模板编辑异常', "保存失败", 'warning');
+					}
+				}, {
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_templates_btn_cancel",
+					handler: function () {
+						$("#workflow_templates_edit").dialog("close");
+					}
+				}]
+
+			});
+		} catch (e) {
+			$.messager.alert('表单模板编辑异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_viewHtml() {
+		try {
+			var rec = $("#workflow_templates_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$("#workflow_templates_view").dialog({
+				title: rec.TemplateName + "-预览",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				cache: false,
+				content: "<iframe width='100%' height='99%' name='workflow_templates_frm_html_view' id='workflow_templates_frm_html_view' frameborder='0' scrolling='auto' src='/workflow/templatehtmlview?id=" + rec.Templateid + "&_=" + Math.random() + "'></iframe>",
+				buttons: [{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_templates_btn_cancelview",
+					handler: function () {
+						$("#workflow_templates_view").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('预览异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_viewWebOffice() {
+		try {
+			var rec = $("#workflow_templates_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			var url = "";
+			if (rec.TemplateType == "WORD模板")
+				url = "/workflow/templateiwebofficeedit?type=.doc&id=" + rec.Templateid + "&_=" + Math.random();
+			else if (rec.TemplateType == "EXCEL模板")
+			    url = "/workflow/templateiwebofficeedit?type=.xls&id=" + rec.Templateid + "&_=" + Math.random();
+            
+			$("#workflow_templates_view").dialog({
+				title: rec.TemplateName + "-预览",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				content: "<iframe width='100%' height='99%' name='workflow_templates_frm_office_view' id='workflow_templates_frm_office_view' frameborder='0' scrolling='auto' src='" + url + "'></iframe>",
+				buttons: [{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_templates_btn_cancel",
+					handler: function () {
+						$("#workflow_templates_view").dialog("close");
+					}
+				}]
+
+			});
+		} catch (e) {
+			$.messager.alert('预览异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_initFormCtrlType() {
+		try {
+			$("#workflow_templates_edit_info_companyid").combobox({
+				valueField: "CompanyId",
+				textField: "CompanyName",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_templates_g_edit_companys
+			});
+			$("#workflow_templates_edit_info_html").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_templates_g_edit_htmltypes
+			});
+			$("#workflow_templates_edit_info_office").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_templates_g_edit_templatetypes
+			});
+			$("#workflow_templates_edit_info_displaysteptype").combobox({
+			    valueField: "id",
+			    textField: "text",
+			    mode: "local",
+			    editable: false,
+			    panelHeight: 'auto',
+			    data: workflow_templates_g_edit_displaysteptypes
+			});
+			
+
+			$("#workflow_templates_edit_info_office").combobox("select", workflow_templates_g_edit_templatetypes[0].id);
+		} catch (e) {
+			$.messager.alert('初始化表单控件异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_initFormCtrlValue() {
+		try {
+			$("#workflow_templates_edit_info_companyid").combobox("select", workflow_templates_g_edit_companys[0].CompanyId);
+			$("#workflow_templates_edit_info_html").combobox("select", workflow_templates_g_edit_htmltypes[0].id);
+			$("#workflow_templates_edit_info_office").combobox("select", workflow_templates_g_edit_templatetypes[0].id);
+			$("#workflow_templates_edit_info_displaysteptype").combobox("select", workflow_templates_g_edit_displaysteptypes[1].id)
+			$("#workflow_templates_edit_info_templatename").val("");
+			$("#workflow_templates_edit_info_id").val("");
+		} catch (e) {
+			$.messager.alert('初始化表单控件值异常', e.message, 'warning');
+		}
+	}
+	function workflow_templates_loadFormCtrlValue(template) {
+		try {
+			$("#workflow_templates_edit_info_companyid").combobox("select", template.CompanyId);
+			var html = (template.TemplateType.indexOf("1") > -1) ? "1" : "0";
+			$("#workflow_templates_edit_info_html").combobox("select", html);
+			var office = (template.TemplateType.indexOf("2") > -1) ? "2" : "0";
+			if (office == "0")
+				office = (template.TemplateType.indexOf("3") > -1) ? "3" : "0";
+			$("#workflow_templates_edit_info_office").combobox("select", office);
+			$("#workflow_templates_edit_info_displaysteptype").combobox("select", template.DisplayStepType);
+			$("#workflow_templates_edit_info_templatename").val(template.TemplateName);
+			$("#workflow_templates_edit_info_id").val(template.Templateid);
+		} catch (e) {
+			$.messager.alert('初始化表单控件值异常', e.message, 'warning');
+		}
+	}
+
+	function workflow_templates_initKeydown() {
+	    try {
+	        $("#workflow_templates_search_templatename").keydown(function (e) {
+	            var ev = document.all ? window.event : e;
+	            if (ev.keyCode == 13) {
+	                workflow_templates_search();
+	            }
+	        });
+	    } catch (e) {
+	        $.messager.alert('初始化按键事件异常', e.message, 'warning');
+	    }
+	}
+</script>
+<table id="workflow_templates_maintable"></table>  
+<div id="workflow_templates_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a onclick="workflow_templates_addRecord();" id="workflow_templates_btnadd" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
+		<a onclick="workflow_templates_editRecord();" id="workflow_templates_btnedit" class="easyui-linkbutton" iconCls="icon-edit" plain="true" disabled="true">修改</a>
+		<a onclick="workflow_templates_editHtml();" id="workflow_templates_btneditcontent" class="easyui-linkbutton" iconCls="icon-edit-template" plain="true" disabled="true">编辑HTML模板</a>
+		<a onclick="workflow_templates_editOffice();" id="workflow_templates_btneditoffice" class="easyui-linkbutton" iconCls="icon-edit-office" plain="true" disabled="true">编辑OFFICD模板</a>
+		<a onclick="workflow_templates_deleteRecord();" id="workflow_templates_btndelete" class="easyui-linkbutton" iconCls="icon-remove" plain="true" disabled="true">删除</a>
+		<a onclick="workflow_templates_viewHtml();" id="workflow_templates_btnview" class="easyui-linkbutton" iconCls="icon-template-view" plain="true" disabled="true">预览HTML模板</a>
+	</div>  
+	<div>
+		所属单位：<input id="workflow_templates_search_companys" style="width:200px" />
+		模板类型：<input id="workflow_templates_search_templatetype" style="width:120px" />
+		模板名称：<input id="workflow_templates_search_templatename" style="width:120px" />
+		<a href="javascript:workflow_templates_search();" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+	</div>
+</div>
+<div id="workflow_templates_edit"></div>
+<div id="workflow_templates_view"></div>
+<form id="workflow_templates_frm_content" method="post" action="">
+	<input type="hidden" id="workflow_templates_edit_id" name="workflow_templates_edit_id" />
+	<input type="hidden" id="workflow_templates_edit_html" name="workflow_templates_edit_html" />
+</form>
+<div id="workflow_templates_edit_info_div" style="margin:5px 5px 5px 5px; text-align:center;">
+<form id="workflow_templates_frm_info" method="post" action="">
+	<input type="hidden" id="workflow_templates_edit_info_id" name="workflow_templates_edit_info_id" />
+	<input type="hidden"  id="workflow_templates_edit_info_companyname" name="workflow_templates_edit_info_companyname" />
+	<table class="table_form" cellpadding="2" cellspacing="1">
+		<tr>
+			<th width="150">所属单位：</th>
+			<td width="400"><input id="workflow_templates_edit_info_companyid" name="workflow_templates_edit_info_companyid" style="width:350px" /></td>
+		</tr>
+		<tr>
+			<th>模板名称：</th>
+			<td><input id="workflow_templates_edit_info_templatename" name="workflow_templates_edit_info_templatename" style="width:350px" class="easyui-validatebox" data-options="required:true"/></td>
+		</tr>
+		<tr>
+			<th>HTML模板：</th>
+			<td><input id="workflow_templates_edit_info_html" name="workflow_templates_edit_info_html"  style="width:350px"/></td>
+		</tr>
+		<tr>
+			<th>Office模板：</th>
+			<td><input id="workflow_templates_edit_info_office" name="workflow_templates_edit_info_office" style="width:350px"/></td>
+		</tr>
+        <tr>
+            <th>显示步骤类型：</th>
+            <td><input id="workflow_templates_edit_info_displaysteptype" name="workflow_templates_edit_info_displaysteptype" style="width:350px" /></td>
+        </tr>
+	</table>
+</form>
+</div>

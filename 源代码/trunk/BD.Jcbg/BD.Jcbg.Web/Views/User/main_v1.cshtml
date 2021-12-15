@@ -1,0 +1,212 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/User/_mainlayout.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    $(function () {
+
+        try {
+            loadMenus();
+            resize_daxiao();
+            var tabImagePath = "@SkinManager.GetBootstrapPath("/plugins/tab/")";
+
+            initTabs(tabImagePath, 'div_center', Array('首页'), 0, $(".middle").width(), $(".middle").height(), Array(false));
+            
+        }
+        catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    });
+    $(window).resize(function () {
+
+        resize_daxiao();
+    });
+
+
+    function left_neirong(groupid) {
+        try {
+            $('.left_neirong_select').each(function () {
+                $(this).removeClass("left_neirong_select");
+                $(this).addClass("left_neirong");
+            });
+            $("#" + groupid).removeClass("left_neirong");
+            $("#" + groupid).addClass("left_neirong_select");
+        }
+        catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+
+    }
+    function resize_daxiao() {
+        try {
+            var body_height = $(window).height();
+            var body_width = $(window).width();
+            $(".left").height(body_height - $(".top").height() - 20);
+            $(".middle").height(body_height - $(".top").height() - 20);
+            $(".middle").width(body_width - $(".left").width());
+
+
+            $(".dhtmlgoodies_aTab").height($(".middle").height() - 35);
+
+            var left_height = $(".left").height() - 35;
+            if (g_menugroups.length > 0) {
+                if (g_menugroups.length < 5) {
+                    $(".left_neirong").height(100);
+                    $(".left_neirong_select").height(100);
+                    $(".left_neirong_div").css("padding-top", ($(".left_neirong").height() - 75) / 2);
+
+
+                }
+                else {
+
+                    $(".left_neirong").height(left_height * 0.125);
+                    $(".left_neirong_select").height(left_height * 0.125);
+
+                    if (left_height < 250) {
+                        $(".left_neirong_div").css("height", "28px");
+                        $(".left_neirong_tubiao").css("display", "none");
+                    }
+
+                }
+            }
+        } catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    };
+    var g_menus = [];
+    var g_menugroups = [];
+    var g_imageRoot ="@SkinManager.GetImagePath("")";
+    function loadMenus() {
+        try{
+            $.ajax({
+                type: "POST",
+                url: "/user/getmenus",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_menus = data;
+
+
+
+                    var menustr = "<div style=\"width:100%;height:35px;background-color: #0099cc;\"> </div>";
+                    for (var i = 0; i < g_menus.length; i++) {
+                        var group = g_menus[i];
+                        if (!group.IsGroup)
+                            continue;
+                        g_menugroups[g_menugroups.length] = group;
+                        var vclass = "left_neirong";
+                        menustr += "<div class='" + vclass + "' id='" + group.MenuCode + "' onclick='groupClick(\""+group.MenuCode+"\")'>\r\n" +
+                                    "<div class='left_neirong_div'>\r\n" +
+                                    "<div class='left_neirong_tubiao'>\r\n" +
+                                    "<img src='" + g_imageRoot + group.ImageUrl + "' />\r\n" +
+                                    "</div>\r\n" +
+                                    "<div class='left_neirong_word'>" + group.MenuName + "</div>\r\n" +
+                                    "</div>\r\n" +
+                                    "</div>\r\n";
+                            
+                    }
+                    $("#leftMenu").html(menustr);
+
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll('loading');
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.load();
+                }
+            });
+        } catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    }
+    function groupClick(groupid) {
+        try{
+            left_neirong(groupid);
+            addTab("menu_list", "菜单", "/user/menus?groupid=" + groupid);
+
+        } catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    }
+    function logout() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/user/dologout",
+                dataType: "json",
+                success: function (data) {
+                    if (data.code == 0)
+                        window.location = "/";
+                    else
+                        layer.open({ title: '提示', content: data.msg, icon: 5 });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    //$("body").unmask();
+                    layer.closeAll('loading');
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    //$("body").mask("正在退出系统...")
+                    layer.load();;
+                }
+            });
+        } catch (e) {
+            layer.open({ title: '错误', content: e, icon: 5 });
+        }
+    }
+    var g_maxTabSum =6;
+    function addTab(code, title, url) {
+        try {
+            
+            var tabIndex = getTabIndexByTitle(title);
+            var tabSum = getTabCount("div_center");
+            if (tabIndex == -1 && tabSum >= g_maxTabSum) {
+                deleteTab(null, 1, 'div_center');
+            }
+            deleteTab(title);
+            deleteTab("菜单");
+            var content = "<iframe name=\"frm_" + code + "\" class=\"iframe_mid\" frameborder=\"0\" seamless=\"seamless\" src=\"" + url + "\" id=\"frm_" + code + "\"></iframe>";
+            createNewTab("div_center", title, content, "", true);
+        } catch (e) {
+            layer.open({ title: '错误', content: e, icon: 5 });
+        }
+    }
+</script>
+}
+<div class="top">
+    <div class="top_blue">
+        <div class="top_1">
+            <div class="top_rjm">@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_TITLE1") </div>
+         <div class="top_tel"> @GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_TITLE2")  </div> 
+        </div>
+    </div>
+</div>
+<div class="left topbar" id="leftMenu">
+
+
+</div>
+
+<div class="zhuxiao" onclick="logout()">
+    <div class="img_btn">
+
+        
+    </div>
+    <div class="font_zhuxiao"> 注销</div>
+</div>
+
+<div class="middle" id="div_center">
+    
+        <div class="dhtmlgoodies_aTab">
+
+            <iframe name="shouye" class="iframe_mid" frameborder="0" seamless="seamless" src="/user/welcome" id="main_frm"></iframe>
+        </div>
+
+</div>
+
+
+<div class="foot">
+    @GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_TAIL1") 
+    
+</div>

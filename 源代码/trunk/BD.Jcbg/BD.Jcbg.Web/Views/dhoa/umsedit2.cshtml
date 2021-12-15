@@ -1,0 +1,628 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/oa/css/load.css" />
+    <style>
+        .person-view {
+            text-align: left;
+        }
+
+        .m-role {
+            width: 32%;
+        }
+
+            .m-role .xb {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .m-role .sfsyr {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .role-list .m-role input,
+            .m-role select {
+                width: 90%;
+            }
+
+        .role-line {
+            width: 60%;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .m-role span {
+            text-align: center;
+        }
+        /* .role-list {
+            min-width: 100px;
+            margin: 0 20px;
+            vertical-align: middle;
+        }
+
+        #roleLine .role-list {
+            margin: 0px;
+            width: 50%;
+            display: inline-block;
+            text-align: left;
+        }*/
+
+        .role-list .checkbox {
+            width: 16px;
+            height: 16px;
+        }
+        /*    .m-role label {
+            width: 400px;
+            display: inline-block;
+        }*/
+        /*    #roleLine .role-list {
+            width: 33%;
+        }*/
+
+        .role-list {
+        }
+
+        #roleLine {
+            border: 1px solid #C6C6C6;
+        }
+
+            #roleLine > div {
+                display: table-cell;
+                width: 50%;
+            }
+
+            #roleLine p {
+                background: #F1F1F1;
+                color: #303030;
+                height: 40px;
+                line-height: 40px;
+                border-bottom: 1px solid #E5E5E5;
+                border-left: 1px solid #E5E5E5;
+            }
+
+            #roleLine div:first-child p {
+                border-left: 0px;
+            }
+
+            #roleLine .role-list span {
+                width: 70%;
+                text-align: left;
+                margin-left: 10px;
+            }
+
+        #roleLeft,
+        #roleRight {
+            height: 300px;
+            overflow: auto;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+            #roleRight li {
+                width: 100%;
+                margin: 0;
+            }
+
+        #roleLine .role-list .close {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            background: url('/static/oa/images/close.png') no-repeat;
+            background-position: 7px 7px;
+        }
+
+        #roleRight .role-list:hover {
+            background: #E5E5E5;
+        }
+
+        .role-list {
+            width: 90%;
+        }
+
+        #personView {
+            display: inline-block;
+            margin: 0px 10%;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        #selectRole span {
+            margin-top: 5px;
+            background: #5167D7;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .m-role input, .m-role select {
+            width: 60%;
+        }
+        /*860px; 700px*/
+    </style>
+</head>
+
+<body>
+    <div id="personView" class="person-view">
+        <div class="m-role" style="display: none">
+            <label>
+                <span>所属企业</span>
+                <select id="cpcode">
+                    <option value="0">请选择企业</option>
+                </select>
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>所属部门</span>
+                <select id="depcode">
+                    <option value="0">请选择部门</option>
+                </select>
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>账号</span>
+                <input type="text" name="username" id="username" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>员工姓名</span>
+                <input type="text" name="realname" id="realname" />
+            </label>
+        </div>
+
+
+        <div class="m-role" style="display: none">
+            <label>
+                <span>密码</span>
+                <input type="password" name="password" id="password" />
+            </label>
+        </div>
+        <div class="m-role">
+            <span>性别</span>
+            <div class="role-line">
+                <label style="width: 150px;">
+                    <input type="radio" class="xb" name="xb" value="女" />女
+                </label>
+                <label style="width: 140px;">
+                    <input type="radio" class="xb" name="xb" value="男" />男
+                </label>
+            </div>
+        </div>
+        <div class="m-role">
+            <span>用工形式</span>
+            <select id="ygxs">
+                <option value="0">在编</option>
+                <option value="0">合约</option>
+            </select>
+        </div>
+
+
+        <div class="m-role">
+            <label>
+                <span>政治面貌</span>
+                <input type="text" name="zzmm" id="zzmm" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>全日制学历</span>
+                <input type="text" name="qrzxl" id="qrzxl" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>在职学历</span>
+                <input type="text" name="zzxl" id="zzxl" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>毕业院校</span>
+                <input type="text" name="byyx" id="byyx" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>职称</span>
+                <input type="text" name="zc" id="zc" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>手机号码</span>
+                <input type="text" name="sjhm" id="sjhm" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>身份证号</span>
+                <input type="text" name="sfzh" id="sfzh" />
+            </label>
+        </div>
+
+
+
+        <div class="m-role" style="width: 100%">
+            <div>
+                <span style="vertical-align: top;float: left;">岗位</span>
+                <div id="roleLine" class="role-line" style="display: table;float: left;width: 80%;">
+                    <div>
+                        <p>可选择岗位</p>
+                        <ul id="roleLeft"></ul>
+                    </div>
+                    <div style="border-left: 1px solid #E5E5E5;">
+                        <p>已有岗位</p>
+                        <ul id="roleRight"></ul>
+                    </div>
+                    <div style="display: table-row;background: #F1F1F1;height: 40px;">
+                        <div id="selectRole" style="display: table-cell;"><span>确认</span></div>
+                        <div style="display: table-cell;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="save" style="margin-top: 0px;border: 0px;"><span class="btn">保存</span></div>
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script>
+        var usercode = "@ViewBag.usercode";
+        var cpcode = '@ViewBag.cpcode';
+        var ksbh = '@ViewBag.ksbh';
+        $(function () {
+            if (usercode)
+        {
+            $("#username").attr("readonly", true);
+            $("#realname").attr("readonly", true);
+            $("#sfzh").attr("readonly", true);
+            $("#username").css({ background: "lightgray" })
+            $("#realname").css({ background: "lightgray" })
+            $("#sfzh").css({ background: "lightgray" })
+        }
+            ajaxTpl('/jcjtfun/GetCompanys', '', function (data) {
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+
+                        str += "<option value='" + data[i].CPCODE + "'>" + data[i].CompanyName + "</option>";
+                    }
+                    if (data.length == 1) {
+                        $('#cpcode').html(str);
+                    } else {
+                        $('#cpcode').append(str);
+                    }
+                    if (cpcode) {
+                        $('#cpcode').val(cpcode);
+                    }
+                }
+            });
+
+            ajaxTpl('/dhoa/GetJcjgks', '', function (data) {
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].ksbh + "'>" + data[i].ksmc + "</option>";
+                    }
+                    if (data.length == 1) {
+                        $('#depcode').html(str);
+                    } else {
+                        $('#depcode').append(str);
+                    }
+                    if (ksbh) {
+                        $('#depcode').val(ksbh);
+                    }
+                }
+            });
+
+            if (usercode) {
+                $('#password').parents('.m-role').hide();
+                $('#username').val('@ViewBag.username');
+                $('#realname').val('@ViewBag.realname');
+                $('#sfzh').val('@ViewBag.sfzh');
+                $('#sjhm').val('@ViewBag.sjhm');
+                $('.xb').filter('[value="@ViewBag.xb"]').attr("checked", true);
+                $('.sfsyr').filter('[value="@ViewBag.sfsyr"]').attr("checked", true);
+            }
+            GetRoleList();
+        })
+
+        function GetRoleList() {
+            var obj;
+            if (usercode) {
+                obj = {
+                    method: 'Role',
+                    opt: 'GetOwnerRoleListByUsercode',
+                    usercode: usercode,
+                    cpcode: cpcode != 0 ? cpcode : ''
+                }
+            } else {
+                obj = {
+                    method: 'Role',
+                    opt: 'GetRoleList',
+                    cpcode: cpcode != 0 ? cpcode : ''
+                }
+
+            }
+            //角色列表
+            ajaxTpl("/dhoa/UmsApiService", obj, function (data) {
+                var lf = '',
+                    rig = '',
+                    tmp;
+                for (var i = 0, len = data.data.rows.length; i < len; i++) {
+                    tmp = data.data.rows[i];
+                    if (tmp.hasUser == true) {
+                        rig += getRig(tmp);
+                    } else {
+                        if (tmp.rolename=="管理员") {
+                            continue;
+                        }
+                        lf += getLf(tmp);
+                    }
+                }
+
+                $("#roleLeft").html(lf);
+                $("#roleRight").html(rig);
+                // $("#roleLine").html(str);
+            });
+
+        }
+
+        function getRig(tmp) {
+            return "<li class='role-list' value='" + tmp.rolecode + "' text='" + tmp.rolename + "'><span>" + tmp.rolename + "</span><span class='close'></span></li>";
+        }
+
+
+        function getLf(tmp) {
+            return "<li class='role-list' value='" + tmp.rolecode + "' text='" + tmp.rolename + "' ><label><input type='checkbox'  class='checkbox' /><span>" + tmp.rolename + "</span></label></li>";
+        }
+
+        $("#cpcode").change(function () {
+            cpcode = $('#cpcode').val();
+            GetRoleList();
+        });
+
+        $("#personView .save").click(function () {
+
+            var sfzh = $('#sfzh').val();
+            if (!IDCardCheck(sfzh)) {
+                layer.msg('身份证格式不正确', {icon: 2,time: 2000});
+                return;
+            }
+            var username = $('#username').val();
+            var realname = $('#realname').val();
+            var password = $('#password').val();
+            var cpcode = $('#cpcode').val();
+            var depcode = $('#depcode').val();
+            if (cpcode == 0) {
+                layer.msg('请选择单位', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+            var xb = $(".xb:checked").val() || '';
+            var sfsyr = $(".sfsyr:checked").val() || '';
+            var sjhm = $('#sjhm').val();
+            if (!isPoneAvailable(sjhm)) {
+                layer.msg('手机号码不正确', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+            var ary = $("#roleRight").children();
+            var rolecodelist = [];
+            if (ary.length) {
+                for (var i = 0, len = ary.length; i < len; i++) {
+                    rolecodelist.push(ary.eq(i).attr('value'));
+                }
+            }
+
+            if (username.length && realname.length && rolecodelist.length) {
+
+                var obj = {
+                username: username,
+                realname: realname,
+                sfzh: sfzh,
+                cpcode: cpcode,
+                sjhm: sjhm,
+                xb: xb,
+                sfsyr: sfsyr,
+                depcode: depcode,
+                rolecodelist: rolecodelist.join(',')
+                };
+
+                if (!usercode) {
+                    //****相同身份证可注册多个账号****
+                    //obj.password = password;
+                    //obj.method = 'User';
+                    //obj.opt = 'AddUser';
+                    //save(obj);
+                    //****相同身份证可注册多个账号****
+                    //身份校验
+                    if (sfzh.length && sjhm.length && xb.length) {
+                        obj.password = "88888";
+                        ajaxTpl('/dhoa/UmsApiService', {
+                            method: 'User',
+                            opt: 'CheckUserBySfzh',
+                            sfzh: sfzh
+                        }, function (data) {
+                            if (data) {
+                                // data false表示唯一码不存在，true表示唯一码已存在
+                                if (data.data == false) {
+                                    obj.method = 'User';
+                                    obj.opt = 'AddUser';
+                                    save(obj);
+                                } else {
+                                    layer.msg(data.msg, {
+                                        icon: 2,
+                                        time: 2000
+                                    });
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        layer.msg('请将表单填写完整!', {
+                            icon: 2,
+                            time: 2000
+                        });
+                    }
+                } else {
+                    obj.method = 'User';
+                    obj.opt = 'ModifyUserInfoByUsercode';
+                    obj.usercode = usercode;
+                    save(obj);
+                }
+            }else {
+                layer.msg('请将表单填写完整', {
+                icon: 2,
+                time: 2000
+                });
+            }
+        });
+
+        function save(obj) {
+            ajaxTpl('/dhoa/UmsApiService', obj, function (data) {
+                if (data.success == true) {
+                    layer.alert('保存成功');
+
+                    try {
+                        setTimeout(function () {
+                            parent.layer.closeAll();
+                        },1000)
+                    }
+                    catch(e)
+                    {
+                    }
+                }
+                else {
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+        }
+
+        function IDCardCheck(num) {
+            num = num.toUpperCase();
+            //身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X。
+            if (!(/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(num))) {
+                alert('输入的身份证号长度不对，或者号码不符合规定！\n15位号码应全为数字，18位号码末位可以为数字或X。');
+                return false;
+            }
+            //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+            //下面分别分析出生日期和校验位
+            var len, re;
+            len = num.length;
+            if (len == 15) {
+                re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
+                var arrSplit = num.match(re);
+
+                //检查生日日期是否正确
+                var dtmBirth = new Date('19' + arrSplit[2] + '/' + arrSplit[3] + '/' + arrSplit[4]);
+                var bGoodDay;
+                bGoodDay = (dtmBirth.getYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+                if (!bGoodDay) {
+                    alert('输入的身份证号里出生日期不对！');
+                    return false;
+                }
+                else {
+                    //将15位身份证转成18位
+                    //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+                    var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                    var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                    var nTemp = 0, i;
+                    num = num.substr(0, 6) + '19' + num.substr(6, num.length - 6);
+                    for (i = 0; i < 17; i++) {
+                        nTemp += num.substr(i, 1) * arrInt[i];
+                    }
+                    num += arrCh[nTemp % 11];
+                    return true;
+                }
+            }
+            if (len == 18) {
+                re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
+                var arrSplit = num.match(re);
+
+                //检查生日日期是否正确
+                var dtmBirth = new Date(arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]);
+                var bGoodDay;
+                bGoodDay = (dtmBirth.getFullYear() == Number(arrSplit[2])) && ((dtmBirth.getMonth() + 1) == Number(arrSplit[3])) && (dtmBirth.getDate() == Number(arrSplit[4]));
+                if (!bGoodDay) {
+                    // alert(dtmBirth.getYear());
+                    //  alert(arrSplit[2]);
+                    alert('输入的身份证号里出生日期不对！');
+                    return false;
+                }
+                else {
+                    //检验18位身份证的校验码是否正确。
+                    //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+                    var valnum;
+                    var arrInt = new Array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
+                    var arrCh = new Array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
+                    var nTemp = 0, i;
+                    for (i = 0; i < 17; i++) {
+                        nTemp += num.substr(i, 1) * arrInt[i];
+                    }
+                    valnum = arrCh[nTemp % 11];
+                    if (valnum != num.substr(17, 1)) {
+                        alert('18位身份证的校验码不正确！'); //应该为： + valnum
+                        return false;
+                    }
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        function isPoneAvailable(poneInput) {
+            var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+            if (!myreg.test(poneInput)) {
+                return false;
+            } else {
+                return true;
+            }
+        };
+
+
+        $("#selectRole").click(function () {
+
+            var cli = $("#roleLeft").find(":checked");
+            var par, str = '';
+            if (cli.length) {
+                for (var i = 0, len = cli.length; i < len; i++) {
+                    par = cli.eq(i).parents('.role-list');
+                    str += getRig({rolecode: par.attr('value'),rolename: par.attr('text')});
+                    par.remove();
+                }
+                $("#roleRight").append(str);
+            }
+        });
+
+        $("#roleRight").on('click', '.close', function () {
+
+            var par = $(this).parents('.role-list');
+
+            var str = getLf({rolecode: par.attr('value'),rolename: par.attr('text')});
+            par.remove();
+            $("#roleLeft").append(str);
+        });
+    </script>
+</body>
+
+</html>

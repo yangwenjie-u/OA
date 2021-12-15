@@ -1,0 +1,177 @@
+﻿@using BD.Jcbg.Web.Func;
+@using BD.Jcbg.Common;
+@{
+    ViewBag.Title = "软件超市";
+    Layout = "~/Views/User/_loginlayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        $(function () {
+        });
+    </script>
+}<div class="s_container font_size_normal font_faminly font_color_black">
+    <div class="s_container_top sj_dark_red">
+        <div class="width_1000">
+            <div class="width_1000_left">
+                <div class="img"> <img src="@SkinManager.GetImagePath("logo.png")" /></div>
+                <div class="word">
+                    <p class="font_faminly_yishu font_size_xxl sj_dark_red logo_left_name">绍兴标点</p>
+                    <p class="font_color_white font_size_m">好技术 好软件 好服务</p>
+                </div>
+
+
+            </div>
+            <div class="shu">
+                <img src="@SkinManager.GetImagePath("shu.png")" />
+            </div>
+            <div class="width_1000_right">
+                <ul class="font_color_white font_size_l font_color_black top_tab_tiaozhuan">
+
+
+                    <li class="" onclick="top_tiaozhun(1)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">首页</li>
+                    <li class="active " onclick="top_tiaozhun(2)">软件超市</li>
+                    <li class="" onclick="top_tiaozhun(3)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">关于我们</li>
+                    <li class=" hezuohuoban " onclick="top_tiaozhun(4)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">合作伙伴</li>
+
+                    <li class="" onclick="top_tiaozhun(5)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">下载</li>
+                </ul>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="S_container_middle_ruanjian">
+
+        <div class="top">
+            <div class="width_1000">
+                <a href="/user/aboutus">
+                    <img src="@SkinManager.GetImagePath("guanggao.png")" />
+                </a>
+
+            </div>
+
+
+        </div>
+        <div class="middle">
+            <ul>
+                <li class="background_grey">
+                    <div class="ruanjian_jieshao">
+                        <div class="left" style="width:550px;padding-top:20px;">
+                            <h2>建筑工程质量检测系统</h2>
+                            <p>实现了对现所检测建材的自助委托、莱阳等级、实验数据、自动采集、自动计算、自动生成报告、查询、统计、打印、领导管理等全过程电脑网络化管理</p>
+                            <div class="xian"></div>
+                            <div class="last"><div class="left tip">main</div><div class="left inportant">实验数据自动分析，在线委托，实时上报，报告防伪查询</div>  </div>
+                        </div>
+                        <div class="right">
+                            <img src="@SkinManager.GetImagePath("jcxt.png")" />
+
+                        </div>
+
+
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="ruanjian_jieshao">
+                        <div class="left">
+                            <img src="@SkinManager.GetImagePath("jgxt.png")" />
+
+                        </div>
+                        <div class="right" style="width:550px;padding-top:20px; text-align:left;">
+                            <h2>智能检测监管系统</h2>
+                            <p>系统主要功能是对区域内检测机构和工程材料检测情况的智能管理。通过记录检测机构的原始数据，并进行智能分析,为工程材料的质量提供最真实的数据,同时为管理方对检测机构信誉评级提供依据;通过对检测机构资质、人员资质、采集项目、数据修改等的控制，规范检测机构行为。</p>
+                            <div class="xian"></div>
+                            <div class="last"><div class="left tip">main</div><div class="left inportant">资质，工程信息、行为、设备的管理</div>  </div>
+                        </div>
+
+
+
+                    </div>
+                </li>
+
+                <li class="background_grey" style="height:350px;">
+                    <div class="ruanjian_jieshao">
+                        <div class="left" style="width:550px;padding-top:60px;">
+                            <h2>质量安全办公管理系统</h2>
+                            <p>本软件是主管监督单位对于工程的日常监督管理的软件。系统通过企业库，人员库，工程库，过程库的四库一体大数据。施工监理单位通过系统上报工程建设情况和相关资料，主管监督单位对工程进行日常监督验收工作，直至最终形成完整系统工程电子文件归档。</p>
+                            <div class="xian"></div>
+                            <div class="last"><div class="left tip">main</div><div class="left inportant">多种设备接入，引导式办公</div>  </div>
+                        </div>
+                        <div class="right">
+                            <img src="@SkinManager.GetImagePath("bgxt.png")" />
+
+                        </div>
+
+
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="ruanjian_jieshao">
+                        <div class="left">
+                            <img src="@SkinManager.GetImagePath("wgxt.png")" />
+
+                        </div>
+                        <div class="right" style="width:550px;padding-top:20px; text-align:left;">
+                            <h2>务工人员管理系统</h2>
+                            <p> 系统主要功能是对区域内的务工人员和建筑企业进行智能管理。通过虹膜认证实现了人员考勤记录的真实性,对解决劳资纠纷提供了原始依据；通过对未发放工资的工程企业预警，减少社会事件；上访人员企业关联,形成区域内企业的诚信体系。</p>
+                            <div class="xian"></div>
+                            <div class="last"><div class="left tip">main</div><div class="left inportant">准确定位你您的店面与顾客的位置</div>  </div>
+                        </div>
+
+
+
+                    </div>
+                </li>
+
+                <li class="background_grey" style="height:300px;">
+                    <div class="ruanjian_jieshao">
+                        <div class="left" style="width:550px;padding-top:20px;">
+                            <h2>监理施工现场管理APP</h2>
+                            <p>本软件是面向监理施工单位现场管理人员的智能管理软件，通过在智能移动终端上预装app软件，监理施工单位现场人员可以通过软件将工程现场管理过程进行记录和自动同步上报更新。利用智能移动终端多媒体和GPS等技术手段，将工程实况实施更新上传，形成完整的工程现场记录和影像资料。</p>
+                            <div class="xian"></div>
+                            <div class="last"><div class="left tip">main</div><div class="left inportant">工程信息实时交互</div>  </div>
+                        </div>
+                        <div class="right">
+                            <img src="@SkinManager.GetImagePath("jlapp.png")" />
+
+                        </div>
+
+
+                    </div>
+                </li>
+
+                <li class="">
+                    <div class="ruanjian_jieshao">
+                        <div class="left">
+                            <img src="@SkinManager.GetImagePath("xypjxt.png")" />
+
+                        </div>
+                        <div class="right" style="width:550px;padding-top:20px; text-align:left;">
+                            <h2>信用评价系统</h2>
+                            <p>       信用评价系统是基于企业库和人员库的云端大数据的行为管理和评价的智能管理系统。企业通过系统录入企业资质证书，人员信息和证书来管理本单位的证书资质和有效期；监管部门通过系统记录日常的检查评分和企业奖惩情况，根据实际情况设定禁止承接项目企业和个人和名单；系统自动根据企业填报证书和监管部门检查记录生成企业诚信记录，管理企业行为。</p>
+                            <div class="xian"></div>
+                            <div class="last"><div class="left tip">main</div><div class="left inportant">奖惩，证书管理</div>  </div>
+                        </div>
+
+
+
+                    </div>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>

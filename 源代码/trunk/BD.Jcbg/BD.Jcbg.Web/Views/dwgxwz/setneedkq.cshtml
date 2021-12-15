@@ -1,0 +1,50 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var needkq = '@ViewBag.needkq';
+        var usercode = '@ViewBag.usercode';
+        $(function () {
+            try {
+                if ($('#curv').length) {
+                    $('#curv').html(needkq);
+                }
+
+                setneedkqxz();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+
+        function setneedkqxz() {
+
+            var divid = "div_needkq";
+            try {
+                var data = [{ key: 1, value: "是" },{ key: 0, value: "否" } ];
+                $.each(data, function (i, item) {
+                    $("#" + divid).append("<label class=\"btn btn-default\" style='margin:5px 5px 5px 5px;'> <input type=\"radio\" class=\"toggle\" value=\"" + item.key + "\"> " + item.value + "</label>");
+                });
+
+
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+
+        function getValues() {
+            if ($('#div_needkq input:radio:checked').length == 0)
+                return "";
+            return $('#div_needkq input:radio:checked').val();
+
+        }
+    </script>
+}
+<div  style="margin:10px 10px 10px 10px;">
+    <span>当前设置值：</span>&nbsp;&nbsp;&nbsp;&nbsp;<span id="curv"></span>
+</div>
+<div class="btn-group" id="div_needkq" data-toggle="buttons" style="margin:10px 10px 10px 10px;">
+    
+</div>

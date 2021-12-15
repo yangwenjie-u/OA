@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.KqjUserDayLog,BD.Jcbg.DataModal" table="KqjUserDayLog" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="UserId" column="[UserId]" />
+    <property type="string" length="50" name="ScheduleId" column="[ScheduleId]" />
+    <property type="DateTime" name="LogDay" column="[LogDay]" />
+    <property type="string" length="50" name="CompanyId" column="[CompanyId]" />
+    <property type="string" length="50" name="ProjectId" column="[ProjectId]" />
+    <property type="string" length="50" name="GzId" column="[GzId]" />
+    <property type="string" length="50" name="GW" column="[GW]" />
+    <property type="Decimal" name="RealSum" column="[RealSum]" />
+    <property type="string" length="50" name="Bzfzr" column="[Bzfzr]" />
+    <property type="string" length="50" name="RealName" column="[RealName]" />
+    <property type="Decimal" name="SetSum" column="[SetSum]" />
+    <property type="Decimal" name="RealPay" column="[RealPay]" />
+    <property type="string" length="200" name="CompanyName" column="[CompanyName]" />
+    <property type="string" length="200" name="ProjectName" column="[ProjectName]" />
+    <property type="Decimal" name="SetPay" column="[SetPay]" />
+    <property type="string" length="50" name="BzfzrRealName" column="[BzfzrRealName]" />
+    <property type="int" name="ShouldMinutes" column="[ShouldMinutes]" />
+    <property type="int" name="RealMinutes" column="[RealMinutes]" />
+  </class>
+</hibernate-mapping>

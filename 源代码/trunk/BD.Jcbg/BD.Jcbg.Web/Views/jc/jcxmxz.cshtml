@@ -1,0 +1,173 @@
+﻿@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+    var g_dwbh = '@ViewBag.dwbh';
+    var g_syxmfl1 = [];
+    var g_syxmfl = [];
+    var g_syxm = [];
+    var g_fbxm = '@ViewBag.fbxm';
+    var g_limitxmbh = "@ViewBag.limitxmbh";
+        var g_view = "@ViewBag.view";
+        var g_selectxmbh = "@ViewBag.selectxmbh";
+        var g_global = "@ViewBag.global";
+
+        $(function () {
+            try {
+                initData();
+                showData();
+
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function initData() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getjcdwxmfz",
+                    dataType: "json",
+                    async: false,
+                    data:"dwbh="+encodeURIComponent(g_dwbh)+"&global="+g_global,
+                    success: function (data) {
+                        try {
+                            $.each(data, function (i, value) {
+                                if (value.sjxsflbh == "")
+                                    g_syxmfl1.push(value);
+                                else
+                                    g_syxmfl.push(value);
+                            });
+                        } catch (e) {
+                            alert(e);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getjcdwxm",
+                    data: "dwbh=" + encodeURIComponent(g_dwbh) + "&yx=0&yzb=0&fbxm=" + g_fbxm + "&limitxmbh=" + encodeURIComponent(g_limitxmbh)+"&global="+g_global,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        try {
+                            g_syxm = data;
+                        } catch (e) {
+                            alert(e);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+
+        function showData() {
+            try {
+                var totalWidth = 840;
+                var isfirst1 = true;
+                $.each(g_syxmfl1, function (i, value) {
+                    var otaba1 = "";
+                    var otaba2 = "";
+                    if (isfirst1) {
+                        otaba1 = "in active";
+                        otaba2 = "active";
+                        isfirst1 = false;
+                    }
+                    var o_div_id = "o_tab_" + value.xsflbh;
+                    var o_cur_div = "<div class=\"tab-pane fade " + otaba1 + "\" id=\"" + o_div_id + "\"></div>";
+                    $("#out_tab_content").append(o_cur_div);
+                    $("#out_tab_tab").append("<li class=\"" + otaba2 + "\"><a href=\"#" + o_div_id + "\" data-toggle=\"tab\">" + value.xsflmc + "</a></li>");
+                    $("#" + o_div_id).append("<div id=\"main_tab_content_" + value.xsflbh + "\" ></div>");
+
+                    //if (totalWidth == 0)
+                    //    totalWidth = $("#" + o_div_id).width();
+                    var subfls = [];
+                    $.each(g_syxmfl, function (j, value2) {
+                        if (value2.sjxsflbh == value.xsflbh)
+                            subfls.push(value2);
+                    });
+                    if (subfls.length == 0)
+                        return true;
+                    var divWidth = totalWidth / subfls.length;
+                    var span = 2;
+                    divWidth = divWidth - span;
+
+
+                    $.each(subfls, function (j, value2) {
+
+
+                        var div_id = "block_" + value2.xsflbh;
+                        var cur_div = "<div id=\"" + div_id + "\" style='padding:5px 5px 5px 5px;margin-right:" + span + "px;width:" + divWidth + "px;float:left;'></div>";
+                        $("#main_tab_content_" + value.xsflbh + "").append(cur_div);
+                        $("#" + div_id).append("<a class=\"list-group-item active text-center\"><input type='checkbox' id='selall_" + value2.xsflbh + "'  onchange=\"checkAllChange(this.checked,1,'" + value2.xsflbh + "')\" /><label for='selall_" + value2.xsflbh + "'>" + value2.xsflmc + "</label></a>");
+
+                        $.each(g_syxm, function (k, syxm) {
+                            if (syxm.xsflbh != value2.xsflbh)
+                                return true;
+                            //$("#" + div_id).append("<li class=\"list-group-item\"><span style='cursor:pointer;' onclick='showWtdLrDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\")'>" + syxm.syxmmc + "</span><div style='cursor:pointer;' id='div_wtzs_" + syxm.syxmbh + "' class='badge' style='display:inline' onclick='showWtdCkDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\")'></div></li>");
+                            var itemid = "syxm_" + value2.xsflbh + "_" + syxm.syxmbh;
+                            var isselect = ("," + g_selectxmbh + ",").indexOf("," + syxm.syxmbh + ",") > -1 ? "checked" : "";
+                            $("#" + div_id).append("<li class=\"list-group-item\" ><div class=\"stj_span_wai\" style='z-index:1;'><input type='checkbox' value='' desc='" + syxm.syxmmc + "' id='" + itemid + "' " + isselect + "/><label for='" + itemid + "'>" + syxm.syxmmc + "</label></div></li>");
+
+
+                        });
+                    });
+                });
+
+                if (g_view == "true") {
+                    $(":checkbox").each(function () {
+                        $(this).hide();
+                    });
+                }
+            } catch (e) {
+                alert(e);
+            }
+        }
+        function checkAllChange(ischecked, level, xsfl) {
+            xsfl = "_"+xsfl + "_";
+            $('input[type="checkbox"][id*="' + xsfl + '"]').each(function () {
+                $(this).prop("checked", ischecked);
+            });
+        }
+        // 外层调用接口
+        function getTreeValue() {
+            var ids = "";
+            var texts = "";
+            try {
+                $('input[type="checkbox"][id^="syxm_"]').each(function () {
+                    if (!$(this).is(':checked'))
+                        return true;
+                    if (ids != "")
+                        ids += ",";
+                    if (texts != "")
+                        texts += ","
+                    var id = $(this).attr("id");
+                    id = id.substr(id.lastIndexOf("_") + 1);
+                    ids += id;
+                    texts += $(this).attr("desc");
+                });
+            } catch (e) {
+                alert(e);
+            }
+            return ids+"|"+texts;
+        }
+    </script>
+}
+<div class="container-fluid">
+<ul id="out_tab_tab" class="nav nav-tabs"></ul>
+<div id="out_tab_content" class="tab-content"></div>
+</div>

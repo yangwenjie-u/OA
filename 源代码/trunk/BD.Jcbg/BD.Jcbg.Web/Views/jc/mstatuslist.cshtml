@@ -1,0 +1,228 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/jc/_jquerymobilelayout.cshtml";
+}
+
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_pageindex = 1;
+    var g_recordcount = 0;
+    var g_username = "@ViewBag.username";
+
+    $(function () {
+        loadProjects();
+        loadGcs();
+        loadData(false);
+        $(document).bind("swipeleft", function () {
+            gotoPage(1);
+        });
+        $(document).bind("swiperight", function () {
+            gotoPage(-1);
+        });
+
+    });
+    function loadProjects() {
+        $.ajax({
+            type: "POST",
+            url: "/jc/getjcdwxm",
+            dataType: "json",
+            data:"dwbh=&yx=1&yzb=0&global=true",
+            async: false,
+            crossDomain: false,
+            success: function (data) {
+                try {
+                    $.each(data, function (i, value) {
+                        $("#select-project").append("<option value='" + value.syxmbh + "'>" + value.syxmmc + "</option>");
+                    });
+                } catch (e) {
+                    alert(e);
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                hideLoading();
+            },
+            beforeSend: function (XMLHttpRequest) {
+                showLoading("试验项目");
+            }
+        });
+    }
+    function loadGcs() {
+        $.ajax({
+            type: "POST",
+            url: "/jc/getgclist",
+            dataType: "json",
+            data: "ryzh="+g_username,
+            async: false,
+            crossDomain: false,
+            success: function (data) {
+                try {
+                    $.each(data.records, function (i, value) {
+                        $("#select-gcbh").append("<option value='" + value.gcbh + "'>" + value.gcmc + "</option>");
+                    });
+                } catch (e) {
+                    alert(e);
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                hideLoading();
+            },
+            beforeSend: function (XMLHttpRequest) {
+                showLoading("试验项目");
+            }
+        });
+    }
+    function loadData(resetpage) {
+        if (resetpage)
+            g_pageindex = 1;
+        showLoading("委托单");
+        $.ajax({
+            url: "/jc/getwtdlist",
+            dataType: "json",
+            type:"post",
+            crossDomain: false,
+            async: false,
+            data: {
+                syxmbh: $("#select-project").val(),
+                zt: $("#select-status").val(),
+                lrrzh: g_username,
+                gcbh: $("#select-gcbh").val(),
+                pagesize: $("#select-pagesize").val(),                  
+                pageindex: g_pageindex
+            },
+            success: function (data, textStatus) {
+                try {
+                    hideLoading();
+                    $("#lvmain").html("");
+                    $('#lvmain').listview('refresh');
+                    g_recordcount = data.totalcount;
+                    if (data.code != 0)
+                    {
+                        alert(data.msg);
+                        return;
+                    }
+                    $.each(data.records, function (i, val) {
+                        var itm = "<li>";
+                        if (val.sy_bgbs == "是")
+                            itm += "<a href='/jc/viewreport?wtdwyh=" + val.recid + "' target='_blank'>";
+                        itm += val.syxmmc + "," + val.gcmc + ",<br/>" + val.wtdbh + ",";
+                        if (val.sy_bgbs == "是") {
+                            itm += "已出报告," + val.jcjgms;
+                        }
+                        else if (val.sy_sybs == "是")
+                            itm += "已试验";
+                        else if (val.sy_xfbs == "是")
+                            itm += "已收样";
+                        else
+                            itm += "已委托";
+                        if (val.url != "")
+                            itm += "</a>";
+                        itm += "</li>";
+                        $("#lvmain").append(itm);
+                    });
+                    $('#lvmain').listview('refresh');
+                    $("#totaldesc").html("第" + g_pageindex + "页，共" + getPageCount() + "页，共" + g_recordcount + "条");
+                    setPageButton();
+                }
+                catch (e) {
+                    alert(e);
+                }
+            }
+        })
+    }
+    function getPageCount() {
+        try {
+            var pagesize = $("#select-pagesize").val();
+            var sum = g_recordcount / pagesize;
+            sum = sum - sum % 1;
+            return (sum) + ((g_recordcount % pagesize) > 0 ? 1 : 0);
+        }
+        catch (e) {
+            alert(e);
+        }
+    }
+    function gotoPage(diff) {
+        try {
+            if (diff + g_pageindex < 1 || diff + g_pageindex > getPageCount())
+                return;
+            g_pageindex += diff;
+            loadData(false);
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function setPageButton() {
+        try {
+            if (g_pageindex <= 1)
+                $("#prePage").attr('disabled', "disabled");
+            else
+                $("#prePage").removeAttr('disabled');
+            if (g_pageindex >= getPageCount())
+                $("#nextPage").attr('disabled', "disabled");
+            else
+                $("#nextPage").removeAttr('disabled');
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function showLoading(msg) {
+        try {
+            $.mobile.loading("show", {
+                text: "正在加载"+msg,
+                textVisible: true,
+                textonly: false
+            });
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function hideLoading() {
+        $.mobile.loading("hide");
+    }
+</script>
+}
+<div data-role="page" id="statuslistpage">
+    <div data-role="header" data-theme="b" data-position="fixed">
+        <fieldset data-role="controlgroup" data-type="horizontal">
+            <label for="select-pagesize">每页数量</label>
+            <select data-role="none" id="select-pagesize" name="select-pagesize" onchange="loadData(true);">
+                <option value="10" selected>10条/页</option>
+                <option value="20">20条/页</option>
+                <option value="50">40条/页</option>
+                <option value="100">100条/页</option>
+            </select>
+            <label for="select-project">试验项目</label>
+            <select data-role="none" id="select-project" name="select-project" onchange="loadData(true);" style="width:200px;">
+                <option value="ALL">请选择试验项目</option>
+            </select>
+            <label for="select-status">状态</label>
+            <select data-role="none" id="select-status" name="select-status" onchange="loadData(true);">
+                <option value="">请选择状态</option>
+                <option value="B4">已收样</option>
+                <option value="S1">已试验</option>
+                <option value="B1">已出报告</option>
+            </select>
+            <label for="select-gcbh">工程</label>
+            <select data-role="none" id="select-gcbh" name="select-gcbh" onchange="loadData(true);" style="width:200px;">
+                <option value="">请选工程</option>
+                <%=HtbhSelectStr %>
+            </select>
+            <label for="select-khdw">客户单位</label>
+            <select data-role="none" id="select-khdw" name="select-khdw">
+                <option value="">@ViewBag.company</option>
+            </select>
+        </fieldset>
+    </div>
+    <div role="main" class="ui-content">
+        <ul data-role="listview" id="lvmain" data-insert="true"></ul>
+
+    </div>
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <div class="ui-bar">
+            <button class="ui-btn ui-btn-inline" onclick="gotoPage(-1)" id="prePage">上页</button>
+            <span id="totaldesc"></span>
+            <button class="ui-btn ui-btn-inline" onclick="gotoPage(1)" id="nextPage">下页</button>
+        </div>
+    </div>
+</div>

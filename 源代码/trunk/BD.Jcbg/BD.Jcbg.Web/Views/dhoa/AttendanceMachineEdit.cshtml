@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/oa/css/load.css" />
+    <style>
+        .data-view {
+            text-align: left;
+        }
+
+        .m-role {
+            width: 100%;
+        }
+
+            .m-role .xb {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .m-role .sfsyr {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .role-list .m-role input,
+            .m-role select {
+                width: 90%;
+            }
+
+        .role-line {
+            width: 60%;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .m-role span {
+            text-align: center;
+        }
+
+        .role-list .checkbox {
+            width: 16px;
+            height: 16px;
+        }
+
+        .role-list {
+        }
+
+        #roleLine {
+            border: 1px solid #C6C6C6;
+        }
+
+            #roleLine > div {
+                display: table-cell;
+                width: 50%;
+            }
+
+            #roleLine p {
+                background: #F1F1F1;
+                color: #303030;
+                height: 40px;
+                line-height: 40px;
+                border-bottom: 1px solid #E5E5E5;
+                border-left: 1px solid #E5E5E5;
+            }
+
+            #roleLine div:first-child p {
+                border-left: 0px;
+            }
+
+            #roleLine .role-list span {
+                width: 70%;
+                text-align: left;
+                margin-left: 10px;
+            }
+
+        #roleLeft,
+        #roleRight {
+            height: 300px;
+            overflow: auto;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+
+        #roleLine .role-list .close {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            background: url('/static/oa/images/close.png') no-repeat;
+            background-position: 7px 7px;
+        }
+
+        #dataView {
+            display: inline-block;
+            margin: 0px 10%;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .m-role input, .m-role select {
+            width: 70%;
+        }
+        /*860px; 700px*/
+    </style>
+</head>
+
+<body>
+    <div id="dataView" class="data-view">
+        <div class="m-role">
+            <label>
+                <span>
+                    考勤机名称
+                </span>
+                <input type="text" name="name" id="name" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>安装位置</span>
+                <input type="text" name="installposition" id="installposition" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>考勤机序列号</span>
+                <input type="text" name="serialnumber" id="serialnumber" />
+            </label>
+        </div>
+
+        <div class="save" style="margin-top: 0px;border: 0px;"><span class="btn">保存</span></div>
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script>
+        var machineId = "@ViewBag.id";
+
+        $(function () {
+            if (machineId)
+            {
+                $("#serialnumber").attr("readonly", true);
+                $("#serialnumber").css({ background: "lightgray" })
+            }
+            if (machineId) {
+                $('#name').val('@ViewBag.name');
+                $('#installposition').val('@ViewBag.installposition');
+                $('#serialnumber').val('@ViewBag.serialnumber');
+            }
+        })
+
+        $("#dataView .save").click(function () {
+            var name = $('#name').val();
+            var installposition = $('#installposition').val();
+            var serialnumber = $('#serialnumber').val();
+
+            if (name.length && installposition.length && serialnumber.length) {
+                var obj = {
+                    id: machineId,
+                    name: name,
+                    installposition: installposition,
+                    serialnumber: serialnumber
+                };
+                save(obj)
+
+            }else {
+                layer.msg('请将表单填写完整', {
+                icon: 2,
+                time: 2000
+                });
+            }
+        });
+
+        function save(obj) {
+            ajaxTpl('/dhoa/AttendanceMachineUpdate', obj, function (data) {
+                if (data.code =='1') {
+                    layer.alert('保存成功');
+                    try {
+                        setTimeout(function () {
+                            parent.layer.closeAll();
+                        },1000)
+                    }
+                    catch(e)
+                    {
+                    }
+                }
+                else {
+
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

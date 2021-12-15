@@ -1,0 +1,632 @@
+﻿@{
+	ViewBag.Title = "发起工作";
+    Layout = "~/Views/workflow/_workflowdo.cshtml";
+}
+
+@section head 
+{
+<script language="javascript" type="text/javascript">
+    var g_ProcessId = '@ViewBag.ProcessId';
+    var g_ExtraInfo = "@ViewBag.ExtraInfo";
+    var g_ExtraInfo2 = "@ViewBag.ExtraInfo2";
+    var g_ParentSerial = '@ViewBag.ParentSerial';
+    var g_ExtraInfo3 = '@ViewBag.ExtraInfo3';
+    var g_ExtraInfo4 = '@ViewBag.ExtraInfo4';
+    var g_ExtraInfo5 = '@ViewBag.ExtraInfo5';
+    var g_ExtraInfo6 = '@ViewBag.ExtraInfo6';
+    var g_ReturnUrl = '@ViewBag.ReturnUrl';
+    var g_Serial = '@ViewBag.Serial';
+    var g_Error = '@ViewBag.Error';
+    var g_IsCopy = '@ViewBag.IsCopy';
+    var g_Params = '@ViewBag.Params';
+    var g_ProcessInfo = null;
+    var g_Activity = null;
+    var g_NextActivitys = null;
+    var g_DefaultUsers = null;
+    var g_NoNextSteps = false;
+    var g_NoNewProcess = false;
+    var g_IsSubmit = 0;
+    var g_callbackjs = "@ViewBag.CallBackJs";
+    var g_next_users = null;
+    var g_fgcmc = "@Request["fgcmc"]";
+
+    $(function () {
+        try {
+            if (g_Error != "") {
+                $("#divbuttons").hide();
+                $("#divtoolbars").hide();
+                $.messager.alert('发起工作失败', g_Error, 'warning', function () {
+                    if (g_ReturnUrl != "")
+                        window.location = g_ReturnUrl;
+                });
+
+            }
+            else {
+                loadprocess(g_ProcessId);
+                loadDefaultUser();
+                initDialog();
+                initFileCtrl();
+
+                // 主页面
+
+                var entryUrl = "/DataInput/Index?activityid=" + g_ProcessId +
+				"&taskid=" + g_Activity.Activityid +
+				"&callback=window.parent.doSubmit" +
+				"&button=" + encodeURIComponent("提交|TJ|" + g_ReturnUrl) +
+				"&buttonhidden=1" +
+				"&" + $.base64.decode(g_Params) + "";
+                $("#divformmain").dialog({
+                    fit: true,
+                    modal: true,
+                    shadow: true,
+                    collapsible: false,
+                    minimizable: false,
+                    maximizable: false,
+                    closable: false,
+                    resizable: false,
+                    closed: false,
+                    maximized: true,
+                    title: g_Activity.ActivityName + "(" + g_ProcessInfo.ProcessName + ")",
+                    buttons: "#divbuttons",
+                    toolbar: "#divtoolbars",
+                    content: "<iframe width='100%' height='99%' name='workflow_startworkz_frm' id='workflow_startworkz_frm' frameborder='0' scrolling='auto' src='" + entryUrl + "'></iframe>"
+
+                });
+            }
+        } catch (e) {
+            $.messager.alert('初始化程序异常', e.message, 'warning');
+        }
+    });
+    // 加载流程信息
+    function loadprocess(processid) {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/workflow/getprocessinfo?id=" + g_ProcessId,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code != 0 || data.record.length == 0)
+                        $.messager.alert('无法获取流程信息', e.message, 'info');
+                    else {
+                        g_ProcessInfo = data.record[0].Process;
+                        g_Activity = data.record[0].RealStartActivity;
+                    }
+
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在加载流程基本信息...");
+                }
+            });
+        } catch (e) {
+            $.messager.alert('加载流程基本信息异常', e.message, 'warning');
+        }
+    }
+    // 初始化对话框
+    function initDialog() {
+        try {
+            if (!g_Activity.IsPrint)
+                $("#btnPrint").hide();
+            else
+                $("#btnSubmit").hide();
+            if (g_ReturnUrl == "")
+                $("#btnBack").hide();
+
+            if (!isCommentShow())
+                $("#divcomment").hide();
+            if (!isNextStepShow())
+                $("#divnextstep").hide();
+            else
+                loadNextSteps();
+
+            if (!isUserSelectShow())
+                $("#divnextuser").hide();
+            if (!isNewProcessShow())
+                $("#divnewprocess").hide();
+            else
+                loadNewProcess();
+        } catch (e) {
+            $.messager.alert('初始化对话框异常', e.message, 'warning');
+        }
+    }
+    // 加载下一步选择
+    function loadNextSteps() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/workflow/getnextsteps?id=" + g_Activity.Activityid,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    try {
+                        g_NextActivitys = data;
+                        if (g_NextActivitys.length == 0) {
+                            $("#divnextstep").hide();
+                            $("#divnextuser").hide();
+                            g_NoNextSteps = true;
+                        }
+                        else {
+
+                            $("#divnextstep").hide();
+                            $("#btnPrint").hide();
+                            $("#btnSubmit").hide();
+                            if (isNextStepShow()) {
+                                for (var i = 0; i < g_NextActivitys.length; i++) {
+                                    var activity = g_NextActivitys[i];
+                                    //$("<a class='easyui-linkbutton' iconCls='icon-ok' onclick='nextstepClick(" + activity.Activityid + ")'>" + activity.ActivityName + "</a>").appendTo("#startwork_btn_td");
+                                    //$("#startwork_btn_td").append("<a id='btn" + i + "' class='easyui-linkbutton' iconCls='icon-ok' onclick='nextstepClick(" + activity.Activityid + ")'>" + activity.ActivityName + "</a>");
+                                    $("<a id='btn" + i + "' class='easyui-linkbutton' iconCls='icon-ok' onclick='nextstepClick(" + activity.Activityid + ")'>" + activity.ActivityName + "</a>").prependTo("#startwork_btn_td");
+
+
+                                }
+                            }
+                            $.parser.parse($("#startwork_btn_td"));
+                            $("#FixFieldNextSteps").combobox({
+                                valueField: "Activityid",
+                                textField: "ActivityName",
+                                mode: "local",
+                                editable: false,
+                                panelHeight: 'auto',
+                                data: g_NextActivitys,
+                                onLoadSuccess: function () {
+                                    if (g_NextActivitys.length > 0) {
+                                        var activity = g_NextActivitys[0];
+                                        $("#FixFieldNextSteps").combobox("select", activity.Activityid);
+                                        //$("#FixFieldNextSteps").combobox('setValue', activity.Activityid);
+                                        $("#FixFieldNextSteps").focus();
+                                    }
+                                },
+                                onSelect: function (record) {
+                                    if (!g_Activity.HiddenNextStep && g_Activity.PermitSelectUser)
+                                        loadActivityUser(record.Activityid);
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        $.messager.alert('下一步骤数据分析错误', e.message, 'warning');
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在加载下一步骤信息...");
+                }
+            });
+        } catch (e) {
+            $.messager.alert('加载下一步骤错误', e.message, 'warning');
+        }
+    }
+    // 加载下一步审批人
+    function loadActivityUser(activityid) {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/workflow/getactivityusers?id=" + g_Activity.Activityid + "&nextid=" + activityid + "&processid=" + g_ProcessId,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    try {
+                        g_next_users = data;
+                        $("#FixFieldNextUsers").combotree({
+                            valueField: "id",
+                            textField: "text",
+                            mode: "local",
+                            editable: false,
+                            multiple: true,
+                            checkbox: true,
+                            onlyLeafCheck: true,
+                            lines: true,
+                            //panelHeight: 'auto',
+                            data: data,
+                            onLoadSuccess: function () {
+                                var realDefUsers = [];
+                                $.each(g_DefaultUsers, function (idx1, defuser) {
+                                    var find = false;
+                                    $.each(g_next_users, function (idx2, nextuser) {
+                                        if (nextuser.id == defuser) {
+                                            find = true;
+                                            $.each(nextuser.children, function (idx3, nextsubuser) {
+                                                realDefUsers.push(nextsubuser.id);
+                                            });
+                                        }
+                                    });
+                                    if (!find)
+                                        realDefUsers.push(defuser);
+                                });
+                                g_DefaultUsers = realDefUsers;
+                                $("#FixFieldNextUsers").combotree('setValues', g_DefaultUsers);
+                            }
+                        });
+                        /*
+                        $("#FixFieldNextUsers").combogrid({
+                            idField: "UserId",
+                            textField: "UserRealName",
+                            mode: "local",
+                            editable: false,
+                            panWidth: 150,
+                            multiple: true,
+                            columns: [[
+								{ field: 'UserId', checkbox: true },
+								{ field: 'UserRealName', title: '', width: 100 }]]
+                        });
+                        $("#FixFieldNextUsers").combogrid("clear");
+                        $("#FixFieldNextUsers").combogrid("grid").datagrid("loadData", data);
+                        $("#FixFieldNextUsers").combogrid('setValues', getValidSelectUser(data, g_DefaultUsers));*/
+                    } catch (e) {
+                        $.messager.alert('下一步骤用户数据分析错误', e.message, 'warning');
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在加载下一步骤用户信息...");
+                }
+            });
+
+        } catch (e) {
+            $.messager.alert('加载下一步骤用户失败', e.message, 'warning');
+        }
+    }
+    // 加载默认用户
+    function loadDefaultUser() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/workflow/getnextstepdefaultuser?activityid=" + g_Activity.Activityid + "&processid=" + g_ProcessId,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_DefaultUsers = data;
+                    if (isExitsFunction("getDefaultUsers")) {
+                        var defUsers = getDefaultUsers();
+                        if (defUsers != "") {
+                            g_DefaultUsers = defUsers.split(",");
+                        }
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在加载下一步骤用户信息...");
+                }
+            });
+        } catch (e) {
+            $.messager.alert('加载默认用户失败', e.message, 'warning');
+        }
+    }
+    // 获取用户列表中存在的默认用户
+    function getValidSelectUser(allusers, selectusers) {
+        var ret = new Array();
+        if (selectusers == null)
+            return ret;
+        for (var i = 0; i < selectusers.length; i++) {
+            for (var j = 0; j < allusers.length; j++) {
+                if (selectusers[i] == allusers[j].UserId) {
+                    ret[ret.length] = selectusers[i];
+                    break;
+                }
+            }
+        }
+        return ret;
+    }
+    // 加载新流程
+    function loadNewProcess() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/workflow/getnewprocess?id=" + g_Activity.Activityid,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    try {
+                        if (data.length == 0) {
+                            $("#divnewprocess").hide();
+                            g_NoNewProcess = true;
+                        }
+                        else {
+                            $("#FixFieldNewProcess").combogrid({
+                                idField: "Processid",
+                                textField: "ProcessName",
+                                mode: "local",
+                                editable: false,
+                                panWidth: 150,
+                                multiple: true,
+                                columns: [[
+									{ field: 'Processid', checkbox: true },
+									{ field: 'ProcessName', title: '', width: 100 }]]
+                            });
+                            $("#FixFieldNewProcess").combogrid("grid").datagrid("loadData", data);
+                            if (g_Activity.Streamid != "") {
+                                var selectProcess = g_Activity.Streamid.split(",");
+                                $("#FixFieldNewProcess").combogrid('setValues', selectProcess);
+                            }
+                        }
+
+                    } catch (e) {
+                        $.messager.alert('新流程数据分析错误', e.message, 'warning');
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在加载新流程信息...");
+                }
+            });
+        } catch (e) {
+            $.messager.alert('加载新流程信息错误', e.message, 'warning');
+        }
+    }
+    function isCommentShow() {
+        var ret = false;
+        try {
+            ret = !g_Activity.HiddenOpinion;
+        } catch (err) {
+            $.messager.alert('判断审批意见是否显示异常', e.message, 'warning');
+        }
+        return ret;
+    }
+    function isNextStepShow() {
+        var ret = false;
+        try {
+            ret = !g_Activity.HiddenNextStep && !g_NoNextSteps;
+        } catch (err) {
+            $.messager.alert('判断下一步骤是否显示异常', e.message, 'warning');
+        }
+        return ret;
+    }
+    function isUserSelectShow() {
+        var ret = false;
+        try {
+            ret = isNextStepShow() && g_Activity.PermitSelectUser;
+
+        } catch (err) {
+            $.messager.alert('判断下一步用户是否显示异常', e.message, 'warning');
+        }
+        return ret;
+    }
+    function isNewProcessShow() {
+        var ret = false;
+        try {
+            ret = g_Activity.IsCreateStream && g_Activity.Streamid != "" && !g_Activity.StreamHidden && !g_NoNewProcess;
+        } catch (err) {
+            $.messager.alert('判断新建流程是否显示异常', e.message, 'warning');
+        }
+        return ret;
+    }
+    function backClick() {
+        window.location = g_ReturnUrl;
+    }
+    function saveClick() {
+        g_IsSubmit = 0;
+        doSaveForm();
+        //doSubmit();
+    }
+    function printClick() {
+        g_IsSubmit = 1;
+        doSaveForm();
+        //doSubmit();
+    }
+    function submitClick() {
+        g_IsSubmit = 1;
+        doSaveForm();
+        //doSubmit();
+    }
+    function getOtherParams(submit) {
+        var ret = "";
+        try {
+            ret += "FixFieldSerial=" + encodeURIComponent(g_Serial) +
+					"&FixFieldReturnUrl=" + encodeURIComponent(g_ReturnUrl) +
+					"&FixFieldActivityId=" + g_Activity.Activityid +
+					"&FixFieldProcessId=" + g_ProcessId +
+					"&FixFieldExtraInfo=" + encodeURIComponent(g_ExtraInfo) +
+					"&FixFieldExtraInfo2=" + encodeURIComponent(g_ExtraInfo2) +
+                    "&FixFieldExtraInfo3=" + encodeURIComponent(g_ExtraInfo3) +
+                    "&FixFieldExtraInfo4=" + encodeURIComponent(g_ExtraInfo4) +
+                    "&FixFieldExtraInfo5=" + encodeURIComponent(g_ExtraInfo5) +
+                    "&FixFieldExtraInfo6=" + encodeURIComponent(g_ExtraInfo6) +
+					"&FixFieldSubmit=" + submit +
+					"&FixFieldParentSerial=" + encodeURIComponent(g_ParentSerial) +
+					"&FixFieldIsCopy=" + g_IsCopy +
+					"&FixFieldParams=" + g_Params;
+
+            if (isCommentShow())
+                ret += "&FixFieldComment=" + encodeURIComponent($("#FixFieldComment").val());
+            if (isNextStepShow())
+                ret += "&FixFieldNextSteps=" + encodeURIComponent($("#FixFieldNextSteps").combobox("getValue"));
+            if (isUserSelectShow())
+                ret += "&FixFieldNextUsers=" + encodeURIComponent(arrayToStr($("#FixFieldNextUsers").combogrid("getValues"), ","));
+            if (isNewProcessShow())
+                ret += "&FixFieldNewProcess=" + encodeURIComponent(arrayToStr($("#FixFieldNewProcess").combogrid("getValues"), ","));
+        }
+        catch (e) {
+            $.messager.alert('提交获取额外参数错误', e, 'warning');
+        }
+        return ret;
+    }
+    // 实际提交
+    function doSubmit(entrydata) {
+        try {
+            var submit = g_IsSubmit;
+            var extraparams = getOtherParams(submit);
+            var extraparams2 = "FiexFieldDataEntryKey=" + encodeURIComponent(entrydata);
+            if (extraparams2 != "") {
+                if (extraparams != "")
+                    extraparams += "&";
+                extraparams += extraparams2;
+            }
+            if (extraparams != "")
+                extraparams = "?" + extraparams;
+
+            $.ajax({
+                type: "POST",
+                url: "/workflow/docreatework" + extraparams,
+                dataType: "json",
+                success: function (data) {
+                    var code = data.code;
+                    var msg = data.msg;
+                    if (code != 0) {
+                        $.messager.alert('提示', msg, 'info');
+                    }
+                    else {
+                        if (msg != "")
+                            g_ReturnUrl = msg;
+                        var str = g_IsSubmit == 1 ? "提交成功！" : "临时保存成功！";
+                        $.messager.alert('提示', str, 'info', function () {
+                            if (g_callbackjs != "" && !(g_callbackjs.indexOf('layer.closeAll()') > -1 && g_ReturnUrl != "")) {
+                                g_callbackjs = g_callbackjs.replace(new RegExp(/&quot;/g), '\"');
+                                g_callbackjs = g_callbackjs.replace(new RegExp(/&#39;/g), '\'');
+                                eval(g_callbackjs);
+                            }
+                            if (g_ReturnUrl != "")
+                                window.location = g_ReturnUrl;
+                        });
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("#divformmain").unmask();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("#divformmain").mask("正在保存...");
+                }
+            });
+
+        }
+        catch (err) {
+            $.messager.alert('提示', err, 'info');
+        }
+    }
+    function doSaveForm() {
+        try {
+            document.getElementById("workflow_startworkz_frm").contentWindow.btn_opt_TJfun();
+        }
+        catch (err) {
+            $.messager.alert('提示', err, 'info');
+        }
+    }
+    function viewProcess() {
+        try {
+            $("#divviewprocess").dialog({
+                title: g_ProcessInfo.ProcessName + "-预览",
+                collapsible: false,
+                minimizable: false,
+                maximizable: false,
+                resizable: false,
+                draggable: false,
+                closable: true,
+                modal: true,
+                fit: true,
+                cache: false,
+                content: "<iframe width='100%' height='99%' name='workflow_templates_frm' id='workflow_templates_frm' frameborder='0' scrolling='auto' src='/flow/FlowDesigner.html?edit=0&key=" + g_ProcessId + "'></iframe>",
+                buttons: [{
+                    text: "关闭",
+                    iconCls: "icon-cancel",
+                    id: "btn_cancelview",
+                    handler: function () {
+                        $("#divviewprocess").dialog("close");
+                    }
+                }]
+            });
+        } catch (e) {
+            $.messager.alert('预览异常', e.message, 'warning');
+        }
+    }
+    function nextstepClick(stepid) {
+        //alert(stepid);
+        try {
+            $("#FixFieldNextSteps").combobox("select", stepid);
+            if (isUserSelectShow()) {
+                $("#divviewnextusers").dialog({
+                    title: $("#FixFieldNextSteps").combobox("getText") + "-用户选择",
+                    collapsible: false,
+                    minimizable: false,
+                    maximizable: false,
+                    resizable: false,
+                    draggable: false,
+                    closable: true,
+                    modal: true,
+                    fit: false,
+                    cache: false,
+                    width: 500,
+                    height: 400,
+                    buttons: [{
+                        text: "确定",
+                        iconCls: "icon-ok",
+                        id: "btn_submituser",
+                        handler: function () {
+                            $("#divnextuser").dialog("close");
+                            g_IsSubmit = 1;
+                            doSaveForm();
+                        }
+                    }, {
+                        text: "关闭",
+                        iconCls: "icon-cancel",
+                        id: "btn_canceluser",
+                        handler: function () {
+                            $("#divnextuser").dialog("close");
+                        }
+                    }]
+                });
+            }
+            else {
+                g_IsSubmit = 1;
+                doSaveForm();
+            }
+        } catch (e) {
+            $.messager.alert('预览异常', e.message, 'warning');
+        }
+
+
+
+        //alert($("#FixFieldNextSteps").combobox("getValue"));
+    }
+</script>
+}
+<div id="divformmain"></div>
+<div id="divbuttons">
+     <table cellpadding="0" cellspacing="0" style="width:100%">   
+         <tr>  
+			 <td style="text-align:left">
+				<div id="divcomment" style="float:left;margin-left:5px;">
+					经办意见：<input id="FixFieldComment" name="FixFieldComment" style="width:100px;border: 1px solid #ddf; text-align:left;"/>
+					
+				</div>
+				<div id="divnextstep" style="float:left;margin-left:5px;">
+					提交下一步：<input id="FixFieldNextSteps" name="FixFieldNextSteps" style="width:150px" />
+				</div>
+				<div id="divnewprocess" style="float:left;margin-left:5px;">
+					创建新流程：<input id="FixFieldNewProcess" name="FixFieldNewProcess" style="width:150px" />
+				</div>
+			</td>
+			<td style="text-align:right">   
+                <div id="startwork_btn_td">
+				<a id="btnSubmit" class="easyui-linkbutton" iconCls="icon-ok" onclick="submitClick()">提交</a>   
+				<a id="btnPrint" class="easyui-linkbutton" iconCls="icon-print" onclick="printClick()">打印</a>   
+				<a id="btnSave" class="easyui-linkbutton" iconCls="icon-save" onclick="saveClick()">临时保存</a>  				
+				<a id="btnBack" class="easyui-linkbutton" iconCls="icon-back" onclick="backClick()">返回</a>   </div>
+             </td>   
+         </tr>   
+     </table>  
+ </div>
+<div id="divtoolbars">
+	<table cellpadding="0" cellspacing="0" style="width:100%"> 
+         <tr> 
+             <td style="width:120px"> 
+                  <a id="tbViewProcess" onclick="viewProcess()" class="easyui-linkbutton" iconCls="icon-flowdesign" plain="true">查看流程步骤</a> 
+             </td> 
+			 
+         </tr> 
+     </table> 
+</div>
+ <div id="divviewprocess"></div>
+<div id="divviewnextusers">
+<div id="divnextuser" style="float:left;margin-left:5px;">
+					下一步用户：<input id="FixFieldNextUsers" name="FixFieldNextUsers" style="width:150px" />
+</div>
+</div>

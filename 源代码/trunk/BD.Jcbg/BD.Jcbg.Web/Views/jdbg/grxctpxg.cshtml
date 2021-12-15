@@ -1,0 +1,191 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+<link href="@SkinManager.GetCssPath("/image_style.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetDatePath("/css/bootstrap.css")" rel="stylesheet" type="text/css" />
+<script src=@SkinManager.GetDatePath("/js/zebra_datepicker.js") type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+
+        $(function () {
+            try {
+                $('#dt1').Zebra_DatePicker({
+                    pair: $('#dt2'),
+                    days: ['日', '一', '二', '三', '四', '五', '六'],
+                    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    show_select_today: '今天',
+                    view: '天',
+                    lang_clear_date: '清除'
+                });
+
+                $('#dt2').Zebra_DatePicker({
+                    days: ['日', '一', '二', '三', '四', '五', '六'],
+                    months: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    show_select_today: '今天',
+                    view: '天',
+                    lang_clear_date: '清除'
+
+                });
+
+                getProblems(g_pagesize, g_pageindex, "", "", "", "");
+            } catch (err) {
+                alert(err);
+            }
+        });
+        var g_pageindex = 1;
+        var g_pagesize = 100;
+        var g_totalcount = -1;
+        var g_key = "";
+        var g_dt1 = "";
+        var g_dt2 = "";
+        function getProblems(pagesize, pageindex, key, gcbh, dt1, dt2) {
+            try {
+                if (g_totalcount > -1 && g_pageindex * g_pagesize > g_totalcount)
+                    return;
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/getselfproblems?pagesize=" + pagesize + "&pageindex=" + pageindex + "&key=" + encodeURIComponent(key) + "&gcbh=" + encodeURIComponent(gcbh) + "&dt1=" + dt1 + "&dt2=" + dt2,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code != 0) {
+                            if (data.msg != "") {
+                                alert(data.msg);
+                            }
+                        } else {
+                            g_totalcount = data.totalcount;
+                            $.each(data.datas, function (index, obj) {
+                                appendRow(obj);
+                            });
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (err) {
+                alert(err);
+            }
+        }
+        function appendRow(rowData) {
+            var str = "";
+            try {
+                var t1 = rowData.gcmc + " " + rowData.title;
+                var t4 = rowData.comment;
+                var t5 = rowData.time;
+                str += "<div class='row image_row'>";
+                str += "<div>";
+                str += "<div class='row image_row1'><div>" + t1 + "</div></div>";
+                str += "<div class='row image_row4'><div>" + t4 + "</div></div>";
+                str += "<div class='row image_row2'><div>" + getImageStr(rowData.imgids) + "</div></div>";
+                str += "<div class='row image_row3'><div>" + getVoiceStr(rowData.voiceids) + "</div></div>";                
+                str += "<div class='row image_row5'><div>" + t5 + "</div></div>";
+                str += "</div>";
+                str += "</div>";
+                $("#div_main").append(str);
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+        function getImageStr(imgids) {
+            var str = "";
+            try {
+                var arr = imgids.split(',');
+                $.each(arr, function (index, obj) {
+                    if (obj == "")
+                        return true;
+                    var arr1 = obj.split("_");
+                    str += "<a href='/jdbg/p-b" + arr1[0] + ".jpg' target='_blank'><img src='/jdbg/p-s" + arr1[0] + ".jpg' class='img-thumbnail'></a>&nbsp;";
+                });
+            } catch (err) {
+                alert(err);
+            }
+            return str;
+        }
+        function getVoiceStr(voice) {
+            var str = "";
+            try {
+                var arr = voice.split(',');
+                $.each(arr, function (index, obj) {
+                    if (obj == "")
+                        return true;
+                    str += "<span onclick='showVoice(" + obj + ")' class='cursor_hand'><i class=\"fa fa-file-audio-o\" aria-hidden=\"true\"></i></span>&nbsp;";
+                    //str += "<audio src='/jdbg/GetProblemVoice?id=" + obj + "' preload='0' />";
+                });
+            } catch (err) {
+                alert(err);
+            }
+            return str;
+        }
+        function doSearch() {
+            try{
+                g_pageindex = 1;
+                g_totalcount = -1;
+                g_key = $("#key").val();
+                g_dt1 = $("#dt1").val();
+                g_dt2 = $("#dt2").val();
+                $("#div_main").html("");
+                getProblems(g_pagesize, g_pageindex, g_key, "", g_dt1, g_dt2);
+            }catch (err) {
+                alert(err);
+            }
+        }
+        function showVoice(id) {
+            try{
+                parent.layer.open({
+                    type: 2,
+                    title: '音频播放',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['550px', '120px'],
+                    content: "/jdbg/player?filepath=" + encodeURIComponent("/jdbg/p-"+id+".mp3"),
+                    //content: "/jdbg/player",
+                    end: function () {
+                    }
+                });
+            } catch (err) {
+                alert(err);
+            }
+        }
+        function nextPage() {
+            try{
+                g_pageindex++;
+                getProblems(g_pagesize, g_pageindex, g_key, "", g_dt1, g_dt2);
+            } catch (err) {
+
+            }
+        }
+    </script>
+}
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">我的现场图片</a>
+        </div>
+        <div>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="关键字" id="key">                    
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="开始日期" id="dt1">                    
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="结束日期" id="dt2">
+                </div>
+                <input type="button" class="btn btn-default" value="查找" onclick="doSearch();"/>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container" id="div_main">
+</div>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="navbar-inner navbar-content-center" style="padding-top:10px;">
+        <center> <i class="fa fa-download cursor_hand" aria-hidden="true" style="font-size:22px;" onclick="nextPage();"></i></center>
+    </div>
+</nav>

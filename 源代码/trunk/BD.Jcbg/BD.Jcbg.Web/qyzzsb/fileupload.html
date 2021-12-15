@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/Huploadify/Huploadify.css">
+    <title>sxjz</title>
+    <style type="text/css">
+    .uploadify .uploadify-queue {
+        box-sizing: border-box;
+        position: fixed;
+        left: 46%;
+        width: 220px;
+        padding: 20px 10px 0 10px;
+        height: 100px;
+        top: 40%;
+        background: lightgray;
+        display: none;
+    }
+
+    .uploadify .uploadify-progress {
+        width: 200px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
+    .uploadify-queue-item {
+        text-align: center;
+    }
+
+    .down-warp {
+        display: inline-block;
+        margin-right: 20px;
+    }
+
+    .downLoad-link {
+        display: inline-block;
+    }
+
+    .downLoad-link::after {
+        content: "|";
+        padding: 0 10px;
+    }
+
+    .del {
+        color: red;
+    }
+
+    .save-boottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        left: 0px;
+        background: rgba(55, 55, 55, 0.5);
+        height: 60px;
+    }
+
+    .pt-down {
+        border-radius: 12px;
+        display: inline-block;
+        height: 26px;
+        line-height: 26px;
+        margin: 12px;
+    }
+
+    .audit-val {
+        margin-top: 5px;
+        padding-top: 5px;
+        max-width: 600px;
+        /*display: none;*/
+    }
+
+    .edit-tppe-4,
+    .edit-tppe-5 {
+        display: none;
+    }
+
+    .must {
+        color: #FF5722;
+        padding: 0 3px;
+        font-size: 20px;
+    }
+
+    .del {
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;padding-bottom: 80px;box-sizing: border-box;">
+        <table class="layui-table  layui-form" style="width: 90%;margin:0 5%;">
+            <thead id="thead">
+                <tr>
+                    <th style="width: 60px;">序号</th>
+                    <th>类型</th>
+                    <th style="min-width: 200px;max-width: 45%;">已上传</th>
+                    <th class="edit" style="width: 250px;">操作</th>
+                    <th class="edit-tppe-4" style="width: 250px;">行政主管部门审核</th>
+                    <th class="edit-tppe-5" style="width: 250px;">建设局初审</th>
+                </tr>
+            </thead>
+            <tbody class="tbody-list" id="GetSBZL">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="save-boottom" style="text-align: center;">
+        <!-- <button class="layui-btn layui-btn-normal" id="" style="margin: 10px 50px 0 0 ;">从平台获取</button> -->
+        <button class="layui-btn " id="save" style="margin-top: 10px;display: none;">保存</button>
+
+        <!-- <button class="layui-btn layui-btn-normal edit-tppe-4" id="back" style="margin-top: 10px;">退回</button>
+        <button class="layui-btn edit-tppe-4" id="pass" style="margin: 10px 0 0 50px;">审核通过</button> -->
+    </div>
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/Huploadify/jquery.Huploadify.js"></script>
+
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+
+    <script type="text/javascript">
+    var fileList = [];
+    var uploadList = [];
+
+    var params = getParams(); //id=7EE16A28-BD89-4D97-987E-2288673B0693
+    var editType = params.editType;
+
+
+    var uploadurl = "/dwgxsxjzy/DoUploadZZSBZL";
+    var downLoad = '/DataInput/FileService?method=DownloadFile&fileid=';
+
+    if (editType == 1 || editType == 2) {
+        $("#save").show();
+    }
+
+    if (editType == 3) { //3：查看
+        $("#thead").find(".edit-tppe-4").show();
+        $("#thead").find(".edit-tppe-5").show();
+        $("#thead").find(".edit").hide();
+        $(".save-boottom").hide();
+    }
+    // if (editType == 4) {
+    //     $("#thead").find(".edit").hide();
+    //     $("#thead").find(".edit-tppe-4").show();
+    //     $(".save-boottom").find(".edit-tppe-4").show()
+    //     // $(".save-boottom").hide();
+    // }
+    // if (editType == 5) {
+    //     $("#thead").find(".edit").hide();
+    //     $("#thead").find(".edit-tppe-4").show();
+    //     $("#thead").find(".edit-tppe-5").show();
+    //     $(".save-boottom").find(".edit-tppe-4").show()
+    //     $("#back").hide();
+    //     // $(".save-boottom").hide();
+    // }
+
+    ajaxTpl("/dwgxsxjzy/GetSBZL?zzsblxbh=" + params.zzsblxbh, "", function (res) {
+        if (res.code == 0) {
+            var tmp, str = '';
+            fileList = res.data;
+            var j = 1;
+            for (var i = 0, len = fileList.length; i < len; i++) {
+                str += "<tr value='" + fileList[i].cllxbh + "'>";
+                str += "<td>" + (j++) + "</td><td>"
+
+                if (fileList[i].isrequired) {
+                    str += "<span class='must'>*</span>" + fileList[i].clmc + "</td>";
+                } else {
+                    str += fileList[i].clmc + "</td>";
+                }
+                str += "<td class='afterUpload'></td>";
+                str += setEditTypeIpt(editType, i);
+                // if (editType == 1 || editType == 2) { // 1: 新增, 2：修改
+                //     str += "<td><div class='uploadify' style='display:inline-block'></div><button class='layui-btn layui-btn-normal pt-down' >从平台获取</button></td>";
+                // }
+                // if (editType == 4) { //行政主管部门审核
+                //     str += "<td class='edit-tppe-4' style='display:table-cell'><div class='audit-warp'><input type='checkbox' class='ipt-check' name='audit" + i + "' title='通过' lay-skin='primary'><textarea class='audit-val layui-input' placeholder='请输入审批意见'></textarea></div></td>";
+                // }
+
+                // if (editType == 3 || editType == 5) { //建设局初审
+                //     str += "<td class='edit-tppe-4' style='display:table-cell'><div class='audit-warp'><input type='checkbox' class='ipt-check' disabled='true' readonly='true' name='audit" + i + "' title='通过' lay-skin='primary'><textarea class='audit-val layui-input' readonly='true' placeholder='请输入审批意见'></textarea></div></td>";
+                //     str += "<td class='edit-tppe-5' style='display:table-cell'><div class='audit-warp'><input type='checkbox' class='ipt-check' disabled='true' name='audit" + i + "' title='达标' lay-skin='primary'><textarea class='audit-val layui-input' readonly='true'placeholder='请输入审批意见'></textarea></div></td>";
+                // }
+                str += "</tr>";
+            }
+            $("#GetSBZL").html(str);
+            afterInit2();
+
+            if (editType == 1 || editType == 2) {
+                for (var i = 0, len = fileList.length; i < len; i++) {
+                    uploadInit(i);
+                }
+            }
+        }
+    });
+
+    function setEditTypeIpt(editType, i) {
+        var str = '';
+        if (editType == 1 || editType == 2) { // 1: 新增, 2：修改
+            str += "<td><div class='uploadify' style='display:inline-block'></div><button class='layui-btn layui-btn-normal pt-down' >从平台获取</button></td>";
+        }
+        if (editType == 3) { //查看
+            str += "<td class='edit-tppe-4' style='display:table-cell'><div class='audit-warp'><div class='radio-warp'><input type='radio' disabled='true' class='ipt-check' name='audit-4-" + i + "' title='通过' lay-skin='primary' value='1'><input type='radio' disabled='true' class='ipt-check' name='audit-4-" + i + "' title='不通过' lay-skin='primary' value='0'></div><textarea class='audit-val layui-input' placeholder='请输入审批意见' readonly='true'></textarea></div></td>";
+            str += "<td class='edit-tppe-5' style='display:table-cell'><div class='audit-warp'><div class='radio-warp'><input type='radio' disabled='true' class='ipt-check' name='audit-5-" + i + "' title='通过' lay-skin='primary' value='1'><input type='radio' disabled='true' class='ipt-check' name='audit-5-" + i + "' title='不通过' lay-skin='primary' value='0'></div><textarea class='audit-val layui-input' placeholder='请输入审批意见' readonly='true'></textarea></div></td>";
+        }
+        return str;
+    }
+
+    function getDtl2() {
+        ajaxTpl("/dwgxsxjzy/GetZZSBSCZL", {
+            id: params.id
+        }, function (data) {
+            if (data.code == 0) {
+                var tmp, m, n, idx, ary, ipt;
+                var sbzl = $("#GetSBZL");
+                for (var i = 0, len = data.data.length; i < len; i++) {
+                    tmp = data.data[i];
+                    if (tmp.itemname && tmp.itemname.length && tmp.itemname.indexOf('_fj') > -1) {
+                        m = tmp.itemname.split("_");
+                        key = m.length > 2 ? m[1] : "";
+
+                        if (key && tmp.itemvalue && tmp.itemvalue.length) { //已上传
+                            m = tmp.itemvalue.split('|');
+                            ary = [];
+                            for (var j = 0, len2 = m.length; j < len2; j++) {
+                                n = m[j].split(",");
+                                ary.push({
+                                    id: n[0],
+                                    name: n[1]
+                                });
+                            }
+                            idx = sbzl.find("tr[value='" + key + "']").index();
+                            uploadList[idx] = ary;
+                        }
+                    }
+
+                    // 行政主管部门审核
+                    if (tmp.itemname && tmp.itemname.length && tmp.itemname.indexOf('_zgbmsh') > -1) {
+
+                        var m = tmp.itemname.split("_");
+                        var n = m.length > 2 ? m[1] : "";
+                        var ipt = sbzl.find("tr[value='" + n + "']").find(".edit-tppe-4");
+
+                        setValue(ipt, tmp.itemname, tmp.itemvalue);
+                    }
+                    if (tmp.itemname && tmp.itemname.length && tmp.itemname.indexOf('_jsjcs') > -1) {
+                        var m = tmp.itemname.split("_");
+                        var n = m.length > 2 ? m[1] : "";
+                        var ipt = sbzl.find("tr[value='" + n + "']").find(".edit-tppe-5");
+
+                        setValue(ipt, tmp.itemname, tmp.itemvalue);
+                    }
+                }
+                // 初始化下载按钮
+                initUploadListView();
+            }
+        });
+    }
+
+    function setValue(doc, key, value) {
+
+        if (key.indexOf('zt') > -1) {
+            var ipt;
+            if (value == 1 || value == 0) { //通过状态
+                ipt = doc.find(".ipt-check[value=" + value + "]");
+            }
+
+            if (ipt.attr("disabled")) {
+                //ipt.next().removeAttr('class').addClass('layui-form-checkbox layui-form-checked');
+                ipt.next().removeAttr('class').addClass('layui-unselect layui-form-radio layui-form-radioed').find("i").removeAttr('class').addClass('layui-anim layui-icon layui-anim-scaleSpring').html("");
+            } else {
+                ipt.next().click();
+            }
+
+        } else { //意见
+            var ipt = doc.find(".audit-val");
+            ipt.val(value);
+        }
+    }
+
+    // function setValue(doc, key, value) {
+    //     if (key.indexOf('zt') > -1) {
+    //         var ipt = doc.find(".ipt-check");
+    //         if (value == 1) { //通过状态
+    //             if (ipt.attr("disabled")) {
+    //                 ipt.next().removeAttr('class').addClass('layui-form-checkbox layui-form-checked');
+    //                 // ipt.parents(".audit-warp").find('.audit-val').hide();
+    //             } else {
+    //                 ipt.next().click();
+    //             }
+    //         }
+    //     } else { //意见
+    //         var ipt = doc.find(".audit-val");
+    //         ipt.val(value);
+    //     }
+    // }
+
+    function afterInit2() {
+        layui.use('form', function () {
+            var form = layui.form;
+            form.render("checkbox");
+            getDtl2();
+
+            // form.on('checkbox', function (data) {
+            // if (data.elem.checked) {
+            //     $(data.elem).parents('.audit-warp').find('.audit-val').hide();
+            // } else {
+            //     $(data.elem).parents('.audit-warp').find('.audit-val').show();
+            // }
+            // });
+        });
+    }
+
+    // $("#back").click(function () {
+    //     if (auditCheck("back")) {
+    //         var obj = getZzsbzgbm();
+    //         obj.zgbmshzt = 0; //0,退回  1,通过
+    //         ajaxTpl("/dwgxsxjzy/SaveZZSBZGBMSHYJ", obj, function (res) {
+    //             if (res.code == 0) {
+    //                 try {
+    //                     alert("保存成功");
+    //                     parent.layer.closeAll();
+    //                 } catch (e) {
+    //                 }
+    //             } else {
+    //                 alert(res.msg)
+    //             }
+    //         });
+    //     }
+    // });
+
+    // $("#pass").click(function () {
+    //     if (auditCheck("pass")) {
+    //         var obj = getZzsbzgbm();
+    //         obj.zgbmshzt = 1; //0,退回  1,通过
+    //         ajaxTpl("/dwgxsxjzy/SaveZZSBZGBMSHYJ", obj, function (res) {
+    //             if (res.code == 0) {
+    //                 try {
+    //                     alert("保存成功");
+    //                     parent.layer.closeAll();
+    //                 } catch (e) {
+
+    //                 }
+    //             } else {
+    //                 alert(res.msg)
+    //             }
+    //         });
+    //     }
+    // });
+
+    function getZzsbzgbm() {
+        var tmp, obj = {},
+            key, bh;
+        var child;
+        if (editType == 4) {
+            child = $("#GetSBZL").find(".edit-tppe-4 .audit-warp");
+        } else {
+            child = $("#GetSBZL").find(".edit-tppe-5 .audit-warp");
+        }
+
+        for (var i = 0, len = child.length; i < len; i++) {
+            tmp = child.eq(i).find(".ipt-check");
+
+            bh = tmp.parents("tr").attr("value");
+
+            // if () {
+            //     obj["zl_" + bh + "_zgbmshyj"] = "";
+            // }else{
+            //     obj["zl_" + bh + "_zgbmshzt"] = 0;
+            // }
+            if (editType == 4) {
+                obj["zl_" + bh + "_zgbmshzt"] = tmp.is(":checked") ? 1 : 0;
+                obj["zl_" + bh + "_zgbmshyj"] = tmp.parents("td").find(".audit-val").val() || "";
+            } else {
+                obj["zl_" + bh + "_jsjcszt"] = tmp.is(":checked") ? 1 : 0;
+                obj["zl_" + bh + "_jsjcsyj"] = tmp.parents("td").find(".audit-val").val() || "";
+            }
+
+            obj.id = params.id;
+            // obj.zgbmshzt = 1; //0,退回  1,通过
+        }
+        return obj;
+    }
+
+    function allCheck() {
+        $(".audit-warp").find(".ipt-check").not(":checked").next().click();
+    }
+
+    function auditCheck(type) {
+        var notCheck
+        if (editType == 4) {
+            notCheck = $("#GetSBZL").find(".edit-tppe-4 .audit-warp .ipt-check").not(":checked");
+        } else {
+            notCheck = $("#GetSBZL").find(".edit-tppe-5 .audit-warp .ipt-check").not(":checked");
+        }
+
+        // $("#GetSBZL").find(".audit-warp").find(".ipt-check").not(":checked");
+        // if (type == 'pass') {
+        //     if (notCheck.length != 0) {
+        //         var idx = parseInt(notCheck.eq(0).parents("tr").index()) + 1;
+        //         alert("请审核序号" + idx + "的上传文件!");
+        //         return false;
+        //     }
+        // }
+
+        var audit = notCheck.parents(".audit-warp").find(".audit-val");
+        var tmp;
+        for (var i = 0, len = audit.length; i < len; i++) {
+            tmp = audit.eq(i);
+            if (tmp.val().length == 0) {
+
+                var idx = parseInt(tmp.parents("tr").index()) + 1;
+                alert("请输入序号" + idx + "的审批意见");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function initUploadListView() {
+        var tmp;
+        for (var i = 0, len = uploadList.length; i < len; i++) {
+            tmp = uploadList[i];
+            chgUpload(i);
+        }
+    }
+
+    function uploadInit(idx) {
+        $(".uploadify").eq(idx).Huploadify({
+            auto: true,
+            fileTypeExts: '*.*',
+            multi: false,
+            fileObjName: 'Filedata',
+            fileSizeLimit: 2048, //允许上传的文件大小，单位KB
+            // removeTimeout: 0,
+            showUploadedPercent: false,
+            buttonText: '上传',
+            uploader: uploadurl,
+            onUploadSuccess: function (file, data) {
+                var res = JSON.parse(data);
+                if (res.code != 0) {
+                    alert(val.msg);
+                    return;
+                }
+                chgUpload(idx, res.data, 'add');
+
+            },
+            onUploadError: function (file, response) {
+                alert("上传失败!");
+            },
+            onUploadStart: null, //上传开始时的动作
+            onUploadComplete: null, //上传完成的动作
+            onUploadError: null, //上传失败的动作
+        });
+    }
+
+    function chgUpload(idx, data, type) {
+        if (type == 'add') {
+            if (uploadList[idx] && uploadList[idx].length) {
+                uploadList[idx].push(data);
+            } else {
+                uploadList[idx] = [data]
+            }
+        }
+        var str = "";
+        var tmp;
+        if (uploadList[idx] && uploadList[idx].length) {
+            for (var i = 0, len = uploadList[idx].length; i < len; i++) {
+                tmp = uploadList[idx][i];
+                str += "<div class='down-warp'><a class='downLoad-link' href='" + downLoad + tmp.id + "'>" + tmp.name + "</a>";
+                if (editType <= 2) {
+                    str += "<span class='del' idx='" + idx + "' num='" + i + "'>删除</span></div>";
+                }
+            }
+        }
+        $("#GetSBZL").children().eq(idx).find(".afterUpload").html(str);
+    }
+
+    $("#GetSBZL").on("click", ".del", function () {
+        var item = $(this);
+        var idx = item.attr("idx");
+        var num = item.attr("num");
+        item.parents(".down-warp").remove();
+
+        uploadList[idx].splice(num, 1);
+    });
+
+    $("#save").click(function (event) {
+        var tmp, obj = {},
+            key;
+        for (var i = 0, len = fileList.length; i < len; i++) {
+
+            tmp = fileList[i];
+            key = 'zl_' + tmp.cllxbh + "_fj";
+            // id,name|id,name
+            obj[key] = getVal(uploadList[i])
+            if (tmp.isrequired && obj[key] == "") {
+                alert("请上传序号为" + (i + 1) + "的文件");
+                return false;
+            }
+        }
+
+        obj.id = params.id;
+        ajaxTpl("/dwgxsxjzy/SaveZZSBZL", obj, function (res) {
+            if (res.code == 0) {
+                try {
+                    alert("保存成功");
+                    parent.layer.closeAll();
+                } catch (e) {
+
+                }
+            } else {
+                alert(res.msg)
+            }
+        });
+    });
+
+    function getVal(val) {
+        if (val && val.length) {
+            var tmp, ary = [];
+            for (var i = 0, len = val.length; i < len; i++) {
+                tmp = val[i];
+                ary.push(tmp.id + "," + tmp.name);
+            }
+            return ary.join("|");
+        }
+        return "";
+    }
+
+    // $("#GetSBZL").on("click", "span", function () {
+    //     var i = $(this).parent().index();
+    //     console.log(list[i]);
+    // })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1CD8796F-DE8B-4075-AC63-0FA3088A31F5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BD.Jcbg.IDao</RootNamespace>
+    <AssemblyName>BD.Jcbg.IDao</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\引用库\MySql\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="IMySqlDao.cs" />
+    <Compile Include="ISysLogPicDao.cs" />
+    <Compile Include="IAlertDao.cs" />
+    <Compile Include="IBanHeZhanSectionDao.cs" />
+    <Compile Include="IBaseDao.cs" />
+    <Compile Include="IBaseViewDao.cs" />
+    <Compile Include="ICommonDao.cs" />
+    <Compile Include="ICompanyAnnounceDao.cs" />
+    <Compile Include="ICompanyChangeDao.cs" />
+    <Compile Include="ICompanyChangeItemDao.cs" />
+    <Compile Include="ICompanyChangeTotalDao.cs" />
+    <Compile Include="ICompanyChangeTotalItemDao.cs" />
+    <Compile Include="ICompanyFileStorageDao.cs" />
+    <Compile Include="ICompanyReaderDao.cs" />
+    <Compile Include="IDcLogRedoDao.cs" />
+    <Compile Include="IGclrWxyFileDao.cs" />
+    <Compile Include="IHelpDesktopItemDao.cs" />
+    <Compile Include="IKqUserSignDao.cs" />
+    <Compile Include="IInfoGzgzDao.cs" />
+    <Compile Include="IInfoScheduleDao.cs" />
+    <Compile Include="IInfoWgryHistoryDao.cs" />
+    <Compile Include="IKqjUserDayLogDao.cs" />
+    <Compile Include="IKqjUserDayLogDetailDao.cs" />
+    <Compile Include="IKqjUserLogDao.cs" />
+    <Compile Include="IKqjUserMonthLogDao.cs" />
+    <Compile Include="IMessageActDao.cs" />
+    <Compile Include="IMessageInfoListDao.cs" />
+    <Compile Include="IMessageReceiveDao.cs" />
+    <Compile Include="INewsArtcleDao.cs" />
+    <Compile Include="INewsAttachDao.cs" />
+    <Compile Include="INewsCategoryDao.cs" />
+    <Compile Include="INewsMenuDao.cs" />
+    <Compile Include="IPrmDywjDao.cs" />
+    <Compile Include="IPrmWjDao.cs" />
+    <Compile Include="IReportWWGZDao.cs" />
+    <Compile Include="IReportWWGZFileDao.cs" />
+    <Compile Include="ISelfDesktopItemDao.cs" />
+    <Compile Include="ISysFileImageDao.cs" />
+    <Compile Include="ISysjBakDao.cs" />
+    <Compile Include="ISysjsdDao.cs" />
+    <Compile Include="ISysSessionDao.cs" />
+    <Compile Include="ISysycdyfieldDao.cs" />
+    <Compile Include="ISysycdyparamDao.cs" />
+    <Compile Include="ISysYcdyStationDao.cs" />
+    <Compile Include="ISysycdytableDao.cs" />
+    <Compile Include="ISysycdytablerelationDao.cs" />
+    <Compile Include="ISysycdyurlDao.cs" />
+    <Compile Include="IUserMailDao.cs" />
+    <Compile Include="IUserMailFolderDao.cs" />
+    <Compile Include="IUserSettingDao.cs" />
+    <Compile Include="IUserShareFileDao.cs" />
+    <Compile Include="IUserShareFileFolderDao.cs" />
+    <Compile Include="IViewSelfDesktopItemDao.cs" />
+    <Compile Include="IXcsjDao.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IDcLogDao.cs" />
+    <Compile Include="IBanHeZhanDataDao.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BD.Jcbg.DataModal\BD.Jcbg.DataModal.csproj">
+      <Project>{5E620B26-8ECC-4BFC-92A6-4C43B6237ED7}</Project>
+      <Name>BD.Jcbg.DataModal</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

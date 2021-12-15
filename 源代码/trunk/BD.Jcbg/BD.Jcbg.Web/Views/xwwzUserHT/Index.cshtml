@@ -1,0 +1,262 @@
+﻿@using BD.Jcbg.Web.xwwz;
+@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <!--不支持IE兼容模式-->
+    <meta http-equiv="x-ua-compatible" content="IE=9,10,11">
+    <title>@messfunc.GetValue("admintitle")</title>
+    <link href="@SkinManager.GetXwwzHTPath("css/users.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetXwwzHTPath("easyui/themes/default/easyui.css")"  rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetXwwzHTPath("easyui/themes/icon.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetXwwzHTPath("js/jquery-1.8.0.min.js")"   type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/jquery.easyui.min.js")"   type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/easyui-lang-zh_CN.js")"  type="text/javascript"></script>
+    <link href="@SkinManager.GetXwwzHTPath("css/jquery.loadmask.css")"  rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetXwwzHTPath("js/jquery.loadmask.min.js")"  type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/jquery-base64.js")"  type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/fileupload.js")"   type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/user.js")"   type="text/javascript"></script>
+
+
+
+
+    <script src="@SkinManager.GetXwwzHTPath("workflow/js/formbase.js")"   type="text/javascript"></script>
+</head>
+<body>
+
+    <script type="text/javascript">
+        var g_hosteduser = new Array();
+        var g_hosting = "";
+        $(function () {
+            try {
+                $('body').layout();
+                $("#tabfrm").tabs({
+                    fit: true,
+                    border: false,
+                    plain: true
+                });
+                setTime();
+                setInterval(setTime, 1000);
+                loadMenu();
+               // loadPage("桌面", "/Home/DeskTop", false);
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        });
+
+        function setTime() {
+            try {
+                var now = (new Date()).toLocaleString();
+                $('#current-time').text(now);
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+
+        function loadMenu() {
+            try {
+                $.ajax({
+                    type: "GET",
+                    url: "/xwwzUserHT/GetMenus",
+                    cache: false,
+                    dataType: "json",
+                    success: function (data) {
+                        loadMenuDeal(data);
+                    },
+                    complete: function () {
+                        $("#west").unmask();
+                    },
+                    beforeSend: function () {
+                        $("#west").mask("加载中...");
+                    }
+                });
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+
+        function loadMenuDeal(data) {
+            try {
+                var groupname = "";
+                var defUrl = "";
+                for (var i = 0; i < data.length; i++) {
+                    var val = data[i];
+                    if (val.IsGroup) {
+                        groupname = val.MenuCode;
+                        var divstr = "<div id='" + groupname + "' title='" + val.MenuName + "'";
+                        divstr += " data-options=\"iconCls:'mfolder'\"";
+                        divstr += " class='menu_pan'></div>";
+                        $("#menus").append(divstr);
+                    } else {
+                        $("#" + groupname).append("<span class='menu_item' ><a href='javascript:loadPage(\"" + val.MenuName + "\",\"" + val.MenuUrl + "\", true)'><img src='/skins/default/images/arr_right.png' border='0' alt='' align='middle'/>&nbsp;&nbsp;" + val.MenuName + "</a></span>");
+                        if (defUrl == "") {
+                            defUrl = val.MenuUrl;
+                        }
+                    }
+                }
+                $("#menus").accordion({
+                    animate: true
+                });
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+
+        function loadPage(title, url, closeable) {
+            try {
+                if (!$('#tabfrm').tabs('exists', title)) {
+                    $('#tabfrm').tabs('add', {
+                        title: title,
+                        content: "<iframe scrolling='yes' frameborder='0' src='" + url + "' style='width:100%;height:99%;'></iframe>",
+                        id: title,
+                        closable: closeable
+                    });
+                } else {
+                    $('#tabfrm').tabs('select', title);
+                    var tab = $('#tabfrm').tabs('getSelected');
+                    $("#tabfrm").tabs('update', {
+                        tab: tab,
+                        options: {
+                            title: title,
+                            content: "<iframe scrolling='yes' id='content_" + title + "' frameborder='0' src='" + url + "' style='width:100%;height:99%;'></iframe>",
+                            id: title,
+                            closable: closeable,
+                            selected: true
+                        }
+                    });
+                }
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+        function tabsClose() {
+            var tab = $('#tabfrm').tabs('getSelected');//获取当前选中tabs
+            var index = $('#tabfrm').tabs('getTabIndex', tab);//获取当前选中tabs的index
+            $('#tabfrm').tabs('close', index);//关闭对应index的tabs
+        }
+        function exit() {
+            try {
+                $.ajax({
+                    type: "get",
+                    url: "/xwwzUserHT/LoginOut",
+                    dataType: "json",
+                    cache: false,
+                    success: function (data) {
+                        if (data.Code == "1")
+                            window.location = "/xwwzUserHT/Login";
+                        else
+                            $.messager.alert('提示', data.Msg, 'info');
+                    },
+                    complete: function () {
+                        $("body").unmask();
+                    },
+                    beforeSend: function () {
+                        $("body").mask("正在退出系统...");
+                    }
+                });
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+
+        function collapseTop() {
+            try {
+                $("body").layout('collapse', 'north');
+
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+
+        function loadDesktop() {
+            try {
+                loadPage("桌面", "/Home/DeskTop", false);
+
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+
+        function loadChangePass() {
+            try {
+                loadPage("修改密码", "/xwwzUserHT/ChangePsw", true);
+
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+
+        function closeAll() {
+            try {
+                var tabs = $('#tabfrm').tabs("tabs");
+                for (var i = tabs.length - 1; i >= 0; i--) {
+                    var tab = tabs[i];
+                    var title = tab.panel('options').tab.text();
+                    if (title != "桌面")
+                        $('#tabfrm').tabs("close", title);
+                }
+
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        }
+    </script>
+    <div data-options="region:'north',title:'',split:false,border:false" style="height: 50px;">
+        <div class="main_top">
+            <table width="100%" height="100%">
+                <tr>
+                    <td width="20px"></td>
+                    <td style="text-align: left; vertical-align: middle;" class="font_top1"></td>
+                    <td style="text-align: right; vertical-align: middle;" class="font_top2">
+                        欢迎您，@ViewData["username"]<br />
+                        <div id="current-time">
+                            &nbsp;
+                        </div>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;" width="30px">
+                        <a id="btnExpand" onclick="collapseTop();" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-up',plain:true"
+                           title="折叠">
+                        </a>
+                    </td>
+                    <td width="10px"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div data-options="region:'center',title:'',split:false,border:false">
+        <div class="easyui-layout" data-options="fit:true">
+            <div data-options="region:'north',title:'',split:false,border:false" style="height: 32px;">
+                <div data-options="fit:true" id="toolbar" class="toolbar">
+                    <table width="100%" height="100%">
+                        <tr>
+                            <td style="text-align: right;">
+                                <a style="display:none;" href="javascript:loadDesktop();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-toolbar-desktop'">
+                                    显示桌面
+                                </a> <a href="javascript:loadChangePass();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-changepass'">
+                                    修改密码
+                                </a> <a href="javascript:closeAll();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-desktop'">
+                                    关闭所有页面
+                                </a> <a href="javascript:exit();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-exit'">
+                                    退出系统
+                                 </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div data-options="region:'west',title:'导航菜单',split:false,border:true" style="width: 210px;">
+                <div id="menus" fit="true" border="false">
+                </div>
+            </div>
+            <div data-options="region:'center',title:'',border:false">
+                <div id="tabfrm">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myWindow"></div>
+</body>
+</html>

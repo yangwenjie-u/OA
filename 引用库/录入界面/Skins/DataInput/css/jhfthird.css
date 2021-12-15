@@ -1,0 +1,139 @@
+#contentDiv{
+    background: white;
+}
+#mainT1 {
+    display: inline-block;
+    width: 30%;
+    vertical-align: top;
+    border: 1px solid #e5e5e5;
+    background: white;
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+}
+
+.main-t1-title {
+    display: inline-block;
+    vertical-align: top;
+    padding: 3px;
+    width: 100%;
+    font-weight: 600;
+    margin: 0px;
+    padding: 0px;
+    font-size: 16px;
+    line-height: 22px;
+    padding: 8px 10%;
+
+}
+
+#tabsContainerWarp {
+    display: inline-block;
+    width: 70%;
+    vertical-align: top;
+}
+
+
+#tabs-containerhead {
+    background: #20A7F8;
+    display: inline-block;
+    vertical-align: top;
+    padding: 3px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: auto;
+
+}
+
+#tabs-containerhead span {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#tabs-containerhead span.active {
+    font-size: 16px;
+    line-height: 22px;
+    color: white;
+}
+
+#mainT1 .stj_lr_tab {
+    display: inline-block;
+}
+
+#mainT1 .stj_lr_tab td {
+    display: inline-block;
+    width: 100%;
+
+}
+
+#tabsContainerWarp>.tabs-container {
+    display: inline-block;
+    width: 100%;
+    display: none;
+    margin-top: 0px;
+    background: white;
+}
+
+
+
+#form1 {
+    padding: 0px;
+}
+
+.wrapper-content {
+    padding: 0px;
+}
+
+.stj_nav>li.active {
+    background-color: white;
+}
+
+.stj_nav_2>li.active {
+    background-color: #F3F3F5;
+}
+
+#tabsContainerWarp .btn-group{
+	
+	float: right;
+}
+#tabsContainerWarp .btn-group .btn-default{
+	margin-right: 10px;
+	height: 38px;
+    border-radius: 5px;
+    background: #bababa;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#mainT1 td .col-sm-3.control-label {
+    width: 30%;
+}
+
+/*#mainT1  .col-sm-9{
+	width: 68%;
+}
+#mainT1 .col-sm-9.stj_input .tonghang_text_input{
+	width: 80%;
+}
+#mainT1 .col-sm-9.stj_input .mustinContent{
+	width: 80%;
+}*/

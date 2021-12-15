@@ -1,0 +1,1644 @@
+﻿@using BD.Jcbg.Web.xwwz;
+@using BD.Jcbg.Common;
+@using BD.Jcbg.DataModal.Entities;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>台州市建筑业信息管理网 - 台州市住房和城乡建设局</title>
+    <link rel="stylesheet" type="text/css" href="@SkinManager.GetXwwzPath("css/stj_20160517_2.css")" />
+    <link href="@SkinManager.GetXwwzPath("SpryAssets/SpryTabbedPanels.css")" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="@SkinManager.GetXwwzPath("css/default.css")" />
+
+    <title>@messfunc.GetValue("title")</title>
+    <link rel="stylesheet" href="@SkinManager.GetXwwzPath("css/jquery.hiSlider.min.css")" />
+    <style type="text/css">
+
+        body {
+    margin: 0 auto;
+    font-size: 12px;
+    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    background: url(/skins/default/images/images/bg.jpg);
+    padding:0!important;
+}
+
+* {
+    padding: 0px;
+    margin: 0px;
+}
+
+img {
+    border: none;
+}
+
+li {
+    list-style: none;
+}
+
+a:link {
+    text-decoration: none;
+    color: #333;
+    font-size: 12px;
+}
+
+a:visited {
+    text-decoration: none;
+    color: #333;
+    font-size: 12px;
+}
+
+a:hover {
+    color: #0A62A0;
+    text-decoration: underline;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.txt_left {
+    text-align: left;
+}
+
+.txt_right {
+    text-align: right;
+}
+
+.txt_center {
+    text-align: center;
+}
+
+.clear {
+    clear: both;
+    float: none;
+}
+
+.center {
+    text-align: center;
+}
+
+input {}
+
+textarea {}
+
+.border_s1 {
+    border: 1px solid #d7d7d7;
+}
+
+.border_s2 {
+    border: 1px solid #a9cfe5;
+    border-top: 0px;
+}
+
+.tab_content {
+    display: none;
+    height: 240px;
+}
+
+
+
+
+.marign_b_20 {
+    margin-bottom: 10px;
+}
+
+.header {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/index_mid_bg.gif")) center top;
+}
+
+.w1003 {
+    width: 1003px;
+    margin: 0px auto;
+    background-color: #fff;
+    padding: 0 6px;
+}
+
+.mid_bg_wrapper {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/index_mid_bg.gif")) center top;
+    overflow: hidden;
+    padding-bottom: 32px;
+}
+
+
+.function_bar {
+    margin-right: 15px;
+    overflow: hidden;
+    width: 770px;
+    height: 138px;
+}
+
+.function_bar .category_title {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/servicebg.jpg")) repeat-y;
+    width: 24px;
+    overflow: hidden;
+    text-align: center;
+    color: #fff;
+    padding: 12px 0px;
+    line-height: 19px;
+    margin: 21px 10px 0px 20px;
+}
+
+.function_bar li {
+    float: left;
+    background-color: #fff;
+    margin-left: 9px;
+    width: 108px;
+    color: #0a62a0;
+    font-weight: bold;
+    text-align: center;
+    line-height: 28px;
+    margin-top: 20px;
+}
+
+.login_box {
+    width: 214px;
+    height: 138px;
+    overflow: hidden;
+}
+
+.login_box td {
+    padding: 0px 0px;
+}
+
+.login_box .category_title {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/greybg.jpg")) repeat-x;
+    height: 26px;
+    line-height: 26px;
+    border-bottom: 1px solid #d7d7d7;
+    color: #0a62a0;
+    font-weight: bold;
+    padding-left: 15px;
+}
+
+.login_box .btn {
+    border: 1px solid #9d9d9d;
+    width: 64px;
+    height: 24px;
+    line-height: 24px;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/btn_bg1.gif")) left top repeat-x;
+}
+
+.login_box .in_put {
+    width: 135px;
+    height: 20px;
+    line-height: 20px;
+}
+
+
+.banner {
+    height: 341px;
+    overflow: hidden;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/banner.jpg")) center top no-repeat;
+}
+
+/*图标向上旋转*/
+
+.hover-up {
+    transition-duration: .5s;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+}
+
+/*图标向下旋转*/
+
+.hover-down {
+    transition-duration: .5s;
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+}
+
+
+/*隐藏盒子设置*/
+
+.hidden-box {
+    width: 90px;
+    border-top: 0;
+    z-index: 22;
+    position: absolute;
+    display: none;
+    top: 244px;
+    background-color: #056C95;
+    border: 1px solid #0A8CBD;
+    border-top: none;
+    line-height: 37px;
+    text-align: center;
+    top: 41px;
+    /* filter:alpha(opacity=80);-moz-opacity:0.8;opacity:0.8; */
+}
+
+.hidden-box a {
+    color: #FFF;
+}
+
+.hidden-box>dl {
+    color: #fff;
+    cursor: pointer;
+}
+
+.hidden-box dt {
+    border-top: 1px solid #067EBA;
+}
+
+.hidden-box dt:hover {
+    background: #057AA8;
+    color: #fff;
+}
+
+.hidden-box dt:hover a {
+    color: #EE7504;
+}
+
+
+.nav_bar {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/nav_bg.gif")) repeat-x;
+    height: 41px;
+}
+
+.nav_bar ul {
+    overflow: hidden;
+}
+
+.nav_bar li {
+    float: left;
+    width: 90px;
+    float: left;
+    text-align: center;
+    height: 41px;
+    line-height: 41px;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/nav_split.gif")) left top no-repeat;
+}
+
+.nav_bar a.title {
+    display: block;
+    font-size: 13px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+
+.nav_bar li.first {
+    width: 100px;
+}
+
+.nav_bar li.first {
+    background-image: none;
+}
+
+.nav_bar a.title:hover {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/nav_a_cur_bg.jpg")) center top no-repeat;
+    color: #ff6600;
+}
+
+.nav_bar a.title.cur {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/nav_a_cur_bg.gif")) top repeat-x;
+    color: #ff6600;
+}
+
+
+
+
+
+
+
+
+/*----------daohang start--------------*/
+
+#menu {
+    font: 13px "trebuchet MS", Arial, Helvetica;
+
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/nav_bg.gif")) repeat-x;
+}
+
+#menu a {
+    color: #2A679F;
+}
+
+#menu,
+#menu ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#menu {
+    width: 1003px;
+}
+
+#menu:before,
+#menu:after {
+    content: "";
+    display: table;
+}
+
+#menu:after {
+    clear: both;
+}
+
+#menu {
+    zoom: 1;
+}
+
+#menu li {
+    float: left;
+    position: relative;
+    width: 90px;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/nav_split.gif")) left top no-repeat;
+}
+
+#menu a {
+    float: left;
+    line-height: 41px;
+    color: #fff;
+    text-align: center;
+    width: 90px;
+    font-weight: bold;
+}
+
+#menu li:hover>a {
+    color: #fafafa;
+}
+
+*html #menu li a:hover {
+    color: #fafafa;
+}
+
+#menu ul {
+    margin: 20px 0 0 0;
+    _margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 38px;
+    left: 0;
+    z-index: 1;
+    background: #2286b7;
+    -webkit-transition: all .2s ease-in-out;
+    -moz-transition: all .2s ease-in-out;
+    -ms-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+#menu li:hover>ul {
+    opacity: 1;
+    visibility: visible;
+    margin: 0;
+}
+
+#menu ul ul {
+    top: 0;
+    left: 150px;
+    margin: 0 0 0 20px;
+    -moz-box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+    -webkit-box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+    box-shadow: -1px 0 0 rgba(255, 255, 255, .3);
+}
+
+#menu ul li {
+    float: none;
+    display: block;
+    border: 0;
+    background: none;
+    border-bottom: #2c90ce 1px solid;
+}
+
+#menu ul li:last-child {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#menu ul a {
+    width: 90px;
+    _height: 10px;
+    display: block;
+    white-space: nowrap;
+    float: none;
+    text-transform: none;
+    height: 30px;
+    line-height: 30px;
+    font-weight: normal;
+}
+
+#menu ul a:hover {
+    background-color: #0186ba;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/filebg2_cur.gif")) left top repeat-x;
+}
+
+
+#menu ul li:first-child>a {
+    -moz-border-radius: 3px 3px 0 0;
+}
+
+#menu ul li:first-child>a:after {
+    content: '';
+    position: absolute;
+    left: 40px;
+    top: -6px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #188ac2;
+}
+
+#menu ul ul li:first-child a:after {
+    left: -6px;
+    top: 50%;
+    margin-top: -6px;
+    border-left: 0;
+    border-bottom: 6px solid transparent;
+    border-top: 6px solid transparent;
+
+    border-right: 6px solid #3b3b3b;
+}
+
+#menu ul li:first-child a:hover:after {
+    border-bottom-color: #04acec;
+}
+
+#menu ul ul li:first-child a:hover:after {
+    border-right-color: #0299d3;
+    border-bottom-color: transparent;
+}
+
+#menu ul li:last-child>a {
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-radius: 0 0 3px 3px;
+    border-radius: 0 0 3px 3px;
+}
+
+/* Mobile */
+#menu-trigger {
+    display: none;
+}
+
+/* iPad */
+.no-transition {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -ms-transition: none;
+    -o-transition: none;
+    transition: none;
+    opacity: 1;
+    visibility: visible;
+    display: none;
+}
+
+#menu li:hover>.no-transition {
+    display: block;
+}
+
+
+
+
+
+
+
+
+/*----------daohang end---------------*/
+.index_search_box {
+    border: 1px solid #a7d0e4;
+    border-top: none;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/search_bg.GIF")) repeat-x;
+    line-height: 37px;
+    height: 37px;
+    overflow: hidden;
+    margin-bottom: 13px;
+    clear: both;
+}
+
+.index_search_box .in_put {
+    height: 20px;
+    border: 1px solid #88b1cf;
+    height: 20px;
+    line-height: 20px;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/bg222.gif")) left center no-repeat;
+    background-color: #fff;
+    padding-left: 32px;
+    background-color: #FFFFFB;
+}
+
+.index_search_box input {
+    vertical-align: middle;
+}
+
+.index_search_box .date {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/date.gif")) 24px center no-repeat;
+    padding-left: 48px;
+}
+
+.index_search_box .search {
+    margin-right: 18px;
+}
+
+
+
+
+
+
+
+
+
+/*-----------------------------*/
+.index_news_box1 {
+    width: 228px;
+    overflow: hidden;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/split1.gif")) right 20px no-repeat;
+}
+
+.index_news_box1 ul {
+    margin-bottom: 7px;
+    padding: 0 6px;
+}
+
+.index_news_box1 .category_title {
+    background: url(/skins/default/images/images/category_title_bg.gif) left center no-repeat;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    border: 1px solid #a9cfe5;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.index_news_box1 .category_title .msg_title {
+    font-size: 14px;
+    color: #0a62a0;
+    font-weight: bold;
+    padding-left: 27px;
+}
+
+.index_news_box1 .category_title .more a {
+    padding-right: 10px;
+    color: #0a62a0;
+    font-family: '宋体';
+}
+
+.index_news_box1 li {
+    background: url(/skins/default/images/images/li_bg.gif) 8px bottom no-repeat;
+    line-height: 32px;
+    padding-left: 22px;
+}
+
+
+
+
+
+
+
+
+/**/
+
+/**/
+.index_news_box2 {
+    width: 762px;
+    overflow: hidden;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/split1.gif")) right 20px no-repeat;
+}
+
+.index_news_box2 ul {}
+
+.index_news_box2 .category_title {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/category_title_bg.GIF")) left center no-repeat;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    border-bottom: 1px solid #a9cfe5;
+}
+
+.index_news_box2 .category_title .title {
+    font-size: 14px;
+    color: #0a62a0;
+    font-weight: bold;
+    padding-left: 27px;
+}
+
+.index_news_box2 .category_title .more a {
+    padding-right: 10px;
+    color: #0a62a0;
+    font-family: '宋体';
+}
+
+.index_news_box2 li {
+    background: url(/skins/default/images/images/li_bg.gif) 8px bottom no-repeat;
+    line-height: 32px;
+    padding-left: 22px;
+}
+
+
+
+
+
+
+
+
+/**/
+
+/**/
+.tab_title {
+    height: 32px;
+    overflow: hidden;
+    background: url(/skins/default/images/images/filebg2.gif) left top repeat-x;
+    border: 1px solid #A9CFE5;
+}
+
+.tab_title span {
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    height: 32px;
+    line-height: 32px;
+    width: 132px;
+    color: #0a62a0;
+    font-size: 13px;
+    font-weight: bold;
+    border-right: 1px solid #D7D7D7;
+}
+
+
+
+
+.tab_title a {
+    display: inline-block;
+    margin-left: 28px;
+    color: #19487b;
+    color: #fff;
+}
+
+.tab_title span.thistab {
+    color: #fff;
+    background-color: #0a62a0;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/cur_bg.GIF")) center top no-repeat;
+}
+
+.tab_content {
+    width: 740px;
+    overflow: hidden;
+    margin: 10px 10px 0 0;
+}
+
+.tab_content li {
+    background: url(/skins/default/images/images/li_bg.gif) 8px bottom no-repeat;
+    line-height: 32px;
+    height: 32px;
+    padding-left: 22px;
+    overflow: hidden;
+}
+
+.tab_content .date {
+    color: #525252;
+}
+
+
+
+
+
+
+
+
+/**/
+.index_focus_box {
+    width: 300px;
+    overflow: hidden;
+    margin: 15px 0px 0px 15px;
+}
+
+
+
+
+
+
+
+
+/*-----------------------------*/
+.tab_title2 {
+    height: 32px;
+    overflow: hidden;
+    background: url(/skins/default/images/images/filebg2.gif) left top repeat-x;
+    border: 1px solid #A9CFE5;
+    border-bottom: none;
+}
+
+.tab_title2 span {
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 40px;
+    color: #333;
+    font-size: 13px;
+    font-weight: bold;
+    border-right: 1px solid #D7D7D7;
+}
+
+.tab_title2 span.thistab {
+    color: #fff;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/filebg2_cur.gif")) left top repeat-x;
+}
+
+.tab_content2 {
+    overflow: hidden;
+    margin: 0px 10px;
+}
+
+.tab_content2 li {
+    background: url(/skins/default/images/images/li_bg.gif) 8px bottom no-repeat;
+    line-height: 32px;
+    height: 32px;
+    padding-left: 22px;
+    overflow: hidden;
+}
+
+.tab_content2 .date {
+    color: #525252;
+}
+
+.tab_content3 {
+    overflow: hidden;
+    margin: 0px 10px;
+}
+
+.tab_content3 ul {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/ul_bg.gif")) center center no-repeat;
+    overflow: hidden;
+    padding: 11px 10px 15px 10px;
+}
+
+.tab_content3 li {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/dian.gif")) left center no-repeat;
+    line-height: 32px;
+    height: 32px;
+    padding-left: 8px;
+    margin-right: 18px;
+    overflow: hidden;
+    float: left;
+}
+
+.tab_content3 .date {
+    color: #525252;
+}
+
+
+
+.index_icons_list {
+    margin-right: 9px;
+}
+
+.index_icons_list li {
+    padding: 2px;
+    border: 1px solid #C5C6C8;
+    margin-bottom: 10px;
+}
+
+.index_icons_list li img {
+    width: 226px;
+    height: 53px;
+    display: block;
+}
+
+
+
+
+
+
+
+
+/**/
+
+/**/
+.index_news_box3 {
+    width: 228px;
+    overflow: hidden;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/split1.gif")) right 20px no-repeat;
+}
+
+.index_news_box3 .category_title {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/category_title_bg3.GIF")) left center no-repeat;
+    height: 28px;
+    line-height: 28px;
+    overflow: hidden;
+    border-bottom: 1px solid #a9cfe5;
+}
+
+.index_news_box3 .category_title .title {
+    font-size: 14px;
+    color: #fff;
+    font-weight: bold;
+    padding-left: 17px;
+}
+
+.index_news_box3 .category_title .more {
+    padding-right: 10px;
+    color: #0a62a0;
+    font-family: '宋体';
+}
+
+.index_news_box3 li {
+    background: url(/skins/default/images/images/li_bg.gif) 8px bottom no-repeat;
+    line-height: 32px;
+    padding-left: 22px;
+}
+
+
+
+.cxtop {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.cxmain {
+    border-top: #d7d7d7 1px solid;
+    border-bottom: #d7d7d7 1px solid;
+}
+
+.cxmain li {
+    background: url(/skins/default/images/images/cxbg.jpg) no-repeat;
+    width: 246px;
+    height: 33px;
+    line-height: 33px;
+}
+
+.cxmain img {
+    float: left;
+    margin-right: 5px;
+    margin-left: 25px;
+    margin-top: 2px;
+}
+
+
+.foot{
+    width: 1003px;
+    margin: 0 auto;
+    background: white;
+    padding: 6px;
+}
+
+.footer {
+    text-align: center;
+    line-height: 26px;
+    padding: 10px 0px;
+}
+
+
+
+/* 设备焦点图---flexslider_demmo2 */
+.fr_links {
+    overflow: hidden;
+    margin-bottom: 7px;
+    margin-top: 11px;
+}
+
+.fr_links li.first {
+    margin-left: 0px;
+}
+
+.fr_links li {
+    float: left;
+    margin-left: 8px;
+}
+
+.fr_links li img {
+    width: 329px;
+    height: 50px;
+}
+
+.fr_links2 {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/linkbg.jpg")) repeat-x;
+    height: 25px;
+    width: 1000px;
+    color: #FFFFFF;
+    text-align: center;
+    padding-top: 5px;
+}
+
+
+
+
+
+
+
+
+/* flexslider_demmo2 */
+
+/*分页*/
+.pager {
+    width: 100%;
+    height: 30px;
+    margin: 3px 0px;
+    padding: 3px 0px;
+    text-align: center;
+}
+
+.pager A {
+    border-style: solid;
+    border-width: 1px;
+    color: #1177A7;
+    margin: 2px;
+    padding: 2px 5px;
+    text-decoration: none;
+}
+
+.pager A:hover {
+    background-color: #1177A7;
+    border: 1px solid #1177A7;
+    color: #fff;
+    font-weight: bold;
+}
+
+.pager SPAN.current {
+    background-color: #1177A7;
+    border: 1px solid #1177A7;
+    color: #fff;
+    font-weight: bold;
+    margin: 2px;
+    padding: 2px 5px;
+}
+
+.pager SPAN.disabled {
+    border-style: solid;
+    border-width: 1px;
+    color: #ddd;
+    margin: 2px;
+    padding: 2px 5px;
+}
+
+
+
+
+
+
+
+.category_list li {
+    line-height: 21px;
+}
+
+.category_list ul {
+    margin-bottom: 0px;
+}
+
+.bbsimg {
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+}
+
+.bbsimg:before {
+    content: "";
+    display: block;
+    padding-top: 75%;
+    /* 代表1：1，如果是想要5：1就是20%，根据图片大小比例，那就自己算一下吧*/
+}
+
+.case li {
+    width: 180px;
+    float: left;
+    margin: 0 5px 0 5px;
+}
+
+.case li span {
+    display: block;
+    text-align: center;
+    clear: both;
+    padding: 15px 0 5px 0;
+}
+
+.case .title {
+    background: url(/skins/default/images/images/filebg2.gif) left top repeat-x;
+    border: 1px solid #A9CFE5;
+    border-bottom: none;
+    height: 32px;
+}
+
+.case .title h1 {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/filebg2_cur.gif")) left top repeat-x;
+    color: #fff;
+    float: left;
+    font-size: 13px;
+    padding: 0 40px;
+    height: 32px;
+    line-height: 32px;
+    border-right: 1px solid #D7D7D7;
+}
+
+.case .title span {
+    float: right;
+    line-height: 32px;
+    padding: 0 10px 0 0;
+}
+
+.casemain {
+    border: 1px solid #A9CFE5;
+    padding: 10px 0 10px 0;
+}
+
+.case {
+    width: 100%;
+    clear: both;
+    margin: 12px 0 0 0;
+}
+
+#demo {
+    overflow: hidden;
+    width: 980px;
+    margin: 0px auto 0 auto;
+    height: 170px;
+}
+
+#indemo {
+    float: left;
+    width: 800%;
+}
+
+#demo1,
+#demo2 {
+    float: left;
+}
+
+#owl-demo,
+#owl-demo1,
+#owl-demo2 {
+    width: 325px;
+    height: 240px;
+}
+
+#owl-demo .item,
+#owl-demo1 .item,
+#owl-demo2.item {
+    position: relative;
+    display: block;
+}
+
+#owl-demo img,
+#owl-demo1 img,
+#owl-demo2 img {
+    display: block;
+    width: 325px;
+    height: 240px;
+}
+
+#owl-demo b,
+#owl-demo1 b,
+#owl-demo2 b {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #000;
+    opacity: .5;
+    filter: alpha(opacity=50);
+}
+
+#owl-demo span,
+#owl-demo1 span,
+#owl-demo2 span {
+    position: absolute;
+    left: 0;
+    bottom: 25px;
+    width: 100%;
+    font: 16px/32px;
+    color: #fff;
+    text-align: center;
+}
+
+.owl-pagination {
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    width: 100%;
+    height: 22px;
+    text-align: center;
+}
+
+.owl-page {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/bg15.png"));
+    *display: inline;
+    *zoom: 1;
+}
+
+.owl-pagination .active {
+    width: 25px;
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/bg16.png"));
+}
+
+.owl-buttons {
+    display: none;
+}
+
+.owl-buttons div {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 80px;
+    margin-top: -40px;
+    text-indent: -9999px;
+}
+
+.owl-prev {
+    left: 0;
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/bg17.png"));
+}
+
+.owl-next {
+    right: 0;
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/bg18.png"));
+}
+
+.owl-prev:hover {
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/bg19.png"));
+}
+
+.owl-next:hover {
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/bg20.png"));
+}
+
+.owl-carousel .owl-wrapper:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.owl-carousel {
+    display: none;
+    position: relative;
+    width: 100%;
+    -ms-touch-action: pan-y;
+}
+
+.owl-carousel .owl-wrapper {
+    display: none;
+    position: relative;
+    -webkit-transform: translate3d(0px, 0px, 0px);
+}
+
+.owl-carousel .owl-wrapper-outer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.owl-carousel .owl-wrapper-outer.autoHeight {
+    -webkit-transition: height 500ms ease-in-out;
+    -moz-transition: height 500ms ease-in-out;
+    -ms-transition: height 500ms ease-in-out;
+    -o-transition: height 500ms ease-in-out;
+    transition: height 500ms ease-in-out;
+}
+
+.owl-carousel .owl-item {
+    float: left;
+}
+
+.owl-controls .owl-page,
+.owl-controls .owl-buttons div {
+    cursor: pointer;
+}
+
+.owl-controls {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.grabbing {
+    cursor: url(grabbing.png) 8 8, move;
+}
+
+.owl-carousel .owl-wrapper,
+.owl-carousel .owl-item {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+}
+
+.newspic {
+    width: 310px;
+    float: left;
+    margin-right: 20px;
+}
+
+.newsfile {
+    width: 740px;
+}
+
+.newsfile ul {
+    width: 740px;
+}
+
+#pub_slideplay,
+#pub_slideplay1 {
+    width: 325px;
+    float: left
+}
+
+#pub_slideplay li,
+#pub_slideplay1 li {
+    padding: 0 0 0 0;
+}
+
+.qcode {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    z-index: 99999;
+    margin-top: -75px;
+}
+
+
+.sub_li2 a {
+    margin: 0 15px 0 0px;
+    line-height: 20px;
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/dian.gif")) left center no-repeat;
+    float: left;
+    padding-left: 8px;
+    margin: 0 15px 0 0px;
+}
+
+.sub_li22 a {
+    padding: 0 16px 0 0px;
+    line-height: 20px;
+}
+
+
+.tab_title .active {
+
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/filebg2_cur.gif")) left top repeat-x;
+
+    color: white;
+}
+
+.bag {
+    height: 190px;
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/banner.jpg"));
+}
+
+.bag p {
+    padding: 30px;
+    font-size: 24px;
+}
+
+.main {
+    width: 1003px;
+    margin: 0 auto;
+    background: white;
+    padding: 0 6px;
+}
+
+.tzgg li {
+    width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#jslt li,
+#wdxz li {
+    width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#tplb li {
+    width: 325px;
+    height: 240px;
+    padding-left: 0;
+}
+
+#tplb li img {
+    width: 325px;
+    height: 240px;
+}
+
+.hiSlider-wrap {
+    display: inline-block;
+}
+
+#tplbName {
+    display: inline-block;
+    width: 410px;
+    vertical-align: top;
+}
+li a {
+    color: #74777b;
+}
+
+.login {
+    display: inline-block;
+    width: 210px;
+    height: 140px;
+    margin-bottom: 10px;
+    border: 1px solid #d7d7d7;
+}
+
+
+.user,
+.pass {
+    margin: 6px 0;
+    position: relative;
+    padding-left: 15px;
+}
+
+.user-icon,
+.pass-icon {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 2px;
+    left: 15px;
+}
+
+.user-icon {
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/user.png"));
+    background-repeat: no-repeat;
+    background-position: 2px;
+    background-size: 22px 22px;
+}
+
+.pass-icon {
+    background-image: url(@SkinManager.GetXwwzPath("Content/themes/default/images/pass.png"));
+    background-repeat: no-repeat;
+    background-position: 2px;
+    background-size: 22px 22px;
+}
+
+.input-text {
+    width: 140px;
+    height: 28px;
+    border-radius: 5px;
+    padding-left: 30px;
+    font-size: 14px;
+    border: 1px solid #D7D7D7;
+}
+
+.login-btn {
+    background: url(@SkinManager.GetXwwzPath("Content/themes/default/images/filebg2_cur.gif")) left top repeat-x;
+    display: inline-block;
+    text-align: center;
+    color: white;
+    height: 28px;
+    line-height: 28px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 70px;
+    margin: 4px 0 0 15px;
+}
+.btn-href {
+    display: inline-block;
+    text-align: center;
+    width: 70px;
+    line-height: 28px;
+    font-size: 16px;
+    border-radius: 5px;
+    width: 70px;
+    margin: 4px 0 0 15px;
+    border: 1px solid #d7d7d7;
+}
+
+.forget {
+    margin-top: 10px;
+    padding: 0 15px;
+}
+.forget label,
+.forget span,
+.login-btn,
+.more-info {
+    cursor: pointer;
+}
+
+.forget input {
+    margin-right: 10px;
+}
+
+.forget>span {
+
+    float: right;
+    display: inline-block;
+    width: 70px;
+}
+.img-list {}
+.img-list img {
+    width: 180px;
+    height: 135px;
+}
+.login-title {
+    text-align: center;
+    margin: 2px 0;
+    font-size: 16px;
+}
+
+    </style>
+
+    <script src="@SkinManager.GetXwwzPath("SpryAssets/SpryTabbedPanels.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzPath("js/jquery.1.9.1.js")"></script>
+    <script src="@SkinManager.GetXwwzPath("js/pic_lb.js")"></script>
+    <script src="@SkinManager.GetXwwzPath("js/jquery.lazyload.min.js")"></script>
+    <script src="@SkinManager.GetXwwzPath("js/jquery.hiSlider.min.js")"></script>
+    <script src="@SkinManager.GetXwwzPath("zdy/common.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzPath("zdy/myurls.js")" type="text/javascript"></script>
+
+    @RenderSection("head", false)
+</head>
+<body>
+    <div class="main">
+        <div class="bag">
+            <p></p>
+        </div>
+        <div id="menu-wrap">
+            @{
+                IList<NewsMenu> newsMenuList = XwwzInit.newsMenuList;
+                IDictionary<int, IList<NewsCategory>> newsCategoryDList = XwwzInit.newsCategoryDList;
+                if (newsMenuList == null)
+                {
+                    XwwzInit.initMnus();
+                }
+            }
+            <ul id="menu">
+                
+                @foreach (var itm in newsMenuList)
+                {
+                    // 链接
+                    if (itm.MenuType == 1)
+                    {
+                        <li><a href="@myurls.GetNewsMenuViewUrl(itm)">@itm.MenuName</a></li>
+                    }
+                    // 栏目
+                    else if (itm.MenuType == 2)
+                    {
+                        <li>
+                            <a href="@myurls.GetNewsMenu2ViewUrl(itm)">@itm.MenuName</a>
+                            @{
+                        IList<NewsCategory> NewsCategoryList = new List<NewsCategory>();
+                        try
+                        {
+                            NewsCategoryList = newsCategoryDList[itm.CategoryId.Value];
+                        }
+                        catch
+                        {
+                            NewsCategoryList.Clear();
+                        }
+                            }
+                            @if (NewsCategoryList.Count > 0)
+                            {
+                                <ul>
+                                    @foreach (NewsCategory category in NewsCategoryList)
+                                    {
+                                        <li><a href="@myurls.GetNewsCategoryViewUrl(itm,category)">@category.Name</a></li>
+                                    }
+                                </ul>
+
+                            }
+                        </li>
+                    }
+
+                }
+            </ul>
+            <div class="index_search_box">
+                <div class="left date">
+                    今天是：<span id="todayDate"></span>
+                </div>
+                <div class="right search">
+                    <form method="get">
+                        <input type="text" name="keys" value="" id="keys" class="in_put" />
+                        <input type="image" src="@SkinManager.GetXwwzPath("/Content/themes/default/images/btn1.gif")" id="searchVal" class="input2" />
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @RenderSection("body", false)
+        @RenderBody()
+
+        <div class="foot">
+
+        <div class="fr_links2">
+            <select onchange="javascript:window.open(this.options[this.selectedIndex].value)" style=" width:160px;" name="">
+                <option selected="" disabled="disabled">--省级政府网站--</option>
+                <option value="http://www.wl.gov.cn/">温岭市人民政府</option>
+                <option value="http://www.zjtz.gov.cn/">台州市人民政府</option>
+                <option value="http://www.zj.gov.cn/">浙江省人民政府</option>
+                <option value="http://www.wuhan.gov.cn/publish/wuhan/category/57/20001.html">武汉市政府网站</option>
+                <option value="http://www.hubei.gov.cn/">湖北省人民政府门户网站</option>
+                <option value="http://www.hunan.gov.cn/">湖南省政府门户网站</option>
+                <option value="http://www.shanghai.gov.cn/shanghai/node2314/index.html">上海市政府</option>
+                <option value="http://www.hainan.gov.cn/code/html/">海南省人民政府网</option>
+                <option value="http://www.jiangsu.gov.cn/">江苏省人民政府</option>
+                <option value="http://www.shaanxi.gov.cn/">陕西省人民政府门户网站</option>
+            </select>
+            <select onchange="javascript:window.open(this.options[this.selectedIndex].value)" style="width:225px;" name="">
+                <option selected="" disabled="disabled">--国家部委网站--</option>
+                <option value="http://www.mlr.gov.cn/">中华人民共和国国土资源部</option>
+                <option value="http://www.mwr.gov.cn/">中华人民共和国水利部</option>
+                <option value="http://www.moa.gov.cn/">中华人民共和国农业部网站</option>
+                <option value="http://www.mofcom.gov.cn/">中华人民共和国商务部网站</option>
+                <option value="http://www.mohurd.gov.cn/wzlj/bsdwwz/200804/t20080424_162526.html">住房和城乡建设部城乡规划管理中心</option>
+                <option value="http://www.mohurd.gov.cn/wzlj/bsdwwz/200804/t20080424_162538.html">住房和城乡建设部信息中心</option>
+                <option value="http://www.cstcmoc.org.cn/">住房和城乡建设部科技发展促进中心</option>
+                <option value="http://www.cstcmoc.org.cn/">住房和城乡建设部科技发展促进中心</option>
+                <option value="http://www.caupd.com/">中国城市规划设计研究院</option>
+                <option value="http://jcb.mohurd.gov.cn/">住房和城乡建设部稽查办公室</option>
+                <option value="http://www.chinabidding.com.cn/zbw/index.jsp">中国采购与招标网</option>
+            </select>
+            <select onchange="javascript:window.open(this.options[this.selectedIndex].value)" style="width:228px;" name="">
+                <option selected="" disabled="disabled">--全国各省市区建设网站--</option>
+                <option value="http://www.zjjs.com.cn/">浙江省住房和城乡建设厅</option>
+                <option value="http://www.fjjs.gov.cn/">福建省住房和城乡建设厅</option>
+                <option value="http://www.jxjst.gov.cn/">江西省住房和城乡建设厅</option>
+                <option value="http://www.hnjs.gov.cn/">河南省住房和城乡建设厅</option>
+                <option value="http://www.hbsjst.gov.cn/">湖北省住房和城乡建设厅</option>
+                <option value="http://www.hunanjs.gov.cn/">湖南省住房和城乡建设厅</option>
+                <option value="http://www.gdcic.net/">广东省住房和城乡建设厅</option>
+                <option value="http://www.gxcic.net/">广西壮族自治区住房和城乡建设厅</option>
+                <option value="http://www.hncic.net/">海南省住房和城乡建设厅</option>
+                <option value="http://www.ynjst.gov.cn/">云南省住房和城乡建设厅</option>
+                <option value="http://www.ynjst.gov.cn/">云南省住房和城乡建设厅</option>
+                <option value="http://www.gzjs.gov.cn/">贵州省住房和城乡建设厅</option>
+                <option value="http://www.scjst.gov.cn/">四川省住房和城乡建设厅</option>
+                <option value="http://www.xzcs.gov.cn/">西藏自治区住房和城乡建设厅</option>
+                <option value="http://www.shaanxijs.gov.cn/">陕西省住房和城乡建设厅</option>
+                <option value="http://www.gsjs.com.cn/">甘肃省住房和城乡建设厅</option>
+                <option value="http://www.nxjst.gov.cn/">宁夏回族自治区住房和城乡建设厅</option>
+                <option value="http://www.nxgczl.com.cn/">宁夏建设工程质量信息网</option>
+                <option value="http://www.qhcin.gov.cn/">青海省住房和城乡建设厅</option>
+                <option value="http://www.xjjs.gov.cn/">新疆维吾尔自治区住房和城乡建设厅</option>
+                <option value="http://www.xjbt.gov.cn/">新疆生产建设兵团</option>
+                <option value="http://www.cbi360.com/">中国建设网</option>
+            </select>
+            <select onchange="javascript:window.open(this.options[this.selectedIndex].value)" style="width:190;" name="">
+                <option selected="" disabled="disabled">--建筑类网站--</option>
+                <option value="http://www.wljgw.com/dqjz/index.htm">浙江远丰建设工程公司</option>
+                <option value="http://www.shuguangjituan.com">曙光控股集团有限公司</option>
+                <option value="http://www.wljgw.com/lqjz/index.htm">浙江立强建筑公司</option>
+                <option value="http://www.zjsscc.com">实事集团建设工程有限公司</option>
+                <option value="http://www.wljgw.com/wlsd/index.htm">温岭市隧道工程公司</option>
+                <option value="http://www.wljgw.com/zggj/index.htm">温岭市古建筑工程公司</option>
+                <option value="http://www.wljgw.com/hdjz/index.htm">温岭市宏达建筑工程公司</option>
+                <option value="http://www.wljgw.com/szgc/index.htm">温岭建筑市政公司</option>
+                <option value="http://www.wljgw.com/wlsl/index.htm">温岭市石料装饰工程有限公司</option>
+                <option value="http://www.wljgw.com/wltyjg/index.htm">温岭市田洋建筑工程公司</option>
+                <option value="http://www.wljgw.com/dyjz/index.htm">浙江鼎业基础工程公司</option>
+                <option value="http://www.zjjd128.com">浙江金典建设有限公司</option>
+                <option value="http://www.zjtsjs.com/">天颂建设集团有限公司</option>
+                <option value="http://www.zbjt.cn">中博建设集团有限公司</option>
+                <option value="http://www.htjsjt.com">华太建设集团有限公司</option>
+            </select>
+            <select onchange="javascript:window.open(this.options[this.selectedIndex].value)" style="width:116;" name="">
+                <option selected="" disabled="disabled">--其他友情链接--</option>
+                <option value="http://www.people.com.cn/">人民网</option>
+                <option value="http://www.xinhuanet.com/">新华网</option>
+                <option value="http://www.sohu.com/">搜狐</option>
+                <option value="http://www.baidu.com/">百度</option>
+                <option value="http://www.sina.com.cn/">新浪</option>
+            </select>
+        </div>
+        <div class="footer">
+
+            <div>建议使用1024×768 分辨率 IE 9.0 以上浏览器</div>
+            <div>技术支持：绍兴标点电子技术有限公司</div>
+            <a href="http://tzsw.cn" target="_blank" style="">
+                <div style="text-align:center;">
+                </div>
+            </a>
+        </div>
+
+        </div>
+
+        <script type="text/javascript">
+            $(".tab_title").on("mousemove click", "span", function () {
+                var that = $(this);
+                var index = that.index();
+
+                that.addClass('active').siblings().removeClass('active');
+                that.parent().next().children().eq(index).show().siblings().hide();
+            });
+
+            $("#todayDate").html(new Date().toLocaleString().substr(0, 10));
+            $("#searchVal").click(function () {
+                linkJs("/xwwzUser/searchnewlb", { zncontent: $("#keys").val() }, "_blank");
+            });
+
+
+        </script>
+    
+</body>
+</html>

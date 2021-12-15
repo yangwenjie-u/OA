@@ -1,0 +1,82 @@
+﻿@{
+    Layout = "~/Views/User/_albumlayout.cshtml";
+}
+@section head{
+<script language="javascript" type="text/javascript">
+    $(function () {
+        $.ajax({
+            type: "POST",
+            url: "/qy/getqyzzimages",
+            dataType: "json",
+            data:"qybh=@ViewBag.qybh",
+            async: false,
+            success: function (data) {
+                if (data.code != "0") {
+                    alert(data.msg);
+                } else {
+                    var images = data.images;
+                    if (images.length == 0) {
+                        layer.alert("没有可显示的资质文件");
+                    } else {
+                        var firstId = "";
+                        $.each(images, function (i, item) {
+                            var zznr = item.zznrmc;
+                            var zzmc = item.zzmc;
+                            var imgArr = item.zzwj.split("|");
+                            $.each(imgArr, function (j, subItem) {
+                                if (subItem == "")
+                                    return true;
+                                var arr = subItem.split(",");
+                                if (arr.length < 2)
+                                    return true;
+                                var bigUrl = "/DataInput/FileService?method=DownloadFile&fileid=" + arr[0];
+                                var smallUrl = "/DataInput/FileService?method=DownloadFile&type=small&fileid=" + arr[0];
+                                if (firstId == "")
+                                    firstId = arr[0];
+                                /*
+                                var imgStr = "<div class=\"col-sm-6 col-md-3\" style='cursor:pointer;' onclick='showImage(\""+bigUrl+"\")'><div class=\"thumbnail\"><img src=\""+smallUrl+"\" alt=\"\">"+
+                                                "<div class=\"caption\">"+
+                                                    "<p style='text-align:center;'>"+zznr+"("+zzmc+")</p>"+
+                                   
+                                                "</div></div></div>";
+                                $("#maindiv").append(imgStr);*/
+                                var imgStr = "<li><img data-original=\"" + bigUrl + "\" src=\"" + bigUrl + "\" alt=\"" + zznr + "(" + zzmc + ")" + "\" class='img-thumbnail' id='"+arr[0]+"'></li>";
+                                $("#images").append(imgStr);
+
+                            });
+
+                        });
+
+                        $('#images').viewer();
+                        if (firstId != "")
+                            $("#" + firstId).click();
+
+                    }
+                    
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+    });
+    function showImage(url) {
+        parent.layer.open({
+            type: 2,
+            title: '',
+            shadeClose: true,
+            shade: 0.5,
+            area: ['90%', '90%'],
+            content: "/workflow/showimage?url="+encodeURIComponent(url),
+            end: function () {
+            }
+        });
+    }
+</script>
+}
+<div class="col-sm-8 col-md-6">
+    <div class="docs-galley">
+        <ul id="images" class="docs-pictures clearfix"></ul>
+    </div>
+</div>

@@ -1,0 +1,346 @@
+﻿@{
+    Layout = "~/Views/dwgxzj/_contentlayout2.cshtml";
+}
+@section head
+{
+    <link href="/Contents/plugins/BootstrapDate/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+    <script src="/Contents/plugins/BootstrapDate/bootstrap-datetimepicker.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/Contents/plugins/BootstrapDate/bootstrap-datetimepicker.zh-CN.js" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+        .tjinput{
+            width:150px;
+        }
+
+        .spcs{
+            width:150px;
+            display:inline-block;
+        }
+
+        .kjcs {
+            margin-left:5px;
+            margin-right:5px;
+            display:inline-block;
+            width:250px;
+        }
+
+        .divstrong{
+            margin-top:20px;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+
+        Date.prototype.Format = function (fmt) { //author: meizz   
+            var o = {
+                "M+": this.getMonth() + 1,                 //月份   
+                "d+": this.getDate(),                    //日   
+                "h+": this.getHours(),                   //小时   
+                "m+": this.getMinutes(),                 //分   
+                "s+": this.getSeconds(),                 //秒   
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+                "S": this.getMilliseconds()             //毫秒   
+            };
+            if (/(y+)/.test(fmt))
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+
+        $(function () {
+            var today = new Date();
+            $('#startny').val(today.Format('yyyy-01'));
+            $('#endny').val(new Date(today.setMonth((today.getMonth() == 0 ? 1 : today.getMonth())-1)).Format('yyyy-MM'));
+            $('#startny').datetimepicker({
+                format: 'yyyy-mm',
+                language: 'zh-CN',
+                autoclose: true,
+                startView: 3,
+                minView: 3,
+                maxView: 3
+            });
+            $('#endny').datetimepicker({
+                format: 'yyyy-mm',
+                language: 'zh-CN',
+                autoclose: true,
+                startView: 3,
+                minView: 3,
+                maxView: 3
+            });
+            $('#btntj').click(function () {
+                starttj();
+            });
+            $('#btnsave').click(function () {
+                savetj();
+            });
+
+            starttj();
+        });
+
+        function starttj() {
+            try {
+                if (!checksubmit()) {
+                    return;
+                }
+
+                var startny = $('#startny').val();
+                var endny = $('#endny').val();
+                $.ajax({
+                    type: "POST",
+                    url: "/dwgxzj/loadtjxxhz",
+                    data:{startny: startny, endny:endny},
+                    dataType: "json",
+                    async: false,
+                    success: function (ret) {
+                        // 加载成功
+                        if (ret.code == "0") {
+                            var data = ret.data;
+                            showdata(data);
+                        }
+                            // 加载失败
+                        else {
+                            var msg = ret.msg;
+                            if (msg == "") {
+                                msg = "加载统计信息失败！";
+                            }
+                            layer.alert(msg);
+                        }
+
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+                layer.alert(e);
+            }
+            
+
+
+        }
+
+        function showdata(data) {
+            if (data != "") {
+                var info = JSON.parse(data);
+                for (var key in info) {
+                    if (key == "startny" || key=="endny") {
+                        continue;
+                    }
+                    else {
+                        $('#' + key).val(info[key]);
+                    }
+                    
+                }
+            }
+            else {
+                var arr = $('#tjxxform').serializeArray();
+                $.each(arr, function (i, row) {
+                    var excludes = ["startny", "endny"];
+                    if (excludes.indexOf(row.name) == -1) {
+                        $('#' + row.name).val('');
+                    }
+                });
+            }
+        }
+
+        function savetj() {
+            try {
+                if (!checksubmit()) {
+                    return;
+                }
+
+                var startny = $('#startny').val();
+                var endny = $('#endny').val();
+                var tjjg = gettjjgfromform();
+                $.ajax({
+                    type: "POST",
+                    url: "/dwgxzj/savetjxxhz",
+                    data: { startny: startny, endny: endny,tjjg:tjjg },
+                    dataType: "json",
+                    async: true,
+                    success: function (ret) {
+                        // 加载成功
+                        if (ret.code == "0") {
+                            alert("保存成功");
+                        }
+                            // 加载失败
+                        else {
+                            var msg = ret.msg;
+                            if (msg == "") {
+                                msg = "加载统计信息失败！";
+                            }
+                            alert(msg);
+                        }
+
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+
+
+
+        }
+
+        function gettjjgfromform() {
+            var info = {};
+            var arr = $('#tjxxform').serializeArray();
+            $.each(arr, function (i, row) {
+                info[row.name] = row.value;
+            });
+            return JSON.stringify(info);
+        }
+
+
+
+        function checksubmit() {
+            var ret = true;
+            var startny = $('#startny').val();
+            var endny = $('#endny').val();
+            if (startny =="") {
+                ret = false;
+                layer.alert('开始年月不能为空！');
+            }
+            else if (endny == "") {
+                ret = false;
+                layer.alert('结束年月不能为空！');
+            }
+            else if (startny > endny) {
+                ret = false;
+                layer.alert('开始年月不能大于结束年月！');
+            }
+            return ret;
+        }
+    </script>
+}
+<form class="" role="form" id="tjxxform">
+    <div class="container">
+        <div class="row">
+            <h3>统计信息汇总</h3>
+        </div>
+        <div class="row">
+            <div class="form-group col-lg-3">
+                <div class="input-group">
+                    <span class="input-group-addon">开始年月</span>
+                    <input type="text" class="form-control" id='startny' name="startny" value="">
+                </div>
+            </div>
+            <div class="form-group col-lg-3">
+                <div class="input-group">
+                    <span class="input-group-addon">结束年月</span>
+                    <input type="text" class="form-control" id='endny' name="endny" value="">
+                </div>
+            </div>
+
+            <div class="form-group col-lg-3">
+                <div class="input-group">
+                    <button class="btn btn-default" id="btntj" type="button">重新统计</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="btn btn-default" id="btnsave" type="button">保存统计结果</button>
+                </div>
+            </div>
+            <div class="form-group col-lg-3">
+                <div class="input-group">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="divstrong"><strong>产值</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">当月产值</span><span class="kjcs"><input type ="text" id="dycz" name="dycz" class="tjinput" value=""/>万元</span><br/><br />
+                <span class="spcs">截止到上月的累计产值</span><span class="kjcs"><input type="text" id="syljcz" name="syljcz" class="tjinput" value="" />万元</span>
+                <span class="spcs">累计同比增幅</span><span class="kjcs"><input type="text" id="czljtbzf" name="czljtbzf" class="tjinput" value="" />%</span>
+            </div>
+            <div class="divstrong"><strong>税收</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">当月税收</span><span class="kjcs"><input type="text" id="dyss" name="dyss" class="tjinput" value="" />万元</span>
+                <span class="spcs">累计税收</span><span class="kjcs"><input type="text" id="ljss" name="ljss" class="tjinput" value="" />万元</span><br/><br />
+                <span class="spcs">去年同比增幅</span><span class="kjcs"><input type="text" id="ssqntbzf" name="ssqntbzf" class="tjinput" value="" />%</span>
+                <span class="spcs">占全市比重</span><span class="kjcs"><input type="text" id="sszqsbz" name="sszqsbz" class="tjinput" value="" />%</span>
+            </div>
+            <div class="divstrong"><strong>承接业务</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">当月承接业务</span><span class="kjcs"><input type="text" id="sycjyw" name="sycjyw" class="tjinput" value="" />个</span>
+                <span class="spcs">截止到上月的累计承接业务</span><span class="kjcs"><input type="text" id="ljcjyw" name="ljcjyw" class="tjinput" value="" />个</span><br /><br />
+                <span class="spcs">累计同比增幅</span><span class="kjcs"><input type="text" id="ljcjywtbzf" name="ljcjywtbzf" class="tjinput" value="" />%</span>
+                <span class="spcs">占全市比重</span><span class="kjcs"><input type="text" id="cjywzqsbz" name="cjywzqsbz" class="tjinput" value="" />%</span><br/><br/>
+                <span class="spcs">3亿元以上项目</span><span class="kjcs"><input type="text" id="syyysxmgs" name="syyysxmgs" class="tjinput" value="" />个</span>
+                <span class="spcs">1亿-3亿元项目</span><span class="kjcs"><input type="text" id="ydsyyxmgs" name="ydsyyxmgs" class="tjinput" value="" />个</span><br /><br />
+                <span class="spcs">3千万-1亿元项目</span><span class="kjcs"><input type="text" id="sqdyyxmgs" name="sqdyyxmgs" class="tjinput" value="" />个</span>
+                <span class="spcs">项目总数</span><span class="kjcs"><input type="text" id="xmzs" name="xmzs" class="tjinput" value="" />个</span><br /><br />
+                <span class="spcs">完成年计划</span><span class="kjcs"><input type="text" id="wcnjh" name="wcnjh" class="tjinput" value="" />万元</span>
+                <span class="spcs">完成年计划百分比</span><span class="kjcs"><input type="text" id="wcnjhbfb" name="wcnjhbfb" class="tjinput" value="" />%</span>
+            </div>
+            <div class="divstrong"><strong>职工人数</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">本月职工人数</span><span class="kjcs"><input type="text" id="byzgrs" name="byzgrs" class="tjinput" value="" />人</span>
+            </div>
+            <div class="divstrong"><strong>完成建筑产值</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">省外完成建筑产值</span><span class="kjcs"><input type="text" id="swwcjzcs" name="swwcjzcs" class="tjinput" value="" />万元</span>
+                <span class="spcs">省外完成建筑产值占比</span><span class="kjcs"><input type="text" id="swwcjzcszb" name="swwcjzcszb" class="tjinput" value="" />%</span>
+            </div>
+            <div style="margin-top:10px;">
+                <span class="spcs">本市完成建筑产值</span><span class="kjcs"><input type="text" id="bswcjzcs" name="bswcjzcs" class="tjinput" value="" />万元</span>
+                <span class="spcs">本市完成建筑产值占比</span><span class="kjcs"><input type="text" id="bswcjzcszb" name="bswcjzcszb" class="tjinput" value="" />%</span>
+            </div>
+            <div class="divstrong"><strong>企业资质情况</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">特级</span><span class="kjcs"><input type="text" id="tjqysl" name="tjqysl" class="tjinput" value="" />家</span>
+                <span class="spcs">一级</span><span class="kjcs"><input type="text" id="yjqysl" name="yjqysl" class="tjinput" value="" />家</span>
+            </div>
+            <div style="margin-top:10px;">
+                <span class="spcs">二级</span><span class="kjcs"><input type="text" id="ejqysl" name="ejqysl" class="tjinput" value="" />家</span>
+                <span class="spcs">三级</span><span class="kjcs"><input type="text" id="sjqysl" name="sjqysl" class="tjinput" value="" />家</span>
+            </div>
+            <div style="margin-top:10px;">
+                <span class="spcs">劳务</span><span class="kjcs"><input type="text" id="lwqysl" name="lwqysl" class="tjinput" value="" />家</span>
+                <span class="spcs">总数</span><span class="kjcs"><input type="text" id="zsqysl" name="zsqysl" class="tjinput" value="" />家</span>
+            </div>
+            <div class="divstrong"><strong>建造师统计</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">建造师总数</span><span class="kjcs"><input type="text" id="jzszssl" name="jzszssl" class="tjinput" value="" />个</span><br /><br />
+                <span class="spcs">一级</span><span class="kjcs"><input type="text" id="jzsyjsl" name="jzsyjsl" class="tjinput" value="" />个</span>
+                <span class="spcs">二级</span><span class="kjcs"><input type="text" id="jzsejsl" name="jzsejsl" class="tjinput" value="" />个</span>
+            </div>
+            <div style="margin-top:10px;">
+                <span class="spcs">当月调入</span><span class="kjcs"><input type="text" id="jzsdydrsl" name="jzsdydrsl" class="tjinput" value="" />个</span>
+                <span class="spcs">当月调出</span><span class="kjcs"><input type="text" id="jzsdydcsl" name="jzsdydcsl" class="tjinput" value="" />个</span>
+            </div>
+            <div class="divstrong"><strong>经营区域排名</strong></div>
+            <div style="margin-top:10px;">
+                <input type="hidden" id="jyqypmtop5" name="jyqypmtop5"/>
+                <div id="divjyqypmtop5"></div>
+            </div>
+            <div class="divstrong"><strong>国外经营区域排名</strong></div>
+            <div style="margin-top:10px;">
+                <input type="hidden" id="gwjyqypmtop5" name="gwjyqypmtop5" />
+                <div id="divgwjyqypmtop5"></div>
+            </div>
+            <div class="divstrong"><strong>建安规模企业22家</strong></div>
+            <div style="margin-top:10px;">
+                <span class="spcs">当月产值</span><span class="kjcs"><input type="text" id="jagmqydycz" name="jagmqydycz" class="tjinput" value="" />万元</span>
+                <span class="spcs">累计产值</span><span class="kjcs"><input type="text" id="jagmqyljcz" name="jagmqyljcz" class="tjinput" value="" />万元</span><br/><br />
+                <span class="spcs">同比增幅</span><span class="kjcs"><input type="text" id="jagmqytbzf" name="jagmqytbzf" class="tjinput" value="" />%</span>
+                <span class="spcs">占比</span><span class="kjcs"><input type="text" id="jagmqyzb" name="jagmqyzb" class="tjinput" value="" />%</span>
+            </div>
+            <div class="divstrong"><strong>施工面积</strong></div>
+            <div style="margin-top:10px;margin-bottom:20px;">
+                <span class="spcs">累计施工面积</span><span class="kjcs"><input type="text" id="ljsgmj" name="ljsgmj" class="tjinput" value="" />平方米</span><br /><br />
+                <span class="spcs">累计在建面积</span><span class="kjcs"><input type="text" id="ljzjmj" name="ljzjmj" class="tjinput" value="" />平方米</span>
+                <span class="spcs">累计竣工面积</span><span class="kjcs"><input type="text" id="ljjgmj" name="ljjgmj" class="tjinput" value="" />平方米</span>
+            </div>
+
+
+            
+
+        </div>
+    </div>
+</form>
+

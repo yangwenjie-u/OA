@@ -1,0 +1,2 @@
+1.在各ZDZD中,添加“是否辅助隐藏”字段
+alter table *ZDZD add FZYC bit

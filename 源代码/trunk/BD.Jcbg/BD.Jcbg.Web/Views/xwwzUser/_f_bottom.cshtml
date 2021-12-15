@@ -1,0 +1,181 @@
+﻿
+@using BD.Jcbg.Common;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <link rel="stylesheet" type="text/css" href="@SkinManager.GetXwwzPath("css/stj_20160517_2.css")" />
+    <link href="@SkinManager.GetXwwzPath("SpryAssets/SpryTabbedPanels.css")" rel="stylesheet" type="text/css" />
+     <title>无标题文档</title>
+    <link rel="stylesheet" type="text/css" href="@SkinManager.GetXwwzPath("css/default.css")">
+     <link rel="stylesheet" href="@SkinManager.GetXwwzPath("css/jquery.hiSlider.min.css")">
+     <!--<link rel="stylesheet" type="text/css" href="css/style.css">-->
+ 
+    <script src="@SkinManager.GetXwwzPath("SpryAssets/SpryTabbedPanels.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzPath("js/jquery.1.9.1.js")"></script>
+    <script src="@SkinManager.GetXwwzPath("js/pic_lb.js")"></script>
+
+    <script src="@SkinManager.GetXwwzPath("js/jquery.hiSlider.min.js")"></script>
+    @RenderSection("head", false)
+    <!--<script src="js/jquery.hiSlider.min.js"></script>-->
+    <!--<script type="text/javascript">-->
+    <script type="text/javascript">
+
+
+
+
+        // Executes the function when DOM will be loaded fully
+        $(document).ready(function () {
+            // hover property will help us set the events for mouse enter and mouse leave
+            $('.navigation li').hover(
+                // When mouse enters the .navigation element
+                function () {
+                    //Fade in the navigation submenu
+                    $('ul', this).fadeIn(); 	// fadeIn will show the sub cat menu
+                },
+                // When mouse leaves the .navigation element
+                function () {
+                    //Fade out the navigation submenu
+                    $('ul', this).fadeOut();	 // fadeOut will hide the sub cat menu
+                }
+            );
+        });
+
+
+    </script>
+
+    <!--
+    $(document).ready(function(){
+        $("#count1").dayuwscroll({
+            parent_ele:'#wrapBox1',
+            list_btn:'#tabT04',
+            pre_btn:'#left1',
+            next_btn:'#right1',
+            path: 'left',
+            auto:true,
+            time:3000,
+            num:5,
+            gd_num:5,
+            waite_time:1000
+        });
+    });
+
+    var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+    /*
+    var TabbedPanels2 = new Spry.Widget.TabbedPanels("TabbedPanels2");
+    */
+    var TabbedPanels3 = new Spry.Widget.TabbedPanels("TabbedPanels3");
+    $('.hiSlider1').hiSlider();
+
+    </script>
+    -->
+
+</head>
+
+<body>
+    <div class="top">
+        <div class="top_1000">
+            <div class="top_1000_left">
+                <div class="top_1000_left_img"> <img src="@SkinManager.GetXwwzPath("img/zs-title.png")" class="img" />  </div>
+            </div>
+            <div class="top_1000_right">
+                <div class="top_1000_right_word"><a href="#" onclick="this.style.behavior='url(#default#homepage)';this.setHomePage('http://www.baidu.com');"> 设为首页</a></div>
+                <div class="top_1000_right_word"> | </div>
+                <div class="top_1000_right_word"><a href="javascript:window.external.AddFavorite('http://www.baidu.com','标题')">加入收藏</a></div>
+                <div class="top_1000_right_word"> | </div>
+                <div class="top_1000_right_word">联系我们</div>
+            </div>
+        </div>
+    </div>
+    <div class="title">
+        <div class="title_1000">
+
+
+            <div style="margin:0 auto">
+
+
+                <ul class="navigation">
+                    <li><a href="#">首页</a></li>
+                    <li>
+                        <a href="#">组织机构 </a>
+
+                        <ul>
+                            <li><a href="#">单位概况</a></li>
+                            <li><a href="#">工作制度</a></li>
+                        </ul>
+                        <div class="clear"></div>
+                    </li>
+                    <li>
+                        <a href="#">政务公开 </a>
+                        <div class="clear"></div>
+                    </li>
+                    <li>
+                        <a href="#">政策法规 </a>
+
+                        <div class="clear"></div>
+                    </li>
+
+                    <li>
+                        <a href="#">办事指南 </a>
+
+                        <div class="clear"></div>
+                    </li>
+
+
+                    <li>
+                        <a href="#">公示平台 </a>
+                        <ul>
+                            <li><a href="#">监督受理</a></li>
+
+                        </ul>
+                        <div class="clear"></div>
+                    </li>
+
+
+                    <li>
+                        <a href="#">建设动态 </a>
+                        <ul>
+                            <li><a href="#">优质工程</a></li>
+                            <li><a href="#">不良行为</a></li>
+                            <li><a href="#">曝光台</a></li>
+                        </ul>
+                        <div class="clear"></div>
+                    </li>
+
+
+                    <li>
+                        <a href="#">学习园地 </a>
+
+                        <div class="clear"></div>
+                    </li>
+
+
+                    <li>
+                        <a href="#">相关下载 </a>
+
+                        <div class="clear"></div>
+                    </li>
+
+
+
+                    <!--<li><a href="#">Main Cat </a></li>-->
+                </ul>
+                <div class="clear"></div>
+            </div>
+
+
+
+
+
+
+
+
+            <!--  -->
+        </div>
+    </div>
+
+    @RenderBody()
+</body>
+</html>

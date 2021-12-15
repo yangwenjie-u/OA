@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.KqjUserMonthLog,BD.Jcbg.DataModal" table="KqjUserMonthLog" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="UserId" column="[UserId]" />
+    <property type="string" length="50" name="ScheduleId" column="[ScheduleId]" />
+    <property type="string" length="50" name="CompanyId" column="[CompanyId]" />
+    <property type="string" length="50" name="GzId" column="[GzId]" />
+    <property type="string" length="50" name="Bzfzr" column="[Bzfzr]" />
+    <property type="string" length="50" name="RealName" column="[RealName]" />
+    <property type="string" length="200" name="CompanyName" column="[CompanyName]" />
+    <property type="string" length="50" name="BzfzrRealName" column="[BzfzrRealName]" />
+    <property type="string" length="50" name="GzName" column="[GzName]" />
+    <property type="int" name="LogYear" column="[LogYear]" />
+    <property type="int" name="LogMonth" column="[LogMonth]" />
+    <property type="DateTime" name="LogDayIn1" column="[LogDayIn1]" />
+    <property type="DateTime" name="LogDayOut1" column="[LogDayOut1]" />
+    <property type="DateTime" name="LogDayIn2" column="[LogDayIn2]" />
+    <property type="DateTime" name="LogDayOut2" column="[LogDayOut2]" />
+    <property type="DateTime" name="LogDayIn3" column="[LogDayIn3]" />
+    <property type="DateTime" name="LogDayOut3" column="[LogDayOut3]" />
+    <property type="DateTime" name="LogDayIn4" column="[LogDayIn4]" />
+    <property type="DateTime" name="LogDayOut4" column="[LogDayOut4]" />
+    <property type="DateTime" name="LogDayIn5" column="[LogDayIn5]" />
+    <property type="DateTime" name="LogDayOut5" column="[LogDayOut5]" />
+    <property type="DateTime" name="LogDayIn6" column="[LogDayIn6]" />
+    <property type="DateTime" name="LogDayOut6" column="[LogDayOut6]" />
+    <property type="DateTime" name="LogDayIn7" column="[LogDayIn7]" />
+    <property type="DateTime" name="LogDayOut7" column="[LogDayOut7]" />
+    <property type="DateTime" name="LogDayIn8" column="[LogDayIn8]" />
+    <property type="DateTime" name="LogDayOut8" column="[LogDayOut8]" />
+    <property type="DateTime" name="LogDayIn9" column="[LogDayIn9]" />
+    <property type="DateTime" name="LogDayOut9" column="[LogDayOut9]" />
+    <property type="DateTime" name="LogDayIn10" column="[LogDayIn10]" />
+    <property type="DateTime" name="LogDayOut10" column="[LogDayOut10]" />
+    <property type="DateTime" name="LogDayIn11" column="[LogDayIn11]" />
+    <property type="DateTime" name="LogDayOut11" column="[LogDayOut11]" />
+    <property type="DateTime" name="LogDayIn12" column="[LogDayIn12]" />
+    <property type="DateTime" name="LogDayOut12" column="[LogDayOut12]" />
+    <property type="DateTime" name="LogDayIn13" column="[LogDayIn13]" />
+    <property type="DateTime" name="LogDayOut13" column="[LogDayOut13]" />
+    <property type="DateTime" name="LogDayIn14" column="[LogDayIn14]" />
+    <property type="DateTime" name="LogDayOut14" column="[LogDayOut14]" />
+    <property type="DateTime" name="LogDayIn15" column="[LogDayIn15]" />
+    <property type="DateTime" name="LogDayOut15" column="[LogDayOut15]" />
+    <property type="DateTime" name="LogDayIn16" column="[LogDayIn16]" />
+    <property type="DateTime" name="LogDayOut16" column="[LogDayOut16]" />
+    <property type="DateTime" name="LogDayIn17" column="[LogDayIn17]" />
+    <property type="DateTime" name="LogDayOut17" column="[LogDayOut17]" />
+    <property type="DateTime" name="LogDayIn18" column="[LogDayIn18]" />
+    <property type="DateTime" name="LogDayOut18" column="[LogDayOut18]" />
+    <property type="DateTime" name="LogDayIn19" column="[LogDayIn19]" />
+    <property type="DateTime" name="LogDayOut19" column="[LogDayOut19]" />
+    <property type="DateTime" name="LogDayIn20" column="[LogDayIn20]" />
+    <property type="DateTime" name="LogDayOut20" column="[LogDayOut20]" />
+    <property type="DateTime" name="LogDayIn21" column="[LogDayIn21]" />
+    <property type="DateTime" name="LogDayOut21" column="[LogDayOut21]" />
+    <property type="DateTime" name="LogDayIn22" column="[LogDayIn22]" />
+    <property type="DateTime" name="LogDayOut22" column="[LogDayOut22]" />
+    <property type="DateTime" name="LogDayIn23" column="[LogDayIn23]" />
+    <property type="DateTime" name="LogDayOut23" column="[LogDayOut23]" />
+    <property type="DateTime" name="LogDayIn24" column="[LogDayIn24]" />
+    <property type="DateTime" name="LogDayOut24" column="[LogDayOut24]" />
+    <property type="DateTime" name="LogDayIn25" column="[LogDayIn25]" />
+    <property type="DateTime" name="LogDayOut25" column="[LogDayOut25]" />
+    <property type="DateTime" name="LogDayIn26" column="[LogDayIn26]" />
+    <property type="DateTime" name="LogDayOut26" column="[LogDayOut26]" />
+    <property type="DateTime" name="LogDayIn27" column="[LogDayIn27]" />
+    <property type="DateTime" name="LogDayOut27" column="[LogDayOut27]" />
+    <property type="DateTime" name="LogDayIn28" column="[LogDayIn28]" />
+    <property type="DateTime" name="LogDayOut28" column="[LogDayOut28]" />
+    <property type="DateTime" name="LogDayIn29" column="[LogDayIn29]" />
+    <property type="DateTime" name="LogDayOut29" column="[LogDayOut29]" />
+    <property type="DateTime" name="LogDayIn30" column="[LogDayIn30]" />
+    <property type="DateTime" name="LogDayOut30" column="[LogDayOut30]" />
+    <property type="DateTime" name="LogDayIn31" column="[LogDayIn31]" />
+    <property type="DateTime" name="LogDayOut31" column="[LogDayOut31]" />
+    <property type="string" length="50" name="ProjectId" column="[ProjectId]" />
+    <property type="string" length="200" name="ProjectName" column="[ProjectName]" />
+  </class>
+</hibernate-mapping>

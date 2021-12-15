@@ -1,0 +1,135 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var ryxm = '@ViewBag.ryxm';
+        var rybh = '@ViewBag.rybh';
+        var sjhm = '@ViewBag.sjhm';
+
+        $(function () {
+            try {
+                $('#ryxm').val(ryxm);
+                $('#phone').val(sjhm);
+                InitKeydown();
+            } catch (err) {
+                alert(e);
+            }
+        });
+
+        function InitKeydown() {
+            try {
+                $("#phone").keydown(function (e) {
+                    var ev = document.all ? window.event : e;
+                    if (ev.keyCode == 13) {
+                        doSubmit();
+                    }
+                });
+            } catch (e) {
+                layer.alert('初始化按键事件异常', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+            }
+        }
+
+
+        function isValid() {
+            try {
+
+                if ($("#phone").val() == "") {
+                    layer.alert('请输入填写手机号码！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+                else if (!checkphone()) {
+                    layer.alert('请输入有效的手机号码！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+
+
+            } catch (e) {
+                alert(e);
+            }
+            return true;
+        }
+        function checkphone() {
+            var reg = /^1\d{10}$/;
+            var phone = $('#phone').val();
+            return reg.test(phone);
+        }
+        function doSubmit() {
+            var ret = true;
+            // 校验表单
+            if (!isValid())
+                return false;
+
+            var phone = $('#phone').val();
+
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/dorybamodifyphone?rybh=" + encodeURIComponent(rybh) + "&sjhm=" + encodeURIComponent(phone),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == "0") {
+                            layer.alert('手机号码修改成功！', {
+                                icon: 0,
+                                skin: 'layer-ext-moon',
+                                yes: function (index, layero) {
+                                    parent.layer.closeAll();
+                                }
+                            });
+                            
+                            
+                        } else {
+                            if (data.msg == "")
+                                data.msg = "修改失败";
+                            layer.alert(data.msg, {
+                                icon: 0,
+                                skin: 'layer-ext-moon'
+                            });
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+            return ret;
+        }
+    </script>
+}
+
+<ul class="list-group">
+    <li class='list-group-item' id='li_ryxm'>
+        <div class="input-group">
+            <span class="input-group-addon">用 户 姓  名</span>
+            <input type="text" class="form-control" id='ryxm' name="ryxm" value="" readonly="readonly">
+        </div>
+    </li>
+    <li class='list-group-item' id='li_sjhm'>
+        <div class="input-group">
+            <span class="input-group-addon">手 机 号  码</span>
+            <input type="text" class="form-control" id='phone' name="phone" value="" placeholder="请填写手机号">
+        </div>
+    </li>
+</ul>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="保存" />
+        &nbsp;&nbsp;
+    </form>
+
+
+</div>

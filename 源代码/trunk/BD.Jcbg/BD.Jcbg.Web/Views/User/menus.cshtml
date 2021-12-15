@@ -1,0 +1,320 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_contentlayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+    $(function () {
+        try {
+            loadMenus();
+            resize_daxiao();
+            layer.config({
+                extend: 'extend/layer.ext.js'
+            });
+        } catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    });
+    // 页切换
+    function a_qiehuan(aa) {
+        try{
+            document.getElementsByClassName("fenlei_container").item(0).style.left = -($(window).width() * aa) + "px";
+            document.getElementsByClassName("fanye_c_a_active").item(0).className = "fanye_c_a";
+            document.getElementsByClassName("fanye_c_a").item(aa).className = "fanye_c_a_active";
+        } catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    }
+    // 显示所有菜单，不限分组
+    function all_qiehuan() {
+        try {
+            g_groupid = "";
+            g_searchkey = "";
+
+            var menus = filterMenu(g_groupid, g_searchkey);
+            setPages(menus.length);
+            setMenus(menus);
+            resize_daxiao();
+        } catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    }
+    var g_groupid = "@ViewData["groupid"]";             // 分组id
+    var g_searchkey = "";                               // 搜索关键字
+    var g_menus = [];                                   // 所有菜单，包含分组
+    var g_imageRoot = "@SkinManager.GetImagePath("")";  // 图片根路径
+        // 加载菜单
+        function loadMenus() {
+            try{
+                $.ajax({
+                    type: "POST",
+                    url: "/user/getmenus",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        g_menus = data;
+                        var menus = filterMenu(g_groupid, g_searchkey);
+                        setPages(menus.length);
+                        setMenus(menus);
+                        resize_daxiao();
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll('loading');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.load();
+                    }
+                });
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        }
+
+        var g_pageSize = 15;            // 每页菜单数
+        var g_rowSize = 5;              // 每行列数
+        // 加载分页控件
+        function setPages(recordSum) {
+            try {
+                var left = recordSum % g_pageSize;
+                var pageSum = (recordSum - left) / g_pageSize;
+                if (left > 0)
+                    pageSum++;
+                var pageStr = "<div class=\"fanye_l\"> </div>\r\n"+
+                    "<div class=\"fanye_c\"> <a class=\"fanye_c_a_active\" id=\"pingmu1\" href=\"javascript:a_qiehuan(0)\" onfocus=\"this.blur();\"></a> </div>\r\n";
+                for (var i = 1; i < pageSum; i++) {
+                    pageStr += "<div class=\"fanye_c\"> <a class=\"fanye_c_a\" id=\"pingmu"+(i+1)+"\" href=\"javascript:a_qiehuan("+i+")\" onfocus=\"this.blur();\"></a> </div>";
+                }
+                pageStr += "<div class=\"fanye_r\"> <a class=\"fanye_r_a\" href=\"javascript:all_qiehuan()\" onfocus=\"this.blur();\"></a> </div>" +
+                    "<div class=\"fanye_s\"> <a class=\"fanye_s_a\" href=\"javascript:showSearchDlg()\"  onfocus=\"this.blur();\"    ></a> </div>";
+
+                $(".fanye_div").html(pageStr);
+            }catch(e){
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+
+        }
+        // 加载菜单
+        function setMenus(menus) {
+            try {
+                var left = menus.length % g_pageSize;
+                var pageSum = (menus.length - left) / g_pageSize;
+                if (left > 0)
+                    pageSum++;
+                var menuStr = "";
+                for (var i = 0; i < pageSum; i++) {
+                    var curPageRecord = ((i == pageSum - 1)&& ((menus.length%g_pageSize)!=0)) ? menus.length % g_pageSize : g_pageSize;
+                    left = curPageRecord % g_rowSize;
+                    var rowSum = (curPageRecord - left) / g_rowSize;
+                    if (left > 0)
+                        rowSum++;
+                    menuStr += "<div class=\"fenlei\" style=\"position:absolute; top:0px;\">";
+                    for (var j = 0; j < rowSum; j++) {
+                        menuStr += "<div class=\"jcjggl_row\">";
+                        var startIndex = i * g_pageSize + j * g_rowSize;
+                        for (var k = startIndex; k < menus.length && k < startIndex + g_rowSize; k++) {
+                            var curMenu = menus[k];
+                            var countclass = "";
+                            var countstyle = "display:none";
+                            // 企业申请审批
+                            if (curMenu.MenuCode == "QYGL_QYSQSP") {
+                                var sqsl = getQysqsl() * 1;
+                                if (sqsl > 0) {
+                                    countstyle = "display:inline";
+                                    if (sqsl <= 9)
+                                        countclass = "count_" + sqsl;
+                                    else
+                                        countclass = "count_11";
+                                }
+                            }
+                            // 内部邮件
+                            else if (curMenu.MenuCode == "NBYJ") {
+                                var newmailsum = getNewMailSum() * 1;
+                                if (newmailsum > 0) {
+                                    countstyle = "display:inline";
+                                    if (newmailsum <= 9)
+                                        countclass = "count_" + newmailsum;
+                                    else
+                                        countclass = "count_11";
+                                }
+                            }
+                            // 待办工作
+                            else if (curMenu.MenuCode == "DBGZ") {
+                                var workSum = getWorkSum() * 1;
+                                if (workSum > 0) {
+                                    countstyle = "display:inline";
+                                    if (workSum <= 9)
+                                        countclass = "count_" + workSum;
+                                    else
+                                        countclass = "count_11";
+                                }
+                            }
+                            menuStr += "<div class=\"jcjggl_row_1\" style='cursor:pointer;' onclick='gotoMenu(\"" + curMenu.MenuCode + "\")'>" +
+                                        "<div  class=\"jcjggl_row_1_div\">" +
+                                            "<div class=\"jcjggl_row_1_pic\"><img src=\"" + g_imageRoot + curMenu.ImageUrl + "\" style='vertical-align:top' class='img_cd' /> </div>" +
+                                            "<div class=\"" + countclass + "\" style='" + countstyle + "' id='div_count_" + curMenu.MenuCode + "'> </div>" +
+                                        "</div>"+
+                                        "<div class=\"jcjggl_row_1_word\"> " + curMenu.MenuName + " </div>" +
+                                       "</div>";
+                        }
+                        menuStr += "</div>";
+                    }
+
+                    menuStr += "</div>";
+                }
+                $(".fenlei_container").html(menuStr);
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        }
+        // 根据组号，关键字，过滤菜单
+        function filterMenu(groupid, searchkey) {
+            var ret = [];
+            try{
+                for (var i = 0; i < g_menus.length; i++) {
+                    var item = g_menus[i];
+                    if (item.IsGroup ||
+                        (g_groupid != "" && item.ParentCode != g_groupid) ||
+                        (g_searchkey != "" && item.MenuName.indexOf(g_searchkey) == -1))
+                        continue;
+                    ret[ret.length] = item;
+                }
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+            return ret;
+        }
+        // 根据关键字查找菜单
+        function searchMenus(searchKey) {
+            try{
+                g_searchkey = searchKey;
+                var menus = filterMenu(g_groupid, g_searchkey);
+                setPages(menus.length);
+                setMenus(menus);
+                resize_daxiao();
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+
+        }
+        // 打开某个菜单
+        function gotoMenu(menuCode) {
+            try {                
+                var curMenu = undefined;
+                for (var i = 0; i < g_menus.length; i++) {
+                    if (g_menus[i].MenuCode == menuCode) {
+                        curMenu = g_menus[i];
+                        break;
+                    }
+                }
+                if (curMenu == undefined) {
+                    layer.open({ title: '错误', content: "找不到菜单", icon: 2 });
+                    return;
+                }
+                
+                window.parent.addTab(curMenu.MenuCode, curMenu.MenuName, curMenu.MenuUrl);
+
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        }
+        // 显示查找对话框
+        function showSearchDlg() {
+            try {
+                layer.prompt({
+                    title: '菜单搜索',
+                    formType: 0 //prompt风格，支持0-2
+                }, function (pass) {
+                    searchMenus(pass);
+                    layer.closeAll();
+                });
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        }
+        $(window).resize(function () {
+            resize_daxiao();
+        });
+        function resize_daxiao() {
+            $(".jcjggl_row_1_pic").width($(".jcjggl_row_1_pic").height());
+            $(".all").height($(window).height());
+            var fanye_div_width = document.getElementsByClassName("fanye_c").length * $(".fanye_c").width() + $(".fanye_l").width() + $(".fanye_s").width() + $(".fanye_r").width();
+            $(".fanye_div").width(fanye_div_width);
+            $(".fenlei_container").height($(window).height() - 40 - $(".fanye").height());
+            $(".fenlei_container").width($(window).width());
+            $(".fenlei").width($(window).width());
+            for (i = 0; i < document.getElementsByClassName("fenlei").length; i++) {
+                document.getElementsByClassName("fenlei").item(i).style.left = $(window).width() * i + "px";
+            }
+        }
+        function getQysqsl() {
+            var ret = 0;
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/qy/getqysqsl",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == 0)
+                            ret = data.msg;
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+            }
+            return ret;
+        }
+        function getNewMailSum() {
+            var ret = 0;
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/oa/getnewmailsum",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == 0)
+                            ret = data.msg*1;
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+            }
+            return ret;
+        }
+        function getWorkSum() {
+            var ret = 0;
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/workflow/getworktodocount",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        ret = data.count * 1;
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+            }
+            return ret;
+        }
+    </script>
+}
+<div class="all over_hidden">
+    <div class="fanye">
+        <div class="fanye_div"></div>
+    </div>
+    <div class="fenlei_container" style="position:relative; top:66px;">
+    </div>
+</div>

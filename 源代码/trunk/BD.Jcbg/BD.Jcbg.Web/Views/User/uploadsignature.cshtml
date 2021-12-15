@@ -1,0 +1,69 @@
+﻿@{
+    Layout = "~/Views/User/_fileuploadlayout.cshtml";
+}
+
+@{
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            try {
+                us_initFileCtrl();
+
+            } catch (err) {
+                alert(e);
+            }
+        });
+
+        function us_initFileCtrl() {
+            try {
+                var width = 120;
+                $('#setsign_fj').uploadify({
+                    'swf': '/skins/default/images/uploadify.swf',
+                    'uploader': '/user/savesetsign',
+                    'onUploadSuccess': function (file, data, response) {
+                        var jdata = eval('(' + data + ')');
+
+                        if (jdata.code == 0) {
+                            $("#setsign_imgsign").attr("src", "/user/showsign?t=" + Math.random());
+                            us_shImage();
+                        }
+                        else
+                            $.messager.alert('提示', '上传文件' + file.name + '失败，错误信息：' + jdata.msg, 'info');
+                    },
+                    'onFallback': function () {
+                        $.messager.alert('提示', '当前未安装flash控件，请从百度搜索flash player下载安装', 'info');
+                    },
+
+                    'onUploadError': function (file, errorCode, errorMsg, errorString) {
+                        $.messager.alert('提示', file.name + '上传失败，' + errorString + '，请稍后再试', 'info');
+                    },
+                    'buttonText': '请选择签名图片',
+                    'width': width,
+                    'height': '25'
+                });
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+        function us_shImage() {
+            $("img").each(function (i, e) {
+                var imgsrc = $(e).attr("src");
+                $(e).load(function () {
+                    $(e).show();
+                }).error(function () {
+                    $(e).hide();
+                });
+
+            });
+        }
+    </script>
+}
+<ul class="list-group">
+    <li class='list-group-item'>
+        <input type='file' id='setsign_fj' name='setsign_fj' />
+    </li>
+    <li class="list-group-item">
+        已上传签名：　　
+        <img src="/user/showsign" id="setsign_imgsign" alt="" />
+    </li>
+</ul>

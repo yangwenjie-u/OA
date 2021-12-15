@@ -1,0 +1,393 @@
+﻿@{
+    Layout = "~/Views/workflow/_workflow.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+	var workflow_serials_g_pageSize = 20;
+	var workflow_serials_g_editIndex = undefined;
+
+	var workflow_serials_g_edit_companys = null;
+	var workflow_serials_g_search_companys = null;
+	var workflow_serials_g_default_company = null;
+
+	$(function () {
+		try {
+			workflow_serials_initDs();
+			$('#workflow_serials_maintable').datagrid({
+				title: '流程流水号管理',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/workflow/getserials?rows=' + workflow_serials_g_pageSize + '&_=' + Math.random(),
+				rownumbers: true,
+				nowrap: true,
+				idField: 'Recid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: workflow_serials_g_pageSize,
+				pageList: [workflow_serials_g_pageSize, 40, 50, 100, 1000, 10000],
+				columns: [[
+				{ field: 'CompanyId', title: '所属单位', width: 200, sortable: true, align: "center",
+				formatter: function (value, row, index) {
+				        var r = '';
+				        var cps = $.grep(workflow_serials_g_edit_companys, function (c, index) {
+				            return c['CompanyId'] == value;
+				        });
+				        if (cps.length) {
+				            r = cps[0]['CompanyName'];
+				        }
+				        return r;
+						//return row.CompanyName;
+					},
+					editor: {
+						type: 'combobox',
+						options: {
+							valueField: "CompanyId",
+							textField: "CompanyName",
+							mode: "local",
+							editable: false,
+							panelHeight: 'auto',
+							required: true,
+							data: workflow_serials_g_edit_companys,
+							onChange: function (newvalue, oldvalue) {
+								try {
+									if (workflow_serials_inEdit()) {
+										$('#workflow_serials_maintable').datagrid('selectRow', workflow_serials_g_editIndex);
+										var data = $('#workflow_serials_maintable').datagrid('getSelected');
+										for (var i = 0; i < workflow_serials_g_edit_companys.length; i++) {
+											if (workflow_serials_g_edit_companys[i].CompanyId == newvalue) {
+												data.CompanyName = workflow_serials_g_edit_companys[i].CompanyName;
+												break;
+											}
+										}
+									}
+								} catch (e) {
+									$.messager.alert('单位选择事件异常', e.message, 'warning');
+								}
+
+							}
+						}
+					}
+				},
+				{ field: 'SerialKey', title: '流水号关键字', width: 140, sortable: true, align: "center", editor: { type: 'validatebox', options: { required: true, validType: 'maxLength[50]'}} },
+				{ field: 'SerialModule', title: '编号模式', width: 200, sortable: true, align: "center", editor: { type: 'validatebox', options: { required: true, validType: 'maxLength[50]'}} },
+				{ field: 'CurMaxSerial', title: '当前最大编号', width: 100, sortable: true, align: "center" },
+				{ field: 'Memo', title: '备注', width: 150, sortable: true, align: "center", editor: { type: 'validatebox', options: { required: false, validType: 'maxLength[50]'}} }
+				
+				]],
+				toolbar: "#workflow_serials_tb",
+				onClickRow: function (rowIndex, rowData) {
+					if (!workflow_serials_inEdit())
+						workflow_serials_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					if (!workflow_serials_inEdit())
+						workflow_serials_editRecord();
+				}
+			});
+
+			workflow_serials_initSearch();
+		} catch (e) {
+			$.messager.alert('初始化页面异常', e.message, 'warning');
+		}
+
+	});
+	function workflow_serials_initDs() {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/workflow/getcompanys",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					workflow_serials_g_edit_companys = new Array();
+
+					workflow_serials_g_search_companys = [{ "CompanyId": "", "CompanyName": "不限"}];
+					if (data == null || data.length == 0)
+						workflow_serials_g_edit_companys = [{ "CompanyId": "", "CompanyName": "请选择单位"}];
+					else {
+						for (var i = 0; i < data.length; i++) {
+							workflow_serials_g_edit_companys[workflow_serials_g_edit_companys.length] = data[i];
+							workflow_serials_g_search_companys[workflow_serials_g_search_companys.length] = data[i];
+						}
+					}
+					workflow_serials_g_default_company = workflow_serials_g_edit_companys[0];
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载单位数据...");
+				}
+			});
+		} catch (e) {
+			$.messager.alert('加载初始化数据集异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_initSearch() {
+		try {
+			$("#workflow_serials_search_companys").combobox({
+				valueField: "CompanyId",
+				textField: "CompanyName",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_serials_g_search_companys
+			});
+		} catch (e) {
+			$.messager.alert('初始化查询控件异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_search() {
+		try {
+			if (workflow_serials_inEdit()) {
+				$.messager.alert('提示', '请先完成当前的编辑的记录', 'info');
+				return;
+			}
+			workflow_serials_gridReload();
+		} catch (e) {
+			$.messager.alert('查找记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_showToolbar(rowData) {
+		try {
+			$("#workflow_serials_btnedit").linkbutton('enable');
+			$("#workflow_serials_btndelete").linkbutton('enable');
+		} catch (e) {
+			$.messager.alert('显示工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_showNoRecToolbar() {
+		try {
+			$("#workflow_serials_maintable").datagrid('unselectAll');
+			$("#workflow_serials_btnedit").linkbutton('disable');
+			$("#workflow_serials_btndelete").linkbutton('disable');
+			$("#workflow_serials_btnsave").linkbutton('disable');
+			$("#workflow_serials_btncancel").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('显示无记录工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_showEditToolbar(isedit) {
+		try {
+			var selectRow = $("#workflow_serials_maintable").datagrid("getSelected") != null;
+			$("#workflow_serials_btnadd").linkbutton(isedit ? 'disable' : 'enable');
+			$("#workflow_serials_btnedit").linkbutton(isedit ? 'disable' : (selectRow ? 'enable' : 'disable'));
+			$("#workflow_serials_btndelete").linkbutton(isedit ? 'disable' : (selectRow ? 'enable' : 'disable'));
+			$("#workflow_serials_btnsave").linkbutton(isedit ? 'enable' : 'disable');
+			$("#workflow_serials_btncancel").linkbutton(isedit ? 'enable' : 'disable');
+		} catch (e) {
+			$.messager.alert('显示编辑工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_inEdit() {
+		var ret = false;
+		try {
+			ret = workflow_serials_g_editIndex != undefined;
+		} catch (e) {
+			$.messager.alert('判读是否处于编辑状态异常', e.message, 'warning');
+		}
+		return ret;
+	}
+	function workflow_serials_addRecord() {
+		try {
+			if (workflow_serials_inEdit()) {
+				$.messager.alert('提示', '请先完成当前的编辑的记录', 'info');
+				return;
+			}
+			workflow_serials_showEditToolbar(true);
+			var data = {
+				Recid: 0,
+				SerialKey: "",
+				SerialModule: "",
+				CurMaxSerial:"",
+				CompanyId: workflow_serials_g_default_company.CompanyId,
+				Memo: "",
+				CompanyName: workflow_serials_g_default_company.CompanyName
+			};
+			$('#workflow_serials_maintable').datagrid('insertRow', {
+				index: 0,
+				row: data
+			});
+			workflow_serials_g_editIndex = 0;
+			$('#workflow_serials_maintable').datagrid('selectRow', workflow_serials_g_editIndex).datagrid('beginEdit', workflow_serials_g_editIndex);
+
+		} catch (e) {
+			$.messager.alert('添加记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_editRecord() {
+		try {
+			if (workflow_serials_inEdit()) {
+				$.messager.alert('提示', '请先完成当前的编辑的记录', 'info');
+				return;
+			}
+			workflow_serials_showEditToolbar(true);
+			var data = $('#workflow_serials_maintable').datagrid('getSelected');
+			workflow_serials_g_editIndex = $('#workflow_serials_maintable').datagrid('getRowIndex', data);
+			$('#workflow_serials_maintable').datagrid('selectRow', workflow_serials_g_editIndex).datagrid('beginEdit', workflow_serials_g_editIndex);
+
+		} catch (e) {
+			$.messager.alert('修改记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_deleteRecord() {
+		try {
+			var rec = $("#workflow_serials_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$.messager.confirm('提示', '确定要删除选中的记录吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/workflow/deleteserial?id=" + rec.Recid,
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									var index = $("#workflow_serials_maintable").datagrid('getRowIndex', rec);
+									$("#workflow_serials_maintable").datagrid('deleteRow', index);
+									$('#workflow_serials_maintable').datagrid('acceptChanges');
+									workflow_serials_showNoRecToolbar();
+									$.messager.alert('提示', '删除成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e.message, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在删除...");
+						}
+					});
+				}
+			});
+		} catch (e) {
+			$.messager.alert('删除记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_gridReload() {
+		try {
+			$('#workflow_serials_maintable').datagrid('load', {
+				companyid: $("#workflow_serials_search_companys").combobox("getValue"),
+				key: $("#workflow_serials_search_key").val(),
+				memo: $("#workflow_serials_search_memo").val()
+			});
+			workflow_serials_showNoRecToolbar();
+		} catch (e) {
+			$.messager.alert('加载表格异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_cancelRecord() {
+		if (!workflow_serials_inEdit())
+			return;
+		try {
+			$('#workflow_serials_maintable').datagrid('rejectChanges');
+			$('#maintable').datagrid('deleteRow', workflow_serials_g_editIndex);
+
+			workflow_serials_g_editIndex = undefined;
+			workflow_serials_showEditToolbar(false);
+		}
+		catch (e) {
+			$.messager.alert('取消编辑异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_saveRecord() {
+		if (!workflow_serials_inEdit())
+			return;
+		try {
+
+			$('#workflow_serials_maintable').datagrid('selectRow', workflow_serials_g_editIndex);
+
+			if (!workflow_serials_validateRecord()) {
+				return;
+			}
+			$('#workflow_serials_maintable').datagrid('acceptChanges');
+			var row = $('#workflow_serials_maintable').datagrid('getRows')[workflow_serials_g_editIndex];
+			$.ajax({
+				type: "POST",
+				url: "/workflow/saveserial",
+				data: workflow_serials_getRecordParams(row),
+				dataType: "json",
+				success: function (data) {
+					try {
+						if (data.code != "0") {
+							$.messager.alert('提示', '保存失败，请稍后再试', 'info');
+						}
+						else {
+							$('#workflow_serials_maintable').datagrid('getRows')[workflow_serials_g_editIndex] = data.record[0];
+							$('#workflow_serials_maintable').datagrid('refreshRow', workflow_serials_g_editIndex);
+							$('#workflow_serials_maintable').datagrid('selectRow', workflow_serials_g_editIndex);
+							workflow_serials_g_editIndex = undefined;
+							workflow_serials_showEditToolbar(false);
+						}
+					} catch (e) {
+						$.messager.alert('保存表单数据返回结果处理异常', e.message, 'warning');
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在保存...");
+				}
+			});
+		}
+		catch (e) {
+			$.messager.alert('保存表单数据异常', e.message, 'warning');
+		}
+	}
+	function workflow_serials_validateRecord() {
+		if (!workflow_serials_inEdit())
+			return false;
+		var ret = true;
+		try {
+			if (!$('#workflow_serials_maintable').datagrid("validateRow", workflow_serials_g_editIndex)) {
+				$.messager.alert('提示', '请把鼠标移到红三角感叹号上查看错误提示', 'info');
+				return false;
+			}
+		} catch (e) {
+			ret = false;
+			$.messager.alert('校验表单异常', e.message, 'warning');
+		}
+		return ret;
+	}
+	function workflow_serials_getRecordParams(record) {
+		var ret = "";
+		try {
+			ret =
+			"recid=" + record.ReportId + "&serialkey=" + encodeURIComponent(record.SerialKey) +
+			"&SerialModule=" + encodeURIComponent(record.SerialModule) + "&companyname=" + encodeURIComponent(record.CompanyName) +
+			"&memo=" + encodeURIComponent(record.Memo) + "&companyid=" + encodeURIComponent(record.CompanyId);
+		} catch (e) {
+			$.messager.alert('表单数据序列化异常', e.message, 'warning');
+		}
+		return ret;
+
+	}
+</script>
+<table id="workflow_serials_maintable"></table>  
+<div id="workflow_serials_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a onclick="workflow_serials_addRecord();" id="workflow_serials_btnadd" class="easyui-linkbutton" iconCls="icon-add" plain="true">添加</a>
+		<a onclick="workflow_serials_editRecord();" id="workflow_serials_btnedit" class="easyui-linkbutton" iconCls="icon-edit" plain="true" disabled="true">修改</a>
+		<a onclick="workflow_serials_saveRecord();" id="workflow_serials_btnsave" class="easyui-linkbutton" iconCls="icon-save" plain="true" disabled="true">保存</a>
+		<a onclick="workflow_serials_cancelRecord();" id="workflow_serials_btncancel" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" disabled="true">取消</a>
+		<a onclick="workflow_serials_deleteRecord();" id="workflow_serials_btndelete" class="easyui-linkbutton" iconCls="icon-remove" plain="true" disabled="true">删除</a>
+	</div>  
+	<div>
+		所属单位：<input id="workflow_serials_search_companys" style="width:200px" />
+		流水号关键字：<input id="workflow_serials_search_key" style="width:200px" />
+		流水号备注：<input id="workflow_serials_search_memo" style="width:200px" />
+		<a href="javascript:workflow_serials_search();" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+	</div>
+</div>

@@ -1,0 +1,263 @@
+﻿@using BD.WebListCommon;
+@using BD.WebListDataModel.Entities;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列表界面</title>@*    <script type="text/javascript" src="@Skins.GetHPath("js/jquery.min.js?v=2.1.4")"></script>*@
+    <link rel="stylesheet" href="@Skins.GetPubPath("jqwidgets/js/styles/jqx.base.css")"/>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jquery-1.11.1.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/plugins/layer/layer.js")"></script>
+    <script type="text/javascript" src="@Skins.GetMy97Path("WdatePicker.js")"></script>
+    <!-- jqxGrid -->
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxcore.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxdata.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxbuttons.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxscrollbar.js")"></script>
+
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxmenu.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxcheckbox.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxlistbox.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxdropdownlist.js")"></script>
+
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxgrid.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxgrid.grouping.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxgrid.pager.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxgrid.filter.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxgrid.sort.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/jqxgrid.selection.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("jqwidgets/js/globalization/globalize.js")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("weblist.js?v=2016062201")"></script>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="@Skins.GetHPath("css/bootstrap.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/font-awesome.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/plugins/bootstrap-table/bootstrap-table.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/animate.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/style.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/plugins/layer/skin/layer.css")"/>
+    <link rel="stylesheet" href="@Skins.GetCssPath("stj.css")"/>
+    <!-- CSS -->
+    @{ IList<string> cssList = ViewData["css"] as IList<string>; }
+    @foreach (var item in cssList)
+    {
+        <link rel="stylesheet" href="@Skins.GetCustomCssPath(item)"/>
+    }
+    <!-- JS -->
+    @{ IList<string> jsList = ViewData["js"] as IList<string>; }
+    @foreach (var item in jsList)
+    {
+        <script type="text/javascript" src="@Skins.GetCustomJsPath(item)"></script>
+    }
+</head>
+<body class="gray-bg" style="font-size: 20px;">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <form id="form1" name="form1" style="padding: 0 10px 0 0">
+        <input type="hidden" id="param" name="param" value="@ViewData["param"]" />
+        <input type="hidden" id="searchTxt" name="searchTxt" />
+        <input type="hidden" id="page" name="page" />
+        <input type="hidden" id="rows" name="rows" />
+        <input type="hidden" id="sort" name="sort" />
+        <input type="hidden" id="order" name="order" />
+        <!-- 按钮 -->
+        <div id="buttonDiv">
+        </div>
+        <!-- 查询条件 -->
+        <div id="conditionDiv" style="overflow: auto">
+        </div>
+        <!-- 工具栏 -->
+        <div id="toolbarDiv" class="btn-group">
+        </div>
+        <!-- 列表 -->
+        @{ Form form = ViewData["form"] as Form; }
+        @{ IList<FormZdzd> zdzdList = ViewData["zdzd"] as IList<FormZdzd>; }
+
+        <div id="dataDiv">
+            <div id="jqxgrid"></div>
+        </div>
+        </form>
+    </div>
+    <script type="text/javascript" language="javascript">
+        var dataGrid;
+        var source;
+        //工具栏
+        var toolbarStr = "";
+        //初始化数据
+        $(function () {
+            //初始化界面数据包
+            $.ajax({
+                type: "POST",
+                url: "/WebList/InitFormData",
+                dataType: "json",
+                data: { param: $("#param").val() },
+                async: true,
+                success: function (val) {
+                    if (!val.success) {
+                        alert(val.msg);
+                        return;
+                    }
+                    //**** 初始化界面 ****
+                    //按钮
+                    //$("#buttonDiv").html(iniButton(val.data.buttonList));
+                    toolbarStr = initToolbarButton(val.data.buttonList);
+                    //查询条件
+                    $("#conditionDiv").html(initCondition(val.data.conditionList));
+                    //列表
+                    iniTableForm(val.data);
+                    //**** 初始化列表 ****
+                    //initContentData();
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        });
+
+        //初始化内容
+        function initContentData() {
+       
+            //绑定事件
+            bindEvent();
+            //查询数据
+            //searchRecord();
+        }
+
+        //初始化显示Table界面
+        function iniTableForm(data) {
+            var listform = data.form;
+            var listzdzd = data.zdzdList
+            var str = "";
+            //**** 显示字段 ****
+            str += "[";
+            str += "{";
+            str += "    text: '序号',";
+            str += "    sortable: false, filterable: false, editable: false,groupable: false, draggable: false, resizable: false,";
+            str += "    datafield: '',";
+            str += "    align: 'center',";
+            str += "    columntype: 'number',";
+            str += "    width: 50,";
+            str += "    cellsrenderer: function (row, column, value) {";
+            str += "        return \"<div style='margin:4px;'>\" + (value + 1) + \"</div>\"";
+            str += "    }";
+            str += "},";
+            $(listzdzd).each(function (index) {
+                str += "{";
+                str += "    datafield:'" + listzdzd[index].zdname + "',";
+                str += "    text:'" + listzdzd[index].zdsy + "',";
+                str += "    columntype:'textbox',";
+                str += "    filtertype:'input',";
+                str += "    cellsalign: '" + listzdzd[index].align + "',";
+                str += "    align: 'center',";
+                //格式化
+                if (listzdzd[index].formatevent != "")
+                    str += "   cellsrenderer: " + listzdzd[index].formatevent + ",";
+                str += "    width:" + listzdzd[index].zdwidth + "";
+                str += "},";
+            });
+            //去掉功能项后面的||
+            if (str.length > 0 && str.charAt(str.length - 1) == ',')
+                str = str.substring(0, str.length - 1)
+            str += "]";
+            var columns = eval(str);
+            //**** 显示字段 ****
+            //**** 数据字段 ****
+            str = "";
+            str += "[";
+            $(listzdzd).each(function (index) {
+                str += "{";
+                str += "name:'" + listzdzd[index].zdname + "',";
+                str += "type:'string'";
+                str += "},";
+            });
+            //去掉功能项后面的||
+            if (str.length > 0 && str.charAt(str.length - 1) == ',')
+                str = str.substring(0, str.length - 1)
+            str += "]";
+            var datafields = eval(str);
+            //**** 数据字段 ****
+            //过滤字段
+            source = {
+                datafields: datafields,
+                datatype: "json",
+                url: "http://localhost:18794/WebList/SearchFormData?a=b",
+                sort: function (column, direction) {
+                    alert(column + ' ' + direction);
+                },
+                filter: function (filters, recordsArray, a, b) {
+                    dataGrid.jqxGrid('updatebounddata', 'filter');  
+                     //alert(filters[0].datavalue);
+                },
+                cache: false,
+                root: 'rows',
+                beforeprocessing: function (data) {
+                    source.totalrecords = data.total;
+                }
+            };
+         
+            var dataAdapter = new $.jqx.dataAdapter(source);
+            dataGrid = $("#jqxgrid").jqxGrid({
+                
+                //theme: theme,
+                width: $(window).width() - 50,
+                height: $(window).height() - 180,
+                source: dataAdapter,
+                //分页
+                pageable: true,
+                pagesize: 2, //每页显示50条  
+                pagesizeoptions: [1, 2, 3], //可选择每页显示条数      
+                virtualmode: true,
+                rendergridrows: function (params) {
+                    return params.data;
+                },
+                //selectionmode:"multiplerows",
+                //showgroupsheader: true,
+                //groupable: true,
+                //过滤
+                showfilterrow: true,
+                filterable: true,
+                //localization: getLocalization('de'),
+                //selectionmode: listform.singleselect ? "singlerow" : "multiplerows",checkbox
+                selectionmode: 'singlerow',
+                //ready: function () { $("#jqxgrid").jqxGrid('sortby', 'firstname', 'asc'); },      //默认排序
+                sortable: true,
+                //工具栏
+                showtoolbar: true,
+                rendertoolbar: initToolbar,
+                columns: columns
+            });
+            //**** 绑定事件 ****
+            //分页事件
+            dataGrid.on('pagechanged', function (event) {
+                //                var args = event.args;
+                //                var pagenum = args.pagenum;
+                //                var pagesize = args.pagesize;
+                //                alert(pagenum + ' ' + pagesize);
+                searchFormData();
+            });
+            //双击事件
+            dataGrid.on("rowdoubleclick", function (event) {
+                //判断是否有双击事件
+                if (listform.dbclickfunname != "")
+                    eval(listform.dbclickfunname + "(" + event.args.rowindex + ")");
+            });
+            //**** 绑定事件 ****
+            //**** 工具栏事件 ****
+            function initToolbar(toolbar) {
+                toolbar.append(toolbarStr);
+            };
+            //**** 工具栏事件 ****
+            //浏览器缩放
+            $(window).resize(function () {
+                //alert(dataGrid.width);
+                //width: $(window).width() - 50,
+                //height: $(window).height() - 180,
+                dataGrid.jqxGrid('refresh');
+            });
+            //searchFormData();
+            //$('#clearfilteringbutton').jqxButton({ height: 25 }); 
+            //$('#clearfilteringbutton').click(function () { $("#jqxgrid").jqxGrid('clearfilters'); });
+        }
+       
+    </script>
+</body>
+</html>

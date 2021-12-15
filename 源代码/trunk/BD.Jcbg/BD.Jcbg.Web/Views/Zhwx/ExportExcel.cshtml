@@ -1,0 +1,112 @@
+﻿@using BD.Jcbg.Common;
+@using BD.DataInputCommon;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>导出到excel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="@SkinManager.GetJsPath("jquery-2.0.3.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("My97DatePicker/WdatePicker.js")"></script>
+    <style>
+        a {
+            text-decoration: none;
+            color:#000000;
+        }
+    </style>
+</head>
+
+<body class="gray-bg" style="font-size:13px;text-align:center;">
+    <script type="text/javascript" language="javascript">
+        function dc() {
+            document.location.href = "/zhwx/TableToExcel";
+
+        }
+
+        function toexcel() {
+            var len = $("input:checkbox:checked").length;
+            
+            if (len <= 0) {
+                alert("请至少选择一个!");
+                return;
+            }
+            
+            $("#form").submit();
+        }
+        function mycheck(id) {
+            var flag = document.getElementById(id).checked
+            if (flag) {//选中  $("#" + id).attr('checked')
+                //$("#" + id).attr("checked", false);
+                // $("[name = " + id + "]:checkbox").attr("checked", false);
+                document.getElementById(id).checked = false;
+            } else {
+               // $("#" + id).attr("checked", true);
+                //$("[name = " + id + "]:checkbox").attr("checked", true);
+                document.getElementById(id).checked = true;
+            }
+        }
+
+
+    </script>
+    @{ IList<string[]> zdzdList = ViewData["zdzd"] as IList<string[]>; }
+    <form id="form" method="post" action="doexportexcel">
+        <div style="text-align:center;width:100%;align-content:center;margin:10px atuo auto auto;">
+            
+
+            <table style="margin:auto;">
+                <tr>
+                    <th style="width:160px;">
+                        字段
+                    </th>
+                    <th style="width:250px;">
+                        条件
+                    </th>
+                    <th style="width:250px;">
+                        值
+                    </th>
+                </tr>
+                @foreach (var item in zdzdList)
+                {
+                    <tr>
+                        <td style="text-align:left;">
+                            <input type="checkbox" name="@(item[0]+"b")" id="@(item[0]+"bb")" checked /><a href="javascript:void(0)" onclick="mycheck('@(item[0] + "bb")')" >@item[1]</a>
+                            <input type="text" name="sy" style="width:120px;display:none;" value="@item[1]" />
+                            <input type="text" name="zdmc" style="width:120px;display:none;" value="@item[0]" />
+                            <input type="text" name="zdlx" style="width:120px;display:none;" value="@item[2]" />
+                        </td>
+                        <td>
+                            @if (item[2].Equals("datetime"))
+                            {
+                                <div><input name="@(item[0]+"t")" style="width:100px;" type="text" onclick="WdatePicker()" />至<input name="@(item[0]+"t")" style="width:100px;" type="text" onclick="WdatePicker()" /></div>
+
+                            }
+                            else
+                            {
+                                <select style="width:120px;" name="@(item[0]+"t")">
+                                    <option value=""></option>
+                                    <option value="like">like</option>
+                                    <option value="=">=</option>
+                                    <option value=">">></option>
+                                    <option value="<"><</option>
+                                </select>
+                            }
+                        </td>
+                        <td>
+
+                            @if (!item[2].Equals("datetime"))
+                            {
+                                <input type="text" style="width:200px;" name="@(item[0]+"v")" />
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </table>
+
+        </div>
+    </form>
+
+    <br />
+    <button style="margin:40px auto;" type="submit" onclick="toexcel()">导出到Excel</button>
+</body>
+</html>

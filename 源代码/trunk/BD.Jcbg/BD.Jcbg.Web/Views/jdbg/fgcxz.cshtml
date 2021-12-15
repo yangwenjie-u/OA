@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var g_fgc = '@ViewBag.fgc';
+
+        $(function () {
+            try {
+                setFgcDiv(g_fgc);
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function setFgcDiv(fgc) {
+            var divid = "div_fgc";
+            try {
+                var arr = fgc.split("||");
+                var content = "";
+                $.each(arr, function (i, item) {
+                    var arrItem = item.split('|');
+                    $("#" + divid).append("<a href=\"#\" class=\"list-group-item\"><div class=\"checkbox\"><label><input type=\"checkbox\" value=\"" + arrItem[0] + "\" id=\"item_"+arrItem[0]+"\"><span id=\"sp_"+arrItem[0]+"\">" + arrItem[1] + "</span></label></div></a>");
+                });
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function checkAllChange(ischecked) {
+            $('input[type="checkbox"][id*="item_"]').each(function () {
+                $(this).prop("checked", ischecked);
+            });
+        }
+        function getValues() {
+            var fgcids = "";
+            var fgcmcs = "";
+            try {
+                $('input[type="checkbox"]').each(function () {
+                    
+                    if ($(this).is(':checked')) {
+                        if ($(this).val() != ""){
+                            if (fgcids != "")
+                                fgcids += ",";
+                            fgcids += $(this).val();
+                            var id = $(this).attr("id").replace("item_", "sp_");
+                            if (fgcmcs != "")
+                                fgcmcs += ",";
+                            fgcmcs += $("#" + id).html();
+                        }
+                    }
+                        
+                });
+            } catch (e) {
+                alert(e);
+            }
+            var ret = {};
+            ret.fgcid = fgcids;
+            ret.fgcmc = fgcmcs;
+            return ret;
+        }
+    </script>
+}
+
+<div class="list-group" id="div_fgc">
+    <a href="#" class="list-group-item active">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="" id="check_all" onchange="checkAllChange(this.checked)">全选（不选分工程表示所有分工程）
+            </label>
+        </div>
+    </a>
+
+</div>

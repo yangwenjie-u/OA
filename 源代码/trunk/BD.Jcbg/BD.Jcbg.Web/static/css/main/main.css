@@ -1,0 +1,225 @@
+* {
+    color: #545b6d;
+    font-family: "微软雅黑"
+}
+
+.top-main{
+    display: flex;
+}
+.body-main{
+    display: flex;
+}
+
+
+.top-main {
+    height: 50px;
+    width: 100%;
+}
+
+.slid-menus {
+    height: 50px;
+    width: 200px;
+    display: inline-block;
+    background: #335bba;
+    line-height: 50px;
+    font-size: 16px;
+    padding-left: 20px;
+    vertical-align: top;
+    color: white;
+}
+
+
+.nav-list img {
+    width: 26px;
+    height: 26px;
+}
+
+.nav-list .active .nav-image {
+    display: none;
+}
+
+.nav-list .active .nav-image2 {
+    display: inline-block;
+}
+
+.nav-image2 {
+    display: none;
+}
+
+.nav-list {
+    background: white;
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+    cursor: pointer;
+    vertical-align: top;
+    overflow: auto;
+}
+
+.nav-list>li:first-child {
+    border-radius: 50px;
+    background: #f0f3fa;
+    height: 46px;
+}
+
+#navList>li:first-child.active {
+    background: #5574d7;
+    color: white;
+}
+
+#navList>li:first-child.active span {
+
+    color: white;
+}
+
+
+.nav-sed {
+    display: none;
+    list-style: disc inside;
+    margin: 0 0 10px 20px;
+}
+
+.nav-sed li {
+    list-style-type: disc;
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+
+}
+.nav-sed li span{
+    /*font-size: 14px;*/
+}
+
+.nav-list>.active>.nav-text {
+    color: #5574d7;
+}
+
+.nav-list>li {
+    min-height: 40px;
+    line-height: 40px;
+    margin-top: 10px;
+    list-style: none;
+
+    /*height: 46px;*/
+    padding: 8px 0 6px 20px;
+}
+
+.nav-fir>.nav-text {
+    display: inline-block;
+    margin-left: 10px;
+    line-height: 32px;
+    vertical-align: top;
+    font-weight: 500;
+}
+
+.nav-menus span {
+    color: white;
+    display: inline-block;
+    min-width: 150px;
+    padding: 0 10px 0 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.close-icon {
+    float: right;
+}
+
+.main-page {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#mainPage iframe {
+    width: 100%;
+    height: 100%;
+}
+
+.nav-menus {
+    background: white;
+    display: inline-block;
+    height: 50px;
+    vertical-align: top;
+    background: -webkit-linear-gradient(left, #4f81d8, #456fbb);
+    background: -o-linear-gradient(left, #4f81d8, #456fbb);
+    background: -moz-linear-gradient(left, #4f81d8, #456fbb);
+    background: linear-gradient(left, #4f81d8, #456fbb);
+}
+
+.nav-menus span {
+    line-height: 50px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.nav-menus .active {
+    background: url("/static/image/main/back-select.jpg") no-repeat;
+    background-size: 100% 100%;
+    /*color: white;*/
+    /* background: -webkit-linear-gradient(left, #4f81d8, #456fbb);
+    background: -o-linear-gradient(left, #4f81d8, #456fbb);
+    background: -moz-linear-gradient(left, #4f81d8, #456fbb);
+    background: linear-gradient(left, #4f81d8, #456fbb);*/
+}
+
+.wfa_frame_div_image a {
+    width: 90%;
+}
+
+.wfa_frame_div_image a img {
+    width: 100%;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.slid-menus span {
+    color: white;
+}
+
+.close-icon {
+    color: white;
+    font-style: normal;
+}
+
+.nav-list .active .active span {
+    color: #446fb9;
+}
+
+.top-msg {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    display: inline-block;
+    height: 50px;
+    cursor: pointer;
+}
+
+.top-msg div {
+    display: inline-block;
+    height: 50px;
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+    padding:0 10px;
+
+    text-align: center;line-height: 50px;color: white;
+}
+
+.top-msg div span {
+    vertical-align: top;
+    line-height: 50px;
+    height: 50px;
+    color: white;
+}
+
+.top-msg img {
+    width: 25px;
+    height: 25px;
+    margin-top: 12px;
+    vertical-align: top;
+}

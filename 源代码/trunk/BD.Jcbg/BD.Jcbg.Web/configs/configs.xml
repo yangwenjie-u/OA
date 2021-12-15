@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configs>
+  <!--网站标题-->
+  <title>OA系统</title>
+  <!--创建用户默认密码-->
+  <defpass>88888</defpass>
+  <!--用户系统url-->
+  <umsurl>http://whums.jzyglxt.com</umsurl>
+  <!--业务系统权限前缀-->
+  <bpprefix></bpprefix>
+  <!--用户系统中识别用的项目id-->
+  <appid>OA</appid>
+  <!--视频文件后缀-->
+  <videoext>flv</videoext>
+
+</configs>

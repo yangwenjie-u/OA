@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.InfoSchedule,BD.Jcbg.DataModal" table="InfoSchedule" lazy="false">
+    <id name="Recid" column="Recid" type="string">
+      <generator class="assigned" />
+    </id>
+    <property type="string" length="200" name="ScheduleName" column="[ScheduleName]" />
+    <property type="string" length="50" name="CompanyId" column="[CompanyId]" />
+    <property type="string" length="50" name="StartTime" column="[StartTime]" />
+    <property type="string" length="50" name="EndTime" column="[EndTime]" />
+    <property type="string" length="20" name="ScheduleSum" column="[ScheduleSum]" />
+    <property type="string" length="50" name="ProjectId" column="[ProjectId]" />
+    <property type="string" length="1" name="HasDelete" column="[HasDelete]" />
+    <property type="string" length="1" name="Zt" column="[ZT]" />
+    <property type="string" length="1" name="Sfjs" column="[SFJS]" />
+    <property type="int" name="FreeTime" column="[FreeTime]" />
+    <property type="int" name="KqTimes" column="[KqTimes]" />
+    <property type="string" length="20" name="LjTime" column="[LjTime]" />
+  </class>
+</hibernate-mapping>

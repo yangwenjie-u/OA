@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+
+
+    <title>sxjz</title>
+    <style type="text/css">
+    .dltabs dd {
+        height: 80vh;
+    }
+
+    .page {
+        position: absolute;
+        bottom: 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;padding-bottom: 80px;box-sizing: border-box;">
+        <div id="tableWarp" class="table-warp">
+            <div>
+                <table class="table layui-table table-border table-bordered table-hover" lay-size="lg">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>资质编号</th>
+                            <th>企业名称</th>
+                            <th>企业类型</th>
+                            <th>主项（增项）</th>
+                            <th>资质类型</th>
+                            <th>资质内容</th>
+                            <th>资质等级</th>
+                            <th>是否临时</th>
+                            <th>资质有效日期</th>
+                            <th>问题说明</th>
+                            <th>市场行为</th>
+                            <th>企业行为</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-list" id="tbody">
+                    </tbody>
+                </table>
+            </div>
+            <div id="test" class="page">
+                <span class="count"></span>
+                <div class="layer-page" id="page"></div>
+                <input type="text" class="page-val" value="1" />
+                <span class="sure">确定</span>
+                <!-- <div class="size">每页显示
+                <input type="text" class="page-size" value="10" /> 条
+            </div> -->
+            </div>
+        </div>
+
+    </div>
+
+    <!--  <div class="save-boottom" style="text-align: center;">
+        <button class="layui-btn" id="save" style="margin-top: 10px;">保存</button>
+    </div> -->
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/pub/table.js"></script>
+
+
+    <script type="text/javascript">
+    var list = [];
+    var uploadList = [];
+
+    var params = getParams();
+    $(function () {
+        // var height = $("#panel1").height();
+        // $("#tabTitle").find("dd").height(height - 110);
+
+        // $("#tabWarp").append("<input type='text' name='id' value='" + params.id + "' style='display:none;' />")
+        // layui.use('form', function () {
+        //     var form = layui.form;
+        //     form.render();
+        // });
+
+        loadtbody();
+
+    })
+
+    function loadtbody() {
+
+        var str = '';
+        var item = ["zzbh", "qymc", "qylx", "zxlx", "zzlx", "zznr", "zzdj", "sfls", "zzyxrq", "wtsm", "scxw"];
+        var ary = [{
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+            wtsm: "人员配置不满足要求",
+            scxw: "受限"
+        }];
+
+        function handle(res) {
+            res.rows = "10";
+            res.total = "10"
+        }
+
+        getTable('/dwgxsxjzy/GetQYGcyj', {}, handle, {
+            doc: $('#tableWarp'),
+            pageSize: 'rows',
+            count: 'total'
+        });
+
+        var tmp;
+        for (var i = 0, len = ary.length; i < len; i++) {
+            tmp = ary[i];
+            str += "<tr>";
+            str += "<td>" + (i + 1) + "</td>";
+            for (var j = 0, len2 = item.length; j < len2; j++) {
+                str += "<td>" + tmp[item[j]] || "" + "</td>";
+            }
+            str += "<td><div class='curd'>下载</div></td>";
+            str += "</tr>";
+        }
+
+        $("#tbody").html(str);
+    }
+
+    $("#tabTitle").on("click", "dt", function () {
+        $("#tabTitle").children().removeClass('active');
+        $(this).addClass('active').next().addClass('active');
+    });
+    </script>
+</body>
+
+</html>

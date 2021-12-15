@@ -1,0 +1,68 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_dialoglayout.cshtml";
+}
+
+<link href="@SkinManager.GetCssPath("users.css")" rel="stylesheet" type="text/css" />
+ <script src="@SkinManager.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("jquery.easyui.min.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("jquery.loadmask.min.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("jquery-base64.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("fileupload.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("user.js")" type="text/javascript" charset="utf-8"></script>
+<script language="javascript" type="text/javascript">
+	$(function () {
+	    try {
+        /*
+			$("#readers").combotree({
+				url: '/oa/getusertree',
+				valueField: 'id',
+				textField: 'text',
+				multiple: true,
+				editable: false,
+				panelHeight: 200,
+				width: 250,
+				checkbox: true,
+				onlyLeafCheck: false,
+				animate: false,
+				onLoadSuccess: function (node, data) {
+					try {
+						var users = '@ViewBag.Users';
+						if (users != "") {
+							var arrusers = users.split(',');
+							$('#readers').combotree('setValues', arrusers);
+
+
+						}
+					} catch (e) {
+						alert(e);
+					}
+				}
+			});*/
+			dispUpFiles('divfile', '@ViewBag.FileIds');
+			$("#td_body").html($.base64.decode('@ViewBag.Body'));
+		}
+		catch (e) {
+			alert(e.message);
+		}
+	});
+	</script>
+	
+		<table class="form2" width="800" align="center" cellspacing="1" border="0" style="margin-top:10px">
+			<tr>
+				<th width="100">标题：</th>
+				<td colspan="3">@ViewBag.Title</td>
+			</tr>
+			<tr>
+				<th>附件：</th>
+				<td colspan="3">
+					<div id="divfile"></div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="4" id="td_body" >
+				</td>
+			</tr>
+		</table>

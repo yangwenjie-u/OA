@@ -1,0 +1,81 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>@GlobalVariable.GetSysSettingValue("GLOBAL_PAGE_LOGIN_HEADTITLE", Request)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <!-- <script type="text/javascript" src="./config.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="/skins/default/css/cssReset.css">
+    <link rel="stylesheet" type="text/css" href="/skins/default/css/login/index.css">
+    <style type="text/css">
+    .more-info .info1,
+    .more-info .info2,
+    .forget .forget-pass {
+        display: none;
+    }
+
+    .more-info {
+        text-align: center;
+    }
+
+    .more-info .info3 {
+        margin: 0 auto;
+    }
+    </style>
+</head>
+
+<body>
+    <!-- 顶部 -->
+    <div class="header" id="header">
+        <p>
+            <span class="select">首页</span>
+            <span id="page_down">下载</span>
+        </p>
+    </div>
+    <div class="g-body" id="mainBody">
+        <!-- 工程名 -->
+        <div class="title">
+            <span id="title1">@GlobalVariable.GetSysSettingValue("GLOBAL_PAGE_LOGIN_TITLE1", Request)</span>
+            <span id="title2">@GlobalVariable.GetSysSettingValue("GLOBAL_PAGE_LOGIN_TITLE2", Request)</span>
+        </div>
+        <!-- 登录模块 -->
+        <div class="m-login">
+            <p>用户登录</p>
+            <div class="main">
+                <div class="user">
+                    <span class="user-icon"></span>
+                    <input type="text" name="userName" id="userName" class="userName input-text" placeholder="账号" />
+                </div>
+                <div class="pass">
+                    <span class="pass-icon"></span>
+                    <input type="passWord" name="passWord" id="passWord" class="passWord input-text " placeholder="密码" />
+                </div>
+                <div class="login-btn" id="login">登&nbsp&nbsp录</div>
+                <div class="forget">
+                    <label>
+                        <input type="checkbox" name="checked" id="remberPass" checked="checked">记住密码
+                    </label>
+                    <span class="forget-pass">忘记密码?</span><span class="forget-pass">忘记账号?</span>
+                </div>
+            </div>
+            <div class="more-info">
+                <div class="info1">企业注册</div>
+                <div class="info2">个人注册</div>
+                <div class="info3">专用浏览器下载</div>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <p>@GlobalVariable.GetSysSettingValue("GLOBAL_PAGE_LOGIN_TAIL1", Request)</p>
+        <p>@GlobalVariable.GetSysSettingValue("GLOBAL_PAGE_LOGIN_TAIL2", Request)</p>
+    </div>
+    <script type="text/javascript" src="/skins/default/js/lib/jquery.js"></script>
+    <script type="text/javascript" src="/skins/default/js/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="/skins/default/js/login/common.js"></script>
+    <script type="text/javascript" src="/skins/default/js/login/index.js"></script>
+    <script type="text/javascript" src="/skins/default/js/login/config.js"></script>
+</body>
+
+</html>

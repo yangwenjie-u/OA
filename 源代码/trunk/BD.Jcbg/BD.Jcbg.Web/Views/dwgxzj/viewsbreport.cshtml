@@ -1,0 +1,41 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/dwgxzj/_pdflayout.cshtml";
+}
+
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_serial = "@ViewBag.serial";
+    var g_reporttype = "@ViewBag.reporttype";
+    var g_pdfpath = "@SkinManager.GetPdfViewPath("")";
+
+    $(function () {
+        try {
+            showData();
+
+        } catch (err) {
+            alert(e);
+        }
+    });
+    function showData() {
+        try {
+            var frmHeight = $(document).height() - 70;
+            var divId = "tab_" + g_serial;
+            var frmId = "frm_" + g_serial;
+            var title = "报告详情";
+            var fileurl = "/dwgxzj/GetSbReportFile?serial=" + encodeURIComponent(g_serial) + "&reporttype=" + encodeURIComponent(g_reporttype);
+            var reportUrl = g_pdfpath + 'web/viewer.html?file=' + encodeURIComponent(fileurl);
+            var curDiv = "<div class=\"tab-pane fade in active" + "\" id=\"" + divId + "\" style='padding:0px 10px 0px 10px'><iframe frameborder=\"0\" height=\"" + frmHeight + "\" id=\"" + frmId + "\" name=\"" + frmId + "\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"auto\" width=\"100%\" src=\"" + reportUrl + "\"  /></div>";
+            $("#main_tab_content").append(curDiv);
+            $("#main_tab_tab").append("<li class=\"active\"><a href=\"#" + divId + "\" data-toggle=\"tab\">" + title + "</a></li>");
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+</script>
+}
+<ul id="main_tab_tab" class="nav nav-tabs"></ul>
+<div id="main_tab_content" class="tab-content"></div>

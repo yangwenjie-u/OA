@@ -1,0 +1,111 @@
+﻿@{
+    Layout ="~/Views/_easyuilayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+	function Open_Dialog() {
+		$('#maindlg').show();
+		$('#maindlg').dialog({
+			collapsible: false,
+			minimizable: false,
+			maximizable: false,
+			resizable: false,
+			shadow: true,
+			modal: false,
+			closable:false,
+			buttons: [{
+				text: '确定',
+				iconCls: 'icon-ok',
+				handler: function () {			 
+				    window.location = ''					
+				}
+			}]
+		});
+	}
+	$(function () {
+		var arrYear = new Array();
+		var arrMonth = new Array();
+		var dt = new Date();
+		for (i = 2014; i <= dt.getFullYear(); i++) {
+			var arr = new Array();
+			arr[0] = i;
+			arr[1] = i;
+			arrYear[arrYear.length] = arr;
+		}
+		for (i = 1; i <= 12; i++) {
+			var arr = new Array();
+			arr[0] = i;
+			arr[1] = i;
+			arrMonth[arrMonth.length] = arr;
+		}
+		$('#year').combobox({
+			data: arrYear,
+			panelHeight: 'auto',
+			editable: false,
+			textField: 1,
+			valueField: 0
+
+		});
+		$('#month').combobox({
+			data: arrMonth,
+			panelHeight: 'auto',
+			editable: false,
+			textField: 1,
+			valueField: 0
+		});
+
+		$('#gz').combobox({
+			url: '/init/gethelp/HPGZ',
+			valueField: 'helpvalue',
+			textField: 'helptext',
+			panelHeight: 'auto'
+
+		});
+		$('#bzfzr').combobox({
+		    url: '/info/getbzfzr',
+		    valueField: 'sfzhm',
+		    textField: 'realname',
+		    panelHeight: 'auto',
+		    editable: false
+
+		});
+		$('#search_gc').combobox({
+		    url: '/info/getusergcs',
+		    valueField: 'recid',
+		    textField: 'gcmc',
+		    panelHeight: 'auto',
+		    editable: false,
+		    onLoadSuccess: function () {
+		        var data = $("#search_gc").combobox("getData");
+		        if (data.length > 0)
+		            $("#search_gc").combobox("select", data[0].recid);
+		    }
+		});
+
+
+		Open_Dialog();
+
+		dt.setMonth(dt.getMonth()-1);
+		var year = dt.getFullYear();
+		var month = dt.getMonth() + 2;
+		$('#year').combobox('setValue', year);
+		$('#month').combobox('setValue', month);
+	});
+</script>
+<div id="maindlg" style="display:none;padding:20px;width:320px;height:300px;" title="月出勤登记表查询条件设置"> 
+	工程： 
+    <input id="search_gc" style="width:200px" />
+    <br /><br />
+    年份： 
+	<select id="year" style="width:200px;"></select>
+	<br /><br />
+	月份： 
+	<select id="month" style="width:200px;"></select>
+	<br /><br />
+	工种： 
+	<input id="gz" style="width:200px"/>
+    <br /><br />
+    组长：
+    <input id="bzfzr" style="width:200px"/>
+</div> 
+

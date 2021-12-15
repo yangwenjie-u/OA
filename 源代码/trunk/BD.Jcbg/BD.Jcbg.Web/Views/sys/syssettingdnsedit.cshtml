@@ -1,0 +1,174 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var setting_op_obj = null;
+        $(function () {
+            try {
+                layer.msg('正在加载数据……', { icon: 16 });
+                setting_op_obj = sys_setting_dns_op_class.createNew();
+                setting_op_obj.loadData();
+                setting_op_obj.showData();
+                layer.closeAll();
+            } catch (err) {
+                layer.alert("初始化失败，详细信息：" + err, { icon: 7 });
+            }
+        });
+        var sys_setting_dns_op_class = {
+            createNew: function () {
+                var settingOp = {};
+                settingOp.grouplist = [];
+                settingOp.settingList = [];
+                settingOp.dnsSettingList = [];
+                settingOp.isCopy = '@ViewBag.IsCopy';
+                settingOp.dns = '@ViewBag.Dns';
+
+                settingOp.loadData = function () {
+                    try {
+
+                        $.ajax({
+                            type: "POST",
+                            url: "/sys/getsyssettings",
+                            data: "isglobal=1",
+                            dataType: "json",
+                            async: false,
+                            success: function (data) {
+                                settingOp.grouplist = data.groups;
+                                settingOp.settingList = data.settings;
+                            }
+                        });
+                        if (settingOp.dns != "") {
+                            $.ajax({
+                                type: "POST",
+                                url: "/sys/GetSettingDnsItem",
+                                dataType: "json",
+                                data: "dns=" + encodeURIComponent(settingOp.dns),
+                                async: false,
+                                success: function (data) {
+                                    $.each(settingOp.settingList, function (i, item) {
+                                        var finds = data.filter(function (dns) {
+                                            return dns.settingcode == item.settingcode;
+                                        });
+                                        if (finds.length > 0)
+                                            item.settingvalue = finds[0].settingvalue;
+                                    });
+
+                                }
+                            });
+                        }
+
+                    } catch (err) {
+                        layer.alert("加载数据失败，详细信息：" + err, { icon: 7 });
+                    }
+                }
+                settingOp.showData = function () {
+                    try {
+                        if (this.isCopy=="0" && this.dns.length > 0) {
+                            $("#dns").val(this.dns);
+                            $("#dns").attr("readonly", "readonly");
+                        }
+                        for (var i = 0; i < settingOp.grouplist.length; i++) {
+
+                            var active = "";
+                            var active2 = "";
+                            if (i == 0) {
+                                active = "in active";
+                                active2 = "active";
+                            }
+                            var group = settingOp.grouplist[i];
+                            var divId = "tab_" + group.groupid;
+                            var ulId = "ul_" + group.groupid;
+
+                            var curDiv = "<div class=\"tab-pane fade " + active + "\" id=\"" + divId + "\" style='padding:5px 5px 5px 5px'><ul class=\"list-group\" id='" + ulId + "'></ul></div>";
+                            $("#main_tab_content").append(curDiv);
+                            $("#main_tab_tab").append("<li class=\"" + active2 + "\"><a href=\"#" + divId + "\" data-toggle=\"tab\">" + group.groupname + "</a></li>");
+                            for (var j = 0; j < settingOp.settingList.length; j++) {
+                                var setting = settingOp.settingList[j];
+                                if (setting.groupid != group.groupid)
+                                    continue;
+
+                                var settingdivid = "settingdiv_" + setting.settingcode;
+                                var uploadButton = "";
+                                //if (setting.isupload == "True")
+                                //    uploadButton = "<span class=\"input-group-addon\"><a href='#'>上传</a></span>";
+                                var settingdiv_content = "<li class='list-group-item' id='" + settingdivid + "' ><div class=\"input-group\"><span class=\"input-group-addon\">" + setting.settingname + "</span>" + "<input type=\"text\" class=\"form-control\" value='" + setting.settingvalue + "' id='" + setting.settingcode + "'>" + uploadButton + "</div></li>";
+                                $("#" + ulId).append(settingdiv_content);
+
+                            }
+
+                        }
+
+                    } catch (err) {
+                        layer.alert("显示数据失败，详细信息：" + err, { icon: 7 });
+                    }
+                }
+                settingOp.save = function () {
+                    try {
+                        var dnsValue = $("#dns").val();
+                        if (dnsValue == "") {
+                            layer.alert("域名信息不能为空", { icon: 7 });
+                        } else {
+                            var postStr = "";
+                            $(':text').each(function () {
+                                if (postStr != "")
+                                    postStr += "&";
+                                postStr += $(this).attr('id') + "=" + encodeURIComponent($(this).val());
+                            });
+                            if (postStr == "")
+                                return;
+                            $.ajax({
+                                type: "POST",
+                                url: "/sys/savesyssettingdns",
+                                dataType: "json",
+                                data: postStr,
+                                async: false,
+                                success: function (data) {
+                                    layer.closeAll();
+                                    if (data.code == "0")
+                                        layer.alert("保存成功", { icon: 1}, function () {
+                                            layer.closeAll();
+                                            parent.parent.layer.closeAll();
+                                        });
+                                    else {
+                                        layer.alert("保存失败，详细信息：" + data.msg, { icon: 7 });
+                                    }
+                                },
+                                error: function (XMLHttpRequest, errinfo, obj) {
+                                    layer.closeAll();
+                                },
+                                beforeSend: function (XMLHttpRequest) {
+                                    layer.msg('正在保存……', { icon: 16 });
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        alert(e);
+                    }
+                }
+                return settingOp;
+
+            }
+        };
+    </script>
+}
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="域名" id="dns" name="dns">
+                </div>
+                <button type="button" class="btn btn-warning navbar-btn" onclick="setting_op_obj.save();">
+                    <span class="glyphicon glyphicon-floppy-saved"></span>
+                    保存
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+    <ul id="main_tab_tab" class="nav nav-tabs"></ul>
+    <div id="main_tab_content" class="tab-content"></div>

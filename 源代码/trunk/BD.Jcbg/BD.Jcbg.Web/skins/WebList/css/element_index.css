@@ -1,0 +1,252 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#tools {
+    width: 100%;
+    /* border: 1px solid #ccc; */
+    border-bottom: 1px solid #ccc;
+    /* flex: 0 0 120px; */
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+#content {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.el-table td,
+.el-table th {
+    padding: 0px 0;
+}
+
+.el-table td {
+    padding: 5px 5px;
+}
+
+.el-table td .cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: keep-all;
+}
+
+.el-select .el-input .el-select__caret {
+    margin-right: 3px;
+}
+
+.el-input--mini .el-input__icon {
+    margin-left: 3px;
+}
+
+.title_wrap .my_label {
+    /* width: 100px; */
+    line-height: 40px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-left: 5px;
+}
+
+.form_item {
+    display: flex;
+    margin-top: 10px;
+    margin-left: 10px;
+    /* width: 33.3%; */
+    /* width:48%; */
+}
+
+.top_sel {
+    width: 250px !important;
+    /* max-width: 300px; */
+    margin: 0 3px;
+}
+
+.my_title_wrap {
+    height: 120px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+.forms {
+    margin-top: 15px;
+}
+
+.higher_wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.higher_wrap .form_item {
+    margin-top: 15px;
+    width: 48%;
+}
+
+.higher_wrap .form_item .my_label {
+    width: 100px;
+}
+.tools_content {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+}
+
+.tools_content .form_item {
+    margin-top: 15px;
+    align-items: center;
+    /* width: 48%; */
+}
+
+.tools_content .form_item .my_label {
+    width: 100px;
+}
+.el-table th div {
+    line-height: 20px;
+}
+
+.layui-btn-group {
+    display: flex;
+}
+
+.el-table th>.cell {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+}
+
+.my_tab_wrap {
+    background-color: rgb(250, 250, 250);
+    box-sizing: border-box;
+}
+
+.my_page_wrap {
+    height: 38px !important;
+    display: flex;
+    align-items: center;
+    background-color: #e6e6e6;
+    box-sizing: border-box;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    z-index: 11;
+}
+
+.page_refresh {
+    height: 28px;
+    margin-left: 20px;
+}
+
+.el-table__header-wrapper,
+.gutter {
+    background-color: rgb(250, 250, 250) !important;
+}
+
+.wrap {
+    padding: 0 !important;
+}
+
+.el-button--primary {
+    background-color: #428bca;
+    border-color: #428bca;
+    padding: 10px 13px;
+    margin-top: 5px;
+}
+
+.my_label {
+    display: flex;
+    align-items: center;
+}
+
+.el-table__row td:first-of-type {
+    position: relative;
+}
+
+th .wrap {
+    /* border:1px solid red; */
+    border-top: 1px solid rgb(224, 227, 235);
+    padding-top: 5px !important;
+    /* margin-top: 10px; */
+    background-color: rgb(250, 250, 250);
+    /* margin-top: ; */
+    box-sizing: border-box;
+    width: 100%;
+}
+
+th .title {
+    margin: 8px 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    cursor: pointer !important;
+    /* border:1px solid red; */
+}
+
+th:first-of-type .cell {
+    padding-left: 5px !important;
+}
+.el-table__body tr.current-row>td{
+    background-color: transparent!important;
+}
+.selected_chosen {
+    background-color: #428bca!important;
+    color: #fff;
+    transition: .3s;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    /* background-color: rgb(230, 230, 230)!important;
+    color:#000; */
+    background-color: transparent;
+
+}
+.el-table__footer td .cell{
+    color: #428bca;
+    font-weight: bold;
+}
+.el-table--enable-row-transition .el-table__body td{
+    overflow: hidden;
+}
+.selected_chosen {
+    background-color: #428bca!important;
+    color: #fff;
+    transition: .3s;
+}
+.el-table--enable-row-hover .el-table__body tr:hover>td{
+    background-color: transparent;
+    /* color:#000; */
+}
+.el-date-editor{
+    max-width: 100%;
+}
+/* .el-input__suffix{
+    display: none;
+} */
+.el-input--suffix .el-input__inner{
+    padding-right: 5px !important;
+    padding-left: 5px !important;
+}
+.el-date-editor .el-input__prefix:first-of-type{
+    display: none;
+}
+.el-select.el-select--mini{
+    padding:0
+}
+/* .el-input--mini .el-input__icon{
+    display: none;
+} */

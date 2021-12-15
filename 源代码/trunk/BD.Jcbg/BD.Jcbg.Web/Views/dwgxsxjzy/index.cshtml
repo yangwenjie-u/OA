@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link type="text/css" rel="Stylesheet" href="/static/qdy/css/cssReset.css">
+    <link type="text/css" rel="Stylesheet" href="/static/qdy/css/style.css">
+    <style type="text/css">
+        .table {
+            display: table;
+            width: 100%;
+            border-spacing: 20px;
+        }
+
+            .table a {
+                display: table-cell;
+                width: 30%;
+            }
+
+        .item .icon {
+            width: 72px;
+            height: 72px;
+            margin: 40px auto;
+            background-size: 100%;
+        }
+
+        a.item.active,
+        a.c:hover {
+            background: #669cf5;
+            background: -webkit-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: -o-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: -moz-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: linear-gradient(to bottom, #669cf5 0%, #2767d1 100%);
+        }
+
+        .item {
+            box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(function () {
+            loadjumps();
+            bindevent();
+        });
+
+        function loadjumps() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/dwgxzj/GetJUMPList",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == "0") {
+                            var rows = data.rows;
+                            renderrows(rows);
+                        }
+                        else {
+                            if (data.msg == "")
+                                data.msg = "加载页面失败！";
+                            alert(data.msg);
+                        }
+
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        // 渲染
+        function renderrows(data){
+            var cols = 3;
+            var s = "";
+            $('#mainBody').empty();
+            $.each(data, function (index, row) {
+                if ((index % cols) == 0) {
+                    s += "<div class=\"table\">";
+                }
+                s += "<a class=\"item\" href=\"\" value=\"i_" + row["lx"] + "\" href2=\"" + row["href"] + "\"><i class=\"icon\" style=\"background-image:url(" + row["backgroupimage"] + ")\"></i>" + row["title"] + "</a>";
+                if (((index+1) % cols) == 0) {
+                    s += "</div>";
+                }
+
+            });
+            $('#mainBody').html(s);
+        }
+
+        function bindevent() {
+            $("#mainBody").on("click", ".item", function () {
+                var that = $(this);
+                var url = that.attr("href2");
+                var id = that.attr("value");
+                var name = that.text();
+                if (url != undefined) {
+                    parent.openPage(url, id, name);
+                }
+                else { alert("功能暂未开通") }
+                return false;
+            });
+        }
+        
+    </script>
+
+</head>
+
+<body>
+
+    <div id="mainBody">
+    </div>
+    
+</body>
+
+</html>

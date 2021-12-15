@@ -1,0 +1,141 @@
+﻿function view()
+{
+    try {
+        var selected = pubselect();
+        if (selected == undefined)
+            return;
+
+        var reportfile = selected.ReportFile;
+        var serial = selected.WorkSerial;
+        var recid = selected.RECID;
+        reportfile = GetAvailableReportFile(reportfile, serial);
+        parent.layer.open({
+            type: 2,
+            title: '报表查看',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['95%', '95%'],
+            content: "/jdbg/flowreport?reportfile="+encodeURIComponent(reportfile)+"&serial="+encodeURIComponent(serial)+"&jdjlid="+recid,
+            end: function () {
+            }
+        });
+    }catch(ex){
+        alert(ex);
+    }
+}
+function viewZghf() {
+    try {
+        var selected = pubselect();
+        if (selected == undefined)
+            return;
+        if (selected.ExtraInfo3 == "全部未回复") {
+            alert("整改单全部未回复，无法查看回复情况");
+            return;
+        }
+
+        var reportfile = selected.ExtraInfo15;
+        var serial = selected.WorkSerial;
+        var recid = selected.RECID;
+
+        parent.parent.layer.open({
+            type: 2,
+            title: '查看整改回复',
+            shadeClose: false,
+            shade: 0.8,
+            area: ['95%', '95%'],
+            content: "/jdbg/flowreport?reportfile=" + encodeURIComponent(reportfile) + "&serial=" + encodeURIComponent(serial) + "&jdjlid=" + recid,
+            end: function () {
+            }
+        });
+    } catch (ex) {
+        alert(ex);
+    }
+}
+
+// 获取实际可用的reportfile
+// 主要考虑到，手机填写的监督记录，在后台没有生成模板文件，也就是reportfile为空
+// 因此，如果在pc端查看手机填写的监督记录，需要到后台先生成模板文件
+function GetAvailableReportFile(reportfile, serial) {
+    var realReportFile = reportfile;
+
+    if (realReportFile == null || realReportFile == '') {
+        $.ajax({
+            type: "POST",
+            url: "/jdbg/GeneratePhoneJDJLTemplate",
+            data: "template=" + encodeURIComponent("监督记录v1.docx") + "&serial=" + serial,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.code == "0")
+                    realReportFile = data.msg;
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        }); 
+    }
+
+    return realReportFile;
+
+}
+
+function switchRecord(obj) {
+    try {
+        var strLocation = decodeURIComponent(window.location.href);
+        // 所有
+        if (obj.checked) {
+            strLocation = strLocation.replace("NOT||CHECKBOX", "ALL||CHECKBOX").replace("所有|我的", "所有|所有");
+        }
+        else {
+            strLocation = strLocation.replace("ALL||CHECKBOX", "NOT||CHECKBOX").replace("所有|所有", "所有|我的");
+        }
+        window.location = strLocation;
+    } catch (ex) {
+        alert(ex);
+    }
+}
+
+function setHFZT(lx) {
+    var selected = pubselect();
+    if (selected == undefined)
+        return;
+    if (selected.ExtraInfo1 == '已回复') {
+        layer.alert('已回复的整改记录不能设置!');
+        return;
+    }
+    else if (selected.ExtraInfo1 == '未回复') {
+        var hfzt = '';
+        var serial = selected.WorkSerial;
+        if (lx == 1) {
+            hfzt = '不需回复';
+        }
+        else if (lx == 2) {
+            hfzt = '暂不回复';
+        }
+        if (hfzt != '') {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/updatezgdhfzt",
+                data: { hfzt: hfzt, serial: serial},
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+                        alert('设置成功');
+                        searchRecord();
+                    }
+                    else {
+                        alert(data.msg || "设置失败！");
+                    }
+
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+    }
+    
+}

@@ -1,0 +1,81 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/jc/_pdflayout.cshtml";
+}
+
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+    var g_pdfpath = "@SkinManager.GetPdfViewPath("")";
+    var g_datajson = {};
+
+    $(function () {
+        try {
+            initData();
+            showData();
+
+        } catch (err) {
+            alert(e);
+        }
+    });
+    function initData() {
+        try {
+
+            $.ajax({
+                type: "POST",
+                url: "/jc/getwtdreports",
+                dataType: "json",
+                data:"wtdwyh=" + encodeURIComponent(g_wtdwyh),
+                async: false,
+                success: function (data) {
+                    if (data.code != "0") {
+                        alert(data.msg);
+                    } else {
+                        g_datajson = data.reports;
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function showData() {
+        try {
+            var frmHeight = $(document).height() - 70;
+            var firstWyh = "";
+            for (var i = 0; i < g_datajson.length; i++) {
+                var data = g_datajson[i];
+                var active = "";
+                if (i == 0) {
+                    active = "active";
+                    firstWyh = data.bgwyh;
+                }
+                var divId = "tab_" + data.bgwyh + "_" + data.sxh;
+                var frmId = "frm_" + data.bgwyh + "_" + data.sxh;
+                var title = data.qfrq + "[" + data.sxh + "]";
+                if (data.bgwyh != firstWyh)
+                    title = "<font color='#ff0000'>"+title+"无效"+"</font>";
+                var reportUrl = g_pdfpath + 'web/viewer.html?file=/jc/getreportfile/' + data.bgwyh + "_" + data.sxh;
+                var curDiv = "<div class=\"tab-pane fade in " + active + "\" id=\"" + divId + "\" style='padding:0px 10px 0px 10px'><iframe frameborder=\"0\" height=\"" + frmHeight + "\" id=\"" + frmId + "\" name=\"" + frmId + "\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"auto\" width=\"100%\" src=\"" + reportUrl + "\"  /></div>";
+                $("#main_tab_content").append(curDiv);
+                $("#main_tab_tab").append("<li class=\"" + active + "\"><a href=\"#" + divId + "\" data-toggle=\"tab\">" + title + "</a></li>");
+
+
+            }
+        }catch (e) {
+            alert(e);
+        }
+    }
+</script>
+}
+<ul id="main_tab_tab" class="nav nav-tabs"></ul>
+<div id="main_tab_content" class="tab-content"></div>

@@ -1,0 +1,125 @@
+﻿@using BD.Jcbg.Common;
+@using BD.DataInputCommon;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>导出到excel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="@SkinManager.GetJsPath("jquery-2.0.3.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("My97DatePicker/WdatePicker.js")"></script>
+    <style>
+        a {
+            text-decoration: none;
+            color:#000000;
+        }
+    </style>
+</head>
+
+<body class="gray-bg" style="font-size:13px;text-align:center;">
+    <script type="text/javascript" language="javascript">
+
+
+        function toexcel() {
+            var checkText = $("#deplist").find("option:selected").text(); //获取Select选择的Text 
+            var checkValue = $("#deplist").val(); //获取Select选择的Value 
+            $("#sqlcode").attr("value", checkValue);
+           $("#itemname").attr("value", checkText);
+           $("#form").submit();
+        }
+
+
+
+
+    </script>
+    @{ IList<string[]> zdzdList = ViewData["zdzd"] as IList<string[]>; }
+    @{ IList<string[]> depList = ViewData["deplist"] as IList<string[]>; }
+    <form id="form" method="post" action="doqtexcel">
+        <input type="text" name="template" style="width:120px;display:none;" value="@ViewData["template"]" />
+        <input type="text" name="outzdmc" style="width:120px;display:none;" value="@ViewData["outzdmc"]" />
+        <input type="text" name="sqlcode" id="sqlcode" style="width:120px;display:none;" />
+        <input type="text" name="itemname" id="itemname" style="width:120px;display:none;" />
+        <div style="text-align:center;width:100%;align-content:center;margin:10px atuo auto auto;">
+
+
+            <table style="margin:auto;">
+                <tr>
+                    <th style="width:160px;">
+                        字段
+                    </th>
+                    <th style="width:250px;">
+                        条件
+                    </th>
+                    <th style="width:250px;">
+                        值
+                    </th>
+                </tr>
+                @foreach (var item in zdzdList)
+                {
+                    <tr>
+                        <td style="text-align:left;">
+                            @item[1]
+                            <input type="text" name="sy" style="width:120px;display:none;" value="@item[1]" />
+                            <input type="text" name="zdmc" style="width:120px;display:none;" value="@item[0]" />
+                            <input type="text" name="zdlx" style="width:120px;display:none;" value="@item[2]" />
+                        </td>
+                        <td>
+                            @if (item[2].Equals("datetime"))
+                            {
+                                <div><input name="@(item[0]+"t")" style="width:100px;" type="text" onclick="WdatePicker()" />至<input name="@(item[0]+"t")" style="width:100px;" type="text" onclick="WdatePicker()" /></div>
+
+                            }
+                            else
+                            {
+                                <select style="width:120px;" name="@(item[0]+"t")">
+                                    <option value=""></option>
+                                    <option value="like">like</option>
+                                    <option value="=">=</option>
+                                    <option value=">">></option>
+                                    <option value="<"><</option>
+                                </select>
+                            }
+                        </td>
+                        <td>
+
+                            @if (!item[2].Equals("datetime"))
+                            {
+                                <input type="text" style="width:200px;" name="@(item[0]+"v")" />
+                            }
+
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                <tr>
+                    <td style="text-align:left;">所选导出单位</td>
+                    <td>
+
+                        <select style="width:250px;" name="deplist" id="deplist">
+                            @foreach (var item in depList)
+                            {
+                                <option value="@(item[0])">@(item[1])</option>
+                            }
+                        </select>
+                    </td>
+                    <td> </td>
+                </tr>
+            </table>
+
+        </div>
+    </form>
+
+    <br />
+    <button style="margin:40px auto;" type="submit" onclick="toexcel()">导出到Excel</button>
+</body>
+</html>

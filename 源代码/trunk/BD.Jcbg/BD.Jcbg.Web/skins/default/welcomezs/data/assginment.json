@@ -1,0 +1,382 @@
+{
+    "data":[
+        {
+            "moduleid": "ProjectList",
+            "modulename": "工程",
+            "iconclass": "project_now.png",
+            "displayorder": 1.00,
+            "inuse": true,
+            "listtablename": "MapListProject",
+            "statusfield": "Gczt",
+            "processfield": "Gcjd",
+            "longitudefield": "Longitude",
+            "latitudefield": "Latitude",
+            "template1": "projectv1",
+            "template2": "",
+            "template3": "",
+            "template4": "",
+            "defaultsearchinbounds": 5.00,
+            "searchfields": [
+                {
+                    "searchid": "ProjectListGczt",
+                    "moduleid": "ProjectList",
+                    "fielddesc": "工程状态",
+                    "fieldtype": "select",
+                    "fieldname": "gczt",
+                    "fieldoperation": "=",
+                    "ctrlstring": "valueFixed--所有工程,所有工程,1|在建工程,在建工程,0|整改工程,整改工程,0|竣工工程,竣工工程,0|停工工程,停工工程,0|异常工程,异常工程,0",
+                    "displayorder": 1.00
+                }
+            ],
+            "urls": [
+                {
+                    "urlid": "0001",
+                    "moduleid": "ProjectList",
+                    "urlname": "首次监督会议",
+                    "url": "http://wz.jzyglxt.com/task/task1?gcbh={gcbh}",
+                    "displayorder": 1.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0002",
+                    "moduleid": "ProjectList",
+                    "urlname": "关键验收",
+                    "url": "http://wz.jzyglxt.com/task/task2?gcbh={gcbh}",
+                    "displayorder": 2.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0003",
+                    "moduleid": "ProjectList",
+                    "urlname": "普通验收",
+                    "url": "http://wz.jzyglxt.com/task/task3?gcbh={gcbh}",
+                    "displayorder": 3.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0004",
+                    "moduleid": "ProjectList",
+                    "urlname": "发起监督",
+                    "url": "http://wz.jzyglxt.com/task/task4?gcbh={gcbh}",
+                    "displayorder": 4.00,
+                    "inuse": true
+                }
+            ],
+            "searchitems": [
+                {
+                    "recid": 1,
+                    "moduleid": "ProjectList",
+                    "searchitemid": "ProjectListQY",
+                    "searchitemname": "企业",
+                    "displayorder": 1.00,
+                    "inuse": true,
+                    "searchtable": "MapListQy",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 2,
+                    "moduleid": "ProjectList",
+                    "searchitemid": "ProjectListRY",
+                    "searchitemname": "人员",
+                    "displayorder": 2.00,
+                    "inuse": true,
+                    "searchtable": "MapListRy",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 3,
+                    "moduleid": "ProjectList",
+                    "searchitemid": "ProjectListSB",
+                    "searchitemname": "设备",
+                    "displayorder": 3.00,
+                    "inuse": true,
+                    "searchtable": "MapListSb",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                }
+            ]
+        },
+        {
+            "moduleid": "QyList",
+            "modulename": "企业",
+            "iconclass": "qyxx.png",
+            "displayorder": 3.00,
+            "inuse": true,
+            "listtablename": "MapListQy",
+            "statusfield": "Qyzt",
+            "processfield": "Qyjd",
+            "longitudefield": "Longitude",
+            "latitudefield": "Latitude",
+            "template1": "qyv1",
+            "template2": null,
+            "template3": null,
+            "template4": null,
+            "defaultsearchinbounds": 5.00,
+            "searchfields": [
+                {
+                    "searchid": "QyLisQyzt",
+                    "moduleid": "QyList",
+                    "fielddesc": "企业类型",
+                    "fieldtype": "select",
+                    "fieldname": "gczt",
+                    "fieldoperation": "=",
+                    "ctrlstring": "valueFixed--所有企业,所有企业,1|建设企业,建设企业,0|监理企业,监理企业,0|施工企业,施工企业,0",
+                    "displayorder": 1.00
+                }
+            ],
+            "urls": [
+                {
+                    "urlid": "0009",
+                    "moduleid": "QyList",
+                    "urlname": "工程人员调入",
+                    "url": "http://wz.jzyglxt.com/task/task1?qybh={qybh}",
+                    "displayorder": 1.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0010",
+                    "moduleid": "QyList",
+                    "urlname": "工程人员调出",
+                    "url": "http://wz.jzyglxt.com/task/task2?qybh={qybh}",
+                    "displayorder": 2.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0011",
+                    "moduleid": "QyList",
+                    "urlname": "查看资质证书",
+                    "url": "http://wz.jzyglxt.com/task/task3?qybh={qybh}",
+                    "displayorder": 3.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0012",
+                    "moduleid": "QyList",
+                    "urlname": "发送短信",
+                    "url": "http://wz.jzyglxt.com/task/task4?qybh={qybh}",
+                    "displayorder": 4.00,
+                    "inuse": true
+                }
+            ],
+            "searchitems": [
+                {
+                    "recid": 4,
+                    "moduleid": "QyList",
+                    "searchitemid": "QyListProject",
+                    "searchitemname": "工程",
+                    "displayorder": 1.00,
+                    "inuse": true,
+                    "searchtable": "MapListProject",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 5,
+                    "moduleid": "QyList",
+                    "searchitemid": "QyListRY",
+                    "searchitemname": "人员",
+                    "displayorder": 2.00,
+                    "inuse": true,
+                    "searchtable": "MapListRy",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 6,
+                    "moduleid": "QyList",
+                    "searchitemid": "QyListSB",
+                    "searchitemname": "设备",
+                    "displayorder": 3.00,
+                    "inuse": true,
+                    "searchtable": "MapListSb",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                }
+            ]
+        },
+        {
+            "moduleid": "KqList",
+            "modulename": "考勤机",
+            "iconclass": "ryxx.png",
+            "displayorder": 2.00,
+            "inuse": true,
+            "listtablename": "MapListRy",
+            "statusfield": "Ryzt",
+            "processfield": "Ryjd",
+            "longitudefield": "Longitude",
+            "latitudefield": "Latitude",
+            "template1": "ryv1",
+            "template2": null,
+            "template3": null,
+            "template4": null,
+            "defaultsearchinbounds": 5.00,
+            "searchfields": [
+                {
+                    "searchid": "RyListRylx",
+                    "moduleid": "KqList",
+                    "fielddesc": "人员类型",
+                    "fieldtype": "select",
+                    "fieldname": "gczt",
+                    "fieldoperation": "=",
+                    "ctrlstring": "valueFixed--全部人员,全部人员,1|施工员,施工员,0|安全员,安全员,0|预算员,预算员,0|资料员,资料员,0|监理员,监理员,0",
+                    "displayorder": 1.00
+                } 
+            ],
+            "urls": [
+                {
+                    "urlid": "0005",
+                    "moduleid": "KqList",
+                    "urlname": "发起维修",
+                    "url": "http://wz.jzyglxt.com/task/task1?rybh={rybh}",
+                    "displayorder": 1.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0006",
+                    "moduleid": "KqList",
+                    "urlname": "发起检查",
+                    "url": "http://wz.jzyglxt.com/task/task2?rybh={rybh}",
+                    "displayorder": 2.00,
+                    "inuse": true
+                }
+            ],
+            "searchitems": [
+                {
+                    "recid": 7,
+                    "moduleid": "KqList",
+                    "searchitemid": "RyListProject",
+                    "searchitemname": "工程",
+                    "displayorder": 1.00,
+                    "inuse": true,
+                    "searchtable": "MapListProject",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 8,
+                    "moduleid": "KqList",
+                    "searchitemid": "RyListQY",
+                    "searchitemname": "企业",
+                    "displayorder": 2.00,
+                    "inuse": true,
+                    "searchtable": "MapListQy",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 9,
+                    "moduleid": "KqList",
+                    "searchitemid": "RyListSB",
+                    "searchitemname": "人员",
+                    "displayorder": 3.00,
+                    "inuse": true,
+                    "searchtable": "MapListSb",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                }
+            ]
+        },
+        {
+            "moduleid": "RyList",
+            "modulename": "人员",
+            "iconclass": "ryxx.png",
+            "displayorder": 2.00,
+            "inuse": true,
+            "listtablename": "MapListRy",
+            "statusfield": "Ryzt",
+            "processfield": "Ryjd",
+            "longitudefield": "Longitude",
+            "latitudefield": "Latitude",
+            "template1": "ryv1",
+            "template2": null,
+            "template3": null,
+            "template4": null,
+            "defaultsearchinbounds": 5.00,
+            "searchfields": [
+                {
+                    "searchid": "RyListRylx",
+                    "moduleid": "RyList",
+                    "fielddesc": "人员类型",
+                    "fieldtype": "select",
+                    "fieldname": "gczt",
+                    "fieldoperation": "=",
+                    "ctrlstring": "valueFixed--全部人员,全部人员,1|施工员,施工员,0|安全员,安全员,0|预算员,预算员,0|资料员,资料员,0|监理员,监理员,0",
+                    "displayorder": 1.00
+                } 
+            ],
+            "urls": [
+                {
+                    "urlid": "0005",
+                    "moduleid": "RyList",
+                    "urlname": "回复整改单",
+                    "url": "http://wz.jzyglxt.com/task/task1?rybh={rybh}",
+                    "displayorder": 1.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0006",
+                    "moduleid": "RyList",
+                    "urlname": "修改手机号码",
+                    "url": "http://wz.jzyglxt.com/task/task2?rybh={rybh}",
+                    "displayorder": 2.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0007",
+                    "moduleid": "RyList",
+                    "urlname": "查看证书",
+                    "url": "http://wz.jzyglxt.com/task/task3?rybh={rybh}",
+                    "displayorder": 3.00,
+                    "inuse": true
+                },
+                {
+                    "urlid": "0008",
+                    "moduleid": "RyList",
+                    "urlname": "发送短信",
+                    "url": "http://wz.jzyglxt.com/task/task4?rybh={rybh}",
+                    "displayorder": 4.00,
+                    "inuse": true
+                }
+            ],
+            "searchitems": [
+                {
+                    "recid": 7,
+                    "moduleid": "RyList",
+                    "searchitemid": "RyListProject",
+                    "searchitemname": "工程",
+                    "displayorder": 1.00,
+                    "inuse": true,
+                    "searchtable": "MapListProject",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 8,
+                    "moduleid": "RyList",
+                    "searchitemid": "RyListQY",
+                    "searchitemname": "企业",
+                    "displayorder": 2.00,
+                    "inuse": true,
+                    "searchtable": "MapListQy",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                },
+                {
+                    "recid": 9,
+                    "moduleid": "RyList",
+                    "searchitemid": "RyListSB",
+                    "searchitemname": "设备",
+                    "displayorder": 3.00,
+                    "inuse": true,
+                    "searchtable": "MapListSb",
+                    "searchlongitude": "Longitude",
+                    "searchlatitude": "Latitude"
+                }
+            ]
+        }
+        
+        
+    ]
+}

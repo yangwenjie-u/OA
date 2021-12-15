@@ -1,0 +1,21 @@
+﻿@using BD.WorkFlow.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>@ViewBag.Title</title>
+    <link href="@WorkFlowSkins.GetCssPath("jqueryloadmask/jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+    <link href="@WorkFlowSkins.GetCssPath("easyui/themes/gray/easyui.css")" rel="stylesheet" type="text/css" />
+    <link href="@WorkFlowSkins.GetCssPath("easyui/themes/icon.css")" rel="stylesheet" type="text/css" />
+    <script src="@WorkFlowSkins.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetJsPath("jquery.easyui.min.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetJsPath("jquery.loadmask.min.js")" type="text/javascript"></script>
+    @RenderSection("head", false)
+</head>
+<body style="background:white;">
+    @RenderBody()
+</body>
+</html>

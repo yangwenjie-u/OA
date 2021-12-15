@@ -1,0 +1,42 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!--移动设备-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--高速模式,webkit内核-->
+    <meta name="renderer" content="webkit">
+    <!--不支持IE兼容模式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--禁止搜索引擎转码,并附带广告-->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <meta http-equiv="Refresh" content="0;url=http://www.bing.com">
+    <![endif]-->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@Configs.Title</title>
+
+    <link href="@SkinManager.GetBootstrapPath("/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="/skins/DataInput/pub/viewer/dist/viewer.min.css" rel="stylesheet" type="text/css" />
+    <link href="/skins/DataInput/pub/viewer/demo/css/main.css" rel="stylesheet" type="text/css" />
+
+    <script src="@SkinManager.GetBootstrapPath("/js/jquery.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetBootstrapPath("/js/bootstrap.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="/skins/DataInput/pub/viewer/dist/viewer.min.js" type="text/javascript" charset="utf-8" ></script>
+    
+
+    @RenderSection("head", false)
+
+    </head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+
+</html>
+

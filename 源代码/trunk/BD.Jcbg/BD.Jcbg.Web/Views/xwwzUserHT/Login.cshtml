@@ -1,0 +1,104 @@
+﻿
+@using BD.Jcbg.Web.xwwz;
+@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@messfunc.GetValue("admintitle")</title>
+    <link href="@SkinManager.GetXwwzHTPath("css/login.css")"   rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetXwwzHTPath("css/style_20161128.css")"   rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetXwwzHTPath("css/jquery.loadmask.css")"  rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetXwwzHTPath("easyui/themes/default/easyui.css")"   rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetXwwzHTPath("js/jquery-1.8.0.min.js")"   type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/jquery.easyui.min.js")"  type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/easyui-lang-zh_CN.js")"  type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/jquery.loadmask.min.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetXwwzHTPath("js/login.js")"   type="text/javascript"></script>
+</head>
+<body>
+
+
+    <script type="text/javascript">
+        document.onkeydown = function (e) {
+            var theEvent = window.event || e;
+            var code = theEvent.keyCode || theEvent.which;
+            if (code == 13) {
+                $("#btnLogin").click();
+            }
+        }
+        $(function () {
+            try {
+                $("#login_name").focus();
+                $("#btnLogin").click(function () {
+                    if (!checkLogin())
+                        return;
+                    login();
+                });
+            } catch (e) {
+                $.messager.alert('错误', e, 'error');
+            }
+        });
+
+        function checkLogin() {
+            if ($("#login_name").val() === "") {
+                $.messager.alert('提示', '请输入账号！', 'info');
+                return false;
+            }
+            if ($("#login_pwd").val() === "") {
+                $.messager.alert('提示', '请输入密码！', 'info');
+                return false;
+            }
+            return true;
+        }
+
+        function login() {
+            $.ajax({
+                type: "POST",
+                url: "/xwwzUserHT/CheckUser",
+                dataType: "json",
+                data: "userName=" + escape($("#login_name").val()) + "&passWord=" + escape($("#login_pwd").val()),
+                success: function (data) {
+                    if (data.Code === "1")
+                        window.location = "/xwwzUserHT/Index";
+                    else {
+                        $.messager.alert('提示', data.Msg, 'info');
+                    }
+                },
+                complete: function () {
+                    $("body").unmask();
+                },
+                beforeSend: function () {
+                    $("body").mask("正在登录...");
+                }
+            });
+        }
+    </script>
+    <body class="body_back font_family font_size_13">
+        <div class="back_top"></div>
+        <div class="main">
+            <div class="main_left">
+                <div class="title font_size_33">新闻网站后台</div>
+                <div class="middle"> <img src="@SkinManager.GetXwwzHTPath("images/hardwork.png")"   /></div>
+                <div class="last"><span class="xiaozi">请拨打全国服务热线</span><span class="tel font_size_33">0575-88622455</span></div>
+            </div>
+            <div class="main_right">
+                <div class="input_k font_size_20">
+                    <label for="account">账户:</label>
+                    <input id="login_name" type="text" />
+                </div>
+
+                <div class="input_k font_size_20">
+                    <label for="password">密码:</label>
+                    <input id="login_pwd" type="password" />
+                </div>
+
+                <div class="btn_denglu" id="btnLogin">登录</div>
+
+
+
+            </div>
+        </div>
+    </body>
+</body>
+</html>

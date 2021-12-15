@@ -1,0 +1,305 @@
+--2016-06-03
+CREATE TABLE [dbo].[DATADEFVAL](
+	[SJGJ_ID] [int] IDENTITY(1,1) NOT NULL,
+	[ZDZDTBNAME] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[SJBMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[ZDMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+ CONSTRAINT [PK_DATADEFVAL] PRIMARY KEY CLUSTERED 
+(
+	[SJGJ_ID] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段字典表名称' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL', @level2type=N'COLUMN', @level2name=N'ZDZDTBNAME'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据表名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL', @level2type=N'COLUMN', @level2name=N'SJBMC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL', @level2type=N'COLUMN', @level2name=N'ZDMC'
+
+
+GO
+
+CREATE TABLE [dbo].[DATADEFVAL_USER](
+	[SJGJ_ID] [int] IDENTITY(1,1) NOT NULL,
+	[USERNAME] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[ZDZDTBNAME] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[SJBMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[ZDMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[DEFVALUE] [nvarchar](100) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_DATADEFVAL_USER] PRIMARY KEY CLUSTERED 
+(
+	[SJGJ_ID] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'用户名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL_USER', @level2type=N'COLUMN', @level2name=N'USERNAME'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段字典表名称' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL_USER', @level2type=N'COLUMN', @level2name=N'ZDZDTBNAME'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据表名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL_USER', @level2type=N'COLUMN', @level2name=N'SJBMC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL_USER', @level2type=N'COLUMN', @level2name=N'ZDMC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'默认值' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATADEFVAL_USER', @level2type=N'COLUMN', @level2name=N'DEFVALUE'
+
+GO
+
+CREATE TABLE [dbo].[DATAFILE](
+	[FILEID] [nchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[FILENAME] [nvarchar](100) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[FILECONTENT] [image] NULL,
+	[FILEEXT] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[CJSJ] [nchar](19) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_DATAFILE] PRIMARY KEY CLUSTERED 
+(
+	[FILEID] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件ID' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFILE', @level2type=N'COLUMN', @level2name=N'FILEID'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFILE', @level2type=N'COLUMN', @level2name=N'FILENAME'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFILE', @level2type=N'COLUMN', @level2name=N'FILECONTENT'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'文件扩展名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFILE', @level2type=N'COLUMN', @level2name=N'FILEEXT'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'创建时间' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFILE', @level2type=N'COLUMN', @level2name=N'CJSJ'
+
+
+GO
+
+CREATE TABLE [dbo].[DATAFLOW](
+	[SJGJ_ID] [int] IDENTITY(1,1) NOT NULL,
+	[COMPANYCODE] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[ACTIVITYID] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[TASKID] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[SJBMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[ZDMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[DATABH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[BHMS] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SFXS] [bit] NULL,
+	[XSSX] [numeric](18, 2) NULL,
+	[SFGD] [bit] NULL,
+	[ZDSX] [bit] NULL,
+	[XSCD] [int] NULL,
+ CONSTRAINT [PK_DATAFLOW] PRIMARY KEY CLUSTERED 
+(
+	[COMPANYCODE] ASC,
+	[ACTIVITYID] ASC,
+	[TASKID] ASC,
+	[SJBMC] ASC,
+	[ZDMC] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'SJGJ_ID'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'单位代码' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'COMPANYCODE'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'流程节点代码' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'ACTIVITYID'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'任务节点' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'TASKID'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据表名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'SJBMC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'ZDMC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据编号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'DATABH'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'编号模式' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'BHMS'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否显示' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'SFXS'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示顺序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'XSSX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否固定一行' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'SFGD'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'只读属性' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'ZDSX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示长度' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAFLOW', @level2type=N'COLUMN', @level2name=N'XSCD'
+
+GO
+
+
+GO
+CREATE TABLE [dbo].[DATALOG](
+	[SJGJ_ID] [int] IDENTITY(1,1) NOT NULL,
+	[ZYH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[LB] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[LX] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SY] [nchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[SQLLOG] [nvarchar](600) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_DATALOG] PRIMARY KEY CLUSTERED 
+(
+	[SJGJ_ID] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATALOG', @level2type=N'COLUMN', @level2name=N'SJGJ_ID'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'流水号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATALOG', @level2type=N'COLUMN', @level2name=N'ZYH'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'类别(主表，从表，明细表)' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATALOG', @level2type=N'COLUMN', @level2name=N'LB'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'类型(添加，修改，删除)' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATALOG', @level2type=N'COLUMN', @level2name=N'LX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'释义' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATALOG', @level2type=N'COLUMN', @level2name=N'SY'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'虚拟修改日志' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATALOG', @level2type=N'COLUMN', @level2name=N'SQLLOG'
+
+GO
+CREATE TABLE [dbo].[DATASQL](
+	[SJGJ_ID] [int] IDENTITY(1,1) NOT NULL,
+	[ZYH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SQLCONTENT] [nvarchar](4000) COLLATE Chinese_PRC_CI_AS NULL,
+	[STATUS] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_DATASQL] PRIMARY KEY CLUSTERED 
+(
+	[SJGJ_ID] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATASQL', @level2type=N'COLUMN', @level2name=N'SJGJ_ID'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'流水号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATASQL', @level2type=N'COLUMN', @level2name=N'ZYH'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'假保存的SQL语句' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATASQL', @level2type=N'COLUMN', @level2name=N'SQLCONTENT'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'执行状态' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATASQL', @level2type=N'COLUMN', @level2name=N'STATUS'
+
+GO
+--基础字段字典、项目字段字典、单位字段字典、个性化字典字段(单位代码COMPANYCODE)
+CREATE TABLE [dbo].[DATAZDZD](
+	[SJGJ_ID] [int] IDENTITY(1,1) NOT NULL,
+	[SJBMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[ZDMC] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[SY] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZDLX] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZDCD1] [int] NULL,
+	[ZDCD2] [int] NULL,
+	[INPUTZDLX] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[KJLX] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[SFBHZD] [bit] NULL,
+	[BHMS] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZDSX] [bit] NULL,
+	[SFXS] [bit] NULL,
+	[XSCD] [int] NULL,
+	[XSSX] [numeric](18, 2) NULL,
+	[SFGD] [bit] NULL,
+	[MUSTIN] [bit] NULL,
+	[DEFAVAL] [nvarchar](100) COLLATE Chinese_PRC_CI_AS NULL,
+	[HELPLNK] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[CTRLSTRING] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[VALIDPROC] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[MSGINFO] [nvarchar](100) COLLATE Chinese_PRC_CI_AS NULL,
+	[LX] [nvarchar](100) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_DATAZDZD] PRIMARY KEY CLUSTERED 
+(
+	[SJBMC] ASC,
+	[ZDMC] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'数据表名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'SJBMC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段名' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'ZDMC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'释义' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'SY'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段类型' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'ZDLX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段长度1' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'ZDCD1'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段长度2' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'ZDCD2'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'检验类型' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'INPUTZDLX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'控件类型' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'KJLX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否编号字段' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'SFBHZD'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'编号模式' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'BHMS'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'只读属性' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'ZDSX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否显示' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'SFXS'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示长度' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'XSCD'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示顺序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'XSSX'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否固定一行' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'SFGD'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否必输' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'MUSTIN'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'默认值' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'DEFAVAL'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'helplink' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'HELPLNK'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'ctrlstring' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'CTRLSTRING'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'检验过程' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'VALIDPROC'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'信息提示' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'MSGINFO'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'类型(区分同展示不同情况,以,号隔开)' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'DATAZDZD', @level2type=N'COLUMN', @level2name=N'LX'
+

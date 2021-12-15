@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--********************文件上传到对象存储设置**********************-->
+<FileOss Server="139.224.42.240:8058"  OwnerCode="wlzaz" StorageType="OSS" StorageUrl="">
+  <!--上传配置-->
+  <Uploads>
+    <!--上传类型path表示目录，table表示表格-->
+    <Upload type="path">
+      <!--是否扫描子目录-->
+      <ScanSub>true</ScanSub>
+      <!--根目录-->
+      <PathName>d:\采集视频</PathName>
+      <!--供以后查询参数-->
+      <Params>
+        <!--文件上级目录名称（检测机构编号）-->
+        <Param>{FolderName}</Param>
+        <!--检测机构名称-->
+        <Param>select qymc from i_m_qy where qybh='{FolderName}'</Param>
+      </Params>
+    </Upload>
+  </Uploads>
+</FileOss>

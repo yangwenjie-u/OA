@@ -1,0 +1,67 @@
+﻿@{
+    Layout = "~/Views/User/_dialoglayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+
+    $(function () {
+
+        $('#maintable').datagrid({
+            title: '',
+            loadMsg: "正在加载……",
+            border: false,
+            url: '/syjg/GetRedos?uniqcode=@ViewData["uniqcode"]',
+            rownumbers: true,
+            nowrap: true,
+            idField: 'Recid',
+            striped: false,
+            fit: true,
+            singleSelect: true,
+            pagination: false,
+            columns: [[
+			{ field: 'Syr', title: '试验人', width: 100, sortable: true, align: "center" },
+			{ field: 'CheckUser', title: '同意人', width: 100, sortable: true, align: "center" },
+			{ field: 'Sbmcbh', title: '试验设备', width: 100, sortable: true, align: "center" },
+			{ field: 'Jh', title: '件号', width: 100, sortable: true, align: "center" },
+			{ field: 'Czyy', title: '重做原因', width: 100, sortable: true, align: "center" },
+			{ field: 'Syrq', title: '重做时间', width: 100, sortable: false, align: "center",
+			    formatter: function (value, row, index) {
+			        var strdt = row.Syrq;
+			        if (strdt == null)
+			            return "";
+			        var dt = eval("new " + strdt.substr(1, strdt.length - 2));
+			        return dt.getYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+			    }
+			}
+			]],
+            onDblClickRow: function (rowIndex, rowData) {
+                viewDetail();
+            }
+        });
+    });
+    function viewDetail() {
+        var data = $("#maintable").datagrid('getSelected');
+        if (data == null) {
+            $.messager.alert('提示', '请选择要操作的记录', 'info');
+            return;
+        }
+        var url = '/syjg/viewimage?type=2&recid=' + data.Recid;
+        $('#viewimage').dialog({
+            title: '采集曲线',
+            fit: true,
+            closed: false,
+            cache: false,
+            content: "<iframe scrolling='yes' id='video_frm' frameborder='0' src='" + url + "' style='width:100%;height:99%;'></iframe>",
+            modal: true,
+            buttons: [{
+                iconCls: 'icon-no',
+                text: '关闭',
+                handler: function () {
+                    $('#viewimage').dialog('close');
+                }
+            }]
+        });
+    }
+</script>
+<table id="maintable"></table> 
+<div id="viewimage"></div>

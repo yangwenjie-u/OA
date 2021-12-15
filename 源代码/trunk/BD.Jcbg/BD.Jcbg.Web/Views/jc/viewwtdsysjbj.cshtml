@@ -1,0 +1,74 @@
+﻿@using BD.Jcbg.Common;
+@{
+
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+
+@section head
+{
+<link href="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table.min.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetJsPath("dateformat.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table-zh-CN.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+
+        $(function () {
+            try {
+                layer.msg('正在加载数据');
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getwtdsysjbj",
+                    dataType: "json",
+                    async: false,
+                    data: "wtdwyh=" + g_wtdwyh,
+                    success: function (data) {
+                        if (data.code != "0") {
+                            alert(data.msg);
+                        } else {
+                            for (var i = 0; i < data.result.length; i++) {
+                                var thisObj = data.result[i];
+                                var nearObj = (i % 2 == 0) ? data.result[i + 1] : data.result[i - 1];
+                                
+                                var bodyStr = "";
+                                var headStr = "";
+                                for (var prop in thisObj) {
+                                    if (i == 0)
+                                        headStr += "<th>" + prop + "</th>";
+                                    var thisValue = thisObj[prop];
+                                    var nearValue = nearObj[prop];
+                                    if (thisValue != nearValue && thisValue != "采集数据" && thisValue != "报告数据" &&
+                                        (!isNaN(thisValue) && thisValue*1>0 || !isNaN(nearValue) && nearValue*1>0)) {
+
+                                        thisValue = "<font color='red'>" + thisValue + "</font>";
+                                    }
+                                    bodyStr += "<td>" + thisValue + "</td>";
+                                }
+                                if (i == 0) {
+                                    $("#tbMain").append("<tr>" + headStr + "</tr>");
+                                }
+                                $("#tbMain").append("<tr>" + bodyStr + "</tr>");
+
+                            }
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+
+
+                layer.closeAll();
+
+            } catch (err) {
+                alert(err);
+            }
+        });
+    </script>
+}
+
+<div class="container">
+    <table class='table table-bordered table-striped' style='margin-top:10px' id="tbMain">
+    </table>
+</div>

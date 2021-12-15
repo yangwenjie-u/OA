@@ -1,0 +1,290 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        
+        var g_gcbh = "@ViewBag.gcbh";
+        var g_gcmc = "@ViewBag.gcmc";
+        var g_dwbh = "@ViewBag.dwbh";
+    var g_limitxmbh = "@ViewBag.limitxmbh";
+        var g_jchtrecid = "@ViewBag.jchtrecid";
+        var g_dwinfo = {};
+        var g_syxmfl1 = [];
+        var g_syxmfl = [];
+        var g_syxm = [];
+        var g_sjwtzs = [];
+        var g_gcinfo = {};
+        var g_sgdwinfo = {};
+        $(function () {
+            try {
+                initData();
+                showData();
+                showWtzs();
+
+            } catch (err) {
+                alert(e);
+            }
+        });
+        function initData() {
+            try {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getjcdwxmfz?dwbh="+encodeURIComponent(g_dwbh),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        try {
+                            $.each(data, function (i, value) {
+                                if (value.sjxsflbh == "")
+                                    g_syxmfl1[g_syxmfl1.length] = value;
+                                else
+                                    g_syxmfl[g_syxmfl.length] = value;
+                            });
+                        } catch (e) {
+                            alert(e);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getjcdwxm?dwbh="+encodeURIComponent(g_dwbh),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        g_syxm = data;
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getwtdgcinfo?gcbh=" + encodeURIComponent(g_gcbh)+"&jchtrecid="+g_jchtrecid,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        g_gcinfo = data;
+                        if ("jchtbh" in data) {
+                            g_jchtrecid = data.recid;
+                        }
+                        g_gcbh = data.gcbh;
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getqyinfo?qybh=" + encodeURIComponent(g_dwbh),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        g_dwinfo = data;
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        function showData() {
+            try {
+                var totalWidth = 0;
+                var isfirst1 = true;
+                $.each(g_syxmfl1, function (i, value) {
+                    var otaba1 = "";
+                    var otaba2 = "";
+                    if (isfirst1) {
+                        otaba1 = "in active";
+                        otaba2 = "active";
+                        isfirst1 = false;
+                    }
+                    var o_div_id = "o_tab_" + value.xsflbh;
+                    var o_cur_div = "<div class=\"tab-pane fade " + otaba1 + "\" id=\"" + o_div_id + "\" style='padding:10px 10px 10px 10px'></div>";
+                    $("#out_tab_content").append(o_cur_div);
+                    $("#out_tab_tab").append("<li class=\"" + otaba2 + "\"><a href=\"#" + o_div_id + "\" data-toggle=\"tab\">" + value.xsflmc + "</a></li>");
+                    $("#" + o_div_id).append("<div id=\"main_tab_content_" + value.xsflbh + "\" ></div>");
+                    
+                    if (totalWidth == 0)
+                        totalWidth = $("#" + o_div_id).width();
+                    var subfls = [];
+                    $.each(g_syxmfl, function (j, value2) {
+                        if (value2.sjxsflbh == value.xsflbh)
+                            subfls.push(value2);
+                    });
+                    if (subfls.length == 0)
+                        return true;
+                    var divWidth = (totalWidth-20) / subfls.length;
+                    divWidth = divWidth - divWidth % 1;
+
+                    $.each(subfls, function (j, value2) {
+                        
+
+                        var div_id = "block_" + value2.xsflbh;
+                        var cur_div = "<div id=\"" + div_id + "\" style='padding:10px 10px 10px 10px;width:"+divWidth+"px;float:left;'></div>";
+                        $("#main_tab_content_" + value.xsflbh + "").append(cur_div);
+                        $("#" + div_id).append("<a class=\"list-group-item active text-center\">" + value2.xsflmc + "</a>");
+                        
+                        $.each(g_syxm, function (k, syxm) {
+                            if (syxm.xsflbh != value2.xsflbh)
+                                return true;
+                            //$("#" + div_id).append("<li class=\"list-group-item\"><span style='cursor:pointer;' onclick='showWtdLrDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\")'>" + syxm.syxmmc + "</span><div style='cursor:pointer;' id='div_wtzs_" + syxm.syxmbh + "' class='badge' style='display:inline' onclick='showWtdCkDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\")'></div></li>");
+                            $("#" + div_id).append("<li class=\"list-group-item\" ><div class=\"stj_span_wai\" style='cursor:pointer; z-index:1;'  onclick='showWtdLrDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\",\"" + syxm.wtdlrbj + "\",\"" + this + "\")'><span >" + syxm.syxmmc + "</span></div><div style='cursor:pointer;' id='div_wtzs_" + syxm.syxmbh + "' class='badge' style='display:inline'   onclick=' showWtdCkDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\",\"" + this + "\")'   ></div></li>");
+                     
+                            
+                        });
+                    });
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        function showWtdLrDialog(syxmbh, syxmmc, wtdlrbj) {
+            try {
+                var tabledesc = syxmmc + "委托单录入";
+                var zdzdtable = encodeURIComponent("XTZD_BY,DWZD_" + syxmbh + ",ZDZD_" + syxmbh); // zdzd名
+                var tablename = encodeURIComponent("M_BY,M_D_" + syxmbh + ",M_" + syxmbh); 			// 表名
+                var tablerecid = encodeURIComponent("RECID"); 	// 表主键
+                var title = encodeURIComponent(tabledesc); 	// 标题
+                var formdm = tablename;
+                var buttons = encodeURIComponent("提交|TJ| "); // 按钮
+                var js = encodeURIComponent("wtdService.js");
+                var callback = encodeURIComponent("wtdService.setSubmit('$$RECID$$')");
+                var rdm = Math.random();
+
+                var s_tablename = encodeURIComponent("S_BY,S_D_" + syxmbh + ",S_" + syxmbh);
+                var s_pri = encodeURIComponent("BYZBRECID,RECID");
+                var s_title = encodeURIComponent("记录");
+
+                var dllname = "BD.JC.JS.Common.dll";
+                var dllclass = "BD.JC.JS.Common.ComSetJcyj";
+
+                var fieldparam = "M_BY,SYXMBH," + syxmbh +
+                    "|M_BY,YTDWBH," + g_dwbh +
+                    "|M_BY,YTDWMC," + g_dwinfo.qymc +
+                    "|M_BY,SYXMMC," + syxmmc +
+                    "|M_BY,GCBH," + g_gcbh +
+                    "|M_BY,HTBH," + g_jchtrecid;
+
+                fieldparam = encodeURIComponent(fieldparam);
+
+                var url = "/datainput/Index?zdzdtable=" + zdzdtable +
+                    "&t1_tablename=" + tablename +
+                    "&t1_pri=" + tablerecid +
+                    "&t1_title=" + title +
+                    "&button=" + buttons +
+                    "&js=" + js +
+                    "&callback=" + callback +
+                    "&LX=W" +
+                    "&rownum=2" +
+                    "&t2_tablename=" + s_tablename +
+                    "&t2_pri=" + s_pri +
+                    "&t2_title=" + s_title +
+                    "&type=" + wtdlrbj +
+                    "&fieldparam=" + fieldparam +
+                    "&dllname=" + dllname +
+                    "&dllclass=" + dllclass +
+                    "&redefinebh=S_BY.ZH" +
+                    "&cf=1" +
+                    "&individualZdzdtable=DATAZDZD_INDIVIDUAL " +
+                    "&syxmbh=" + syxmbh +
+                    "&companycode=" + g_dwbh +
+                    "&_=" + rdm;
+
+                parent.layer.open({
+                    type: 2,
+                    title: tabledesc,
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['100%', '100%'],
+                    content: url,
+                    end: function () {
+                        showWtzs();
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        function showWtzs() {
+            $.ajax({
+                type: "POST",
+                url: "/jc/getgcdwsjwtzs?gcbh=" + encodeURIComponent(g_gcbh)+"&dwbh="+g_dwbh,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_sjwtzs = data;
+                    $("div[id^='div_wtzs_']").each(function () {
+                        var id = $(this).attr("id");
+                        var divObj = $(this);
+                        var find = false;
+                        $.each(g_sjwtzs, function (i, item) {
+                            if (id.toLowerCase() == ("div_wtzs_" + item.syxmbh).toLowerCase()) {
+                                divObj.html(item.wtzs);
+                                find = true;
+                                return false;
+                            }
+                        });
+                        if (!find) {
+                            divObj.html(0);
+                        }
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+        }
+        function showWtdCkDialog(syxmbh, syxmmc) {
+            try {
+                var title = "["+g_gcmc+"]["+syxmmc+"]委托清单";
+
+                var url = "/WebList/EasyUiIndex?FormDm=WTDGL&FormStatus=0&FormParam=PARAM--" + g_gcbh + "|" + syxmbh + "|" + g_dwbh;
+
+                parent.layer.open({
+                    type: 2,
+                    title: title,
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['100%', '100%'],
+                    content: url,
+                    end: function () {
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+    </script>
+}
+
+<ul id="out_tab_tab" class="nav nav-tabs"></ul>
+<div id="out_tab_content" class="tab-content"></div>
+<div id="div1"></div>

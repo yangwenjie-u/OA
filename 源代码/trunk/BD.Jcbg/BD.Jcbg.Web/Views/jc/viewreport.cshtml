@@ -1,0 +1,84 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/jc/_pdflayout.cshtml";
+}
+
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+    var g_pdfpath = "@SkinManager.GetPdfViewPath("")";
+    var g_absjson = [];
+
+    $(function () {
+        try {
+            initData();
+            showData();
+
+        } catch (err) {
+            alert(e);
+        }
+    });
+    function initData() {
+        try {
+
+            $.ajax({
+                type: "POST",
+                url: "/jc/getreportabs?wtdwyh=" + encodeURIComponent(g_wtdwyh),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code != "0") {
+                        alert(data.msg);
+                    } else {
+                        g_absjson =data.bgabs;
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function showData() {
+        try {
+            var frmHeight = $(document).height() - 70;
+            var isSingle = g_absjson.length == 1;
+            if (g_absjson.length > 0) {
+                for (var i = 0; i < g_absjson.length; i++) {
+                    var jsonobj = g_absjson[i];
+                    var active = "";
+                    var active2 = "";
+                    if (i == 0) {
+                        active = "in active";
+                        active2 = "active";
+                    }
+                    var divId = "tab_" + jsonobj.sxh + "_" + jsonobj.bgwyh;
+                    var frmId = "frm_" + jsonobj.sxh + "_" + jsonobj.bgwyh;
+                    var title = "报告详情";
+                    if (!isSingle)
+                        title = "[" + jsonobj.scsj + "]-" + jsonobj.sxh;
+                    //var reportUrl = g_pdfpath + 'web/viewer.html?file=' + g_bgwyh + "_" + sxh;
+                    var reportUrl = g_pdfpath + 'web/viewer.html?file=/jc/getreportfile/' + jsonobj.bgwyh + "_" + jsonobj.sxh;
+                    var curDiv = "<div class=\"tab-pane fade " + active + "\" id=\"" + divId + "\" style='padding:0px 10px 0px 10px'><iframe frameborder=\"0\" height=\"" + frmHeight + "\" id=\"" + frmId + "\" name=\"" + frmId + "\" marginheight=\"0\" marginwidth=\"0\" scrolling=\"auto\" width=\"100%\" src=\"" + reportUrl + "\"  /></div>";
+                    $("#main_tab_content").append(curDiv);
+                    $("#main_tab_tab").append("<li class=\"" + active2 + "\"><a href=\"#" + divId + "\" data-toggle=\"tab\">" + title + "</a></li>");
+                    
+
+                }
+            }
+        } catch (e) {
+            alert(e);
+        }
+    }
+</script>
+}
+<ul id="main_tab_tab" class="nav nav-tabs"></ul>
+<div id="main_tab_content" class="tab-content"></div>

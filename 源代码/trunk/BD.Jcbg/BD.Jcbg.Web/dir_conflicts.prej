@@ -1,0 +1,10 @@
+Trying to add new property 'svn:global-ignores'
+but the property already exists.
+<<<<<<< (local property value)
+bin
+obj
+||||||| (incoming 'changed from' value)
+=======
+ReportPrint
+bin
+>>>>>>> (incoming 'changed to' value)

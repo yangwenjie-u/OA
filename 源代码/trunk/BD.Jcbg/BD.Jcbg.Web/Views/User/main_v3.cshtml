@@ -1,0 +1,491 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/User/_mainlayout.cshtml";
+}
+@section head
+{
+    <script src="@SkinManager.GetJsPath("jquery.qrcode.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+        var g_menus = [];
+        var g_menugroups = [];
+        var g_imageRoot = "@SkinManager.GetImagePath("")";
+        var caidan_xianshi = false;
+        var caidan = {};
+        $(function () {
+            TabControlAppend('1', '首页', '/user/welcome', undefined, 'homepage');
+            
+            $(".side ul li").hover(function () {
+                if (this.id == "download") {
+                    $(this).find(".sidebox").stop().animate({ "width": "34px" }, 200).css({ "opacity": "1", "filter": "Alpha(opacity=100)", "background": "#ae1c1c" });
+                    $(this).find(".erweima_right").stop().animate({ "width": "350px" }, 200).css({ "opacity": "1", "filter": "Alpha(opacity=100)", "display": "block" });
+                    //	$(".erweima_right").css("display","block");
+                }
+                else { $(this).find(".sidebox").stop().animate({ "width": "144px" }, 200).css({ "opacity": "1", "filter": "Alpha(opacity=100)", "background": "#ae1c1c" }) }
+
+            }, function () {
+                if (this.id == "download") {
+                    $(this).find(".erweima_right").stop().animate({ "width": "34px" }, 200).css({ "opacity": "0.8", "filter": "Alpha(opacity=80)", "display": "none" });
+                }
+                $(this).find(".sidebox").stop().animate({ "width": "34px" }, 200).css({ "opacity": "0.8", "filter": "Alpha(opacity=80)", "background": "transparent" })
+            });
+            
+
+            getWorkSum();
+            loadMenus();
+            generateBar();
+            //run();
+        });
+        // 生成二维码
+        function generateBar() {
+            try{
+                $("#barIos").qrcode({
+                    render: "table", //table方式
+                    width: 135, //宽度
+                    height: 135, //高度
+                    text: "@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_APPIOS") " //任意内容
+                });
+                $("#barAndroid").qrcode({
+                    render: "table", //table方式
+                    width: 135, //宽度
+                    height: 135, //高度
+
+                    text: "@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_APPANDROID") " //任意内容
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        /*
+        // 获取待办任务数量
+        function setWorkSum() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/workflow/getworktodocount",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        $("#sp_work_sum").text(data.count);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+            }
+        }*/
+        /*
+        // 设置轮询
+        function run() {
+            setInterval("setWorkSum()", 5000);
+        }*/
+        function logout() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/dologout",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code == 0)
+                            window.location = "/";
+                        else
+                            layer.open({ title: '提示', content: data.msg, icon: 5 });
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        //$("body").unmask();
+                        layer.closeAll('loading');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        //$("body").mask("正在退出系统...")
+                        layer.load();;
+                    }
+                });
+            } catch (e) {
+                layer.open({ title: '错误', content: e, icon: 5 });
+            }
+        }
+
+        function loadMenus() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/getmenusv2",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        caidan = data;
+                        setMenus();
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll('loading');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.load();
+                    }
+                });
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        }
+        function setMenus() {
+            var one_caidan_li = "";   //一级菜单的具体类目
+            var two_caidan_li = new Array;   //二级菜单的具体类目数组
+            var content1 = "";    //一级菜单内容
+            var content2 = "";    //二级菜单内容
+            var content = "";     //总的内容
+
+            var color_5 = 0;     //图标底色
+            for (a = 0; a < caidan.one_caidan.length; a++) {
+                color_5 = a + 1;
+                two_caidan_li[a] = "";
+                one_caidan_li += " <li class=\"caidan_ul_li \"  style='cursor:pointer'>" +
+                    "<div class=\"kuang_zhu size3 \">" +//color_one_1
+                    "<div class=\"i_div color_one_" + color_5 + "\"><img class='hover_img_one' src=\"" + g_imageRoot + caidan.one_caidan[a].one_caidan_pic_class + "\"/></div>" +
+                    "  <div class=\"zhu_title_word_div\"><div>" + caidan.one_caidan[a].one_caidan_name + "</div><div class=\"yinwen_title\">" + caidan.one_caidan[a].one_caidan_english + "</div></div>" +
+                    " </div> </li>";
+
+                for (b = 0; b < caidan.one_caidan[a].two_caidan.length; b++) {
+
+                    if (caidan.one_caidan[a].two_caidan[b].two_caidan_three == "false") {
+                        var menuitem = caidan.one_caidan[a].two_caidan[b];
+                        two_caidan_li[a] += " <li class=\"erji_caidan_li hashtird xianshi3\" style='cursor:pointer' onclick='tubiao_zhu_nei(\"" + menuitem.MenuId + "\",\"" + menuitem.two_caidan_name + "\",\"" + menuitem.MenuUrl + "\")'>" +
+                     "<div class=\"erji_kuang\">" +
+                     "  <div class=\"erji_i_div  color_one_" + color_5 + "\"><div class='shangbiao_num  '></div><img class='hover_img' src=\"" + g_imageRoot + caidan.one_caidan[a].two_caidan[b].two_caidan_pic_class + "\"/> </div>" +
+                     "<div class=\"erji_titile_word_div\">" + caidan.one_caidan[a].two_caidan[b].two_caidan_name + "</div>" +
+                     " </div>  </li>";
+
+                    }
+                    else {
+                        content3 = "";
+
+                        for (c = 0; c < caidan.one_caidan[a].two_caidan[b].three_caidan.length; c++) {
+                            content3 += "<li class=\"erji_caidan_li  xianshi3\">" +
+                                " <div class=\"erji_kuang\">" +
+                                "  <div class=\"erji_i_div color_one_" + color_5 + "\"><div class='shangbiao_num  '></div><img  class='hover_img' src=\"" + caidan.one_caidan[a].two_caidan[b].three_caidan[c].three_caidan_pic_class + "\"/></div>" +
+                                " <div class=\"erji_titile_word_div\">" + caidan.one_caidan[a].two_caidan[b].three_caidan[c].three_caidan_name + "</div>" +
+                                " </div></li>";
+
+                        }
+                        two_caidan_li[a] += "<li> <div class=\"half_one\"> <div class=\"shu\"></div>" + caidan.one_caidan[a].two_caidan[b].two_caidan_name + "</div>" +
+                            "   <ul class=\"erji_caidan_ul test0\" style=\"display:block\">" + content3 +
+                            " </ul></li>";
+                    }
+                }
+                if (color_5 == 5) {
+                    color_5 = 0;
+                }
+
+            }
+
+            content1 = "<div class=\"main_caidan_kuang\">" +
+               "<div class=\"yonghu\">" +
+               "<img src=\"" + caidan.user_pic + "\" />" +
+               " <div class=\"yonghu_name\">" + caidan.user_name + "</div>" +
+               "</div>" +
+               "<ul class=\"caidan_ul\">" + one_caidan_li +
+               "</ul></div>"
+
+            content2 = " <div class=\"erji_caidan\">";
+
+            //     alert(two_caidan_li[0]);
+
+            for (j = 0; j < caidan.one_caidan.length; j++) {
+
+                content2 += "<ul class=\"erji_caidan_ul test0\" id=\"erji_zanshi_" + j + "\">" + two_caidan_li[j] + "   </ul>";
+            }
+            content2 += "</div>";
+            content = content1 + content2;
+            $("#caidan").html(content);
+            $(".erji_caidan").niceScroll({ zindex: 8 });   //滚动条设置
+            $(".main_caidan_kuang").niceScroll({ zindex: 8 });
+
+            $(".main_caidan_btn").hover(function () {
+                if (this.offsetLeft == 0) {
+                    $(".main_caidan_btn").animate({ left: "250px" });
+                    $(".main_caidan_kuang").animate({ left: "0px" });
+                    $(".goodless").addClass("xianshi");
+                    //caidan_xianshi = true;
+                }
+
+
+            });
+            $(".goodless").click(function () {
+
+
+                $(".main_caidan_btn").animate({ left: "0px" });
+                $(".main_caidan_kuang").animate({ left: "-250px" });
+                $(".erji_caidan").animate({ left: "-750px" });
+                $(".third_caidan").animate({ left: "-1000px" });
+                //caidan_ul_li active
+                //erji_caidan_li  active
+                //erji_caidan xianshi
+                //erji_caidan_ul xianshi
+                //third_caidan_ul xianshi
+                //third_caidan xianshi
+
+                if ($(".goodless").hasClass("xianshi")) {
+                    $(".goodless").removeClass("xianshi");
+                }
+
+                if ($(".third_caidan").hasClass("xianshi")) {
+                    $(".third_caidan").removeClass("xianshi");
+                }
+                if ($(".erji_caidan_li").hasClass("active")) {
+                    $(".erji_caidan_li").removeClass("active");
+                }
+                if ($(".erji_caidan").hasClass("xianshi")) {
+                    $(".erji_caidan").removeClass("xianshi");
+                }
+                if ($(".caidan_ul_li").hasClass("active")) {
+                    $(".caidan_ul_li").removeClass("active");
+                }
+                if ($(".third_caidan_ul").hasClass("xianshi")) {
+                    $(".third_caidan_ul").removeClass("xianshi");
+                }
+                if ($(".erji_caidan_ul").hasClass("xianshi")) {
+                    $(".erji_caidan_ul").removeClass("xianshi");
+                }
+
+                caidan_xianshi = false;
+
+            });
+            $(".caidan_ul_li").click(function () {
+                //alert(this);
+                var num = $(this).index();
+                var erji_id = "erji_zanshi_" + num;
+                if ($(".caidan_ul_li").hasClass("active")) {
+
+                    $(".caidan_ul_li").removeClass("active");
+                    //  //third_caidan xianshi
+                    //third_caidan_ul xianshi
+                    //erji_caidan_li  active
+                    if ($(".third_caidan").hasClass("xianshi")) {
+                        $(".third_caidan").removeClass("xianshi");
+
+                    }
+                    if ($(".third_caidan_ul").hasClass("xianshi")) {
+                        $(".third_caidan_ul").removeClass("xianshi");
+                    }
+                    if ($(".erji_caidan_li").hasClass("active")) {
+                        $(".erji_caidan_li").removeClass("active");
+                    }
+                    $(".third_caidan").animate({ left: "-1000px" });
+                    $(".main_caidan_btn").animate({ left: "750px" });
+                }
+
+                $(this).addClass("active");
+                //attr(attribute)
+                // alert($(this).index());
+                // alert(erji_id);
+                if ($(".erji_caidan").hasClass("xianshi")) {
+                    if ($(".erji_caidan_ul").hasClass("xianshi")) {
+                        $(".erji_caidan_ul").removeClass("xianshi");
+                    }
+                    $("#" + erji_id).addClass("xianshi");
+                }
+                else {
+                    $(".erji_caidan").addClass("xianshi");
+                    $(".erji_caidan").animate({ left: "250px" });
+                    $(".main_caidan_btn").animate({ left: "750px" });
+                    $("#" + erji_id).addClass("xianshi");
+
+                }
+
+            });
+            $(".xianshi3").click(function () {
+
+
+
+                $(".main_caidan_btn").animate({ left: "0px" });
+                $(".main_caidan_kuang").animate({ left: "-250px" });
+                $(".erji_caidan").animate({ left: "-750px" });
+
+                if ($(".goodless").hasClass("xianshi")) {
+                    $(".goodless").removeClass("xianshi");
+                }
+
+                if ($(".third_caidan").hasClass("xianshi")) {
+                    $(".third_caidan").removeClass("xianshi");
+                }
+                if ($(".erji_caidan_li").hasClass("active")) {
+                    $(".erji_caidan_li").removeClass("active");
+                }
+                if ($(".erji_caidan").hasClass("xianshi")) {
+                    $(".erji_caidan").removeClass("xianshi");
+                }
+                if ($(".caidan_ul_li").hasClass("active")) {
+                    $(".caidan_ul_li").removeClass("active");
+                }
+                if ($(".third_caidan_ul").hasClass("xianshi")) {
+                    $(".third_caidan_ul").removeClass("xianshi");
+                }
+                if ($(".erji_caidan_ul").hasClass("xianshi")) {
+                    $(".erji_caidan_ul").removeClass("xianshi");
+                }
+
+                caidan_xianshi = false;
+
+
+
+            });
+            $("#caidan").hover(function () {
+            }, function () {
+                setTimeout(function () {
+                    $(".main_caidan_btn").animate({ left: "0px" });
+                    $(".main_caidan_kuang").animate({ left: "-250px" });
+                    $(".erji_caidan").animate({ left: "-750px" });
+                    $(".third_caidan").animate({ left: "-1000px" });
+
+                    if ($(".goodless").hasClass("xianshi")) {
+                        $(".goodless").removeClass("xianshi");
+                    }
+
+                    if ($(".third_caidan").hasClass("xianshi")) {
+                        $(".third_caidan").removeClass("xianshi");
+                    }
+                    if ($(".erji_caidan_li").hasClass("active")) {
+                        $(".erji_caidan_li").removeClass("active");
+                    }
+                    if ($(".erji_caidan").hasClass("xianshi")) {
+                        $(".erji_caidan").removeClass("xianshi");
+                    }
+                    if ($(".caidan_ul_li").hasClass("active")) {
+                        $(".caidan_ul_li").removeClass("active");
+                    }
+                    if ($(".third_caidan_ul").hasClass("xianshi")) {
+                        $(".third_caidan_ul").removeClass("xianshi");
+                    }
+                    if ($(".erji_caidan_ul").hasClass("xianshi")) {
+                        $(".erji_caidan_ul").removeClass("xianshi");
+                    }
+                }, 500);
+
+                
+            });
+
+        }
+
+        function doSearch(key) {
+            var isSearch = key != "";
+            $("#menu_search").html("");
+            $("#left_yemian").css("display","block");
+            if (isSearch) {
+                $("#menu_group").css("display", "none");
+                $.each(g_menugroups, function (index, item) {
+                    $("#"+item.MenuCode).css("display", "none");
+                });
+                $("#menu_search").css("display", "block");
+                $.each(g_menus, function (index, item) {
+                    if (item.IsGroup)
+                        return true;
+                    if (item.MenuName.indexOf(key) > -1) {
+                        var menuIcon = item.ImageUrl;
+                        if (menuIcon == "")
+                            menuIcon = "fa fa-balance-scale";
+                        var menustr = "<li onclick=\"tubiao_zhu_nei('" + item.MenuCode + "','" + item.MenuName + "','" + item.MenuUrl + "')\"><div class=\"a_click\"><div class=\"nei_tubiao_div2\"><i class=\"" + menuIcon + "\"></i></div><div class=\"nei_tubiao_word2\">" + item.MenuName + "</div><div class='shangbiao display_no' id='spcount_" + item.MenuCode + "'></div></div></li>";
+                        $("#menu_search").append(menustr);
+                    }
+                });
+            } else {
+                $("#menu_group").css("display", "block");
+                $("#menu_search").css("display", "none");
+            }
+
+        }
+        var g_haswork_img = "@SkinManager.GetImagePath("side_icon04.gif")";
+        var g_nowork_img = "@SkinManager.GetImagePath("side_icon04.png")";
+        function getWorkSum() {
+            var ret = 0;
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/workflow/getworktodocount",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.count * 1 > 1)
+                            $("#img_todo").attr("src", g_haswork_img);
+                        
+                        $("#sp_work_sum").html(data.count);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+                showWorkList();
+            } catch (e) {
+            }
+            return ret;
+        }
+    </script>
+}
+
+
+
+
+
+<!-- 选项卡 -->
+<div class="tab-control stj_left_tab">
+    <!-- 标签 -->
+    <div class="tab simple">
+        <form style="display: none">
+            <input class="prev" type="button" />
+            <input class="next" type="button" />
+            <input class="find" type="button" />
+        </form>
+        <ul></ul>
+    </div>
+    <!-- 标签查找 -->
+    <div class="tab-find hidden">
+        <form>
+            <input class="text" type="text" />
+        </form>
+        <ul></ul>
+    </div>
+    <!--左侧主菜单-->
+    <div class="mian_all">
+        <!-- 主体 -->
+        <div class="top_main"></div>
+        <div class="main">
+            <div class="main_caidan_btn"> 菜<br />单</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="" id="caidan">
+
+
+</div>
+<div class="goodless" id="goodless"></div>
+
+
+
+
+<div class="side_right">
+    <div class="side">
+        <ul>
+            <li id="download">
+                <a href="#">
+                    <div class="erweima_right" style="display:none">
+                        <div class="erweima_xianshi">
+                            <div id="barIos" class="erweima_xianshi_left"></div>
+                            <div id="barAndroid" class="erweima_xianshi_right"></div>
+                        </div>
+                    </div>
+                    <div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon01.png")"></div>
+                </a>
+            </li>
+            <li id="telephone"><a href="#"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon02.png")">@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_TITLE2")></div></a></li>
+            <li id="help"><a href="@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_HELPDOC")"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon03.png")">帮助></div></a></li>
+            <li id="task"><a href="javascript:tubiao_zhu_nei('DBGZ','待办工作','/workflow/worktodo');"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon04.png")" id="img_todo">待办工作(<span id="sp_work_sum"></span>)</div></a></li>
+            <li id="logout"><a href="javascript:logout();"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon05.png")">注销退出></div></a></li>
+            <!--	<li style="border:none;"><a href="javascript:goTop();" class="sidetop"><img src="img/side_icon05.png"></a></li>  -->
+        </ul>
+
+
+    </div>
+</div>

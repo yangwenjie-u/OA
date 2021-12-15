@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    $(function () {
+        try {
+            if ($("#txt_dw").val() == "")
+                $("#sp_leave").css('display', 'none');
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+    function doLeave() {
+        try{
+            layer.confirm('确定要离职吗？该操作不可逆。', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/doleavecompany",
+                    data: {'dwmc' : $("#txt_dw").val()},
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == "0") {
+                            $("#txt_dw").val("");
+                            $("#sp_leave").css('display', 'none');
+                            alert("离职成功！");
+                        } else {
+                            if (data.msg == "")
+                                data.msg = "操作失败";
+                            alert(data.msg);
+                        }
+                        layer.closeAll();
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }, function () {
+                
+            });
+        } catch (err) {
+            alert(err);
+        }
+    }
+    
+</script>
+}
+
+    <div class="container">
+        <div class="row" style="margin-top:50px;">
+            <div class="col-xs-12 col-xs-offset-4 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+                <ul class="list-group">
+                    <li class='list-group-item' id='li_zh'>
+                        <div class="input-group">
+                            <span class="input-group-addon">账号</span>
+                            <input type="text" id="txt_zh" class="form-control" readonly="readonly" value="@ViewBag.UserName" />
+                        </div>
+                    </li>
+                    <li class='list-group-item' id='li_xm'>
+                        <div class="input-group">
+                            <span class="input-group-addon">姓名</span>
+                            <input type="text" id="txt_xm" class="form-control" readonly="readonly" value="@ViewBag.RealName" />
+                        </div>
+                    </li>
+                    <li class='list-group-item' id='li_dw'>
+                        <div class="input-group">
+                            <span class="input-group-addon">任职单位</span>
+
+                            <input type="text" id="txt_dw" class="form-control" readonly="readonly" value="@ViewBag.CompanyName"/>
+
+                            <span class="input-group-addon" id="sp_leave">
+                                <input type="button" value="离职" onclick="doLeave();" />
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>

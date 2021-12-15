@@ -1,0 +1,2 @@
+1.执行默认是自动加载数据
+update FORM set AutoLoad = 1

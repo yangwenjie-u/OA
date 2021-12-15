@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>摄像头拍照</title>
+    <style>
+        .div-a {
+            float: left;
+            width: 49%;
+         
+        }
+
+        .div-b {
+            float: left;
+            width: 49%;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="div-a">
+        <video id="video" width="480" height="320" autoplay style="background:#ddd"></video>
+        <p>
+            <button id="capture">拍照</button>
+        </p>
+    </div>
+    <div class="div-b"><canvas id="canvas" width="480" height="320"></canvas></div> 
+    <script>
+
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var base64="";
+        if (navigator.mediaDevices || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
+            //调用用户媒体设备, 访问摄像头
+            getUserMedia({
+                audio: false,
+                video: true
+            }, success, error);
+
+            document.getElementById('capture').addEventListener('click', function () {
+                context.drawImage(video, 0, 0, 480, 320); //显示拍照的图片
+
+                //转换为base64格式
+                base64 = canvas.toDataURL('image/jpeg');
+            })
+        } else {
+            alert('不支持访问用户媒体');
+        }
+
+        //访问用户媒体设备的兼容方法
+        function getUserMedia(constraints, success, error) {
+            if (navigator.mediaDevices) {
+                //最新的标准API
+                navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+            } else if (navigator.webkitGetUserMedia) {
+                //webkit核心浏览器
+                navigator.webkitGetUserMedia(constraints,success, error)
+            } else if (navigator.mozGetUserMedia) {
+                //firfox浏览器
+                navigator.mozGetUserMedia(constraints, success, error);
+            } else if (navigator.getUserMedia) {
+                //旧版API
+                navigator.getUserMedia(constraints, success, error);
+            }
+        }
+
+        function success(stream) {
+            window.stream = stream;
+            if (window.URL) {
+                video.src = window.URL.createObjectURL(stream);
+            } else {
+                video.src = stream;
+            }
+        }
+
+        function error(error) {
+            alert("获取失败");
+        }
+        function GetBase64ZP()
+        {
+            return base64;
+        }
+
+    </script>
+</body>
+</html>

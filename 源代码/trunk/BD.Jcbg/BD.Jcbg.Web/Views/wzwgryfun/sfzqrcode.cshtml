@@ -1,0 +1,19 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+    var jdzch = '@ViewData["jdzch"]';
+    var sfzhm = '@ViewData["sfzhm"]';
+    $(function () {
+
+        var url = "/wzwgryfun/showqrcode?jdzch=" + encodeURIComponent(jdzch) + "&sfzhm=" + encodeURIComponent(sfzhm);
+        document.getElementById("setsign_imgsign").src = url;
+    });
+
+</script>
+
+
+<div id="setsign_maindlg" style="padding:100px;width:100px;height:180px;" title="二维码">
+    <img id="setsign_imgsign" alt="" />
+</div> 

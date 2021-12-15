@@ -1,0 +1,87 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.DataModal.Entities;
+@using BD.Jcbg.Web.xwwz;
+ 
+@{
+    Layout = "~/Views/xwwzUser/_f_common.cshtml";
+}
+@section head 
+{
+     
+<script src="@SkinManager.GetXwwzPath("zdy/common.js")" type="text/javascript"></script>
+    }
+@section body
+{
+  @{ NewsArtcle newsArtcle = ViewData["NewsArtcle"] as NewsArtcle;}
+<div class="ziye_all" style="text-align: justify;margin-top:0px;margin-bottom:0px;">
+
+    <div class="ziye_all_right" style="width:100%;">
+        <div class="right_container">
+            <div class="right_container_weizhi">
+
+                您当前的位置>>@ViewData["wz"]
+            </div>
+            <div class="right_container_title">
+                <div>@ViewData["wz"]   </div>
+                <!--  <font>建设动态  </font>-->
+
+
+            </div>
+            <div class="right_container_last">
+                <div class="right_container_last_title">
+                    <div class="right_container_last_title_top">
+                        @newsArtcle.ArticleTitle
+                    </div>
+                    <div class="right_container_last_title_last">
+                       发布时间：@newsArtcle.ArticleDate.ToString("F")  &nbsp;&nbsp;&nbsp; 点击数: @newsArtcle.Hits
+
+                    </div>
+
+                </div>
+
+                <div class="right_container_last_neirong">
+                    
+                    @Html.Raw(newsArtcle.ArticleContent)
+
+
+                </div>
+
+                @{
+                    IList<IDictionary<string, string>> newsAttachList = ViewData["newsAttachList"] as IList<IDictionary<string, string>>;
+                    string isdisplay = "";
+                    if (newsAttachList.Count > 0)
+                    {
+                        isdisplay = "block";
+                    }
+                    else
+                    {
+                        isdisplay = "none";
+                    }
+
+
+                }
+                <div style="text-align:left;display:@isdisplay">
+                    附件&nbsp;&nbsp;:
+
+                    @foreach (var item in newsAttachList)
+                    {
+                        <a href="JavaScript:void(0)" onclick="postcall(@Html.Raw(myurls.downNewsAttachUrl(item)))">
+                            @item["docname"]
+                        </a><br />    @Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+                    }
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+<div class="height_20" style="background: #ebf0f3; width:1000px;margin-left:auto;margin-right:auto;">
+</div>
+   
+}
+ 

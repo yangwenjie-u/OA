@@ -1,0 +1,366 @@
+﻿@{
+    Layout = "~/Views/User/_easyuieditlayout.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+	var mail_list_g_pageSize = 20;
+	var mail_list_g_folders = null;
+	$(function () {
+		try {
+			mail_list_initDs();
+			$('#mail_list_maintable').datagrid({
+				title: '邮件管理',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/oa/getmails?rows=' + mail_list_g_pageSize,
+				rownumbers: true,
+				nowrap: true,
+				idField: 'recid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: mail_list_g_pageSize,
+				pageList: [mail_list_g_pageSize, 40, 50, 100, 1000, 10000],
+				columns: [[
+				{ field: 'title', title: '标题', width: 150, sortable: true, align: "center" },
+				{ field: 'content', title: '内容摘要', width: 250, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var content = value;
+						try {
+							content = $.base64.decode(value);
+							content = stripHtml(content);
+							if (content.length > 20)
+								return content.substr(0, 20) + "...";
+						} catch (e) {
+							alert(e);
+						}
+						return content;
+					}
+				},
+				{ field: 'fileids', title: '附件', width: 200, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var ret = "";
+						if (value != "") {
+							var arr = value.split("||");
+							for (var i = 0; i < arr.length; i++) {
+								var arritem = arr[i].split('|');
+								ret += "&nbsp;&nbsp;<a href='/oa/fileview?id=" + arritem[1] + "'>" + arritem[0] + "</a>";
+							}
+
+						}
+						return ret;
+					}
+				},
+				{ field: 'senderrealname', title: '发件人', width: 100, sortable: true, align: "center" },
+				{ field: 'receiverrealname', title: '收件人', width: 100, sortable: true, align: "center" },
+				{ field: 'sendtime', title: '时间', width: 120, sortable: true, align: "center" }
+				]],
+				toolbar: "#mail_list_tb",
+				rowStyler:function(index,row){
+					if (row.hasreader=="False"){
+						return 'font-weight:bold;';
+					}
+				},
+				onClickRow: function (rowIndex, rowData) {
+					mail_list_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					mail_list_viewRecord();
+				}
+			});
+
+			mail_list_initSearch();
+		} catch (e) {
+			$.messager.alert('初始化页面异常', e, 'warning');
+		}
+
+	});
+	function mail_list_initDs() {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/oa/GetMailFolders",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					mail_list_g_folders = data;
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				},
+				beforeSend: function (XMLHttpRequest) {
+				}
+			});
+		} catch (e) {
+			$.messager.alert('加载初始化数据集异常', e, 'warning');
+		}
+	}
+	function mail_list_initSearch() {
+		try {
+			$("#mail_list_search_folder").combobox({
+				valueField: "systemtype",
+				textField: "foldername",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: mail_list_g_folders,
+				onLoadSuccess: function () {
+					$("#mail_list_search_folder").combobox('setValue', '1');
+				},
+				onSelect: function (record) {
+					mail_list_gridReload();
+				}
+			});
+			$("#mail_list_search_time1").datebox({});
+			$("#mail_list_search_time2").datebox({});
+		} catch (e) {
+			$.messager.alert('初始化查询控件异常', e, 'warning');
+		}
+	}
+	function mail_list_search() {
+		try {
+			mail_list_gridReload();
+		} catch (e) {
+			$.messager.alert('查找记录异常', e, 'warning');
+		}
+	}
+	function mail_list_showToolbar(rowData) {
+		try {
+			var canEdit = rowData.hassend == "False";
+			$("#mail_list_btnadd").linkbutton('enable');
+			$("#mail_list_btnedit").linkbutton(canEdit ? 'enable' : 'disable');
+			$("#mail_list_btnview").linkbutton('enable');
+			$("#mail_list_btndelete").linkbutton('enable');
+
+		} catch (e) {
+			$.messager.alert('显示工具条异常', e, 'warning');
+		}
+	}
+	function mail_list_showNoRecToolbar() {
+		try {
+			$("#mail_list_maintable").datagrid('unselectAll');
+			$("#mail_list_btnadd").linkbutton('enable');
+			$("#mail_list_btnedit").linkbutton('disable');
+			$("#mail_list_btnview").linkbutton('disable');
+			$("#mail_list_btndelete").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('显示无记录工具条异常', e, 'warning');
+		}
+	}
+	function mail_list_showEditdlg(recid) {
+		try {
+			$("#mail_list_edit").dialog({
+				title: "编辑邮件",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				cache: false,
+				href: "/oa/mailedit?id=" + recid,
+				buttons: [{
+					text: "临时保存",
+					iconCls: "icon-save",
+					id: "mail_list_btn_save",
+					handler: function () {
+						mail_list_submit(1);
+					}
+				},{
+					text: "发送",
+					iconCls: "icon-mail-send",
+					id: "mail_list_btn_send",
+					handler: function () {
+						mail_list_submit(0);
+					}
+				}, 
+				{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "mail_list_btn_cancel",
+					handler: function () {
+						$("#mail_list_edit").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('添加记录异常', e, 'warning');
+		}
+	}
+	function mail_list_submit(ls) {
+		try {
+			var prefix = ls == "1" ? "保存" : "发送";
+			$("#form_mail_edit").form('submit', {
+				url: "/oa/savemail",
+				onSubmit: function (param) {
+					var ret = false;
+					try {
+						var isValid = $(this).form('validate');
+						if (!isValid)
+							return false;
+						$("#ls").val(ls);
+						$("#content").val(getData());
+						$("body").mask("正在" + prefix + "……");
+						ret = true;
+					}
+					catch (err) {
+						ret = false;
+						$.messager.alert('提示', err, 'info');
+					}
+					return ret;
+				},
+				success: function (data) {
+					try {
+						$("body").unmask();
+
+						var data = eval('(' + data + ')');
+						var code = data.code;
+						var msg = data.msg;
+						if (msg == "") {
+							
+							if (code == 0)
+								msg = prefix+"成功！";
+							else
+								msg = prefix+"保存失败！";
+						}
+						$.messager.alert('提示', msg, 'info', function () {
+						});
+
+
+					}
+					catch (err) {
+						$.messager.alert('提示', err, 'info');
+					}
+				}
+			});
+		}
+		catch (e) {
+			$.messager.alert('保存异常', e, 'warning');
+		}
+	}
+	function mail_list_editRecord() {
+		try {
+			var rec = $("#mail_list_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			mail_list_showEditdlg(rec.recid);
+		} catch (e) {
+			$.messager.alert('修改记录异常', e, 'warning');
+		}
+	}
+	function mail_list_deleteRecord() {
+		try {
+			var rec = $("#mail_list_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$.messager.confirm('提示', '确定要删除选中的记录吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/oa/deletemail?id=" + rec.recid + "&readerid=" + rec.readerid,
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									var index = $("#mail_list_maintable").datagrid('getRowIndex', rec);
+									$("#mail_list_maintable").datagrid('deleteRow', index);
+									$('#mail_list_maintable').datagrid('acceptChanges');
+									mail_list_showNoRecToolbar();
+									$.messager.alert('提示', '删除成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e.message, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在删除...");
+						}
+					});
+				}
+			});
+		} catch (e) {
+			$.messager.alert('删除记录异常', e, 'warning');
+		}
+	}
+	function mail_list_gridReload() {
+		try {
+			$('#mail_list_maintable').datagrid('load', {
+				folder:$("#mail_list_search_folder").combobox('getValue'),
+				key: $("#mail_list_search_key").val(),
+				dt1: $("#mail_list_search_time1").datebox('getValue'),
+				dt2: $("#mail_list_search_time2").datebox('getValue')
+			});
+			mail_list_showNoRecToolbar();
+		} catch (e) {
+			$.messager.alert('加载表格异常', e, 'warning');
+		}
+	}
+	function mail_list_viewRecord() {
+		try {
+			var rec = $("#mail_list_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			rec.hasreader = "True";
+			var index = $("#mail_list_maintable").datagrid('getRowIndex', rec);
+			$("#mail_list_maintable").datagrid('refreshRow', index);
+			$("#mail_list_view").dialog({
+				title: "查看邮件",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				cache: false,
+				content: "<iframe width='100%' height='99%' name='mail_list_view_frm' id='mail_list_view_frm' frameborder='0' scrolling='auto' src='/oa/mailview1?read=true&id=" + rec.recid + "'></iframe>",
+				//href: "/oa/mailview?read=true&id=" + rec.recid,
+				buttons: [{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "mail_list_btn_cancel2",
+					handler: function () {
+						$("#mail_list_view").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('预览异常', e, 'warning');
+		}
+	}
+</script>
+<table id="mail_list_maintable"></table>  
+<div id="mail_list_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a onclick="mail_list_showEditdlg(0);" id="mail_list_btnadd" class="easyui-linkbutton" iconCls="icon-add" plain="true">写邮件</a>
+		<a onclick="mail_list_editRecord();" id="mail_list_btnedit" class="easyui-linkbutton" iconCls="icon-edit" plain="true" disabled="true">修改未发送邮件</a>
+		<a onclick="mail_list_deleteRecord();" id="mail_list_btndelete" class="easyui-linkbutton" iconCls="icon-remove" plain="true" disabled="true">删除邮件</a>
+		<a onclick="mail_list_viewRecord();" id="mail_list_btnview" class="easyui-linkbutton" iconCls="icon-view" plain="true" disabled="true">查看邮件</a>
+	</div>  
+	<div>
+		邮箱：<input id="mail_list_search_folder" style="width:120px"/>
+		邮件标题：<input id="mail_list_search_key" style="width:200px" />
+		时间：<input id="mail_list_search_time1" style="width:100px" />&nbsp;到&nbsp;
+				<input id="mail_list_search_time2" style="width:100px" />
+		<a href="javascript:mail_list_search();" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+	</div>
+</div>
+<div id="mail_list_edit"></div>
+<div id="mail_list_view"></div>
+

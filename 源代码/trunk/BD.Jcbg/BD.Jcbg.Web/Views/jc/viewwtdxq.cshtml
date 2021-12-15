@@ -1,0 +1,58 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+    var g_yczt = @ViewBag.yczt;
+    var g_syxmbh="@ViewBag.syxmbh";
+
+    $(function () {
+        try {
+            var height = $(document).height() - 50;
+
+            $("#frm1").attr("src", "/jc/viewwtdyc?wtdwyh="+g_wtdwyh+"&yczt="+g_yczt);
+            $("#frm2").attr("src", "/jc/viewwts?recid="+g_wtdwyh+"&syxmbh="+g_syxmbh);
+            $("#frm3").attr("src", "/jc/viewwtdsysjs?wtdwyh="+g_wtdwyh);
+            $("#frm4").attr("src", "/jc/viewwtdreport?wtdwyh="+g_wtdwyh);
+
+            $("#frm1").css("height", height + "px");
+            $("#frm2").css("height", height + "px");
+            $("#frm3").css("height", height + "px");
+            $("#frm4").css("height", height + "px");
+
+            
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+</script>
+}
+<div class="container-fluid">
+    <ul id="tab_main" class="nav nav-tabs">
+        <li class="active">
+            <a href="#tab1" data-toggle="tab">异常详情</a>
+        </li>
+        <li><a href="#tab2" data-toggle="tab">委托单</a></li>
+        <li><a href="#tab3" data-toggle="tab">试验数据</a></li>
+        <li><a href="#tab4" data-toggle="tab">报告数据</a></li>
+    </ul>
+    <div id="tab_content_main" class="tab-content">
+        <div class="tab-pane fade in active" id="tab1">
+            <iframe width='98%' name='frm1' id='frm1' frameborder='0' scrolling='auto' ></iframe>
+        </div>
+        <div class="tab-pane fade" id="tab2">
+            <iframe width='98%' name='frm2' id='frm2' frameborder='0' scrolling='auto'></iframe>
+        </div>
+        <div class="tab-pane fade" id="tab3">
+            <iframe width='98%' name='frm3' id='frm3' frameborder='0' scrolling='auto'></iframe>
+        </div>
+        <div class="tab-pane fade" id="tab4">
+            <iframe width='98%' name='frm4' id='frm4' frameborder='0' scrolling='auto'></iframe>
+        </div>
+    </div>
+</div>

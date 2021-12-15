@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var g_gcbh = '@ViewBag.gcbh';
+        var g_cs = '@ViewBag.cs';
+        $(function () {
+            try {
+                setYszt();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function setYszt() {
+
+            var divid = "table_main";
+            try {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/getgccs",
+                    data: "gcbh=" + g_gcbh + "&fgcbh=",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        $.each(data.records, function (i, item) {
+                            $("#" + divid).append("<tr><td>" + item.gcmc + "</td><td><input type='text' value=\"\" id=\"item_s_" + item.gcbh + "_" + item.zcb + "\" size='10'></td><td><input value=\"" + g_cs + "\" id=\"item_e_" + item.gcbh + "_" + item.zcb + "\" size='10'></td></tr>");
+                            
+                        });
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+
+                
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+
+        function getValues() {
+            var items = [];
+            var msg = "";
+            try {
+                $('input[type="text"]').each(function () {
+                    var ids = $(this).attr("id");
+                    if (ids.indexOf('_s_') == -1)
+                        return true;
+                    var ide = ids.replace('_s_', '_e_');
+                    var vs = $("#" + ids).val().trim();
+                    var ve = $("#" + ide).val().trim();
+                    var idtmp = ids.replace("item_s_", "");
+                    var arr = idtmp.split('_');
+                    var gcbh = arr[0];
+                    var zcb = arr[1];
+                    if (!isInterger(vs) || !isInterger(ve)) {
+                        msg = "地下层数和最高层数不能为空，并且必须是整数";
+                        return false;
+                    }
+                    var item = {};
+                    item["gcbh"] = gcbh;
+                    item["zcb"] = zcb;
+                    item["kscs"] = vs;
+                    item["jscs"] = ve;
+                    items.push(item);
+                });
+            } catch (e) {
+                alert(e);
+            }
+            var ret = {};
+            ret["msg"] = msg;
+            ret["items"] = items;
+            return ret;
+
+        }
+        function isInterger(obj) {
+            //return typeof obj === 'number' && obj % 1 === 0
+            var reg = /^-?\d+$/;
+            return reg.test(obj);
+        }
+    </script>
+}
+
+<table class="table" style="width:98%;">
+    <thead>
+        <tr>
+            <th>工程名称</th>
+            <th width="100">地下层数</th>
+            <th width="100">最高层数</th>
+        </tr>
+    </thead>
+    <tbody id="table_main">
+    </tbody>
+</table>

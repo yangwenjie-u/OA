@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--********************启动线程配置,interval单位为秒,start=true的为启动线程**********************-->
+<Threads>
+  <Thread class="JobFileOssUpload" desc="文件上传到对象存储" interval="300" start="false"></Thread>
+  <Thread class="JobSetWtdYczt" desc="比对委托单异常状态" interval="300" start="false"></Thread>
+  <Thread class="JobOutUserKqLog" desc="工地人员考勤处理类" interval="10" start="false"></Thread>
+  <Thread class="JobRemoveInvalidSession" desc="清除API接口无效Session" interval="3600" start="false"></Thread>
+  <Thread class="JobRemoveInvalidSession" desc="清除API接口无效Session" interval="3600" start="false"></Thread>
+  <Thread class="RYXF" desc="人员虹膜下发" interval="600" start="false"></Thread>
+  <Thread class="JobSyncWgryGCZT" desc="务工人员状态同步" interval="600" start="false"></Thread>
+  <Thread class="XYPJ" desc="信用评价处理及短信定时发送" interval="600" start="false"></Thread>
+  <Thread class="FGRY" desc="复工人员同步" interval="60" start="false"></Thread>
+</Threads>

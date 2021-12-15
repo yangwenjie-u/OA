@@ -1,0 +1,115 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.DataModal.Entities;
+@using BD.Jcbg.Web.xwwz;
+ 
+@{
+    Layout = "~/Views/xwwzUser/_f_common.cshtml";
+}
+@section head 
+{
+
+<link rel="stylesheet" href="@SkinManager.GetXwwzPath("jquery-easyui-1.5.2/themes/default/easyui.css")">
+<link rel="stylesheet" href="@SkinManager.GetXwwzPath("jquery-easyui-1.5.2/themes/icon.css")">
+<link rel="stylesheet" href="@SkinManager.GetXwwzPath("jquery-easyui-1.5.2/demo.css")">
+
+<script src="@SkinManager.GetXwwzPath("jquery-easyui-1.5.2/jquery.min.js")" type="text/javascript"></script>
+<script src="@SkinManager.GetXwwzPath("jquery-easyui-1.5.2/jquery.easyui.min.js")" type="text/javascript"></script>
+<script src="@SkinManager.GetXwwzPath("zdy/common.js")" type="text/javascript"></script>
+<style type="text/css">
+    .lines-both .datagrid-body td {
+    }
+
+    .lines-no .datagrid-body td {
+        border-right: 1px dotted transparent;
+        border-bottom: 1px dotted transparent;
+    }
+
+    .lines-right .datagrid-body td {
+        border-bottom: 1px dotted transparent;
+    }
+
+    .lines-bottom .datagrid-body td {
+        border-right: 1px dotted transparent;
+    }
+</style>  
+    }
+@section body
+{
+
+    @{
+        string zncontent = ViewData["zncontent"] as string;
+    }
+<div class="ziye_all">
+    <div class="ziye_all_right" style="width:100%;">
+        <div class="right_container_weizhi" style="font-size:24px;margin:5px;">
+            
+            &nbsp;&nbsp;&nbsp;&nbsp;以下是关于【@zncontent】搜索到的内容
+        </div>
+        <div class="right_container">
+         
+            <div class="right_container_last">
+                <ul>
+                    @{
+                        IList<IDictionary<string, string>> newsArtcleList = ViewData["newsArtcleList"] as List<IDictionary<string, string>>;
+
+                    }
+
+                    @foreach (var item in newsArtcleList)
+                    {
+                        int fid = item["fatherid"].GetSafeInt();
+                        int rid = item["newsmenuid"].GetSafeInt();
+                        int cid = item["categoryid"].GetSafeInt();
+                        <li> <a href="JavaScript:linkJs(@Html.Raw(myurls.GetNewsLbUrl(fid, rid, cid, item)))" onclick=""><font style="float:left;"> @item["articletitle"] </font>   <font style=" float:right ; color:#999; font-size:12px">@Convert.ToDateTime(item["articledate"].ToString()).ToString("D")  </font>  </a>  </li>
+
+                    }
+                </ul>
+
+                @{
+                    
+                    
+                    string pagetitber = ViewData["pagetitber"] as string;
+                }
+                @Html.Raw(pagetitber)
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="height_20">
+</div>
+   
+
+
+    <script type="text/javascript">
+
+
+    $('#pp').pagination({
+        onSelectPage: function (pageNumber, pageSize) {
+            $(this).pagination('loading');
+            @{
+                if (zncontent.Equals(""))
+                {
+                    @Html.Raw("linkJs('/xwwzUser/searchnewlb', { zncontent:'' , page: pageNumber + '', size: pageSize + '' },'_self');");
+                }else{
+                    @Html.Raw("linkJs('/xwwzUser/searchnewlb', { zncontent:'" + zncontent + "' , page: pageNumber + '', size: pageSize + '' },'_self');");
+
+                }
+            }
+           
+
+            $(this).pagination('loaded');
+        }
+    });
+
+        
+
+    </script>
+}
+ 

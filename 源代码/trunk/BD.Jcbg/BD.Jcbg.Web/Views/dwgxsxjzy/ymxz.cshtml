@@ -1,0 +1,80 @@
+﻿@{
+    Layout = "~/Views/dwgxzj/_contentlayout2.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+
+        $(function () {
+            try {
+                initYear();
+                initMonth();
+                setYearMonth();
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function initYear() {
+            var minYear = 2019;
+            var curYear = (new Date()).getFullYear();
+            var yearList = [];
+            for (var i = minYear; i <= curYear; i++) {
+                yearList.push(i);
+            }
+            var s = "";
+            $.each(yearList, function (i, item) {
+                s += "<option value=\"" + item + "\">" + item + "</option>";
+            });
+            if (s!="") {
+                $("#year").html(s);                
+            }
+
+        }
+        function initMonth() {
+            var mlist = [
+                    "1-2",
+                    "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"
+            ];
+            var s = "";
+            $.each(mlist, function (i, item) {
+                s += "<option value=\"" + item + "\">" + item + "</option>";
+            });
+            if (s != "") {
+                $("#month").html(s);
+            }
+
+        }
+
+        function setYearMonth() {
+            var today = new Date();
+            var curYear = today.getFullYear();
+            var curMonth = today.getMonth() + 1;
+            var month = "";
+            if (curMonth == 1 || curMonth==2) {
+                month = "1-2";
+            }
+            else {
+                month = curMonth.toString();
+            }
+            $('#year').val(curYear.toString());
+            $('#month').val(month);
+        }
+        function getValues() {
+            return {
+                year: $('#year').val(),
+                month: $('#month').val()
+            };
+
+        }
+    </script>
+}
+<div style="margin-left:20px; margin-top:20px;">
+    <span>年份：</span>
+    <select id="year" name="year" style="margin-left:50px; width:100px;">
+
+    </select>
+</div>
+<div style="margin-left:20px; margin-top:20px;">
+    <span>月份：</span>
+    <select id="month" name="month" style="margin-left:50px; width:100px;"></select>
+</div>

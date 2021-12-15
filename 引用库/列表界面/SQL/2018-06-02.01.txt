@@ -1,0 +1,2 @@
+1.在FORMBUTTON中添加按钮检验存储过程
+alter table FORMBUTTON add CheckProc nvarchar(500)

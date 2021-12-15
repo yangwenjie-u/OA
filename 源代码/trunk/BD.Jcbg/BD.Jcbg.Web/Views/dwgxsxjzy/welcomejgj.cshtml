@@ -1,0 +1,458 @@
+﻿<html>
+<head>
+    <title>诸暨市智慧建管云平台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="/skins/default/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link type="text/css" rel="stylesheet" href="/skins/default/css/tab-control.min.css" />
+    <link rel="stylesheet" href="/skins/default/css/style.css" type="text/css" />
+    <link href="/skins/default/bootstrap//css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <meta http-equiv="Refresh" content="0;url=http://www.bing.com">
+    <![endif]-->
+
+    <link href="/skins/default/css/style-20161012.css" type="text/css" rel="Stylesheet" />
+    
+    <script type="text/javascript" src="/skins/default/js/jquery-2.0.3.min.js"></script>
+    <script src="/skins/default/bootstrap//js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src=/skins/default/bootstrap//PlugIns/Layer/layer.js type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="/skins/default/js/js_v1.js"></script>
+    <script type="text/javascript" src="/skins/default/js/echarts.common.min.js"></script>
+    <script src="/skins/default/js/dateformat.js" type="text/javascript" charset="utf-8"></script>
+
+
+    
+<link href="/skins/default/css/style-20180829.css" type="text/css" rel="Stylesheet" />
+
+<script language="javascript" type="text/javascript">
+
+    $(function () {
+        run();
+        setSums();
+        setGcs();
+        setAnnounce();
+    });
+    var g_run_menus = ["NBYJ","DBGZ"];
+    // 设置轮询
+    function run() {
+        setInterval("setSums()", 30000);
+    }
+    function setSums(){
+        for (var i=0; i<g_run_menus.length; i++){
+            getSumString(g_run_menus[i]);
+        }
+    }
+    function getSumString(menucode) {
+        var sum = 0;
+        if (menucode == "NBYJ") {
+            sum = getNewMailSum() * 1;
+            if ($("#mail_count").length > 0)
+                $("#mail_count").html(sum);
+        }
+        else if (menucode == "DBGZ") {
+            sum = getWorkSum() * 1;
+            if ($("#task_count").length > 0) {
+                $("#task_count").html(sum);
+            }
+        }
+    }
+    function getNewMailSum() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/oa/getnewmailsum",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == 0)
+                        ret = data.msg*1;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            setMail();
+        } catch (e) {
+        }
+        return ret;
+    }
+    function getWorkSum() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/workflow/getworktodocount",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    ret = data.count * 1;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            showWorkList();
+        } catch (e) {
+        }
+        return ret;
+    }
+    
+    function setGcs() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/dwgxzj/getjdygcs",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $.each(data, function (index, row) {
+                        var rq = row.slrq;
+                        if (rq != '')
+                            rq = rq.substr(0, rq.indexOf(' '));
+                        $("#table_gc").append("<tr onclick=\"showGcDetail('" + row.gcbh + "','" + row.zjdjh + "')\" style=\"cursor:pointer;\"><td>" + row.zjdjh + "</td><td>" + row.gcmc + "</td><td>" + row.jdgcsxm + "," + row.tjjdyxm + "," + row.azjdyxm + "," + row.aqjdyxm + "</td><td>" + rq + "</td></tr>");
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function setAnnounce() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/oa/getannounce?page=1&rows=100&hasread=0&key=",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $.each(data.rows, function (index, row) {
+                        $("#table_announce").append("<tr><td onclick='showAnnounce(\""+row.recid+"\")' style='cursor:pointer'>" + row.title + "</td></tr>");
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showAnnounce(recid) {
+        parent.layer.open({
+            type: 2,
+            title: '公告详情',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['98%', '98%'],
+            content: "/oa/announceview?read=true&id=" + recid,
+            //content: "/jdbg/player",
+            end: function () {
+            }
+        });
+    }
+    function showWorkList() {
+        $.ajax({
+            type: "POST",
+            url: "/workflow/getworktodolist?page=1&rows=1000&key=",
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                $("#table_task").html("");
+                if (data.total > 0) {
+                    $.each(data.rows, function (i, item) {
+                        var extrainfo = "";
+                        if (item.ExtraInfo2 != "")
+                            extrainfo = "[" + item.ExtraInfo2 + "]";
+
+                        //var dt = eval("new " + item.DateAccepted.substr(1, item.DateAccepted.length - 2));
+                        var dt = eval("new " + item.DateAccepted.substr(1, item.DateAccepted.length - 2));
+                        var acceptDate = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds(); //dt.pattern("yyyy-MM-dd HH:mm");
+                        
+                        $("#table_task").append("<tr><td><a href='javascript:showCheckWorkDialog(" + item.Taskid + ")'>[" + acceptDate + "][来自：" + item.PreUserRealName + "]" + item.ActivityName + extrainfo + "</a></td></tr>");
+                    });
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+    }
+
+    function showCheckWorkDialog(taskid) {
+        parent.layer.open({
+            type: 2,
+            title: '',
+            shadeClose: true,
+            shade: 0.5,
+            area: ['95%', '95%'],
+            content: "/workflow/checkwork?taskid=" + taskid + "&DlgId=1&_=" + Math.random(),
+            end: function () {
+            }
+        });
+
+    }
+    function setMail() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/oa/getmails?page=1&rows=100&hasread=0",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $("#table_mail").html("");
+                    $.each(data.rows, function (index, row) {
+                        $("#table_mail").append("<tr><td onclick='showMail(\"" + row.recid + "\")' style='cursor:pointer'>["+row.sendtime+"]&nbsp;&nbsp;" + row.title + "&nbsp;&nbsp;[来自："+row.senderrealname+"]</td></tr>");
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showMail(recid) {
+        parent.layer.open({
+            type: 2,
+            title: '邮件详情',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['98%', '98%'],
+            content: "/oa/mailview1?read=true&id=" + recid,
+            //content: "/jdbg/player",
+            end: function () {
+            }
+        });
+    }
+    function showAllWorkList() {
+        try {
+            window.parent.tubiao_zhu_nei("DBGZ", "待办工作", "/workflow/worktodo");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showAllAnnounce() {
+        try {
+            window.parent.tubiao_zhu_nei("GRGL_GGCK", "公告查看", "/oa/announcelist2");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showAllMail() {
+        try {
+            window.parent.tubiao_zhu_nei("NBYJ", "内部邮件", "/oa/maillist");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showRyqx() {
+        try {
+            window.parent.tubiao_zhu_nei("RYQX", "人员去向", "/WebList/EasyUiIndex?FormDm=UserLeave&FormStatus=0");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+
+    function showAllGc() {
+        try {
+            window.parent.tubiao_zhu_nei("GCLB", "工程列表", "/WebList/EasyUiIndex?FormDm=GCZL_WDGC&FormStatus=1&FormParam=PARAM--ALL||CHECKBOX--我的,所有|所有");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+
+    function showGcDetail(gcbh, zjdjh) {
+        parent.layer.open({
+            type: 2,
+            title: '工程详情',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['98%', '98%'],
+            content: "/dwgxzj/gccknb?gcbh=" + encodeURIComponent(gcbh) + "&zjdjh=" + encodeURIComponent(zjdjh),
+            //content: "/jdbg/player",
+            end: function () {
+            }
+        });
+    }
+</script>
+
+    <script language="javascript" type="text/javascript">
+        function IsIE() {
+            return true;
+            if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                var browser = navigator.appName
+                var b_version = navigator.appVersion
+                var version = b_version;//b_version.split(";")
+                var trim_Version = version[1].replace(/[ ]/g, "");
+                if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                    alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                    return false;
+                }
+                else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                    alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                    return false;
+                }
+                else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                    alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                    return false;
+                } else {
+                    return true;
+                }
+
+            } else {
+                alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+                return false;
+            }
+
+        }
+    </script>
+
+</head>
+<body class="wai_body font_faminly">
+
+    
+
+<div id="page1" style="display:none;">
+    <div class="ruanjianming font_faminly_yishu">
+        
+    </div>
+
+    <div class="index_2_left" id="left_150">
+        <ul class="kuang_left" id="menu_group"></ul>
+    </div>
+    <!--1-->
+    <div class="juti_tubiao" style="float: left; height: 100%; margin: 0px; padding: 0; width: 97%;" id="menu_item">
+        <a href="javascript:void(0)" class="left_jiantou" onclick="fanhui(g_menugroups)">
+            <div class="jiantou">
+                <i class="fa fa-chevron-left"></i>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="right_jiantou" onclick="right_jiantou_click()">
+        <i class="fa fa-angle-right"></i>
+    </div>
+    <div class="company_name font_faminly_yishu"> </div>
+</div>
+
+<div id="page2" >
+    <div class="page2_top" style="display: none;">
+    </div>
+    <div class="page2_middle" style="height: 52%;">
+        <div class="page2_middle_left">
+            <div class="nei">
+                <div class="title" style="cursor:pointer" onclick="showAllGc();">
+                    <p>近日报监工程</p>
+                </div>
+
+
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_gc">
+                        <thead>
+                            <tr>
+                                <th>质监号</th>
+                                <th>工程名称</th>
+                                <th style="width:180px;">监督员</th>
+                                <th>受理日期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+        <div class="page2_middle_right">
+            <div class="nei">
+                <div class="title" style="cursor:pointer" onclick="showAllAnnounce();">
+                    <p>公告通知</p>
+                </div>
+                <div class="page2_middle_right_last">
+
+                    <table class="table table-hover" id="table_announce">
+
+                        <thead>
+
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+                </div>
+            </div>
+
+
+
+
+    </div>
+
+    <div class="page2_last">
+        <div class="page2_last_left">
+            <div class="nei">
+                <div class="title" style="cursor:pointer" onclick="showAllWorkList();">
+                    <i class="file-text-o"></i>
+                    <div class="title_word">  <p><span id="task_count"></span> 个待办任务</p></div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_task">
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+        <div class="page2_last_right">
+            <div class="nei">
+                <div class="title" style="cursor:pointer" onclick="showAllMail();">
+                    <i class="envelope-square"></i>
+                    <div class="title_word">  <p><span id="mail_count"></span> 封新邮件</p></div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_mail">
+
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+    <script type="text/javascript" src="/skins/default/js/tab-control.min.js"></script>
+</body>
+</html>

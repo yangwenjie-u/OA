@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.NewsAttach,BD.Jcbg.DataModal" table="News_Attach" lazy="false">
+    <id name="Attachid" column="attachID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="int" name="Articleid" column="[articleID]" />
+    <property type="string" length="256" name="DocName" column="[docName]" />
+    <property type="string" length="256" name="SaveName" column="[saveName]" />
+    <property type="BinaryBlob" name="Filecontent" column="[filecontent]" />
+  </class>
+</hibernate-mapping>

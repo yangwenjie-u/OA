@@ -1,0 +1,5 @@
+1.附件表DATAFILE中添加存储位置
+//OSS文件地址
+alter table DATAFILE add FILEURL nvarchar(500)
+//OSS缩略图地址
+alter table DATAFILE add SMALLURL nvarchar(500)

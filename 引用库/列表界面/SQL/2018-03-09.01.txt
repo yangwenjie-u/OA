@@ -1,0 +1,7 @@
+1.在Form中添加界面显示时,是否需要自动加载数据
+alter table FORM add AutoLoad bit
+
+
+2.在FormZdzd中,添加字段值是否加载及辅助参数字段
+alter table FORMZDZD add Encrypt bit
+alter table FORMZDZD add Fzcs nvarchar(500)

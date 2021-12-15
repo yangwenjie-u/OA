@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+         xmlns:db="http://www.springframework.net/database">
+  
+	<!--日志-->
+	<object id="SysLogDao" type="BD.Log.DaoSqlServer.SysLogDao, BD.Log.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<!--流程模块-->
+	<object id="StActivityDao" type="BD.WorkFlow.DaoSqlServer.StActivityDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StAssignRuleDao" type="BD.WorkFlow.DaoSqlServer.StAssignRuleDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StDoneTasksDao" type="BD.WorkFlow.DaoSqlServer.StDoneTasksDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StFileDao" type="BD.WorkFlow.DaoSqlServer.StFileDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StFormDao" type="BD.WorkFlow.DaoSqlServer.StFormDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StFormItemDao" type="BD.WorkFlow.DaoSqlServer.StFormItemDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StFormTemplateDao" type="BD.WorkFlow.DaoSqlServer.StFormTemplateDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StProcessDao" type="BD.WorkFlow.DaoSqlServer.StProcessDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+  <object id="STAssistUserDao" type="BD.WorkFlow.DaoSqlServer.STAssistUserDao, BD.WorkFlow.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+	<object id="StProcessGroupDao" type="BD.WorkFlow.DaoSqlServer.StProcessGroupDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StProcessMonitorDao" type="BD.WorkFlow.DaoSqlServer.StProcessMonitorDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StRoutingRuleDao" type="BD.WorkFlow.DaoSqlServer.StRoutingRuleDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StStartActivityDao" type="BD.WorkFlow.DaoSqlServer.StStartActivityDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StToDoTasksDao" type="BD.WorkFlow.DaoSqlServer.StToDoTasksDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StReportDao" type="BD.WorkFlow.DaoSqlServer.StReportDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="ViewStProcessDao" type="BD.WorkFlow.DaoSqlServer.ViewStProcessDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="CommonDao" type="BD.WorkFlow.DaoSqlServer.CommonDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="StSerialDao" type="BD.WorkFlow.DaoSqlServer.StSerialDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="ViewTodoTaskDao" type="BD.WorkFlow.DaoSqlServer.ViewTodoTaskDao, BD.WorkFlow.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+  <object id="StHostDao" type="BD.WorkFlow.DaoSqlServer.StHostDao, BD.WorkFlow.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="StDeadlineDao" type="BD.WorkFlow.DaoSqlServer.StDeadlineDao, BD.WorkFlow.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+	<!--办公系统-->
+	<object id="OaCommonDao" type="BD.Jcbg.DaoSqlServer.CommonDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="SelfDesktopItemDao" type="BD.Jcbg.DaoSqlServer.SelfDesktopItemDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="HelpDesktopItemDao" type="BD.Jcbg.DaoSqlServer.HelpDesktopItemDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="ViewSelfDesktopItemDao" type="BD.Jcbg.DaoSqlServer.ViewSelfDesktopItemDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="CompanyAnnounceDao" type="BD.Jcbg.DaoSqlServer.CompanyAnnounceDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="CompanyFileStorageDao" type="BD.Jcbg.DaoSqlServer.CompanyFileStorageDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="CompanyReaderDao" type="BD.Jcbg.DaoSqlServer.CompanyReaderDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="UserMailDao" type="BD.Jcbg.DaoSqlServer.UserMailDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="UserMailFolderDao" type="BD.Jcbg.DaoSqlServer.UserMailFolderDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="UserShareFileDao" type="BD.Jcbg.DaoSqlServer.UserShareFileDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="UserShareFileFolderDao" type="BD.Jcbg.DaoSqlServer.UserShareFileFolderDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+	<object id="SysFileImageDao" type="BD.Jcbg.DaoSqlServer.SysFileImageDao, BD.Jcbg.DaoSqlServer">
+		<property name="SessionFactory" ref="SessionFactory"/>
+	</object>
+  <object id="BanHeZhanDataDao" type="BD.Jcbg.DaoSqlServer.BanHeZhanDataDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="BanHeZhanSectionDao" type="BD.Jcbg.DaoSqlServer.BanHeZhanSectionDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="CompanyChangeDao" type="BD.Jcbg.DaoSqlServer.CompanyChangeDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="CompanyChangeItemDao" type="BD.Jcbg.DaoSqlServer.CompanyChangeItemDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="CompanyChangeTotalDao" type="BD.Jcbg.DaoSqlServer.CompanyChangeTotalDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="CompanyChangeTotalItemDao" type="BD.Jcbg.DaoSqlServer.CompanyChangeTotalItemDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="PrmDywjDao" type="BD.Jcbg.DaoSqlServer.PrmDywjDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="PrmWjDao" type="BD.Jcbg.DaoSqlServer.PrmWjDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <!--检测数据-->
+  <object id="DcLogRedoDao" type="BD.Jcbg.DaoSqlServer.DcLogRedoDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="SysjBakDao" type="BD.Jcbg.DaoSqlServer.SysjBakDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="SysjsdDao" type="BD.Jcbg.DaoSqlServer.SysjsdDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="XcsjDao" type="BD.Jcbg.DaoSqlServer.XcsjDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="DcLogDao" type="BD.Jcbg.DaoSqlServer.DcLogDao, BD.Jcbg.DaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+
+  <!-- 列表界面 -->
+  <object id="ListDao" type="BD.WebListDaoSqlServer.ListDao, BD.WebListDaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+
+  <!-- 录入界面 -->
+  <object id="WebDataInputDao" type="BD.DataInputDaoSqlServer.WebDataInputDao, BD.DataInputDaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+  <object id="DataFileDao" type="BD.DataInputDaoSqlServer.DataFileDao, BD.DataInputDaoSqlServer">
+    <property name="SessionFactory" ref="SessionFactory"/>
+  </object>
+</objects>

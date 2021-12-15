@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="/skins/default/bootstrap/js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src=/skins/default/bootstrap/PlugIns/Layer/layer.js type="text/javascript" charset="utf-8"></script>
+    <script src="http://api.map.baidu.com/api?v=3.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+    <style type="text/css">
+    body,
+    html,
+    #allmap {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    .save-btn {
+        display: inline-block;
+        background-color: #1E9FFF;
+        color: #fff;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        float: right;
+        margin: -60px 50px 10px 0;
+        cursor: pointer;
+    }
+
+    .search-btn {
+        float: none;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        padding: 0;
+        width: 60px;
+        display: inline-block;
+        background-color: #1E9FFF;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .bottom-area>div {
+        height: 26px;
+        line-height:26px;
+    }
+
+    .wid-120 {
+        display: inline-block;
+        width: 120px;
+        text-align:right;
+        padding-right: 10px;
+    }
+
+    </style>
+    <script type="text/javascript">
+    function getParams() {
+        var url = location.search; //获取url中"?"符后的字串
+        var obj = {};
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            var strS = str.split("&");
+            for (var i = 0; i < strS.length; i++) {
+                obj[strS[i].split("=")[0]] = (strS[i].split("=")[1]);
+            }
+        }
+        return obj;
+    }
+    var opts = {
+        width: 100, // 信息窗口宽度
+        height: 50, // 信息窗口高度
+        title: "" // 信息窗口标题
+    }
+    var g_map = undefined;
+    var g_title = '工程坐标';
+    var g_pos = getParams().pos;
+
+    var g_defaultpos = null;
+    $(function() {
+        initMap();
+        $("#allmap").css("height", window.innerHeight - 148)
+        if (g_pos) {
+            setCenterPoint(g_title, g_pos);
+        }
+    });
+
+
+
+    function initMap() {
+        g_map = new BMap.Map("allmap"); // 创建Map实例
+        g_map.centerAndZoom('台州市温岭市', 12)
+        g_map.addControl(new BMap.NavigationControl()); //缩放控件
+        g_map.addControl(new BMap.MapTypeControl({ mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP] })); //地图类型控件
+        g_map.addControl(new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT })); // 左上 //比例尺控件
+        g_map.enableScrollWheelZoom(); //启用滚轮放大缩小
+        g_map.disableDoubleClickZoom();
+        g_map.addEventListener("dblclick", function(e) { //单击地图，确定工程地点
+            g_pos = e.point.lng + ',' + e.point.lat;
+            changePos(g_pos);
+            // addPoint(g_title, e.point.lng, e.point.lat);
+        });
+    }
+
+    function setCenterPoint(text, pos) {
+        try {
+            if (g_map == undefined)
+                return;
+            if (pos == "")
+                return;
+            var arrPos = pos.split(',');
+            if (arrPos.length < 2)
+                return;
+            if (arrPos[0] != "0" && arrPos[1] != "0") {
+                changePos(g_pos);
+                // addPoint(text, arrPos[0], arrPos[1]);
+                g_map.centerAndZoom(new BMap.Point(arrPos[0], arrPos[1]), 12);
+            } else {
+                g_map.centerAndZoom(text, 12);
+            } // 初始化地图,设置中心点坐标和地图级别。
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    // 百度地图API功能
+    function addPoint(text, lng, lat) {
+        g_map.clearOverlays();
+
+        var point = new BMap.Point(lng, lat);
+        var marker = new BMap.Marker(point);
+
+        g_map.addOverlay(marker);
+
+        var gc = new BMap.Geocoder();
+        var pt = new BMap.Point(lng, lat);
+        var dress = gc.getLocation(pt, function(rs) {
+            var addComp = rs.addressComponents;
+            var label = new BMap.Label(text, { "offset": new BMap.Size(9, -15) });
+            marker.setLabel(label);
+            marker.addEventListener("click", function() { this.openInfoWindow(new BMap.InfoWindow(addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber, opts)); });
+            //var infoWindow = new BMap.InfoWindow(addComp.province+addComp.city+addComp.district+addComp.street+addComp.streetNumber, opts);  // 创建信息窗口对象
+            //map.openInfoWindow(infoWindow,point); //开启信息窗口
+        });
+    }
+
+    function addPointText(text, pos) {
+        try {
+
+            if (pos != "") {
+                var arrPos = pos.split(',');
+                if (arrPos.length < 2)
+                    return;
+
+                addPoint(text, arrPos[0], arrPos[1]);
+            }
+        } catch (e) {
+            alert(e);
+        }
+    }
+    /*
+    function search() {
+        // 百度地图API功能
+        var local = new BMap.LocalSearch(map, {
+            renderOptions: { map: map }
+        });
+        var place = document.getElementById("searchtext").value;
+        local.search(place);
+    }*/
+    function changePos(pos) {
+        var ary = pos.split(",");
+        $("#lang").val(ary[0]);
+        $("#lat").val(ary[1]);
+        addPoint(g_title, ary[0], ary[1]);
+    }
+
+    </script>
+</head>
+
+<body>
+    <div id="allmap"></div>
+    <div class="bottom-area" style="padding: 10px 0 0 34%; ">
+        <div>
+            <span class="wid-120">经度:</span><input type="text" name="lang" id="lang" />
+            <span style="padding-left: 20px;">例如: 121.4423799927053</span>
+        </div>
+        <div>
+            <span class="wid-120">纬度:</span><input type="text" name="lat" id="lat" />
+            <span style="padding-left: 20px;">例如: 28.62668923584285</span>
+        </div>
+        <div>
+            <span class="wid-120">地址搜索:</span><input type="text" id="address" placeholder="关键字搜索">
+            <span id="btn" class="search-btn" style="margin-left: 20px;">搜索</span>
+        </div>
+        <span class="save-btn" id="saveBtn">保存</span>
+        <div style="color:#DD292F;margin-left:-80px;">双击地图或直接输入经纬度可更改坐标点,如果格式正确,将会在地图上显示标注,显示正确即可保存</div>
+    </div>
+    <script type="text/javascript">
+    // 按钮事件
+    $("#btn").click(function() {
+        setPlace($("#address").val());
+    });
+    //定位
+    function setPlace(value) {
+        var local, point, marker = null;
+        local = new BMap.LocalSearch(g_map, { //智能搜索
+            onSearchComplete: fn
+        });
+
+        local.search(value);
+
+        function fn() {
+            //如果搜索的有结果
+            if (local.getResults() != undefined) {
+                g_map.clearOverlays(); //清除地图上所有覆盖物
+                if (local.getResults().getPoi(0)) {
+                    point = local.getResults().getPoi(0).point; //获取第一个智能搜索的结果
+                    g_map.centerAndZoom(point, 18);
+                    marker = new BMap.Marker(point); // 创建标注
+                    g_map.addOverlay(marker); // 将标注添加到地图中
+                    marker.enableDragging(); // 可拖拽
+                    $("#lang").val(point.lng);
+                    $("#lat").val(point.lat);
+                    //alert("当前定位经度:" + point.lng + "纬度:" + point.lat);
+                    g_pos = point.lng + "," + point.lat;
+                } else {
+                    alert("未匹配到地点!可拖动地图上的红色图标到精确位置");
+                }
+            } else {
+                alert("未找到搜索结果")
+            }
+        }
+    }
+
+
+
+
+    $("#lang").change(function() {
+        // 122.121781,29.370443
+        // 120.176267,27.948517
+        var lang = $("#lang").val();
+        if (parseFloat(lang) != lang) {
+            alert("坐标点只能是数字");
+            return false;
+        }
+
+        g_pos = $("#lang").val() + "," + $("#lat").val();
+        changePos(g_pos);
+    })
+    $("#lat").change(function() {
+        var lat = $("#lat").val();
+        if (parseFloat(lat) != lat) {
+            alert("坐标点只能是数字");
+            return false;
+        }
+        g_pos = $("#lang").val() + "," + $("#lat").val();
+        changePos(g_pos);
+    })
+
+    $("#saveBtn").click(function() {
+        try {
+            parent.ifaHandle(g_pos)
+        } catch (e) {
+            console.log(e);
+        }
+    })
+
+    </script>
+</body>
+
+</html>

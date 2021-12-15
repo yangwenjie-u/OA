@@ -1,0 +1,893 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/jquery.scrollify.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version; //b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="/static/tz/css/show.css">
+</head>
+
+<body class="wai_body font_faminly">
+    <section class="panel" id="panel1" style="background:rgb(233,236,243);margin-bottom: 0;" data-section-name="section1">
+        <div id="enginner_title">
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_qyzs">0个</p>
+                <p class="all_title">企业总数</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_zgcs">0个</p>
+                <p class="all_title">总工程数</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5474d7">
+                <p class="all_num" id="enginner_jzmj">0人</p>
+                <p class="all_title">建筑面积</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_gczj">0人</p>
+                <p class="all_title">造价总计</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_zcry">0人</p>
+                <p class="all_title">在册人员</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_yfje">0亿元</p>
+                <p class="all_title">应付金额</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_sfje">0亿元</p>
+                <p class="all_title">实付金额</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_ljffje">0亿元</p>
+                <p class="all_title">累计发放</p>
+            </div>
+        </div>
+        <div id="panel1-2" class="three-lines">
+            <div id="enginner_1"></div>
+            <div id="enginner_2"></div>
+            <div id="enginner_3"></div>
+        </div>
+        <div id="panel1-3" style="width: 90%;margin-left: 5%;padding: 0 10px;">
+            <div id="enginner_4" style="width: 100%;height: 100%;"></div>
+        </div>
+    </section>
+    <section class="panel" id="panel3" data-section-name="section3" style="background: rgb(233, 236, 243);">
+        <dl class="dltabs" style="position: relative;">
+            <dt class="active"><span>工程状态图</span></dt>
+            <dd class="active" id="gczzt">
+                <div id="mapwrap">
+                    <div id="map"></div>
+<div>
+                        <img class="gps-icon" src="/static/image/show/gps7.png">
+                    </div>
+                    <div id="mapInfo">
+                        <p class="subtitle-name">
+                            <div style="font-size: 20px;">已标定工程：</div>
+                            <span id="gcAllNum" style="font-size:20px;"></span>
+                        </p>
+                        <p style="margin-bottom:12px;"><img class="icon-img" src="/static/image/show/icon-2.png" />&emsp;在建工程：<span id="gcNum0"></span>个</p>
+                        <p style="margin-bottom:12px;"><img class="icon-img" src="/static/image/show/icon-1.png" />&emsp;竣工工程：<span id="gcNum1"></span>个</p>
+                        <p style="margin-bottom:12px;"><img class="icon-img" src="/static/image/show/icon-3.png" />&emsp;停工工程：<span id="gcNum2"></span>个</p>
+                    </div>
+                </div>
+            </dd>
+            <div class="show-more">
+                <span class="more-btn" id="moreBtn">展开搜索</span>
+            </div>
+            <div class="more-search" id="moreArea" style="display:none;overflow: hidden;">
+                <ul class="tab-title" id="tabData">
+                    <li class="active" id="GcList">工程</li>
+                    <!--  <li id="QyList">企业</li>
+                        <li id="Rylist">人员</li> -->
+                </ul>
+                <div class="item">
+                    <div class="item-content" style="display: block;">
+                        <div class="searchbutton">
+                            <!-- <label>工程名称</label> -->
+                            <input type="text" placeholder="工程名称" class="form-control" id="txtGcmc" style="width: 90%;">
+                            <button style="margin-top: 10px;" onclick="btnSearch(1);">检索</button>
+                            <button style="margin-top: 10px;" onclick="btnSearch(0);">置空</button>
+
+                        </div>
+                        <div class="listgc-warp">
+                            <div id="listGc" class="list-gc"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </dl>
+    </section>
+    <script src="/static/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" type="text/javascript" charset="utf-8" src="/static/tz/js/pub.js"></script>
+    <!--  <script type="text/javascript" type="text/javascript" charset="utf-8" src="/static/tz/js/initMap.js"></script> -->
+    <script type="text/javascript">
+    function statistics4() {
+
+        ajaxTpl("/tz/GetStatisticsGz", "", function(result) {
+            var listdata = result.rows;
+            var xAxisdata = [];
+            var seriesdata = [];
+
+            $.each(listdata, function(index, value) {
+                xAxisdata.push(value.name);
+                seriesdata.push(value.value);
+            });
+
+            var enginner_4 = document.getElementById("enginner_4");
+            var myChart4 = echarts.init(enginner_4);
+            var option4 = null;
+            option4 = {
+                backgroundColor: '#fff',
+                title: {
+                    text: '务工人员工种分布',
+                    // subtext: '共' + listdata.length + "类工种",
+                    x: 'left',
+                    top: '3%',
+                    left: '4%',
+                },
+                color: ['#6f89dd'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: xAxisdata,
+                    splitLine: {
+                        show: false
+                    },
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }],
+                yAxis: [{
+                    type: 'value',
+                    splitLine: {
+                        show: false
+                    },
+                }],
+                series: [{
+                    name: '',
+                    type: 'bar',
+                    // barWidth: '60%',
+                    barWidth: '30',
+                    data: seriesdata
+                }]
+            };;
+
+            if (option4 && typeof option4 === "object") {
+                myChart4.setOption(option4, true);
+            }
+
+            //点击图表跳转
+            myChart4.on('click', function(param) {
+                var name = param.name;
+                // alert(name);
+            });
+        });
+    }
+
+
+
+
+
+    function fullscreen() {
+
+        //每个图表的宽度
+        var w = ($(".panel").width() + 270).toString() + "px";
+        //每个图表的高度
+        var h = ($(".panel").height() + 50).toString() + "px";
+
+
+        var index = parent.layer.open({
+            type: 2,
+            content: '/WzWgry/index',
+            area: [w, h],
+            closeBtn: 0
+        });
+
+        parent.layer.full(index);
+
+        parent.$(".layui-layer-title").css("height", "0");
+    }
+
+    function unfullscreen() {
+        parent.layer.closeAll();
+    }
+    </script>
+    <script type="text/javascript">
+    var map; //百度地图
+
+    var page = 1; //页面page，1，2，3
+    //第二页所需参数
+    var loop;
+    var millisec = 60000;
+
+
+
+    $(function() {
+
+        //全局初始化
+        init();
+        setHeight();
+
+        // initMap();
+
+
+        refresh2();
+
+
+        // $("#tabTitle").children().eq(0).click();
+        $(".all_num").css("line-height", $('.all_num').height() + "px");
+        $(".all_title").css("line-height", $('.all_title').height() + "px");
+    });
+
+    function setHeight() {
+        var height = $("#panel1").height()
+        $("#panel1-2").height(height * 0.35 + "px");
+        $("#panel1-3").height(height * 0.35 + "px");
+        // $("#panel1-3").height(height * 0.35 + "px");
+
+        $("#gczzt").height(height - 110);
+        $("#tabTitle").find("dd").height(height - 110);
+    }
+
+    //全局初始化
+    function init() {
+
+        //鼠标滚动全屏
+        $('.panel').css({
+            'height': $(window).height()
+        });
+        $.scrollify({
+            section: 'section',
+            scrollbars: false,
+            before: function() {
+                var sectionName = $.scrollify.current()[0].dataset.sectionName;
+                if (sectionName == "section1") {
+                    page = 1;
+                }
+                if (sectionName == "section2") {
+                    page = 2;
+                }
+                // if (sectionName == "section3") {
+                //     page = 3;
+                // }
+                Refresh();
+            }
+        });
+
+    }
+
+
+
+    //刷新
+    function Refresh() {
+        //统计页
+        if (page == 1) {
+            refresh2();
+        }
+
+        //地图页面
+        if (page == 2) {
+            refresh1();
+        }
+    }
+
+
+    //第二图刷新
+    function refresh2() {
+        statistics1();
+        statistics2();
+        statistics4();
+    }
+
+    function addLabel() {
+        ajaxTpl("/tz/GetGcList", "", function(val) {
+            var data = val.data;
+
+            var gc = [0, 0, 0];
+            for (var i = 0; i < data.length; i++) {
+
+                var point = data[i].gcbz.split(",");
+                // var pt = new BMap.Point(data[i].position[0], data[i].position[1]);
+                var pt = new BMap.Point(point[0], point[1]);
+                var marker ;//= new BMap.Marker(pt, { icon: myIcon[data[i].status] });
+                map.addOverlay(marker);
+                if (data[i].sy_gczt == "在建工程") {
+                    gc[0]++;
+                    marker = new BMap.Marker(pt, { icon: myIcon[0] });
+                } else if (data[i].sy_gczt == "竣工工程") {
+                    gc[1]++;
+                    marker = new BMap.Marker(pt, { icon: myIcon[1] });
+                } else {
+                    gc[2]++;
+                    marker = new BMap.Marker(pt, { icon: myIcon[2] });
+                }
+
+                // gc[data[i].status]++;
+
+                (function() {
+                    var infopoint = data[i];
+                    marker.addEventListener("onclick", function(e) {
+                        showInfoGc(this, infopoint);
+                    });
+                })();
+            }
+            $('#gcAllNum').text(data.length + "个");
+            $('#gcNum0').text(gc[0]);
+            $('#gcNum1').text(gc[1]);
+            $('#gcNum2').text(gc[2]);
+        })
+    }
+
+function showInfoGc(thisMaker, point) {
+    var opts = {
+        width: 500, // 信息窗口宽度
+        height: 250, // 信息窗口高度
+    }
+    var enginnersingle = " ";
+    enginnersingle += "<div id='enginner_bigbox'> ";
+    enginnersingle += "<p class='enginner_bigbox_title'>工程名称：" + point.gcmc + "</p> ";
+    enginnersingle += "<div id='enginner_bigbox_left'> ";
+    enginnersingle += "<p class='enginner_bigbox_all'>建设单位：" + point.sy_jsdwmc + "</p> ";
+    enginnersingle += "<p class='enginner_bigbox_all'>施工单位：" + point.sgdwmc + "</p> ";
+    enginnersingle += "<p class='enginner_bigbox_all'>计划开工日期：" + point.sy_jhkgrq + "</p> ";
+    enginnersingle += "<p class='enginner_bigbox_all'>计划竣工日期：" + point.sy_jhjgrq + "</p> ";
+    enginnersingle += "<p class='enginner_bigbox_all'>人员情况：在册：" + point.zcrs + "人&nbsp;&nbsp;在职：" + point.zzrs + "人&nbsp;&nbsp;在岗：" + point.kqrs + "人</p> ";
+    enginnersingle += "<p class='enginner_bigbox_all'>工资发放：计划：" + (point.gczj * 0.3) + "亿元&nbsp;&nbsp;到位：" + "0亿元" + "&nbsp;&nbsp;发放：" + "0亿元" + "</p> ";
+    enginnersingle += "<span id='pepple_button_left'>查看详细</span> ";
+    enginnersingle += "</div> ";
+    enginnersingle += "</div> ";
+    var infoWindow = new BMap.InfoWindow(enginnersingle, opts);
+    var addnumber = point;
+    infoWindow.addEventListener("open", function(type, target, point) {
+        $("#pepple_button_left").bind('click', function() {
+            togczsformap(addnumber.gcbh, addnumber.gcmc);
+        });
+    })
+    thisMaker.openInfoWindow(infoWindow);
+}
+
+    function togczsformap(gcbh, gcmc) {
+
+        //每个图表的宽度
+        var w = ($(".panel").width() * 0.95).toString() + "px";
+        //每个图表的高度
+        var h = ($(".panel").height() * 0.95).toString() + "px";
+
+        var index = parent.layer.open({
+            type: 2,
+            content: '/welcome/welcomegcqp?gcbh=' + gcbh + '&gcmc=' + gcmc,
+            area: [w, h]
+        });
+    }
+
+    $(function() {
+        initMap();
+        getBoundary();
+        addLabel();
+    })
+
+
+
+
+    //第一图
+    function statistics1() {
+
+        ajaxTpl("/tz/GetGC_QYFBTJ", '', function(data) {
+            var name = [];
+            var value = [];
+            var legendName = [];
+            var maxVal = 0;
+            for (var i = 0, len = data.Datas.length; i < len; i++) {
+                data.Datas[i].value = parseFloat(data.Datas[i].value);
+                maxVal += data.Datas[i].value;
+            }
+
+            for (var i = 0, len = data.Datas.length; i < len; i++) {
+                data.Datas[i].name = data.Datas[i].name == "" ? "其他" : data.Datas[i].name;
+                name.push(data.Datas[i].name);
+                legendName.push(name[i] + "  " + (data.Datas[i].value * 100 / maxVal).toFixed(2) + '%');
+
+                value.push(data.Datas[i].value);
+            }
+
+            var option = {
+                title: {
+                    text: '工程区域分布统计',
+                    top: '3%',
+                    left: '4%',
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b}: {c} ({d}%)"
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    top: '10%',
+                    right: '10%',
+                    bottom: 20,
+                    selectedMode: false,
+
+                    itemWidth: 10,
+                    data: data.Datas,
+                    formatter: function(val) {
+                        for (var i = 0, len = name.length; i < len; i++) {
+                            if (val == name[i]) {
+                                return legendName[i];
+                            }
+                        }
+                        return val;
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['20%', '60%'], //内环 外环宽度
+                    center: ['36%', '56%'], //中点位置
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: data.Datas
+
+                }],
+                color: ['#5674d6', '#1ecdbf', '#ea5d67', '#f7b96b', '#91c3f2', '#40c484', '#ff9570', '#84eac0', '#75a7ec']
+            };
+            var doc = document.getElementById('enginner_1');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+
+    //第二图
+    function statistics2() {
+        var paramsData = "";
+        ajaxTpl("/tz/GetTjlist", paramsData, function(data) {
+
+            if (data.Datas && data.Datas[0]) {
+                statistics0Data(data); //八块内容
+                statistics2Data(data); //第二图
+                statistics3Data(data); //第三图
+            }
+        });
+    }
+
+    function statistics0Data(data) {
+        var tmp = data.Datas[0];
+        var jzmj = (tmp.jzmj / 10000).toFixed(2) + '万方';
+        var gczj = (tmp.gczj / 10000).toFixed(2) + '亿元';
+
+        $("#enginner_qyzs").html(tmp.sgdwnum + "个"); //施工单位数
+        $("#enginner_zgcs").html(tmp.zgcs + "个"); //总工程数
+        $("#enginner_jzmj").html(jzmj); //建筑面积
+        $("#enginner_gczj").html(gczj); //工程造价
+        $("#enginner_zcry").html(tmp.zcry + "个"); //在册人员
+        $("#enginner_yfje").html(tmp.yfje + "元"); //应发金额
+        $("#enginner_sfje").html(tmp.sfje + "元"); //实发金额
+        $("#enginner_ljffje").html(tmp.ljffje + "元"); //累计发放金额
+    }
+
+
+    function statistics2Data(data) {
+        var name = [];
+        var value = [];
+        var legendName = [];
+
+        var ary = [];
+        var tmp = data.Datas[0];
+
+
+        name.push("实名制总人数");
+        ary.push({
+            name: "实名制总人数", //在册人员
+            value: 0
+        });
+        legendName.push("实名制总人数  " + tmp.zcry);
+
+        name.push("在职人员");
+        ary.push({
+            name: "在职人员", //在册人员
+            value: 0
+        });
+        legendName.push("在职人员  " + tmp.zzry);
+
+        if (tmp.zzry) { //在职人员
+            name.push('不在岗人员');
+            value.push(tmp.zzry);
+            var tmpVal = parseFloat(tmp.zzry) - parseFloat(tmp.dqry)
+            ary.push({
+                name: "不在岗人员", //在职减去在岗
+                value: tmpVal
+            });
+            legendName.push("不在岗人员  " + tmpVal);
+        }
+
+        if (tmp.dqry) { //在岗人员
+            name.push('在岗人员');
+            value.push(tmp.dqry);
+            ary.push({
+                name: "在岗人员",
+                value: tmp.dqry
+            });
+            legendName.push("在岗人员  " + tmp.dqry);
+        }
+
+
+        var option = {
+            title: {
+                text: '在册人员统计',
+                top: '3%',
+                left: '4%'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}: {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                top: '10%',
+                right: '10%',
+                itemWidth: 10,
+                selectedMode: false,
+                data: [{ name: '实名制总人数' }, {
+                    name: '在职人员',
+                    icon: 'image://../static/wgry/images/icon.jpg'
+                }, {
+                    name: '在岗人员'
+                }, {
+                    name: '不在岗人员'
+                }],
+                formatter: function(val) {
+
+                    for (var i = 0, len = name.length; i < len; i++) {
+
+                        if (val == name[i]) {
+                            return legendName[i];
+                        }
+                    }
+                    return val;
+                }
+            },
+            series: [{
+
+                type: 'pie',
+                radius: ['20%', '60%'], //内环 外环宽度
+                center: ['36%', '56%'], //中点位置
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: ary
+
+            }],
+            color: ['#fff', '#fff', '#ea5d67', '#5674d6']
+        };
+        var doc = document.getElementById('enginner_2');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    }
+
+    function statistics3Data(data) {
+        var name = [];
+        var value = [];
+        var legendName = [];
+
+        var ary = [];
+        var tmp = data.Datas[0];
+        if (tmp.yfje) {
+            name.push("应发金额");
+            value.push(tmp.yfje);
+            ary.push({
+                name: "应发金额",
+                value: tmp.yfje
+            });
+            legendName.push("应发金额 " + tmp.yfje);
+        }
+        if (tmp.sfje) {
+            name.push("实发金额");
+            value.push(tmp.sfje);
+            ary.push({
+                name: "实发金额",
+                value: tmp.sfje
+            });
+            legendName.push("实发金额 " + tmp.sfje);
+        }
+
+        var option = {
+            title: {
+                text: '工资发放统计',
+                top: '3%',
+                left: '4%',
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b}: {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                top: '10%',
+                right: '10%',
+                itemWidth: 10,
+                data: ary,
+                selectedMode: false,
+                formatter: function(val) {
+                    for (var i = 0, len = name.length; i < len; i++) {
+                        if (val == name[i]) {
+                            return legendName[i];
+                        }
+                    }
+                    return val;
+
+                }
+            },
+            series: [{
+                type: 'pie',
+                radius: ['20%', '60%'], //内环 外环宽度
+                center: ['36%', '56%'], //中点位置
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false
+                    }
+                },
+                labelLine: {
+
+                    normal: {
+                        show: false
+                    }
+                },
+                data: ary
+
+            }],
+            color: ['#5674d6', '#ea5d67']
+        };
+        var doc = document.getElementById('enginner_3');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+
+    }
+    </script>
+    <script type="text/javascript">
+    $(function() {
+        if ( window.innerWidth == parent.window.innerWidth) {
+            $("#fullscreen").click(function() {
+                unfullscreen();
+            }).html("关闭全屏");
+        } else {
+            $("#fullscreen").click(function() {
+                fullscreen();
+            });
+        }
+    });
+
+    var paramsData = "";
+
+    $("#tabData").on("click", "li", function() {
+        var that = $(this);
+        var i = that.index();
+        that.addClass("active").siblings().removeClass("active");
+        that.parent().next().children().eq(i).show().siblings().hide();
+
+        tabId = that.attr("id");
+
+        // formChange();
+
+        switch (that.index()) {
+            case 0:
+                if (!gclistAll.length) {
+                    getGcListForMap();
+                }
+                break;
+            case 1:
+                if (!qylistAll.length) {
+                    getQyListForMap();
+                }
+                break;
+            case 2:
+                if (!rylistAll.length) {
+                    getRyListForMap();
+                }
+                break;
+            default:
+                break;
+        }
+    });
+    </script>
+    <script type="text/javascript">
+    var map; //= new BMap.Map("map");
+    function initMap() {
+        // 百度地图API功能
+        map = new BMap.Map("map"); // 创建Map实例
+        // 初始化地图,设置中心点坐标和地图级别
+        map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
+        //添加地图类型控件
+        map.addControl(new BMap.MapTypeControl({
+            // mapTypes: [
+            //     BMAP_NORMAL_MAP,
+            // ],
+            anchor: BMAP_ANCHOR_TOP_RIGHT,
+            offset: new BMap.Size(10, 50)
+        }));
+        var top_right_navigation = new BMap.NavigationControl({
+            anchor: BMAP_ANCHOR_TOP_RIGHT,
+            type: BMAP_NAVIGATION_CONTROL_SMALL,
+            offset: new BMap.Size(50, 80)
+        }); //右上角，仅包含平移和缩放按钮
+        map.addControl(top_right_navigation);
+        map.centerAndZoom("台州市", 9); // 设置地图显示的城市 此项是必须设置的
+    }
+
+
+    function getBoundary() {
+        var bdary = new BMap.Boundary();
+        bdary.get("台州市", function(rs) { //获取行政区域
+            var count = rs.boundaries.length; //行政区域的点有多少个
+            if (count === 0) {
+                alert('未能获取当前输入行政区域');
+                return;
+            }
+            var pointArray = [];
+            for (var i = 0; i < count; i++) {
+                var ply = new BMap.Polygon(rs.boundaries[i], { strokeWeight: 2, strokeColor: "#EF7F44", fillColor: "#EF7F44", fillOpacity: 0.1 }); //建立多边形覆盖物
+                map.addOverlay(ply); //添加覆盖物
+                ply.disableMassClear();//禁止清除覆盖物
+                pointArray = pointArray.concat(ply.getPath());
+            }
+            //map.setViewport(pointArray);    //调整视野      
+        });
+    }
+
+
+    $("#moreBtn").click(function() {
+         var area = $("#moreArea");
+        if (area.is(":hidden")) {
+            area.show();
+            $(this).text("隐藏搜索");
+        } else {
+            area.hide();
+            $(this).text("展开搜索");
+        }
+    });
+
+    var myIcon = [
+        new BMap.Icon("/static/image/show/icon-2.png", new BMap.Size(22, 22), {
+            imageSize: new BMap.Size(22, 22)
+        }),
+        new BMap.Icon("/static/image/show/icon-1.png", new BMap.Size(22, 22), {
+            imageSize: new BMap.Size(22, 22)
+        }),
+        new BMap.Icon("/static/image/show/icon-3.png", new BMap.Size(22, 22), {
+            imageSize: new BMap.Size(22, 22)
+        })
+    ];
+   
+    var thisMaker = [];
+    var markerData = [];
+
+    function btnSearch(flag) {
+        var obj = {};
+        if (flag) {
+            obj.gcmc =  $("#txtGcmc").val();
+        }else{
+            $("#txtGcmc").val("");
+        }
+
+        ajaxTpl("/tz/GetGcList", obj, function(val) {
+
+            map.clearOverlays();
+            markerData = [];
+            thisMaker = [];
+
+            var data = val.data;
+            var tmp,str="";
+            
+            for (var i = 0; i < data.length; i++) {
+                tmp = data[i];
+
+                var point = data[i].gcbz.split(",");
+                var pt = new BMap.Point(point[0], point[1]);
+                var marker ;
+                map.addOverlay(marker);
+                if (data[i].sy_gczt == "在建工程") {
+                    marker = new BMap.Marker(pt, { icon: myIcon[0] });
+                } else if (data[i].sy_gczt == "竣工工程") {
+                    
+                    marker = new BMap.Marker(pt, { icon: myIcon[1] });
+                } else {
+                    
+                    marker = new BMap.Marker(pt, { icon: myIcon[2] });
+                }
+                thisMaker.push(marker);
+                markerData.push(tmp);
+
+               str += '<div class="gc-li" value="'+ i +'"><p title="'+  tmp.gcmc +'">工程名称: ' + tmp.gcmc + '</p><p title="'+tmp.gcdd+'">工程地点: ' + tmp.gcdd + '</p></div>';
+                (function() {
+                    var infopoint = data[i];
+                    marker.addEventListener("onclick", function(e) {
+                        showInfoGc(this, infopoint);
+                    });
+                })();
+            }
+            $("#listGc").html(str);
+$(".more-search").height($("#gczzt").height());
+$(".listgc-warp").height($("#gczzt").height()-111);
+            //$(".listgc-warp").height($("#mapInfo").height()-71);
+        });
+    }
+    $("#listGc").on("click",".gc-li",function(){
+        var i = $(this).attr("value");
+        showInfoGc(thisMaker[i] ,markerData[i]);
+    });
+    $(".gps-icon").click(function(){
+        map.centerAndZoom("台州市", 9);
+    });
+    </script>
+</body>
+
+</html>

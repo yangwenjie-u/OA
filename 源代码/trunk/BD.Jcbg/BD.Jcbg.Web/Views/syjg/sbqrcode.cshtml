@@ -1,0 +1,18 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+    var recid = '@ViewData["recid"]';
+    $(function () {
+
+        var url = "/syjg/showqrcode?recid=" + recid;
+        document.getElementById("setsign_imgsign").src = url;
+    });
+
+</script>
+
+
+<div id="setsign_maindlg" style="padding:100px;width:100px;height:180px;" title="二维码">
+    <img id="setsign_imgsign" alt="" />
+</div> 

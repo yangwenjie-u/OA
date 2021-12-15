@@ -1,0 +1,293 @@
+﻿*********************************************************************************************
+更新时间：2017-03-23
+更 新 人：金成龙
+更新内容：
+	1.企业表 I_M_QY 中添加字段TYYHXY， 表示：是否同意用户协议
+	2.人员表 I_M_RY 中添加字段TYYHXY， 表示：是否同意用户协议
+	注意：字段添加完成之后，需要重新编译相关的视图
+
+数据库脚本：
+ALTER TABLE dbo.I_M_QY ADD
+	TYYHXY bit NULL
+GO
+
+ALTER TABLE dbo.I_M_RY ADD
+	TYYHXY bit NULL
+GO
+
+
+*********************************************************************************************
+更新时间：2017-03-23
+更 新 人：金成龙
+更新内容：
+	1.添加存储过程RefreshAllView，用于在修改表之后，刷新所有视图
+
+数据库脚本：
+CREATE PROCEDURE [dbo].[RefreshAllView]
+AS
+BEGIN 
+	DECLARE MyCursor CURSOR 
+	FOR select Name from dbo.sysobjects where OBJECTPROPERTY(id, N'IsView') = 1 
+	and (not name in ('sysconstraints','syssegments'))
+
+	DECLARE @name varchar(400)
+	declare @i int
+	set @i=0  
+	OPEN MyCursor   
+	FETCH NEXT FROM MyCursor INTO @name  
+	WHILE (@@fetch_status <> -1)  
+	BEGIN   
+		IF (@@fetch_status <> -2)   
+		begin    
+			exec sp_refreshview @name  
+			set @i=@i+1 
+		end    
+		FETCH NEXT FROM MyCursor INTO @name  
+	END  
+	CLOSE MyCursor  
+	DEALLOCATE MyCursor
+
+select '成功刷新 '  + convert(nvarchar, @i) + '个视图' as msg 
+END
+
+*********************************************************************************************
+更新时间：2017-03-24
+更 新 人：金成龙
+更新内容：
+	1. syssetting表中添加两条记录，表示【账号密码修改】，【账号密码重置】的模板信息
+
+数据库脚本：
+INSERT INTO syssetting ( [CompanyCode], [GroupId], [SettingCode], [SettingName], [SettingValue], [IsUpload], [IsTemplate], [DisplayOrder], [InUse]) VALUES ( '', 'SMS_PASSWORDCHANGE_SETTING', 'SMS_PASSWORDCHANGE_SETTING_TEMPLATE_CODE_USERINFO', N'账号密码修改模板标识', 'smsTpl:6099b077-e910-44de-b6dd-b3090b15b07b', '0', '0', '8', '1');
+INSERT INTO syssetting ( [CompanyCode], [GroupId], [SettingCode], [SettingName], [SettingValue], [IsUpload], [IsTemplate], [DisplayOrder], [InUse]) VALUES ( '', 'SMS_PASSWORDRESET_SETTING', 'SMS_PASSWORDRESET_SETTING_TEMPLATE_CODE_USERINFO', N'账号密码重置模板标识', 'smsTpl:47030578-275d-485a-8c1e-b3282ef92c72', '0', '0', '9', '1');
+
+
+
+*********************************************************************************************
+更新时间：2017-05-24
+更 新 人：金成龙
+更新内容：
+	1. userinfo表中添加字段【IsAutoSign】，表示是否需要应用自动签名
+
+数据库脚本：
+ALTER TABLE dbo.UserInfo ADD
+	IsAutoSign bit NULL
+
+
+/****************************************************
+更新时间：2017-06-19
+更 新 人：冯海夫
+更新内容：
+	1.I_M_QY增加字段HQEWM-允许先获取二维码
+	2.手动往zdzd加值
+	3.修改视图
+****************************************************/
+alter table I_M_QY add HQEWM int
+
+
+
+
+/****************************************************
+更新时间：2017-12-04
+更 新 人：冯海夫
+更新内容：
+	1.账号手机号码sam卡绑定
+	2.手动往zdzd加值
+	3.修改视图
+****************************************************/
+CREATE TABLE [dbo].[I_M_RYSJ] (
+[BindId] varchar(50) COLLATE Chinese_PRC_CI_AS NOT NULL ,
+[UserName] varchar(50) COLLATE Chinese_PRC_CI_AS NULL ,
+[Phone] varchar(50) COLLATE Chinese_PRC_CI_AS NULL ,
+[SimCode] varchar(50) COLLATE Chinese_PRC_CI_AS NULL ,
+[BindTime] datetime NULL ,
+CONSTRAINT [PK__I_M_SIM__6943947030D619C0] PRIMARY KEY ([BindId])
+);
+go
+CREATE TABLE [dbo].[SysSession] (
+[SessionId] varchar(50) COLLATE Chinese_PRC_CI_AS NOT NULL ,
+[LoginTime] datetime NULL ,
+[UserName] varchar(50) COLLATE Chinese_PRC_CI_AS NULL ,
+[Password] varchar(50) COLLATE Chinese_PRC_CI_AS NULL ,
+CONSTRAINT [PK__SysSessi__C9F49290B740CB3F] PRIMARY KEY ([SessionId])
+)
+ON [PRIMARY]
+GO
+CREATE TABLE [dbo].[H_XMBW](
+	[RECID] [int] IDENTITY(1,1) NOT NULL,
+	[SYXMBH] [nvarchar](50) NULL,
+	[BWMC] [nvarchar](200) NULL,
+	[XSSX] [decimal](8, 2) NULL
+	) ON [PRIMARY]
+go
+CREATE TABLE [dbo].[H_RYZW](
+	[RECID] [int] IDENTITY(1,1) NOT NULL,
+	[QYLXBH] [nvarchar](50) NULL,
+	[ZWBH] [nvarchar](50) NULL,
+	[ZWMC] [nvarchar](200) NULL,
+	[XSSX] [numeric](8, 2) NULL
+	) ON [PRIMARY]
+GO
+alter table i_m_ry add ZWBH nvarchar(100)
+go
+CREATE TABLE [dbo].[UP_WTDTP](
+	[TPWYH] [varchar](50) NOT NULL,
+	[WTDWYH] [nvarchar](50) NULL,
+	[SCSJ] [datetime] NULL,
+	[SCR] [nvarchar](50) NULL,
+	[SCRXM] [nvarchar](200) NULL,
+	[SFYX] [bit] NULL,
+	[TPLX] [varchar](4) NULL,
+ CONSTRAINT [PK_UP_WTDTP] PRIMARY KEY CLUSTERED 
+(
+	[TPWYH] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+CREATE TABLE [dbo].[UP_WTDTPXQ](
+	[TPXQWYH] [varchar](50) NOT NULL,
+	[TPWYH] [varchar](50) NULL,
+	[TPNR] [varbinary](max) NULL,
+	[SFYX] [bit] NULL,
+	[SCSJ] [datetime] NULL,
+	[SCR] [nvarchar](50) NULL,
+	[SCRXM] [nvarchar](200) NULL,
+	[TPLX] [varchar](4) NULL,
+ CONSTRAINT [PK_UP_WTDTPXQ] PRIMARY KEY CLUSTERED 
+(
+	[TPXQWYH] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+alter table m_by add JZQRRZH nvarchar(50)
+go
+alter table m_by add JZQRRXM nvarchar(200)
+go
+alter table m_by add JZQRSJ datetime
+go
+
+CREATE TABLE [dbo].[UP_SXTZP](
+	[TPWYH] [varchar](50) NOT NULL,
+	[SXTBH] [varchar](50) NULL,
+	[WTDBH] [varchar](50) NULL,
+	[SCSJ] [datetime] NULL,
+	[SCR] [nvarchar](50) NULL,
+	[SCRXM] [nvarchar](200) NULL,
+	[TPNR] [varbinary](max) NULL,
+	[SFYX] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[TPWYH] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+alter table i_m_qyzh add ZHLX nvarchar(10)
+go
+update i_m_qyzh set ZHLX='Q' where SFQYZZH=1
+go
+update i_m_qyzh set ZHLX='R' where SFQYZZH=0
+go
+
+/****************************************************
+更新时间：2018-04-04
+更 新 人：冯海夫
+更新内容：
+	1.创建现场试验记录表，现场试验视频表，现场试验摄像头表增加记录表ID
+	3.修改视图
+****************************************************/
+
+
+
+CREATE TABLE [dbo].[UP_CJJL] (
+[CJSJWYH] varchar(50) NOT NULL ,
+[WTDBH] varchar(50) NULL ,
+[SYR] nvarchar(50) NULL ,
+[SYRXM] nvarchar(50) NULL ,
+[KSSJ] datetime NULL ,
+[JSSJ] datetime NULL ,
+[Longitude] decimal(18,8) NULL ,
+[Latitude] decimal(18,8) NULL ,
+[SFJS] bit NULL ,
+[JSLX] int NULL ,
+[CJSYBH] varchar(50) null
+)
+go
+alter table UP_CJSXT add CJSJWYH varchar(50)
+go
+
+
+CREATE TABLE [dbo].[UP_CJSP] (
+[CJSJSPWYH] varchar(50) NOT NULL ,
+[CJSJWYH] varchar(50) NULL,
+[WTDBH] varchar(50) NULL ,
+[KSSJ] datetime NULL ,
+[JSSJ] datetime NULL ,
+[SCSJ] datetime NULL,
+[SPWJM] nvarchar(200) NULL
+)
+
+/****************************************************
+更新时间：2018-04-27
+更 新 人：冯海夫
+更新内容：
+	1.配置表加dns个性化定义
+****************************************************/
+alter table UP_CJSP add Longitude decimal(18,8) NULL 
+go
+alter table UP_CJSP add Latitude decimal(18,8) NULL 
+go
+CREATE TABLE [dbo].[SysJumpSrcPage] (
+[PageId] nvarchar(50) COLLATE Chinese_PRC_CI_AS NOT NULL ,
+[PageDesc] nvarchar(100) COLLATE Chinese_PRC_CI_AS NULL ,
+[PageUrl] nvarchar(500) COLLATE Chinese_PRC_CI_AS NULL ,
+[InUse] bit NULL ,
+[CreateTime] datetime NULL ,
+CONSTRAINT [PK_SysJumpSrcPage] PRIMARY KEY ([PageId])
+)
+ON [PRIMARY]
+GO
+CREATE TABLE [dbo].[SysJumpDestPage] (
+[PageId] nvarchar(50) COLLATE Chinese_PRC_CI_AS NOT NULL ,
+[SourcePageId] nvarchar(50) COLLATE Chinese_PRC_CI_AS NULL ,
+[Dns] nvarchar(200) COLLATE Chinese_PRC_CI_AS NULL ,
+[UserType] nvarchar(50) COLLATE Chinese_PRC_CI_AS NULL ,
+[JumpUrl] nvarchar(500) COLLATE Chinese_PRC_CI_AS NULL ,
+[InUse] bit NULL ,
+[CreateTime] datetime NULL ,
+CONSTRAINT [PK_SysJumpDestPage] PRIMARY KEY ([PageId])
+)
+ON [PRIMARY]
+
+/****************************************************
+更新时间：2018-05-09
+更 新 人：冯海夫
+更新内容：
+	1.更新全国省市区表得结构和数据h_city（从温州监管手动导入）
+	2.质监站增加所属县市区及管理县市区，及下属部门
+	3.工程信息增加省市区乡镇街道
+	4.修改zdzd配置
+	5.刷新视图
+****************************************************/
+alter table h_zjz add SFZJZ  bit
+go
+alter table h_zjz add SSSF  varchar(50)
+go
+alter table h_zjz add SSCS varchar(50)
+go
+alter table h_zjz add SSXQ varchar(50)
+go
+alter table h_zjz add SSJD varchar(50)
+go
+alter table h_zjz add XSBM varchar(max)
+go
+alter table i_m_gc add SSSF varchar(50)
+go
+alter table i_m_gc add SSCS varchar(50)
+go
+alter table i_m_gc add SSXQ varchar(50)
+go
+alter table i_m_gc add SSJD varchar(50)
+go
+exec RefreshAllView
+go

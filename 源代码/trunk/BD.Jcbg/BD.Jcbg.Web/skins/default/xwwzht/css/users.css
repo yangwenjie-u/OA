@@ -1,0 +1,242 @@
+﻿body
+{
+	padding:0px 0px 0px 0px;
+	margin:0px 0px 0px 0px;
+}
+.menu_pan
+{
+	background-color:#eef4fc;
+}
+.menu_item a
+{
+	display:block;
+	text-align:left;
+	vertical-align:middle;
+	font-size:12px;
+	border-bottom:1px dotted #369;
+	background-color:#eef4fc;
+	font-weight:normal;
+	color:#036;
+	text-decoration:none;
+	padding:4px 10px 4px 10px;
+}
+.menu_item a:hover
+{
+	background-color:#e2eefd;
+	color:#036;
+	font-weight:bolder;
+	border-bottom:1px dotted #369;
+}
+.form-body
+{
+	background-color:#efefff;
+}
+.main_top
+{
+	height:50px;
+	padding:0px; 
+	margin:0px;
+	background-color:#278dbe;
+	
+}
+.toolbar
+{
+	height:32px;
+	padding:0px;
+	margin:0px;
+	background-image:url(../images/bg_toolbar.png);
+}
+.font_top1
+{
+	color:#eeee00;
+	font-size:22px;
+	font-weight:bold;
+}
+.font_top2
+{
+	color:#eeee00;
+	font-size:14px;
+	font-weight:normal;
+	line-height:20px;
+}
+/*div 简单form样式*/
+.form
+{
+	display:table; 
+	border-collapse:separate; 
+	margin:0 auto;
+	padding:5px;
+}
+.form_row { 
+	display:table-row; 
+	height:30px;
+	line-height:30px;
+} 
+.form_row div { 
+	display:table-cell; 
+} 
+.form_row .header { 
+	text-align:right;
+	padding-right:5px;
+} 
+.form_row .body  
+{
+	padding-right:5px;
+} 
+.form_row .button
+{
+	text-align:left;
+}
+/*talbe 复杂form样式*/
+.form2
+{
+	background-color:#a0c0f0;
+	border:0px;
+}
+.form2 th
+{
+	background-color:#ffffff;
+	text-align:left;
+	padding:5px 5px 5px 10px;
+	font-weight:lighter;
+	background-color:#f9f9f9;
+}
+.form2 td
+{
+	background-color:#ffffff;
+	padding:5px 5px 5px 5px;
+	text-align:left;
+}
+.form2 td input
+{
+	width:200px;
+}
+
+
+
+.form3
+{
+	background-color:#a0c0f0;
+	text-align:center;
+	border:0px;
+}
+.form3 th
+{
+	background-color:#ffffff;
+	text-align:right;
+	padding:5px 5px 5px 10px;
+	font-weight:lighter;
+	background-color:#f9f9f9;
+}
+.form3 td
+{
+	background-color:#ffffff;
+	padding:5px 5px 5px 5px;
+}
+/*table 列表样式 */
+.table_list
+{
+	background-color:#a0c0f0;
+	text-align:center;
+	border:0px;
+}
+.table_list th
+{
+	background-color:#ffffff;
+	text-align:center;
+	font-weight:lighter;
+	background-color:#f9f9f9;
+	padding:5px;
+}
+.table_list td
+{
+	background-color:#ffffff;
+	vertical-align:middle;
+	padding:2px;
+}
+.table_list input
+{
+	text-align:center;
+	width:150px;
+	padding:2px;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:1px solid #c0c0c0;
+}
+
+.table_list_noinput
+{
+	background-color:#a0c0f0;
+	text-align:center;
+	border:0px;
+}
+.table_list_noinput th
+{
+	background-color:#ffffff;
+	text-align:center;
+	font-weight:lighter;
+	background-color:#f9f9f9;
+	padding:5px;
+}
+.table_list_noinput td
+{
+	background-color:#ffffff;
+	vertical-align:middle;
+	padding:2px;
+}
+/*form查看样式*/
+.formview
+{
+	background-color:#a0c0f0;
+	text-align:center;
+	border:0px;
+	width:740px;
+}
+.formview th
+{
+	background-color:#ffffff;
+	text-align:right;
+	padding:5px 5px 5px 10px;
+	font-weight:lighter;
+	background-color:#f9f9f9;
+}
+.formview td
+{
+	background-color:#ffffff;
+	padding:5px 5px 5px 5px;
+	line-height:20px;
+	height:20px;
+}
+/*table_list查看样式*/
+.table_list_view
+{
+	background-color:#a0c0f0;
+	text-align:center;
+	border:0px;
+	width:740px;
+}
+.table_list_view th
+{
+	background-color:#ffffff;
+	text-align:center;
+	font-weight:lighter;
+	background-color:#f9f9f9;
+	padding:5px;
+}
+.table_list_view td
+{
+	background-color:#ffffff;
+	vertical-align:middle;
+	padding:2px;
+}
+.table_list_view input
+{
+	text-align:center;
+	width:150px;
+	padding:2px;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:1px solid #c0c0c0;
+}

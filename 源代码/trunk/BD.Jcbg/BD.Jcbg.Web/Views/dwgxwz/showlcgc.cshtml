@@ -1,0 +1,112 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <style type="text/css">
+        ul#taskline {
+            list-style-type: none;
+            max-width: 300px;
+            min-width: 120px;
+        }
+
+            ul#taskline li {
+                border: 1px solid #999;
+                padding: 12px 18px;
+                border-radius: 12px;
+                margin-bottom: 48px;
+                position: relative;
+            }
+
+                ul#taskline li:before {
+                    content: "";
+                    position: absolute;
+                    display: block;
+                    width: 45px;
+                    height: 20px;
+                    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIgkgdmlld0JveD0iMCAwIDgwIDIwIiB3aWR0aD0iODAiIGhlaWdodD0iMjAiPg0KPGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iOSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9IiNmZmZmZmYiIC8+DQo8cGF0aCBkPSJNMjAsMTBIODAiIHN0cm9rZT0iIzk5OSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiAvPg0KPC9zdmc+DQo=);
+                    left: -45px;
+                    top: 16px;
+                    z-index: 7;
+                }
+
+                ul#taskline li:after {
+                    content: "";
+                    position: absolute;
+                    display: block;
+                    width: 1px;
+                    height: 180%;
+                    background: #999;
+                    left: -36px;
+                    top: 0px;
+                    z-index: 6;
+                }
+
+                ul#taskline li:first-of-type:after {
+                    top: 36px;
+                }
+    </style>
+    <script language="javascript" type="text/javascript">
+        var serial = '@ViewBag.serial';
+
+        $(function () {
+            try {
+                load();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function load() {
+            $.ajax({
+                type: "post",
+                url: "/workflow/getdonetasks?serial=" + serial,
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    //console.log(data);
+                    var shtml = '';
+                    for (var i = data.rows.length - 1; i >= 0; i--) {
+                        var dataitem = data.rows[i];
+                        var timeVal = dataitem.DateCompleted;
+                        var dt = eval("new " + timeVal.substr(1, timeVal.length - 2));
+                        timeVal = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                        shtml += '<li>任务名称：' + dataitem.TaskName;
+                        shtml += '<br/>完成时间：' + timeVal;
+                        shtml += '<br>来自：' + dataitem.GrantorRealName;
+                        shtml += '<br/>完成人：' + dataitem.UserRealName;
+                        if (dataitem.option) shtml += '<br/>审批意见：' + data.option;
+                        shtml += '</li>';
+                    }
+                    $('#taskline').html(shtml);
+                }
+            })
+        }
+
+
+        function setneedkqxz() {
+
+            var divid = "div_needkq";
+            try {
+                var data = [{ key: 1, value: "是" }, { key: 0, value: "否" }];
+                $.each(data, function (i, item) {
+                    $("#" + divid).append("<label class=\"btn btn-default\" style='margin:5px 5px 5px 5px;'> <input type=\"radio\" class=\"toggle\" value=\"" + item.key + "\"> " + item.value + "</label>");
+                });
+
+
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+
+        function getValues() {
+            if ($('#div_needkq input:radio:checked').length == 0)
+                return "";
+            return $('#div_needkq input:radio:checked').val();
+
+        }
+    </script>
+}
+<div style="max-width:360px;height:500px;float:left;margin-left:60px;margin-top:20px;">
+    <ul id="taskline"></ul>
+</div>

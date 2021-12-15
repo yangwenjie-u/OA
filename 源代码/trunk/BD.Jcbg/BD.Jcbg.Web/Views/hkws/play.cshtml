@@ -1,0 +1,36 @@
+﻿
+@using BD.Jcbg.Web.Func;
+@using BD.Jcbg.Common;
+@{
+    ViewBag.Title = "视频查看";
+    Layout = "~/Views/hkws/_hkwslayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+    $(function () {
+        try{
+            $("#videoPlay").css("height", ($(document).height()-10) + "px");
+            $("#videoPlay").css("width",($(document).width()-10)+"px");
+            //$("#videoPlay").height = $(document).height();
+            //console.log($("#videoPlay").width + '/' + $("#videoPlay").height);
+            var flashvars;
+            flashvars = {
+                f: '@SkinManager.GetHkwsPath("m3u8.swf")',
+                a: '@ViewBag.url', //此处填写购买获取到的视频播放地址
+                    c: 0,
+                    p: 1,
+                    s: 4,
+                    lv: 1
+                };
+                var params = { bgcolor: '#FFF', allowFullScreen: true, allowScriptAccess: 'always', wmode: 'transparent' };
+                CKobject.embedSWF("@SkinManager.GetHkwsPath("ckplayer.swf")", "videoPlay", "video", "100%", "100%", flashvars, params);
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+
+</script>
+}
+<div id="videoPlay"></div>

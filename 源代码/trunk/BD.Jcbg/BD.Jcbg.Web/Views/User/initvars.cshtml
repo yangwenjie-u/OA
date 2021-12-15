@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript" charset="utf-8" >
+	$(function () {
+		try {
+			$.messager.confirm('提示', '确定要重新加载用户角色信息吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/user/doinitvars",
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									
+									$.messager.alert('提示', '重新加载成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e.message, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在设置...");
+						}
+					});
+				}
+			});
+		} catch (e) {
+			$.messager.alert('错误', e, 'error');
+		}
+	});
+</script>

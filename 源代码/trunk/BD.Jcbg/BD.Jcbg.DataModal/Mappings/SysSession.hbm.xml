@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="BD.Jcbg.DataModal.Entities.SysSession, BD.Jcbg.DataModal" table="SysSession" lazy="false">
+		<id name="SessionId" type="String" unsaved-value="null">
+			<column name="SessionId" length="50" sql-type="varchar" not-null="true" unique="true" index="PK__SysSessi__C9F49290B740CB3F"/>
+			<generator class="assigned" />
+		</id>
+		<property name="LoginTime" type="DateTime">
+			<column name="LoginTime" length="8" sql-type="datetime" not-null="false"/>
+		</property>
+		<property name="UserName" type="String">
+			<column name="UserName" length="50" sql-type="varchar" not-null="false"/>
+		</property>
+		<property name="Password" type="String">
+			<column name="Password" length="50" sql-type="varchar" not-null="false"/>
+		</property>
+		<property name="UserCode" type="String">
+			<column name="UserCode" length="50" sql-type="varchar" not-null="false"/>
+		</property>
+		<property name="RealName" type="String">
+			<column name="RealName" length="50" sql-type="varchar" not-null="false"/>
+		</property>
+	</class>
+</hibernate-mapping>

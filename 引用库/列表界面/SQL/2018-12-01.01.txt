@@ -1,0 +1,2 @@
+1.在FORM中设置分页存储过程类型(空表示默认以前分页函数,NEW表示新的2014分页函数)
+alter table FORM add PagingType nvarchar(10)

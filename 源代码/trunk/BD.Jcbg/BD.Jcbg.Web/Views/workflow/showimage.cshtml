@@ -1,0 +1,74 @@
+﻿@using BD.WorkFlow.Common;
+@{
+    ViewBag.Title = "图片查看";
+    Layout = "~/Views/workflow/_null.cshtml";
+}
+
+@section head
+{
+<script src="@WorkFlowSkins.GetJsPath("jQueryRotate.js")" type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+
+
+    $(function () {
+        try {
+            var width = $(document.body).width();
+            $('#imgmain').css('width', width);
+            document.oncontextmenu = function () {
+                return false;
+            }
+
+            $("#imgmain").mousedown(function (e) {
+                //右键为3
+                if (3 == e.which) {
+                    rotateImage();
+                } else if (1 == e.which) {
+                    scaleImage();
+                }
+            })
+
+        } catch (e) {
+        }
+
+    });
+
+    var g_minPercent = 25;
+    var g_maxPercent = 100;
+    var g_sacleStep = 25;
+    var g_curDir = -1;
+    var g_curPercent = 100;
+    var g_orgWidth = 0;
+    var g_orgHeight = 0;
+    function setOrgSize() {
+        var img = $("#imgmain");
+        g_orgWidth = img.width();;
+        g_orgHeight = img.height();
+    }
+    function scaleImage() {
+        if (g_orgWidth == 0)
+            return;
+        if (g_curPercent >= g_maxPercent)
+            g_curDir = -1;
+        if (g_curPercent <= g_minPercent)
+            g_curDir = 1;
+        var percent = g_curPercent + g_curDir * g_sacleStep;
+        g_curPercent = percent;
+        var img = $("#imgmain");
+        img.width(g_orgWidth * percent / 100);
+        img.height(g_orgHeight * percent / 100);
+    }
+    var g_curRotate = 0;
+    function rotateImage() {
+        g_curRotate += 90;
+        if (g_curRotate >= 360)
+            g_curRotate -= 360;
+        $("#imgmain").rotate(g_curRotate);
+    }
+    $(window).load(function () {
+        setOrgSize();
+    });
+</script>
+ }
+<center>
+    <img src="@ViewBag.url" border='0' id='imgmain' />
+</center>

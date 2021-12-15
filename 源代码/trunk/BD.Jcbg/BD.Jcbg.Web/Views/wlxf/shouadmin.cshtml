@@ -1,0 +1,620 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/css/cssReset.css">
+    <style type="text/css">
+    .tab {
+        display: table;
+        width: 98%;
+        font-size: 18px;
+        margin: 20px auto;
+    }
+
+    .tab>div {
+        width: 46%;
+        display: table-cell;
+        margin-right: 1%;
+    }
+
+    .item-warp {
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+        height: 500px;
+        border: 1px solid lightgray;
+        padding: 20px;
+    }
+
+    .head {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e5e5;
+        cursor: pointer;
+    }
+
+    .item-list {
+        margin-left: 30px;
+        cursor: pointer;
+        height: 80%;
+        overflow: auto;
+    }
+
+    .item-list li {
+        border-bottom: 1px solid #e5e5e5;
+        line-height: 36px;
+        font-size: 16px;
+        padding-left: 10px;
+    }
+
+    .file-text-o {
+        width: 32px;
+        height: 32px;
+        position: relative;
+        top: -5px;
+        vertical-align: top;
+        display: inline-block;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDMyIDMyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9IiMwQTc0REQiIHJ4PSI0IiByYz0iNCIvPg0KPHBhdGggc3Ryb2tlPSIjZmZmZmZmIiBmaWxsPSJub25lIiBkPSJNMjcsOGgtMjIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iMTYsNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPg0KPHBhdGggc3Ryb2tlPSIjZmZmZmZmIiBmaWxsPSJub25lIiBkPSJNMjcsMTZoLTIyIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1kYXNoYXJyYXk9IjE2LDQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgLz4NCjxwYXRoIHN0cm9rZT0iI2ZmZmZmZiIgZmlsbD0ibm9uZSIgZD0iTTI3LDI0aC0yMiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtZGFzaGFycmF5PSIxNiw0IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIC8+DQo8L3N2Zz4=);
+        background-repeat: no-repeat;
+    }
+
+    .envelope-square {
+        width: 34px;
+        height: 32px;
+        position: relative;
+        top: -5px;
+        vertical-align: top;
+        display: inline-block;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDM0IDMyIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjM0IiBoZWlnaHQ9IjMyIj4NCjxyZWN0IHg9IjAiIHk9IjIiIHdpZHRoPSIzNCIgaGVpZ2h0PSIyOCIgZmlsbD0iIzBBNzRERCIgcng9IjQiIHJjPSI0IiAvPg0KPHBhdGggc3Ryb2tlPSIjZmZmZmZmIiBmaWxsPSJub25lIiBkPSJNNSwxMGwxMiwxMmwxMiwtMTIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPg0KPC9zdmc+);
+        background-repeat: no-repeat;
+    }
+
+    .count {
+        color: #e00000;
+        font-weight: bolder;
+        font-size: 30px;
+        line-height: 20px;
+        vertical-align: text-top;
+        padding: 0 10px 0 16px;
+    }
+
+    .lay-table {
+        text-align: center;
+        width: 100%;
+    }
+
+    .lay-table th {
+        font-size: 18px;
+        background: lightgray;
+        text-align: center;
+        padding: 8px;
+        border-right: 1px solid white;
+    }
+
+    .lay-table td {
+        padding: 4px;
+        font-size: 16px;
+        border-bottom: 1px solid lightgray;
+    }
+
+    .tabs-body>div {
+        display: none;
+        width: 98%;
+        margin: 0 auto;
+    }
+
+    .tabs-nav .active {
+        background: #1492FF;
+        color: white;
+        /*display: inline-block;*/
+        /*width: 100%;*/
+    }
+
+    .tabs-body {
+        text-align: center;
+    }
+
+    .tabs-body .active {
+        z-index: 9;
+        display: inline-block;
+    }
+
+    .tabs-body .item-warp {
+        padding: 0px;
+    }
+
+    .tabs-nav span {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 14px;
+        transition: all .2s;
+        -webkit-transition: all .2s;
+        position: relative;
+        line-height: 40px;
+        min-width: 65px;
+        padding: 0 15px;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #e6e6e6;
+        border-bottom: 0px;
+        margin-left: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        width: 120px;
+        float: right;
+        border-radius: 50px;
+        line-height: 36px;
+        background: #FF5722;
+        color: white;
+        text-align: center;
+        margin-right: 1%;
+        height: 36px;
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="tab">
+        <div>
+            <div class="item-warp">
+                <p class="head" value="dbrw"><i class="file-text-o"></i><span class="count" id="taskTotal">0</span>个待办任务</p>
+                <ul class="item-list" id="table_task">
+                </ul>
+            </div>
+        </div>
+        <div style="width:2%"></div>
+        <div>
+            <div class="item-warp">
+                <p class="head" value="mail"><i class="envelope-square"></i> <span class="count" id="mailTotal">0</span>封新邮件</p>
+                <ul class="item-list" id="mailList">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="tabs">
+        <div class="tabs-nav">
+            <span class="active">未回复工程</span>
+            <span>人员外出管理</span>
+            <span>收件通知</span>
+            <span>检测信息</span>
+            <span>标红工程</span>
+            @* <div>更多>></div> *@
+            <div class="btn" id="more">更多>></div>
+        </div>
+        <div class="tabs-body">
+            <div class="active">
+                <div class="item-warp">
+                    @* <p class="head" value="dbrw"><i class="file-text-o"></i><span class="count" id="projectTotal">0</span>个未回复工程</p> *@
+                    <div id="layTabWarp" style="overflow: auto;">
+                        <table class="lay-table">
+                            <thead>
+                                <th>工程名称</th>
+                                <th>建设单位</th>
+                                <th>类型</th>
+                                <th>时间</th>
+                            </thead>
+                            <tbody id="project_task"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="item-warp">
+                    @* <p class="head" value="rywcgl">人员外出管理</p> *@
+                    <div id="layTabWarp2" style="overflow: auto;">
+                        <table class="lay-table">
+                            <thead>
+                                <th>人员姓名</th>
+                                <th>工程名称</th>
+                                <th>消防类型</th>
+                                <th>安排时间</th>
+                                <th style="width: 100px;">当前状态</th>
+                            </thead>
+                            <tbody id="wcgl_task"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="item-warp">
+                    @* <p class="head" value="sjtz">收件通知</p> *@
+                    <div id="layTabWarp3" style="overflow: auto;">
+                        <table class="lay-table">
+                            <thead>
+                                <th style="width: 80px;">审核人</th>
+                                <th style="width:120px">受理类别</th>
+                                <th>工程名称</th>
+                                <th style="width:180px">审核时间</th>
+                                <th style="width: 100px;">登记状态</th>
+                            </thead>
+                            <tbody id="sjtz_task"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="item-warp">
+                    <div id="layTabWarp4" style="overflow: auto;">
+                        <table class="lay-table">
+                            <thead>
+                                <th>工程名称</th>
+                                <th>检测单位</th>
+                                <th>检测开始日期</th>
+                                <th>检测结束日期</th>
+                                <th>检测人员</th>
+                                <th>登记状态</th>
+                            </thead>
+                            <tbody id="xcjc_task"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="item-warp">
+                    @* <p class="head" value="dbrw"><i class="file-text-o"></i><span class="count" id="projectTotal">0</span>个未回复工程</p> *@
+                    <div id="layTabWarp5" style="overflow: auto;">
+                        <table class="lay-table">
+                            <thead>
+                            <th>工程名称</th>
+                            <th>建设单位</th>
+                            <th>类型</th>
+                            <th>承诺办结时间</th>
+                            </thead>
+                            <tbody id="bhgc_task"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/skins/default/js/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/static/lib/layer/layer.js"></script>
+    <!--static/lib/layer/theme/default/layer.css -->
+    <script type="text/javascript">
+    setHeight();
+    $(function() {
+        getMail();
+        getDbrw();
+        getZGlist();
+        getSjtz();
+        getWcgl();
+        getXcjc();
+        getBhgc();
+        setInterval(function() {
+            getMail();
+            getDbrw();
+            getZGlist();
+            getSjtz();
+            getWcgl();
+            getXcjc();
+            getBhgc();
+        }, 60000)
+    })
+
+    $("#more").click(function() {
+
+        var idx = $(".tabs-nav").find(".active").index();
+        switch (idx) {
+            case 0: //未回复工程
+                parent.openPage('/WebList/EasyUiIndex?FormDm=XFYSJL&FormStatus=13', 'XFYSJL', '未回复工程');
+                break;
+            case 1: //人员外出管理
+                parent.openPage('/WebList/EasyUiIndex?FormDm=RYWCGL&FormStatus=0', 'RYWCGL', '外出记录');
+                break;
+            case 2: //收件通知
+                parent.openPage('/WebList/EasyUiIndex?FormDm=RYSHTZ&FormStatus=0', 'RYSHTZ', '收件通知');
+                break;
+            case 3: //现场检测
+                parent.openPage('/WebList/EasyUiIndex?FormDm=XFJC&FormStatus=3', 'XFJC', '现场检测');
+                break; 
+            case 4: //标红工程
+                parent.openPage('/WebList/EasyUiIndex?FormDm=XFYSJL&FormStatus=17', 'XFYSJL', '标红工程');
+                break;
+            default:
+                break;
+        }
+        /*
+            if (val == "mail") {
+                parent.openPage('/oa/maillist', 'NBYJ', '内部邮件');
+            } else if (val == "dbrw") {
+                parent.openPage('/workflow/worktodo', 'DBGZ', '待办工作');
+            } else if (val == "rywcgl") { //rywcgl,sjtz
+                parent.openPage('/WebList/EasyUiIndex?FormDm=RYWCGL&FormStatus=0', 'RYWCGL', '外出记录');
+            } else if (val == "sjtz") {
+                parent.openPage('/WebList/EasyUiIndex?FormDm=RYSHTZ&FormStatus=0', 'RYSHTZ', '收件通知');
+            }
+        */
+
+
+    })
+    $(".tabs-nav").on("click", "span", function() {
+        $(this).addClass('active').siblings().removeClass("active")
+        var i = $(this).index();
+        $('.tabs-body').children().eq(i).addClass('active').siblings().removeClass("active");
+    });
+
+    function getWcgl() { //外出管理
+        ajaxTpl("/WebList/SearchEasyUiFormData", {
+            param: "eyJpc2JhY2tncm91bmQiOmZhbHNlLCJlbmNvZGUiOmZhbHNlLCJGb3JtRG0iOiJSWVdDR0wiLCJGb3JtU3RhdHVzIjoiMCIsIkZvcm1QYXJhbSI6IiIsIkZvcm1IaWRkZW4iOiIiLCJGb3JtRmlsdGVyIjoiIn0=",
+            page: 1,
+            rows: 20,
+            filterRules: []
+        }, function(res) {
+            if (res && res.rows && res.rows.length) {
+                var tmp, str = '';
+                for (var i = 0; i < res.rows.length; i++) {
+                    tmp = res.rows[i];
+                    str += "<tr>";
+                    //
+                    str += "<td>" + tmp.RealNames + "</td><td>" + tmp.GCMC + "</td><td>" + tmp.LeaveType + "</td><td>" + tmp.SJ + "</td><td>" + tmp.ZTNAME + "</td>"
+                    str += "</tr>"
+                }
+                $("#wcgl_task").html(str);
+            } else {
+                $("#wcgl_task").html("<tr><td colspan='4'>暂无数据</td></tr>");
+            }
+
+        })
+    }
+
+    function getXcjc() { //现场检测
+        ajaxTpl("/WebList/SearchEasyUiFormData", {
+            param: "eyJpc2JhY2tncm91bmQiOmZhbHNlLCJlbmNvZGUiOmZhbHNlLCJGb3JtRG0iOiJYRkpDIiwiRm9ybVN0YXR1cyI6IjMiLCJGb3JtUGFyYW0iOiIiLCJGb3JtSGlkZGVuIjoiIiwiRm9ybUZpbHRlciI6IiJ9",
+            page: 1,
+            rows: 20,
+            filterRules: []
+        }, function(res) {
+            if (res && res.rows && res.rows.length) {
+                var tmp, str = '';
+                for (var i = 0; i < res.rows.length; i++) {
+                    tmp = res.rows[i];
+                    str += "<tr>";
+                    str += "<td>" + tmp.GCMC + "</td><td>" + tmp.LRRXM + "</td><td>" + tmp.JCSJ1 + "</td><td>" + tmp.JCSJ2 + "</td><td>" + tmp.JCRYMC + "</td><td>" + tmp.ZTNAME + "</td>"
+                    str += "</tr>"
+                }
+                $("#xcjc_task").html(str);
+            }
+        })
+    }
+    
+
+
+    function getSjtz() { //收件通知
+        ajaxTpl("/WebList/SearchEasyUiFormData", {
+            param: "eyJpc2JhY2tncm91bmQiOmZhbHNlLCJlbmNvZGUiOmZhbHNlLCJGb3JtRG0iOiJSWVNIVFoiLCJGb3JtU3RhdHVzIjoiMCIsIkZvcm1QYXJhbSI6IiIsIkZvcm1IaWRkZW4iOiIiLCJGb3JtRmlsdGVyIjoiIn0=",
+            page: 1,
+            rows: 20,
+            filterRules: []
+        }, function(res) {
+            if (res && res.rows && res.rows.length) {
+                var tmp, str = '';
+                for (var i = 0; i < res.rows.length; i++) {
+                    tmp = res.rows[i];
+                    str += "<tr>";
+                    //
+                    str += "<td>" + tmp.LRRXM + "</td><td>" + tmp.XfysType_Name + "</td><td>" + tmp.GCMC + "</td><td>" + tmp.LRSJ + "</td><td>" + tmp.ZTNAME + "</td>"
+                    str += "</tr>"
+                }
+                $("#sjtz_task").html(str);
+            }
+        })
+        // sjtz_task
+    }
+
+    function getBhgc() { //标红工程
+        ajaxTpl("/WebList/SearchEasyUiFormData", {
+            param: "eyJpc2JhY2tncm91bmQiOmZhbHNlLCJlbmNvZGUiOmZhbHNlLCJGb3JtRG0iOiJYRllTSkwiLCJGb3JtU3RhdHVzIjoiMTciLCJGb3JtUGFyYW0iOiIiLCJGb3JtSGlkZGVuIjoiIiwiRm9ybUZpbHRlciI6IiJ9",
+            page: 1,
+            rows: 20,
+            filterRules: []
+        }, function (res) {
+            if (res && res.rows && res.rows.length) {
+                var tmp, str = '';
+                for (var i = 0; i < res.rows.length; i++) {
+                    tmp = res.rows[i];
+                    str += "<tr>";
+                    //
+                    str += "<td style='color:red;'>" + tmp.GCMC + "</td><td>" + tmp.JSDWMC + "</td><td>" + tmp.L_TypeName + "</td><td>" + tmp.BJSJ + "</td>"
+                    str += "</tr>"
+                }
+                
+                $("#bhgc_task").html(str);
+                $("#bhgc_task td").css("color", "red");
+            } else {
+                $("#bhgc_task").html("<tr><td colspan='4'>暂无数据</td></tr>");
+            }
+        })
+        
+    }
+
+    window.onresize = function() {
+        setHeight()
+    };
+
+    function setHeight() {
+        var h = (window.innerHeight - 260) / 2;
+        $(".item-warp").height(h + "px")
+        $(".tabs .item-warp").css({
+            height: h + 120 + "px"
+        })
+        $("#layTabWarp,#layTabWarp2,#layTabWarp3,#layTabWarp4,#layTabWarp5").css({
+            height: h + 116 + "px"
+        })
+    };
+    $(".head").click(function() {
+        var val = $(this).attr("value")
+        try {
+            if (val == "mail") {
+                parent.openPage('/oa/maillist', 'NBYJ', '内部邮件');
+            } else if (val == "dbrw") {
+                parent.openPage('/workflow/worktodo', 'DBGZ', '待办工作');
+            }
+            // else if (val == "rywcgl") { //rywcgl,sjtz
+            //     parent.openPage('/WebList/EasyUiIndex?FormDm=RYWCGL&FormStatus=0', 'RYWCGL', '外出记录');
+            // } else if (val == "sjtz") {
+            //     parent.openPage('/WebList/EasyUiIndex?FormDm=RYSHTZ&FormStatus=0', 'RYSHTZ', '收件通知');
+            // }
+        } catch (e) {
+            // console.log(e);
+        }
+    })
+
+    function ajaxTpl(url, params, handle) {
+        var index = layer.load(2, { time: 10000 });
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: params,
+            dataType: 'json',
+            success: function(data) {
+                layer.close(index);
+                handle(data);
+            },
+            fail: function(err) {
+                layer.close(index);
+            },
+            complete: function() {
+                layer.close(index);
+            }
+        });
+    }
+
+    function ajax(url, params, handle) {
+        var index = layer.load(2, { time: 10000 });
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: params,
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                layer.close(index);
+                handle(data);
+            },
+            fail: function (err) {
+                layer.close(index);
+            },
+            complete: function () {
+                layer.close(index);
+            }
+        });
+    }
+    function getMail() {
+        ajaxTpl("/oa/getmails?page=1&rows=100&hasread=0", "", function(res) {
+	var tmp, str = '';
+            if (res.rows) {
+                
+                for (var i = 0; i < res.rows.length; i++) {
+                    tmp = res.rows[i];
+                    str += "<li value='" + tmp.recid + "'>" + tmp.sendtime + "]" + tmp.title + "[来自:" + tmp.senderrealname + "]</li>";
+                }
+                
+            }
+$("#mailList").html(str);
+            $("#mailTotal").html(res.rows.length || 0)
+        });
+    }
+    $("#mailList").on("click", "li", function() {
+        var recid = $(this).attr("value");
+        parent.layer.open({
+            type: 2,
+            title: '邮件详情',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['90%', '90%'],
+            content: "/oa/mailview1?read=true&id=" + recid,
+        });
+        getMail();
+    });
+    $("#table_task").on("click", "li", function() {
+        // Taskid
+        var taskid = $(this).attr("value")
+        parent.layer.open({
+            type: 2,
+            title: '',
+            shadeClose: true,
+            shade: 0.5,
+            area: ['90%', '90%'],
+            content: "/workflow/checkwork?taskid=" + taskid + "&DlgId=1&_=" + Math.random(),
+            end: function() {}
+        });
+    })
+
+    function getZGlist() {
+        ajaxTpl("/wlxf/getZGlist?page=1&rows=20&key=", "", function(res) {
+            console.log(res)
+            if (res.total > 0) {
+                var tmp, str = '';
+                for (var i = 0; i < res.rows.length; i++) {
+                    tmp = res.rows[i];
+                    str += "<tr><td>" + tmp.gcmc + "</td><td>" + tmp.jsdwmc + "</td><td>" + tmp.typename + "</td><td>" + tmp.xmfpsj + "</td></tr>"
+                }
+                // $("#mailList").html(str);
+                $("#project_task").html(str);
+            } else {
+                $("#project_task").html("<tr><td colspan='4'>暂无数据</td></tr>");
+            }
+            $("#projectTotal").html(res.total || 0)
+        })
+    }
+
+    function getDbrw() {
+        ajax("/workflow/getworktodolist?page=1&rows=20&key=", "", function(data) {
+	 var str = "";
+            if (data.total > 0) {             
+                var item;
+                for (var i = 0; i < data.rows.length; i++) {
+                    item = data.rows[i]
+                    var extrainfo = "";
+                    if (item.ExtraInfo2 != "") {
+                        extrainfo = "[" + item.ExtraInfo2 + "]";
+                    }
+                    var sysj = "";
+                    var myDate = new Date();
+                    ajax("/wlxf/getsysj?page=1&rows=20&taskid=" + item.Taskid, "", function (dt)
+                    {
+                        if (dt.rows.length > 0 && dt.rows[0].sysj) {                      
+                             sysj = new Date(dt.rows[0].sysj).getTime();
+                        }
+                    })
+                    if (sysj=="" || myDate.getTime()<sysj)
+                    str += "<li value='" + item.Taskid + "'>[" + getDay(item.DateAccepted) + "][来自：" + item.PreUserRealName + "]" + item.ActivityName + extrainfo + "</li>"
+                    else
+                    str += "<li value='" + item.Taskid + "' style='color:red;'>[" + getDay(item.DateAccepted) + "][来自：" + item.PreUserRealName + "]" + item.ActivityName + extrainfo + "</li>"
+                }
+               
+            }
+	     $("#table_task").html(str);
+            $("#taskTotal").html(data.total || 0)
+        })
+    }
+    Date.prototype.format = function(format) {
+        var o = {
+            "M+": this.getMonth() + 1,
+            "d+": this.getDate(),
+            "H+": this.getHours(),
+            "m+": this.getMinutes(),
+            "s+": this.getSeconds(),
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "f+": this.getMilliseconds(), //毫秒
+        };
+        if (/(y+)/.test(format))
+            format = format.replace(RegExp.$1, this.getFullYear() + "").substr(4 - RegExp.$1.length);
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(format))
+                format = format.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        }
+        return format;
+    }
+
+    function getDay(date) {
+        var tmp = date.replace(/\D/g, "");
+        var day = new Date(parseFloat(tmp));
+        return day.format("yyyy-MM-dd HH:mm:ss")
+    }
+    </script>
+</body>
+
+</html>

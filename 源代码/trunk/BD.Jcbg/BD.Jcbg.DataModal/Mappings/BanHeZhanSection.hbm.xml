@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.BanHeZhanSection,BD.Jcbg.DataModal" table="BanHeZhanSection" lazy="false">
+    <id name="SectionId" column="SectionId" type="int">
+      <generator class="assigned" />
+    </id>
+    <property type="string" length="10" name="SectionName" column="[SectionName]" />
+    <property type="int" name="CurrPage" column="[CurrPage]" />
+    <property type="int" name="CurrIndex" column="[CurrIndex]" />
+  </class>
+</hibernate-mapping>

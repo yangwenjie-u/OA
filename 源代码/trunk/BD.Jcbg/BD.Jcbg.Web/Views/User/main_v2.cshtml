@@ -1,0 +1,327 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/User/_mainlayout.cshtml";
+}
+@section head
+{
+    <script src="@SkinManager.GetJsPath("jquery.qrcode.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+        var g_menus = [];
+        var g_menugroups = [];
+        var g_imageRoot = "@SkinManager.GetImagePath("")";
+        $(function () {
+            TabControlAppend('1', '首页', '/user/welcome', undefined, 'homepage');
+            $(".side ul li").hover(function () {
+                if (this.id == "download") {
+                    $(this).find(".sidebox").stop().animate({ "width": "34px" }, 200).css({ "opacity": "1", "filter": "Alpha(opacity=100)", "background": "#ae1c1c" });
+                    $(this).find(".erweima_right").stop().animate({ "width": "350px" }, 200).css({ "opacity": "1", "filter": "Alpha(opacity=100)", "display": "block" });
+                    //	$(".erweima_right").css("display","block");
+                }
+                else { $(this).find(".sidebox").stop().animate({ "width": "144px" }, 200).css({ "opacity": "1", "filter": "Alpha(opacity=100)", "background": "#ae1c1c" }) }
+
+            }, function () {
+                if (this.id == "download") {
+                    $(this).find(".erweima_right").stop().animate({ "width": "34px" }, 200).css({ "opacity": "0.8", "filter": "Alpha(opacity=80)", "display": "none" });
+                }
+                $(this).find(".sidebox").stop().animate({ "width": "34px" }, 200).css({ "opacity": "0.8", "filter": "Alpha(opacity=80)", "background": "transparent" })
+            });
+            /*
+            $(".side ul li").click(function () {
+                if (this.id == "help")
+                { TabControlAppend('2', '人员', 'temp2.html', undefined, 'index'); }
+                else if (this.id == "task")
+                { TabControlAppend('4', '代办消息', 'temp1.html', undefined, 'index'); }
+                else if (this.id == "off")
+                { }
+            }
+
+
+
+            );*/
+
+
+            $(".left_zhucaidan_btn").hover(function () {
+
+                $(".left_zhucaidan").css("display", "block");
+                $(".left_main").css("width", "230px");
+                //("background-image","url(./images/back_sy_temp.jpg)");
+
+
+                $(".left_zhucaidan").css("background-color", "transparent");
+                $(".left_zhucaidan").css("background-image", "url(@SkinManager.GetImagePath("back_sy_temp.jpg"))");
+                //$(".left_zhucaidan").css("background-image","none");
+                $(".left_zhucaidan").css("width", "200px");
+                $(".left_zhucaidan").css("height", "100%");
+                $(".left_zhucaidan").css("float", "left");
+                $(".left_zhucaidan_btn").css("float", "left");
+                $(".left_zhucaidan_btn").css("background-color", "#84c0f2");
+
+                $(".left_zhucaidan_btn").css("left", "200px");
+            }, function () {
+
+            });
+            $(".left_main").hover(function () {
+
+
+            }, function () {
+                $(".left_zhucaidan").css("display", "none");
+                $(".left_main").css("width", "30px");
+                //#84c0f2
+                //$(".left_main").css("background-color","#84c0f2");
+                $(".left_main").css("background-image", "none");
+                //$(".left_main").css("background-color","rgba(255,255,255,0.3)");
+                $(".left_zhucaidan_btn").css("left", "0px");
+                $(".left_zhucaidan_btn").css("background-color", "rgba(0,0,0,0.4)");
+
+
+            });
+            //setWorkSum();
+            loadMenus();
+            generateBar();
+            //run();
+        });
+        // 生成二维码
+        function generateBar() {
+            try{
+                $("#barIos").qrcode({
+                    render: "table", //table方式
+                    width: 135, //宽度
+                    height: 135, //高度
+                    text: "@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_APPIOS") " //任意内容
+                });
+                $("#barAndroid").qrcode({
+                    render: "table", //table方式
+                    width: 135, //宽度
+                    height: 135, //高度
+
+                    text: "@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_APPANDROID") " //任意内容
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        /*
+        // 获取待办任务数量
+        function setWorkSum() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/workflow/getworktodocount",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        $("#sp_work_sum").text(data.count);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+            }
+        }*/
+        /*
+        // 设置轮询
+        function run() {
+            setInterval("setWorkSum()", 5000);
+        }*/
+        function logout() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/dologout",
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code == 0)
+                            window.location = "/";
+                        else
+                            layer.open({ title: '提示', content: data.msg, icon: 5 });
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        //$("body").unmask();
+                        layer.closeAll('loading');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        //$("body").mask("正在退出系统...")
+                        layer.load();;
+                    }
+                });
+            } catch (e) {
+                layer.open({ title: '错误', content: e, icon: 5 });
+            }
+        }
+
+        function loadMenus() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/user/getmenus",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        g_menus = data;
+
+
+                        $.each(g_menus, function (index, group) {
+                            if (!group.IsGroup)
+                                return true;
+                            g_menugroups[g_menugroups.length] = group;
+                            var menuIcon = group.ImageUrl;
+                            if (menuIcon == "")
+                                menuIcon = "fa fa-balance-scale";
+                            var menustr = "<li onclick=\"left_zhu_ci_tiz('" + group.MenuCode + "')\"><div class=\"a_click\"><div class=\"kuang_left_top\"><i class=\"" + menuIcon + "\"></i></div><div class=\"kuang_left_last2\">" + group.MenuName + "</div></div></li>";
+
+                            $("#menu_group").append(menustr);
+                            menustr = "<div class=\"left_tubiao\" id=\"" + group.MenuCode + "\" style=\"display:none;\"></div>";
+                            $("#menu_item").append(menustr);
+                            $("#" + group.MenuCode).append("<div class=\"nei_fanhui\"onclick=\"ziye_fanhui('" + group.MenuCode + "')\"><div class=\"nei_fanhui_left\" ><i class=\"" + menuIcon + "\"></i></div><div class=\"nei_fanhui_right\">" + group.MenuName + "</div></div>");
+                            $("#" + group.MenuCode).append("<ul class=\"nei_tubiao\" id=\"ul_" + group.MenuCode + "\"></ul>");
+                            $.each(g_menus, function (index, item) {
+                                if (item.ParentCode == group.MenuCode) {
+                                    var menuIcon = item.ImageUrl;
+                                    if (menuIcon == "")
+                                        menuIcon = "fa fa-object-group";
+                                    $("#ul_" + group.MenuCode).append("<li><a onclick=\"tubiao_zhu_nei('" + item.MenuCode + "','" + item.MenuName + "','" + item.MenuUrl + "')\" href=\"javascript:void(0)\"><div class=\"nei_tubiao_div2\"><i class=\"" + menuIcon + "\"></i></div><div class=\"nei_tubiao_word2\">" + item.MenuName + "</div><div class='shangbiao display_no' id='pcount_" + item.MenuCode + "'></div></a></li>");
+                                }
+                            });
+                        });
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll('loading');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.load();
+                    }
+                });
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        }
+        function doSearch(key) {
+            var isSearch = key != "";
+            $("#menu_search").html("");
+            $("#left_yemian").css("display","block");
+            if (isSearch) {
+                $("#menu_group").css("display", "none");
+                $.each(g_menugroups, function (index, item) {
+                    $("#"+item.MenuCode).css("display", "none");
+                });
+                $("#menu_search").css("display", "block");
+                $.each(g_menus, function (index, item) {
+                    if (item.IsGroup)
+                        return true;
+                    if (item.MenuName.indexOf(key) > -1) {
+                        var menuIcon = item.ImageUrl;
+                        if (menuIcon == "")
+                            menuIcon = "fa fa-balance-scale";
+                        var menustr = "<li onclick=\"tubiao_zhu_nei('" + item.MenuCode + "','" + item.MenuName + "','" + item.MenuUrl + "')\"><div class=\"a_click\"><div class=\"nei_tubiao_div2\"><i class=\"" + menuIcon + "\"></i></div><div class=\"nei_tubiao_word2\">" + item.MenuName + "</div><div class='shangbiao display_no' id='spcount_" + item.MenuCode + "'></div></div></li>";
+                        $("#menu_search").append(menustr);
+                    }
+                });
+            } else {
+                $("#menu_group").css("display", "block");
+                $("#menu_search").css("display", "none");
+            }
+
+        }
+        
+    </script>
+}
+
+
+
+
+
+<!-- 选项卡 -->
+<div class="tab-control stj_left_tab">
+    <!-- 标签 -->
+    <div class="tab simple">
+        <form style="display: none">
+            <input class="prev" type="button" />
+            <input class="next" type="button" />
+            <input class="find" type="button" />
+        </form>
+        <ul></ul>
+    </div>
+    <!-- 标签查找 -->
+    <div class="tab-find hidden">
+        <form>
+            <input class="text" type="text" />
+        </form>
+        <ul></ul>
+    </div>
+    <!--左侧主菜单-->
+    <div class="mian_all">
+
+        <div class="left_main">
+
+            <div class="left_zhucaidan" style="display:none">
+                <div class="left_main_top">
+                    <div class="left_main_top_left"> <img src="@SkinManager.GetImagePath("touxiang.png")" width="45" height="45" /> </div>
+                    <div class="left_main_top_right"> @CurrentUser.RealName</div>
+
+                </div>
+
+                <div class="left_middle">
+                    <div class="left_middle_left"><i class="fa fa-search"> </i></div>
+                    <div class="left_miaddle_right"><input name="" type="text" onkeyup="doSearch(this.value);" /></div>
+                </div>
+                <div class="left_last" id="menu_item">
+
+                    <div class="left_tubiao" id="left_yemian">
+                        <ul class="kuang_left" id="menu_group">
+                            
+                        </ul>
+                        <ul class="kuang_left" id="menu_search"></ul>
+                    </div>
+                    
+                    
+
+                </div>
+
+
+
+            </div>
+            <div class="left_zhucaidan_btn">主菜单</div>
+        </div>
+
+
+        <!-- 主体 -->
+        <div class="top_main"></div>
+        <div class="main">
+        </div>
+        <div class="foot_main"></div>
+    </div>
+
+</div>
+
+
+
+
+
+
+<div class="side_right">
+    <div class="side">
+        <ul>
+            <li id="download">
+                <a href="#">
+                    <div class="erweima_right" style="display:none">
+                        <div class="erweima_xianshi">
+                            <div id="barIos" class="erweima_xianshi_left"></div>
+                            <div id="barAndroid" class="erweima_xianshi_right"></div>
+                        </div>
+                    </div>
+                    <div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon01.png")"></div>
+                </a>
+            </li>
+            <li id="telephone"><a href="#"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon02.png")">@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_TITLE2")></div></a></li>
+            <li id="help"><a href="@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_HELPDOC")"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon03.png")">帮助></div></a></li>
+            <li id="task"><a href="javascript:tubiao_zhu_nei('DBGZ','待办工作','/workflow/worktodo');"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon04.png")" id="img_todo">待办工作(<span id="sp_work_sum"></span>)</div></a></li>
+            <li id="logout"><a href="javascript:logout();"><div class="sidebox"><img src="@SkinManager.GetImagePath("side_icon05.png")">注销退出></div></a></li>
+            <!--	<li style="border:none;"><a href="javascript:goTop();" class="sidetop"><img src="img/side_icon05.png"></a></li>  -->
+        </ul>
+
+
+    </div>
+</div>

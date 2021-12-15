@@ -1,0 +1,163 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var g_recid = "@ViewBag.recid";
+        $(function () {
+            try{
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getjchtinfo",
+                    data: "recid=" + g_recid,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        try {
+                            if (data.code != "0") {
+                                alert(data.msg);
+                            } else {
+                                var htinfo = data.result[0];
+                                var qybh = htinfo.jcjgbh;
+                                if (htinfo.htlx == "分包合同")
+                                    qybh = htinfo.fbjcjgbh;
+                                else {
+                                    $("#trfb1").hide();
+                                    $("#trfb2").hide();
+                                }
+                                $("#frm_qyzz").attr("src", "/WebList/EasyUiIndex?FormDm=WorkflowQyzz&FormStatus=0&FormParam=PARAM--" + qybh);
+                                $("#frm_jcxm").attr("src", "/jc/jcxmxz?fbxm=false&limitxmbh=" + htinfo.syxmbh + "&dwbh=" + qybh + "&view=true");
+
+                                if (htinfo.htfj != "") {
+                                    var arr = htinfo.htfj.split("||");
+                                    var imgurl = "";
+                                    $.each(arr, function (i, item) {
+                                        var itemarr = item.split("|");
+                                        if (itemarr.length < 2)
+                                            return true;
+                                        var url = "/workflow/showimage?url=" + encodeURIComponent('/workflow/p-b' + itemarr[1] + '.jpg');
+                                        imgurl += "<a href='" + url+"' target='_blank'><img src='/workflow/p-s" + itemarr[1] + ".jpg' title='" + itemarr[0] + "' style='cursor:pointer;margin-right:2px' border='0'/></a>";
+
+                                    });
+                                    $("#tab3").append(imgurl);
+                                } else {
+                                    $("#tab3").append("<br/><br/><br/><center style='font-size:20px;'>无</center>");
+                                }
+
+                                $("#tdhtlx").append(htinfo.htlx);
+                                $("#tdhtbh").append(htinfo.htbh);
+                                $("#tdjcjg").append(htinfo.jcjgmc);
+                                $("#tdfbhtbh").append(htinfo.fbhtbh);
+                                $("#tdfbjcjg").append(htinfo.fbjcjgmc);
+                                $("#tdkhdw").append(htinfo.khdwmc);
+                                $("#tdhtgc").append(htinfo.gcmc);
+                                $("#tdhtje").append(htinfo.htje);
+                                $("#syxmmc").text(htinfo.syxmmc);
+                            }
+                        } catch (e) {
+                            alert(e);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+            }
+            catch (err) {
+                alert(err);
+            }
+        });
+        function showBigImage(imgid, imgdesc) {
+            top.layer.open({
+                type: 2,
+                title: "合同附件详情",
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '95%'],
+                content: "/workflow/showimage?url="+encodeURIComponent('/workflow/p-b' + imgid + '.jpg'),
+                //content: "<img src='/workflow/p-b" + imgid + ".jpg' title='" + imgdesc + "'/>",
+                end: function () {
+                }
+            });
+        }
+    </script>
+}
+
+<div class="container-fluid">
+    <ul id="out_tab_tab" class="nav nav-tabs">
+        <li class="active">
+            <a href="#tab1" data-toggle="tab">
+                合同基本信息
+            </a>
+        </li>
+        <li>
+            <a href="#tab2" data-toggle="tab">
+                检测项目
+            </a>
+        </li>
+        <li>
+            <a href="#tab3" data-toggle="tab">
+                合同附件
+            </a>
+        </li>
+        <li>
+            <a href="#tab4" data-toggle="tab">
+                检测机构资质
+            </a>
+        </li>
+    </ul>
+    <div id="out_tab_content" class="tab-content">
+        <div class="tab-pane fade in active" id="tab1">
+            <table align="center" class="table table-striped">
+                <tr>
+                    <th width="100">合同类型</th>
+                    <td id="tdhtlx"></td>
+                </tr>
+                <tr>
+                    <th>合同编号</th>
+                    <td id="tdhtbh"></td>
+                </tr>
+                <tr>
+                    <th>检测机构</th>
+                    <td id="tdjcjg"></td>
+                </tr>
+                <tr id="trfb1">
+                    <th>分包合同编号</th>
+                    <td id="tdfbhtbh"></td>
+                </tr>
+                <tr id="trfb2">
+                    <th>分包检测机构</th>
+                    <td id="tdfbjcjg"></td>
+                </tr>
+                <tr>
+                    <th>客户单位</th>
+                    <td id="tdkhdw"></td>
+                </tr>
+                <tr>
+                    <th>合同工程</th>
+                    <td id="tdhtgc"></td>
+                </tr>
+
+                <tr>
+                    <th>合同金额</th>
+                    <td id="tdhtje"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="tab-pane fad" id="tab2">
+            <!--<iframe width='100%' height='500px' name='frm_jcxm' id='frm_jcxm' frameborder='0' scrolling='auto' src=''></iframe>-->
+            <span id="syxmmc"></span>
+        </div>
+        <div class="tab-pane fad" id="tab3">
+            
+        </div>
+        <div class="tab-pane fad" id="tab4">
+            <iframe width='100%' height='500px' name='frm_qyzz' id='frm_qyzz' frameborder='0' scrolling='auto' src=''></iframe>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,189 @@
+@charset "utf-8";
+/* CSS Document */
+
+.navbar-header
+{
+	padding:10px;
+	}
+.navbar-top-links .dropdown-shezhi{width:150px;min-width:0}
+.navbar-top-links .dropdown-shezhi{margin-left:-123px}
+.dropdown-shezhi{padding:10px}
+
+.dropdown-shezhi li a{font-size:12px}.dropdown-shezhi li em{font-size:10px}
+
+
+.nav.navbar-top-links .dropdown-shezhi a{font-size:12px}
+.img-circle {border-radius: 5%;}
+
+.nav-header {	padding: 33px 25px;	}
+/*
+.profile_left {	float: left;}
+.profile_right{	float:right; margin:auto;}
+
+.profile-element {padding: 0px 0px 80px 0px;}
+
+.btn-primary {font-size: 25px;padding: 0px;background-color: transparent;border-style: none;}
+.btn-primary.active, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open .dropdown-toggle.btn-primary {
+background-color: transparent;
+border-style:none;
+color: #1ab394;
+}
+*/
+.stj_check_select{padding-top:20px;}
+/*
+.stj_check_select_col{width:30%;float:left;}*/
+	
+.stj_check_select_col .col-sm-3.control-label {
+	text-align: right;
+	vertical-align: middle;
+	line-height:34px;
+}
+.stj_btn_y_f
+{
+	margin-left:10px;
+	margin-right:10px;
+	
+	}
+td .col-sm-3.control-label {
+	text-align: right;
+	vertical-align: middle;
+	/*line-height:34px;*/
+	/*max-height:38px;*/
+	/*max-width:100px;*/
+	overflow:auto;
+	padding-right:0px;
+	padding-left:0px;
+	/*width: 90px;*/
+	
+	
+}
+.stj_lr_tab
+{
+	/*width:100%;*/
+	margin-top:20px;
+	
+	}
+.stj_lr_td
+{
+	/*width: 330px;*/
+overflow: auto;
+padding-top: 5px;
+padding-left:10px;
+padding-right:10px;
+text-align:center;
+	
+	}
+.stj_lr_tr
+{
+	margin-top:4px;}
+.Wdate.form-control
+{
+	background-color: #fff;
+	background-image: url(datePicker.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	}
+.stj_label
+{
+	width:140px;
+	}
+.stj_input
+{
+	width:285px;
+	padding: 0px;
+    padding-left: 5px;
+	}
+.stj_label2
+{
+	width:25px;
+	padding-left:5px;
+	
+	}
+.stj_input2
+{
+	
+	width:130px;
+	padding: 0px;
+    padding-left: 5px;
+	}
+.stj_tab_btn_table
+{
+    height: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    vertical-align: middle;
+    padding-bottom: 0;
+    padding-top: 0;
+	border-radius: 5px;
+    color: #000;
+    margin-left: 10px;
+    border-width: 1px;
+    background-color: #fff;
+	
+	}
+.stj_tab_btn_table i
+{
+	padding-right:10px;
+	display:inline-block;
+	}
+.stj_tab_btn_table label
+{
+
+margin: 0 auto;
+    text-align: center;
+    /* padding-left: 30px; */
+    /* padding-right: 30px; */
+    font-size: 12px;
+    font-weight: normal;
+    font-family:"Microsoft YaHei", tahoma, arial, sans-serif;
+}
+.col-sm-9.stj_input select
+{   
+ height: 46px;
+    font-size: 20px;
+}
+
+.col-sm-9.stj_input input
+{   
+ height: 46px;
+    font-size: 20px;
+}
+
+.col-sm-9.stj_input2 input
+{   
+ height: 46px;
+    font-size: 20px;
+	padding-left: 3px;
+    padding-right: 3px;
+    font-size: 18px;
+}
+	#buttonDiv
+	{
+	 height: 50px;
+  
+    border-bottom: 1px solid #bebebe;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    vertical-align: middle;
+    background-color: #f1f1f1;
+	}
+#jqxgrid
+{
+margin-left:10px;
+margin-top:20px;
+border-width:0px;
+}
+#columntablejqxgrid
+{
+border-top:1px solid #aaa;
+border-left:1px solid #aaa;
+}
+#row00jqxgrid
+{
+border-left:1px solid #aaa;
+
+}
+
+#contenttablejqxgrid .jqx-item-lt_style
+{
+border-left:1px solid #aaa;
+}

@@ -1,0 +1,19 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+<link href="@SkinManager.GetPlayerPath("mediaelementplayer.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetPlayerPath("mediaelement-and-player.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetPlayerPath("lang/zh-cn.js")"></script>
+    <script language="javascript" type="text/javascript">
+    
+    $(function () {
+    });
+</script>
+}
+
+<audio id="player" preload="auto" controls>
+    <source src="@ViewBag.filepath" type="audio/mp3">
+</audio>

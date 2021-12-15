@@ -1,0 +1,422 @@
+﻿@using BD.Jcbg.Common;
+
+@{
+    Layout = "~/Views/xwwzUserHT/_f_common.cshtml";
+}
+@section head
+{
+
+}
+@section body
+{
+
+<table id="datagrid"></table>
+<div id="toolbar" style="display: none;">
+    <div id="toolmenu"></div>
+    <table  >
+        <tr>
+            <td style="width: 60px; padding: 1px 5px 1px 5px;" align="center">
+
+                <a href="javascript:addNewsArtcle();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">新增</a>
+            </td>
+
+            <td style="width: 60px; padding: 1px 5px 1px 5px;" align="right">
+                新闻标题
+            </td>
+            <td style="width: 60px; padding: 1px 5px 1px 5px;" align="left">
+                <input id="xwbt" class="easyui-textbox" style="width:200px" />
+            </td>
+            <td style="width: 60px; padding: 1px 5px 1px 5px;" align="right">
+                是否审核
+            </td>
+            <td style="width: 60px; padding: 1px 5px 1px 5px;" align="left">
+                <select class="easyui-combobox" id="sfsh" style="width:80px">
+                    <option value="ALL">所有</option>
+                    <option value="YSH">已审核</option>
+                    <option value="WSH">未审核</option>
+                </select>
+            </td>
+            <td style="width: 60px; padding: 1px 5px 1px 5px;" align="right">
+                新闻栏目
+            </td>
+            <td style="width: 60px; padding: 1px 5px 1px 5px;" align="left">
+               
+                <input class="easyui-combobox" id="xwlm" name="xwlm" style="width:100px;"
+                       data-options="valueField:'id',textField:'text'">
+            </td>
+            <td style="width:10px; padding: 1px 5px 1px 5px;" align="right">
+                
+            </td>
+            <td style="width: 80px; padding: 1px 5px 1px 5px;" align="left">
+                <input type="checkbox" id="zdxw" onchange="reSearchFun()"/>重点新闻
+            </td>
+            <td style="width: 80px; padding: 1px 5px 1px 5px;" align="left">
+                
+                <a href="javascript:reSearchFun();" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-search'">查询</a>
+</td>
+        </tr>
+    </table>
+</div>
+
+        <script type="text/javascript">
+
+
+            function reSearchFun() {
+                //获取参数
+                var pageopt = dataGrid.datagrid('getPager').data("pagination").options;
+                pageopt.pageNumber = 1;
+                var page = pageopt.pageNumber;
+                var rows = pageopt.pageSize;
+                loadData(page, rows);
+            }
+
+            var dataGrid;
+
+
+            function initCombox() {
+                $.ajax({
+                    type: "post",
+                    url: "/xwwzUserHT/xwlmcom",
+                    dataType: "json",
+                    data: { },
+                    async: true,
+                    success: function (jsonData) {
+                        if (!jsonData.success) {
+                            $.messager.alert("错误", jsonData.msg, 'error');
+                            return;
+                        }
+
+                        $("#xwlm").combobox("loadData", jsonData.data);
+
+                         
+                    }
+                });
+            }
+
+
+
+            //初始化数据集
+            function initDataGrid() {
+                dataGrid = $('#datagrid').datagrid({
+                    url: '/xwwzUserHT/DoSearch',
+                    fit: true,
+                    
+                    pagination: true,
+                    rownumbers: true,
+                    toolbar: '#toolbar',
+                    singleSelect: true,
+                    pageList: [20, 50, 100, 500],
+                    pageSize: 20,
+                    pagePosition:'bottom',
+                    
+                    
+                    rowStyler: function (index, data) {
+                        return "height:20px";
+                    },
+                    frozenColumns: [[
+                        { field: 'ck', checkbox: true }
+                    ]],
+                    columns: [[
+                        {
+                            field: 'articleid',
+                            title: '新闻id',
+                            align: 'center',
+                            width: 80
+                        },
+                     {
+                         field: 'title',
+                         title: '标题',
+                         align: 'center',
+                         width: 300,
+                         formatter: function (value, row, index) {
+                             return '<a style="color:blue" target="_blank" href="/xwwzUser/newsc?id=' + row.articleid + '">' + row.title + '</a>';
+                         }
+                     }, {
+                        field: 'name',
+                        title: '所属栏目',
+                        align: 'center',
+                        halign: 'center',
+                        width: 130
+                     }, {
+                        field: 'articledate',
+                        title: '发布日期',
+                        align: 'center',
+                        width: 130
+                     }, {
+                         field: 'isimportant',
+                         title: '重点新闻',
+                         align: 'center',
+                         halign: 'center',
+                         width: 60,
+                         formatter: function (value, row, index) {
+                             if (row.isimportant == 'True') {
+                                 return '是';
+                             } else {
+                                 return '否';
+                             }
+                         }
+
+                     }, {
+                         field: 'isaudited',
+                         title: '是否审核',
+                         align: 'center',
+                         halign: 'center',
+                         width: 60,
+                         formatter: function (value, row, index) {
+                             if (row.isaudited == 'True') {
+                                 return '是';
+                             } else {
+                                 return '否';
+                             }
+                         }
+
+                     }, {
+                         field: 'hits',
+                         title: '点击数',
+                         align: 'center',
+                         halign: 'center',
+                         width: 60
+                     }, {
+                         field: 'isbtn',
+                         title: '管理',
+                         align: 'center',
+                         halign: 'center',
+                         width: 200,
+                         formatter: function (value, row, index) {
+                             if (row.isbtn == 'True') {
+                                 return '<a href="javascript:jzfb()">禁止发布</a>&nbsp;&nbsp;&nbsp;&nbsp;<a  href="javascript:deleteNewsArtcle()">删除</a>';
+                             } else {
+                                 return '<a  href="javascript:editNewsArtcle()">修改</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:shqf()">审核签发</a>&nbsp;&nbsp;&nbsp;&nbsp;<a  href="javascript:deleteNewsArtcle()">删除</a>';
+                             }
+                         }
+                     }
+
+                     
+
+
+                    ]]
+                });
+                var p = dataGrid.datagrid('getPager');
+                $(p).pagination({
+                    displayMsg: '当前【 {from} 至 {to} 】 共【 {total} 】条记录',
+                    onBeforeRefresh: function (pageNumber, pageSize) {
+                        $(this).pagination('loading');
+                        $(this).pagination('loaded');
+                    },
+                    onSelectPage: function (page, rows) {
+                        var gridOpts = dataGrid.datagrid('options');
+                        gridOpts.pageNumber = page;
+                        gridOpts.pageSize = rows;
+                        loadData(page, rows);
+                    }
+                });
+            };
+
+            //处理数据
+            function loadData(page, rows) {
+                //条件
+
+                var xwbt = $.trim($('#xwbt').val());
+                var sfsh = $.trim($('#sfsh').val());
+                var xwlm = $.trim($('#xwlm').val());
+                var zdxw ;
+
+                if ($("#zdxw").get(0).checked) {//选中
+                    zdxw = "1";
+                } else {//未选中
+                    zdxw = "0";
+                }
+              
+                $.ajax({
+                    type: "post",
+                    url: "/xwwzUserHT/DoSearch",
+                    dataType: "json",
+                    data: { xwbt: xwbt, sfsh: sfsh, xwlm: xwlm, zdxw: zdxw, page: page, rows: rows },
+                    async: true,
+                    success: function (jsonData) {
+                        if (!jsonData.success) {
+                            $.messager.alert("错误", jsonData.msg, 'error');
+                            return;
+                        }
+                        //加载数据
+                        var data = jsonData.data; 
+                        dataGrid.datagrid("loadData", data);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        $.messager.progress('close');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        $.messager.progress({ msg: '检索中，请稍后 ......' });
+                    }
+                });
+            };
+
+
+            $(function () {
+               
+                //初始化新闻栏目Combox
+                initCombox();
+
+                //初始化数据集
+                initDataGrid();
+                //检索数据
+                searchFun();
+                 
+            });
+
+
+
+            function searchFun() {
+                //获取参数
+                var pageopt = dataGrid.datagrid('getPager').data("pagination").options;
+                if (pageopt.pageNumber<1) {
+                     pageopt.pageNumber = 1;
+                }
+                var page = pageopt.pageNumber;
+                var rows = pageopt.pageSize;
+                loadData(page, rows);
+            }
+
+            //禁止发布
+            function jzfb() {
+                var row = dataGrid.datagrid('getSelected');
+                if (row == null) {
+                    layer.alert('请先选中一条数据', { icon: 5 });
+                    return;
+                }
+                 
+                $.ajax({
+                    type: "post",
+                    url: "/xwwzUserHT/jzfb",
+                    dataType: "json",
+                    data: { id: row.articleid },
+                    async: true,
+                    success: function (jsonData) {
+                        if (!jsonData.success) {
+                            $.messager.alert("错误", jsonData.msg, 'error');
+                            return;
+                        }
+                        searchFun();
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        $.messager.progress('close');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        $.messager.progress({ msg: '操作执行中，请稍后 ......' });
+                    }
+                });
+            }
+
+            //审核签发
+            function shqf() {
+                var row = dataGrid.datagrid('getSelected');
+                if (row == null) {
+                    layer.alert('请先选中一条数据', { icon: 5 });
+                    return;
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: "/xwwzUserHT/shqf",
+                    dataType: "json",
+                    data: { id: row.articleid },
+                    async: true,
+                    success: function (jsonData) {
+                        if (!jsonData.success) {
+                            $.messager.alert("错误", jsonData.msg, 'error');
+                            return;
+                        }
+                        searchFun();
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        $.messager.progress('close');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        $.messager.progress({ msg: '操作执行中，请稍后 ......' });
+                    }
+                });
+            }
+
+
+
+            function addNewsArtcle() {
+                layer.open({
+                    type: 2,
+                    title: "新增新闻",
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['95%', '95%'],
+                    content: "/xwwzUserHT/doNewsArtcle?type=add",
+                    end: function () {
+                        searchFun();
+                    }
+                });
+            }
+
+            function editNewsArtcle() {
+                var row = dataGrid.datagrid('getSelected');
+                if (row == null) {
+                    layer.alert('请先选中一条数据', { icon: 5 });
+                    return;
+                }
+                layer.open({
+                    type: 2,
+                    title: "修改新闻",
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['95%', '95%'],
+                    content: "/xwwzUserHT/doNewsArtcle?type=edit&id=" + row.articleid,
+                    end: function () {
+                        searchFun();
+                    }
+                });
+            }
+
+            function deleteNewsArtcle() {
+                //询问框
+                layer.confirm('确定要删除记录吗？删除操作不可恢复！', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                      
+                    var row = dataGrid.datagrid('getSelected');
+                    if (row == null) {
+                        layer.alert('请先选中一条数据', { icon: 5 });
+                        return;
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: "/xwwzUserHT/deleteNewsArtcle",
+                        dataType: "json",
+                        data: { id: row.articleid },
+                        async: true,
+                        success: function (jsonData) {
+                            if (!jsonData.success) {
+                                // $.messager.alert("错误", jsonData.msg, 'error');
+                                layer.alert(jsonData.msg, { icon: 5 });
+                                return;
+                            } else {
+                                layer.alert(jsonData.msg, { icon: 6 });
+                            }
+                            searchFun();
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                            $.messager.progress('close');
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                            $.messager.progress({ msg: '操作执行中，请稍后 ......' });
+                        }
+                    });
+
+
+                }, function () {
+                    
+                });
+                
+            }
+
+        </script>
+
+
+   
+}
+

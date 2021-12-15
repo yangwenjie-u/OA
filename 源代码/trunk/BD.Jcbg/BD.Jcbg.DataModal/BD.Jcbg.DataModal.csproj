@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5E620B26-8ECC-4BFC-92A6-4C43B6237ED7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BD.Jcbg.DataModal</RootNamespace>
+    <AssemblyName>BD.Jcbg.DataModal</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\Alert.cs" />
+    <Compile Include="Entities\BanHeZhanData.cs" />
+    <Compile Include="Entities\BanHeZhanSection.cs" />
+    <Compile Include="Entities\CompanyAnnounce.cs" />
+    <Compile Include="Entities\CompanyChange.cs" />
+    <Compile Include="Entities\CompanyChangeItem.cs" />
+    <Compile Include="Entities\CompanyChangeTotal.cs" />
+    <Compile Include="Entities\CompanyChangeTotalItem.cs" />
+    <Compile Include="Entities\CompanyFileStorage.cs" />
+    <Compile Include="Entities\CompanyReader.cs" />
+    <Compile Include="Entities\DcLog.cs" />
+    <Compile Include="Entities\DcLogRedo.cs" />
+    <Compile Include="Entities\GclrWxyFile.cs" />
+    <Compile Include="Entities\HelpDesktopItem.cs" />
+    <Compile Include="Entities\KqUserSign.cs" />
+    <Compile Include="Entities\InfoGzgz.cs" />
+    <Compile Include="Entities\InfoSchedule.cs" />
+    <Compile Include="Entities\InfoWgryHistory.cs" />
+    <Compile Include="Entities\KqjUserDayLog.cs" />
+    <Compile Include="Entities\KqjUserDayLogDetail.cs" />
+    <Compile Include="Entities\KqjUserLog.cs" />
+    <Compile Include="Entities\KqjUserMonthLog.cs" />
+    <Compile Include="Entities\MessageAct.cs" />
+    <Compile Include="Entities\MessageInfoList.cs" />
+    <Compile Include="Entities\MessageReceive.cs" />
+    <Compile Include="Entities\NewsArtcle.cs" />
+    <Compile Include="Entities\NewsAttach.cs" />
+    <Compile Include="Entities\NewsCategory.cs" />
+    <Compile Include="Entities\NewsMenu.cs" />
+    <Compile Include="Entities\PR_M_DYWJ.cs" />
+    <Compile Include="Entities\PR_M_WJ.cs" />
+    <Compile Include="Entities\ReportWWGZ.cs" />
+    <Compile Include="Entities\ReportWWGZfile.cs" />
+    <Compile Include="Entities\SelfDesktopItem.cs" />
+    <Compile Include="Entities\SysFileImage.cs" />
+    <Compile Include="Entities\SysjBak.cs" />
+    <Compile Include="Entities\Sysjsd.cs" />
+    <Compile Include="Entities\SysLog_Pic.cs" />
+    <Compile Include="Entities\SysSession.cs" />
+    <Compile Include="Entities\SysYcdyField.cs" />
+    <Compile Include="Entities\SysYcdyParam.cs" />
+    <Compile Include="Entities\SysYcdyPrimaryKey.cs" />
+    <Compile Include="Entities\SysYcdyStation.cs" />
+    <Compile Include="Entities\SysYcdyTable.cs" />
+    <Compile Include="Entities\SysYcdyTableRelation.cs" />
+    <Compile Include="Entities\SysYcdyUrl.cs" />
+    <Compile Include="Entities\UserMail.cs" />
+    <Compile Include="Entities\UserMailFolder.cs" />
+    <Compile Include="Entities\UserSetting.cs" />
+    <Compile Include="Entities\UserShareFile.cs" />
+    <Compile Include="Entities\UserShareFileFolder.cs" />
+    <Compile Include="Entities\ViewSelfDesktopItem.cs" />
+    <Compile Include="Entities\Xcsj.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VirutalEntity\CreateZh.cs" />
+    <Compile Include="VirutalEntity\EasyParam.cs" />
+    <Compile Include="VirutalEntity\IBasicDataBase.cs" />
+    <Compile Include="VirutalEntity\JcjtInitJcjg.cs" />
+    <Compile Include="VirutalEntity\JcjtJcjgBhms.cs" />
+    <Compile Include="VirutalEntity\JcjtJcjgZZ.cs" />
+    <Compile Include="VirutalEntity\JcjtSysxmsj.cs" />
+    <Compile Include="VirutalEntity\jcjtSyxm.cs" />
+    <Compile Include="VirutalEntity\Jc\MHeader.cs" />
+    <Compile Include="VirutalEntity\JzqyServiceResponseBase.cs" />
+    <Compile Include="VirutalEntity\payMsg.cs" />
+    <Compile Include="VirutalEntity\Payroll.cs" />
+    <Compile Include="VirutalEntity\PayrollResult.cs" />
+    <Compile Include="VirutalEntity\PersonCard.cs" />
+    <Compile Include="VirutalEntity\ReplyContent.cs" />
+    <Compile Include="VirutalEntity\ResExportJson.cs" />
+    <Compile Include="VirutalEntity\ResultParam.cs" />
+    <Compile Include="VirutalEntity\ReturnParam.cs" />
+    <Compile Include="VirutalEntity\SmsRequestMessage.cs" />
+    <Compile Include="VirutalEntity\SmsRequestMessage3.cs" />
+    <Compile Include="VirutalEntity\SmsRequestMessageJzqy.cs" />
+    <Compile Include="VirutalEntity\SmsRequestPayVerify.cs" />
+    <Compile Include="VirutalEntity\SmsRequestRegister.cs" />
+    <Compile Include="VirutalEntity\SmsRequestBase.cs" />
+    <Compile Include="VirutalEntity\SmsRequestUserInfo.cs" />
+    <Compile Include="VirutalEntity\SmsRequestVerifyCode.cs" />
+    <Compile Include="VirutalEntity\SxtPZ.cs" />
+    <Compile Include="VirutalEntity\SxtThreadList.cs" />
+    <Compile Include="VirutalEntity\UmsRet.cs" />
+    <Compile Include="VirutalEntity\VBasicDataGetGc.cs" />
+    <Compile Include="VirutalEntity\VBasicDataGetQy.cs" />
+    <Compile Include="VirutalEntity\VBasicDataGetRy.cs" />
+    <Compile Include="VirutalEntity\VBasicDataGetSb.cs" />
+    <Compile Include="VirutalEntity\VCheckItem.cs" />
+    <Compile Include="VirutalEntity\VControllerRet.cs" />
+    <Compile Include="VirutalEntity\VDataFileItem.cs" />
+    <Compile Include="VirutalEntity\VEwmWtd.cs" />
+    <Compile Include="VirutalEntity\VJdbgReportSumItem.cs" />
+    <Compile Include="VirutalEntity\VJG_JDBG_JDCCRWWTJL.cs" />
+    <Compile Include="VirutalEntity\VLedInfo.cs" />
+    <Compile Include="VirutalEntity\VMenuRetV2.cs" />
+    <Compile Include="VirutalEntity\VPayCreateBankAccountReturn.cs" />
+    <Compile Include="VirutalEntity\VSqlParam.cs" />
+    <Compile Include="VirutalEntity\VSysJumpPage.cs" />
+    <Compile Include="VirutalEntity\VTransDownGetGc.cs" />
+    <Compile Include="VirutalEntity\VTransDownGetJcht.cs" />
+    <Compile Include="VirutalEntity\VTransDownGetWtd.cs" />
+    <Compile Include="VirutalEntity\VTransDownSetWtd.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqDelEwm.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqGetWtdImage.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqGetWtdInfo.cs" />
+    <Compile Include="VirutalEntity\VTransReqSyncJcjgWtd.cs" />
+    <Compile Include="VirutalEntity\VTransReqSyncJcjgHt.cs" />
+    <Compile Include="VirutalEntity\VTransReqSyncJcjgGc.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqJzrysyList.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqJzrysyxqList.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqSetZt.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqSyInfo.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqSyInfoByEwm.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqSyInfoByZh.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqSyrysyList.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyReqSyrysyxqList.cs" />
+    <Compile Include="VirutalEntity\VTransJzqyRespBasePage.cs" />
+    <Compile Include="VirutalEntity\VTransPayAliRespBankInfo.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespBase.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespBindSettlement.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespGetChangePhoneCode.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespGetPayList.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespGetPaymentReturnList.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespGetRechargeListItem.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespGetUserInfo.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespGetWithDrawCode.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespPageBase.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespPay.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespPrePay.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespQueryUser.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespRegisterUser.cs" />
+    <Compile Include="VirutalEntity\VTransPayRespWithDraw.cs" />
+    <Compile Include="VirutalEntity\VTransPayWgryReqBindCard.cs" />
+    <Compile Include="VirutalEntity\VTransPayWgryReqSetPayRollResult.cs" />
+    <Compile Include="VirutalEntity\VTransPayWgryReqSetPersonCard.cs" />
+    <Compile Include="VirutalEntity\VTransPayWgryRespBase.cs" />
+    <Compile Include="VirutalEntity\VTransPayWgryReqBase.cs" />
+    <Compile Include="VirutalEntity\VTransPayWgryReqSetPayRoll.cs" />
+    <Compile Include="VirutalEntity\VTransPayWgryRespSetPersonCard.cs" />
+    <Compile Include="VirutalEntity\VTransRespSyncJcjgWtd.cs" />
+    <Compile Include="VirutalEntity\VTransRespSyncJcjgHt.cs" />
+    <Compile Include="VirutalEntity\VTransSxtYsyRespCaptureImage.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqGetSyxms.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqSyDetail.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqGcRylx.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqSetCjsbbh.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqSetEwmWtd.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqSyrList.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqSyDevList.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqVideoInfo.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqWtdList.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespBaseInfo.cs" />
+    <Compile Include="VirutalEntity\VTransSxtYsyRespBase.cs" />
+    <Compile Include="VirutalEntity\VTransSxtYsyRespGetAccessToken.cs" />
+    <Compile Include="VirutalEntity\VTransSxtYsyRespGetDeviceInfo.cs" />
+    <Compile Include="VirutalEntity\VTransSxtYsyRespGetDeviceList.cs" />
+    <Compile Include="VirutalEntity\VTransSxtYsyRespGetDevicePlayUrl.cs" />
+    <Compile Include="VirutalEntity\VTransSxtYsyRespPage.cs" />
+    <Compile Include="VirutalEntity\VTransUpBgd.cs" />
+    <Compile Include="VirutalEntity\VTransUpBgwj.cs" />
+    <Compile Include="VirutalEntity\VTransUpBgxqm.cs" />
+    <Compile Include="VirutalEntity\VTransUpBgxqs.cs" />
+    <Compile Include="VirutalEntity\VTransUpCzsj.cs" />
+    <Compile Include="VirutalEntity\VTransUpSetWtd.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqBase.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqBindSmsCode.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqInSyList.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqLogin.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqBasePage.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqStartItem.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqSybw.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqSyList.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespBase.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespGetSyxms.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespSyDetail.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespGcRylx.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespCheckSxt.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespLogin2.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespLogin.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespBasePage.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcReqCheckSxt.cs" />
+    <Compile Include="VirutalEntity\VTransXcjcRespMultiRowInfo.cs" />
+    <Compile Include="VirutalEntity\VTransYcbaPerson.cs" />
+    <Compile Include="VirutalEntity\VTransYcbaPersonCertificate.cs" />
+    <Compile Include="VirutalEntity\VTransYcbaPersonBasicInfo.cs" />
+    <Compile Include="VirutalEntity\VTransZjzPageProjectCondition.cs" />
+    <Compile Include="VirutalEntity\VTransZjzPageReportsCondition.cs" />
+    <Compile Include="VirutalEntity\VTransZjzDownReportsCondition.cs" />
+    <Compile Include="VirutalEntity\VTransZjzReportDealOpinion.cs" />
+    <Compile Include="VirutalEntity\VTransZjzJcjgsCondition.cs" />
+    <Compile Include="VirutalEntity\VTransZjzSyxmsCondition.cs" />
+    <Compile Include="VirutalEntity\VTransZjzReportDealResult.cs" />
+    <Compile Include="VirutalEntity\XcjcRespBase.cs" />
+    <Compile Include="VirutalEntity\XcjcRespBusynessList.cs" />
+    <Compile Include="VirutalEntity\XcjcRespSyPageList.cs" />
+    <Compile Include="VirutalEntity\XcjcRespSyPath.cs" />
+    <Compile Include="VirutalEntity\VUserCalendar.cs" />
+    <Compile Include="VirutalEntity\VTransUpSyxq.cs" />
+    <Compile Include="VirutalEntity\Wgrydata.cs" />
+    <Compile Include="VirutalEntity\WgryGzRyNumTj.cs" />
+    <Compile Include="VirutalEntity\Jc\InterfaceXspmProject.cs" />
+    <Compile Include="VirutalEntity\WtdModifyData.cs" />
+    <Compile Include="VirutalEntity\YsSxSjfxRequest.cs" />
+    <Compile Include="VirutalEntity\ZhwxUniversalMessage.cs" />
+    <Compile Include="VirutalEntity\ZhwxWxBindBdMessage.cs" />
+    <Compile Include="VirutalEntity\ZhwxWxEquipStatusBdMessage.cs" />
+    <Compile Include="VirutalEntity\WXJSON.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\HelpDesktopItem.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SelfDesktopItem.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\CompanyAnnounce.hbm.xml" />
+    <EmbeddedResource Include="Mappings\CompanyFileStorage.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\CompanyReader.hbm.xml" />
+    <EmbeddedResource Include="Mappings\UserMail.hbm.xml" />
+    <EmbeddedResource Include="Mappings\UserMailFolder.hbm.xml" />
+    <EmbeddedResource Include="Mappings\UserShareFile.hbm.xml" />
+    <EmbeddedResource Include="Mappings\UserShareFileFolder.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\ViewSelfDesktopItem.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\SysFileImage.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\DcLogRedo.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysjBak.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Sysjsd.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mappings\Xcsj.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\DcLog.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\BanHeZhanData.hbm.xml" />
+    <EmbeddedResource Include="Mappings\BanHeZhanSection.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\CompanyChange.hbm.xml" />
+    <EmbeddedResource Include="Mappings\CompanyChangeItem.hbm.xml" />
+    <EmbeddedResource Include="Mappings\CompanyChangeTotal.hbm.xml" />
+    <EmbeddedResource Include="Mappings\CompanyChangeTotalItem.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\PR_M_DYWJ.hbm.xml" />
+    <EmbeddedResource Include="Mappings\PR_M_WJ.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\UserSetting.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\KqUserSign.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Mappings\ReportWWGZ.hbm.xml" />
+    <Content Include="Mappings\ReportWWGZfile.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysLog_Pic.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Alert.hbm.xml" />
+    <EmbeddedResource Include="Mappings\GCLR_WXY_File.hbm.xml" />
+    <Content Include="Mappings\MessageAct.hbm.xml" />
+    <Content Include="Mappings\MessageInfoList.hbm.xml" />
+    <Content Include="Mappings\MessageReceive.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysYcdyField.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysYcdyParam.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysYcdyStation.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysYcdyTable.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysYcdyTableRelation.hbm.xml" />
+    <EmbeddedResource Include="Mappings\SysYcdyUrl.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewsArtcle.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewsAttach.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewsCategory.hbm.xml" />
+    <EmbeddedResource Include="Mappings\NewsMenu.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\InfoGzgz.hbm.xml" />
+    <EmbeddedResource Include="Mappings\InfoSchedule.hbm.xml" />
+    <EmbeddedResource Include="Mappings\KqjUserDayLog.hbm.xml" />
+    <EmbeddedResource Include="Mappings\KqjUserDayLogDetail.hbm.xml" />
+    <EmbeddedResource Include="Mappings\KqjUserLog.hbm.xml" />
+    <EmbeddedResource Include="Mappings\KqjUserMonthLog.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\InfoWgryHistory.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mappings\SysSession.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BD.Jcbg.Common\BD.Jcbg.Common.csproj">
+      <Project>{81254b6d-c43c-42db-950e-93b880f53eda}</Project>
+      <Name>BD.Jcbg.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.ViewSelfDesktopItem,BD.Jcbg.DataModal" table="ViewSelfDesktopItem" lazy="false" mutable="false">
+    <id name="_recid" access="field" column="Recid" type="int">
+      <generator class="assigned" />
+    </id>
+    <property type="string" access="field" length="50" name="_username" column="[UserName]" />
+    <property type="string" access="field" length="1" name="_itemcolumn" column="[ItemColumn]" />
+    <property type="int" access="field" name="_displayorder" column="[DisplayOrder]" />
+    <property type="Boolean" access="field" name="_isdisplay" column="[IsDisplay]" />
+    <property type="string" access="field" length="50" name="_itemkey" column="[ItemKey]" />
+    <property type="string" access="field" length="200" name="_itemname" column="[ItemName]" />
+    <property type="string" access="field" length="50" name="_itempower" column="[ItemPower]" />
+    <property type="string" access="field" length="50" name="_itemicon" column="[ItemIcon]" />
+    <property type="int" access="field" name="_itemheight" column="[ItemHeight]" />
+  </class>
+</hibernate-mapping>

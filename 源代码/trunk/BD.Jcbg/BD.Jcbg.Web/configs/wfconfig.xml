@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configs>
+  <!--用户系统url-->
+  <umsurl>http://whums.jzyglxt.com/</umsurl>
+  <!--用户系统WebService描述文件-->
+  <umswsfile>wfremoteuser.xml</umswsfile>
+  <!--用户系统WebService类名-->
+  <umswsclass>Services</umswsclass>
+  <!--业务系统权限前缀-->
+  <bpprefix></bpprefix>
+  <!--用户系统中识别用的项目id-->
+  <appid>OA</appid>
+<!--德浩-->
+  <appid2>JCJT</appid2>
+  <!--流程流水号关键字-->
+  <serialkey>ProcessSerial</serialkey>
+  <!--流程管理帐号，用于获取流程运行中单位部门角色等信息-->
+  <flowmanager>cn</flowmanager>
+  <!--消息地址，有用发送消息到办公助手-->
+  <msgurl></msgurl>
+  <!--流程中的上传oss-->
+  <storagetype>OSS</storagetype>
+</configs>

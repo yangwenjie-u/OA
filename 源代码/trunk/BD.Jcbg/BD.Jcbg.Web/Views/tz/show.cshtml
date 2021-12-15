@@ -1,0 +1,1240 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/jquery.scrollify.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version; //b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+    <!-- 47.97.22.69:15000 -->
+    <!-- lq000012 -->
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/welcome.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    #enginner_title .enginner_title_content {
+
+        width: 18%;
+        background: white;
+        border-bottom: 10px solid black;
+        margin: 0 3px;
+        padding: 5px 8px 0 8px;
+        display: block;
+    }
+
+    #enginner_title .enginner_title_content .all_title {
+
+        margin: 0;
+        height: 50%;
+        color: #333333;
+        font-size: 16px;
+        background: white;
+        padding: 0px;
+        vertical-align: top;
+        text-align: left;
+        width: 100%;
+    }
+
+    #enginner_title .enginner_title_content .all_num {
+        height: 50%;
+        color: #888888;
+        font-size: 16px;
+        text-align: left;
+        margin: 0;
+        background: white;
+        vertical-align: middle;
+    }
+
+
+    #tabTitle {
+        display: table;
+    }
+
+    #tabTitle li {
+        display: table-cell;
+    }
+
+    .panel1-3 {
+        width: 90%;
+        margin: 20px 5%;
+    }
+    .panel1-3 > div{
+        height: 100%;
+        background: white;
+        display: inline-block;
+        vertical-align:top;
+    }
+
+
+
+
+
+
+
+
+
+#tabTitle dd iframe{
+    width: 100%;
+    height: 100%;
+}
+
+/*dl dt:first-child{
+    z-index: 10;
+}*/
+dl dt{
+    z-index: 5
+}
+dl dt:nth-last-child(2){
+    z-index: 3;
+}
+
+
+
+    #mapwrap {
+        width: 100%;
+        height: 100%;
+        display: flex
+    }
+
+    #map {
+        width: 80%;
+        height: 100%;
+        position: relative;
+        z-index: 13;
+    }
+
+    #mapInfo {
+        width: 20%;
+        height: 100%;
+        background-color: #ffffff;
+        box-sizing: border-box;
+        padding: 40px 0 0 40px;
+    }
+
+    .subtitle-name {
+        font-size: 28px;
+        line-height: 32px;
+        margin-bottom: 8px;
+        margin-bottom: 40px;
+    }
+
+    #formData {
+        padding: 4px 0;
+        display: none;
+    }
+
+    #formData .form-group {
+        display: inline-block;
+    }
+
+    * {font-family: "Î¢ÈíÑÅºÚ";box-sizing:border-box;font-size:16px;line-height:28px;}
+body{margin:0;background-color:#E9ECF3;}
+#top-fixed{position:fixed;top:0;left:0;width:100%;margin:0;padding:4px 18px;background-color:#E9ECF3;z-index:2;}
+.title-name{font-size:32px;line-height:38px;margin-bottom:16px;margin-bottom:40px;padding-left:12px;}
+#enginner_title{display:flex;width:100%;justify-content:space-between;}
+#enginner_title > .enginner_title_content{width:11.4%;border-bottom-width:12px;border-bottom-style:solid;background:#ffffff;position:relative;}
+.enginner_title_content>.all_title{color:#ADADAD;font-size:18px;line-height:48px;}
+.enginner_title_content>.all_num{font-size:24px}
+.tip{display:none;position:absolute;background-color:#5F7CDA;padding:10px 14px;border-radius:12px;left:50%;top:-70px;white-space:nowrap;z-index:4;color:#ffffff;}
+.enginner_title_content:hover >.tip{display:block;} .tip>.arrow{display:block;position:absolute;left:20%;bottom:-16px;width:26px;height:16px;background-image:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+DQo8c3ZnICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNiAxNiI+DQo8cGF0aCBkPSJNMCwwSDI2TDMsMTZaIiBmaWxsPSIjNUY3Q0RBIiBzdHJva2U9Im5vbmUiLz4NCjwvc3ZnPg==)}
+/*section.panel{width:100%;margin-bottom:50px;padding:174px 5% 30px 5%;height:900px;}*/
+section.panel2{width:100%;margin-bottom:50px;padding:50px 5% 30px 5%;}
+.enginner_chart{display:flex;width:100%;height:100%;justify-content:space-between;flex-wrap:wrap;justify-content:space-between;align-items:stretch;align-content:space-between;}
+.enginner_chart>.engineer{height:48%;background:#ffffff;border-radius:3px;}
+button.searchbtn{background:#597ECB;width:96px;height:32px;color:#fff;border-radius:16px;border:none;font-size:18px;background:linear-gradient(to top, #4773c0 0%,#5a7cd1 100%);cursor:pointer;}
+button.submitBtn{background-color:#6f9eee;color:#ffffff;border-bottom:4px solid #597ebe;width:206px;height:40px;border-radius:20px;border-top:none;border-left:none;border-right:none;font-size:20px;cursor:pointer;}
+label{display:inline;margin:0 8px 0 16px;}
+label>input[type="checkbox"],label>input[type="radio"]{margin-right:8px;}
+label>span{margin-right:12px;vertical-align:top;}
+.dataGridWrap{height:auto;border-radius:8px;overflow:hidden;box-shadow:0 0 14px 1px rgba(85,116,215,0.25);}
+.dataGridToolbar{padding:12px 8px;background:linear-gradient(to bottom, #d0dbed 0%,#ebeff7 100%)}
+.dataGridToolbar p{line-height:40px;margin-bottom:12px;}
+span.btn{display:inline-block;margin-left:8px;margin-right:8px;padding:3px 8px;border-radius:4px;cursor:pointer;}
+span.btn:hover{box-shadow:1px 1px 6px 0px rgba(0,0,0,0.3);background:rgba(255,255,255,0.8);}
+span.dropbtn{position:relative;}
+span.dropmenu{display:none;position:absolute;border:1px solid #aaa;box-shadow:1px 1px 3px 0 rgba(0,0,0,0.3);background-color:#fff;padding:4px 8px;z-index:4;white-space:nowrap;}
+span.dropmenu a{display:block;color:inherit;text-decoration:none;border-top:1px solid #eee;padding:4px;}
+span.dropmenu a:first-child{border-top:none;}
+span.dropbtn:hover span.dropmenu{display:block;}
+span.btn img{margin:0 8px 0 0;vertical-align:top;}
+
+span.delimit{display:inline-block;border-left:1px solid #D7D7F3;height:28px;margin:0 16px 0  32px;vertical-align:text-top;}
+
+p.inputline{margin:12px 0 12px 12px;line-height:32px;font-size:16px;}
+table.inputtable{width:100%;margin-top:18px;}
+table.inputtable th{text-align:right;font-size:16px;}
+table.inputtable th,table.inputtable td{padding:3px 10px;vertical-align:top;}
+p.formLine{padding-left:120px;margin-top:24px;margin-bottom:20px;}
+
+input.textbox{border:1px solid #95B8E7;border-radius:4px;padding:0 0 0 6px;font-size:16px;vertical-align:baseline;}
+select.combobox{border:1px solid #95B8E7;border-radius:4px;font-size:16px;vertical-align:baseline;height:30px;}
+textarea.textbox{border:1px solid #95B8E7;border-radius:4px;padding:0 0 0 6px;font-size:16px;}
+.dltabs{
+    width: 90%;
+    margin: 50px 0 0 5%;
+}
+dl.dltabs dt {background-color: #F0F3FA;border-top-left-radius: 12px;border-top-right-radius: 12px;box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);display: inline-block;font-size: 18px;padding-top: 12px;margin-right: -18px;position: relative;cursor: pointer;}
+dl.dltabs dt span {padding: 0 36px 12px 36px;display: block;}
+dl.dltabs dt.active {z-index: 12}
+dl.dltabs dt.active span {padding-bottom: 20px;background-color: #F0F3FA;margin-bottom: -8px;}
+dl.dltabs dd {display: none;width: 100%;background: #FFFFFF;clear: both;float: left;margin: 0;padding: 0;box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);z-index: 4;position: relative;border-top-right-radius: 12px;border-bottom-left-radius: 12px;border-bottom-right-radius: 12px;overflow: hidden;}
+dl.dltabs dd.active {display: block;}
+dl.dltabs .dataGridToolbar{padding:12px 8px;background:#F0F3FA;}
+    </style>
+</head>
+
+<body class="wai_body font_faminly">
+    <form class="form-inline" id="formData">
+        <div id="distpicker5">
+            <div class="form-group" style="margin-left: 10px;">
+                <select class="form-control" id="province10" val="ViewBag.provinceName">
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="city10" val="ViewBag.cityName">
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="district10" val="ViewBag.districtName">
+                    <option value=''>请选择</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="street10">
+                    <option value=''>请选择</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="selectQylx" style="display: none;">
+                    <option value="">所有企业</option>
+                    <option value="11">施工企业</option>
+                    <option value="12">监理企业</option>
+                    <option value="13">建设企业</option>
+                    <option value="14">设计企业</option>
+                    <option value="15">勘察企业</option>
+                </select>
+                <select class="form-control selectpicker" data-live-search="true" id="selectQy" style="width: 120px;"></select>
+                <select class="form-control" id="selectGczt" style="width: 180px;">
+                    <option value="">所有工程</option>
+                </select>
+                <label class="sr-only">状态</label>
+            </div>
+            &nbsp;&nbsp;
+            <div class="form-group">
+                <select class="form-control" id="gcxz" style="width: 100px;">
+                    <option selected='selected' value=''>全部类型</option>
+                </select>
+                <input type="text" name="" id="keyVal" class="form-control" style="width: 180px;" placeholder="公司名称/工程名称" />
+                <!--<input type="text" name="" class="form-control" style="width: 180px;padding-right: 70px;" />
+                            <button class="search" style="position: relative;left: -60px;width: 50px;top: 2px;" id="searchAll">检索</button> -->
+            </div>
+            <div style="float:right;margin-right: 10px;padding-top: 9px;">
+                <!-- <select class="form-control" style="width: 0px;"></select> -->
+                <span class="custombutton" id="fullscreen">开启全屏</span>
+            </div>
+        </div>
+    </form>
+
+    <section class="panel" id="panel1" style="background:rgb(233,236,243)" data-section-name="section1">
+        <div id="enginner_title">
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_qyzs">0个</p>
+                <p class="all_title">在建总工程</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_zgcs">0个</p>
+                <p class="all_title">总面积</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5474d7">
+                <p class="all_num" id="enginner_jzmj">0人</p>
+                <p class="all_title">总造价</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_gczj">0人</p>
+                <p class="all_title">竣工</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_zcry">0人</p>
+                <p class="all_title">注册</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_yfje">0亿元</p>
+                <p class="all_title">在岗</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_sfje">0亿元</p>
+                <p class="all_title">备案设备</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_ljffje">0亿元</p>
+                <p class="all_title">在用设备</p>
+            </div>
+        </div>
+        <div id="panel1-2" class="three-lines">
+            <div id="enginner1"></div>
+            <div id="enginner2"></div>
+            <div id="enginner3"></div>
+        </div>
+        <div id="panel1-3" class="panel1-3">
+            <div id="enginner4" style="width: 50%;"></div>
+            <div id="enginner5" style="width: 24%;margin-left:1%;"></div><div id="enginner6" style="width: 23%;"></div>
+        </div>
+    </section>
+
+    <section class="panel" id="panel2" style="background:rgb(233,236,243)" data-section-name="section2">
+       
+        <div id="panel2-1" class="three-lines" style="height: 40%;margin-top: 50px;">
+            <div id="enginner2-1"></div>
+            <div id="enginner2-2"></div>
+            <div id="enginner2-3"></div>
+        </div>
+        <div id="panel2-2" class="two-lines" style="height: 50%;">
+            <div id="enginner2-4" style="width: 49%;"></div>
+            <div id="enginner2-5" style="width: 49%;margin: 0 1%;"></div>
+        </div>
+    </section>
+
+    <section class="panel" id="panel3" data-section-name="section3" style="background: rgb(233, 236, 243);">
+        <dl class="dltabs">
+            <dt class="active"><span>工程状态图</span></dt>
+            <dd class="active" id="gczzt">
+                <div id="mapwrap">
+                    <div id="map"></div>
+                    <div id="mapInfo">
+                        <p class="subtitle-name">总工程数：<span id="gcAllNum" style="font-size:28px;"></span>个</p>
+                        <p style="margin-bottom:12px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMiAyIiB3aWR0aD0iMTQiIGhlaWdodD0iMTQiPg0KPGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9IiMyQjU4RUQiIC8+PC9zdmc+" />&emsp;在建工程：<span id="gcNum0"></span>个</p>
+                        <p style="margin-bottom:12px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMiAyIiB3aWR0aD0iMTQiIGhlaWdodD0iMTQiPg0KPGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9IiNGRjE3MTciIC8+PC9zdmc+" />&emsp;异常工程：<span id="gcNum1"></span>个</p>
+                        <p style="margin-bottom:12px;"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMiAyIiB3aWR0aD0iMTQiIGhlaWdodD0iMTQiPg0KPGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9IiNGRkE3MzkiIC8+PC9zdmc+" />&emsp;停工工程：<span id="gcNum2"></span>个</p>
+                    </div>
+                </div>
+            </dd>
+            <dt><span>视频监控</span></dt>
+            <dd></dd>
+        </dl>
+    </section>
+
+    <section class="panel" id="panel4" style="background:rgb(233,236,243)" data-section-name="section4">
+
+        <dl class="dltabs" id="tabTitle">
+            <dt class="active" value="0"><span>企业一览</span></dt>
+            <dd class="active" id="gczzt">
+               <iframe id="qyTable" src=""></iframe>
+            </dd>
+            <dt value="1"><span>工程一览</span></dt>
+            <dd>
+                <iframe id="gcTable" src=""></iframe>
+            </dd>
+            <dt value="2"><span>人员一览</span></dt>
+            <dd>
+                <iframe id="ryTable" src=""></iframe>
+            </dd>
+        </dl>
+    </section>
+
+
+    <script src="/static/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+
+    <script src="/static/lib/echarts-liquidfill.js" type="text/javascript" charset="utf-8"></script>
+   
+    <script type="text/javascript">
+        function getBar(title, xAxis ,data){
+            var option  = {
+                title: {
+            text: title,
+            top: '3%',
+            left: '4%',
+        },
+          tooltip: {
+            trigger: 'item',
+            formatter: "{b}: {c}"
+        },
+    xAxis: {
+        type: 'category',
+        data: xAxis
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: data,
+        type: 'bar'
+    }],
+     color: ['#5674d6', '#1ecdbf', '#ea5d67', '#f7b96b', '#91c3f2', '#40c484', '#ff9570', '#84eac0', '#75a7ec']
+};
+return option;
+
+        }
+
+    function getPie(title, data) {
+    if(data && !data.length){
+        data = [{
+            value: '1',
+            name: '暂无数据'
+        }]
+    }
+    var option = {
+        title: {
+            text: title,
+            top: '3%',
+            left: '4%',
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{b}: {c} ({d}%)"
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            top: '10%',
+            right: '10%',
+            bottom: 20,
+            selectedMode: false,
+            itemWidth: 10,
+            data: data
+        },
+        series: [{
+            type: 'pie',
+            radius: ['20%', '60%'], //内环 外环宽度
+            center: ['36%', '56%'], //中点位置
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false
+                }
+            },
+            labelLine: {
+
+                normal: {
+                    show: false
+                }
+            },
+            data: data
+        }],
+        color: ['#5674d6', '#1ecdbf', '#ea5d67', '#f7b96b', '#91c3f2', '#40c484', '#ff9570', '#84eac0', '#75a7ec']
+    }
+    return option;
+}
+
+
+function getLine(title, xAxis, data) {
+    if(!data.length){
+        data = [0,0,0];
+        xAxis = [0,0,0]
+    }
+    var option = {
+        title: {
+            text: title,
+            top: '3%',
+            left: '4%',
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            top: '10%',
+            right: '10%',
+            bottom: 20,
+            selectedMode: false,
+            // itemWidth: 10,
+            data: data
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: xAxis
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: data
+    }
+    return option;
+
+}
+
+function getLiquidFill(title, data) {
+    if(!data.length){
+        data = [0]
+    }
+
+    var option = {
+        title: {
+            text: title,
+            top: '3%',
+            left: 'center',
+        },
+        series: [{
+            type: 'liquidFill',
+            data: data,
+            radius: '60%'
+        }]
+    };
+
+    return option;
+}
+
+function getThreeBar(title, legend, obj) {
+
+    for (var i = 0, len = obj.data1.length; i < len; i++) {
+
+    }
+
+    var option = {
+        title: {
+            text: title, //属性1
+            top: '3%',
+            left: '4%',
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            },
+            // formatter: function(params) { //数据格式
+            //     var tmp, str = '';
+            //     if (params.length) {
+            //         str = params[0].axisValue + "<br/>";
+            //         var value = 0;
+            //         for (var i = 0, len = params.length; i < len; i++) {
+            //             tmp = params[i];
+            //             // data2 = data1+data2   data3 = data2+data3
+            //             value += parseFloat(tmp.value);
+            //             str += tmp.marker + tmp.seriesName + ":" + value + "<br/>";
+            //         }
+            //     }
+            //     return str;
+            // }
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            selectedMode: false,
+            top: '3%',
+            right: '10%',
+            bottom: 20,
+            itemWidth: 10,
+            data: legend //属性2
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            top: '100px',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: obj.name
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+                name: legend[0],
+                type: 'bar',
+                stack: 'one',
+                barGap: '-100%',
+                data: obj.data1 //属性3
+            },
+            {
+                name: legend[1],
+                type: 'bar',
+                stack: 'one',
+                barGap: '-100%',
+                data: obj.data2
+            },
+            {
+                name: legend[2],
+                type: 'bar',
+                stack: 'one',
+                barGap: '-100%',
+                data: obj.data3
+            }
+        ],
+        color: ["#6c8ed5", "#92a9df", "#d2dcf5"]
+    };
+    return option;
+}
+
+var tempCity = "浙江省温州市";
+
+var page = 1; //页面page，1，2，3
+
+$(function() {
+
+    //全局初始化
+    init();
+
+    $(".all_num").css("line-height", $('.all_num').height() + "px");
+    $(".all_title").css("line-height", $('.all_title').height() + "px");
+
+    var height = $("#panel1").height()
+    $("#panel1-2").height(height * 0.35 + "px");
+    $("#panel1-3").height(height * 0.35 + "px");
+
+    setHeight();
+
+    refresh1();
+    initQyTable1();
+});
+
+function setHeight() {
+    var height = $("#panel1").height();
+
+    $('#panel2-1').height(height * 0.4);
+    $('#panel2-2').height(height * 0.45);
+
+    $("#gczzt").height(height - 110);
+    $("#tabTitle").find("dd").height(height - 110);
+
+}
+
+
+//全局初始化
+function init() {
+
+    //鼠标滚动全屏
+    $('.panel').css({
+        'height': $(window).height()
+    });
+    $.scrollify({
+        section: 'section',
+        scrollbars: false,
+        before: function() {
+            var sectionName = $.scrollify.current()[0].dataset.sectionName;
+            if (sectionName == "section1") {
+                page = 1;
+            }
+            if (sectionName == "section2") {
+                page = 2;
+            }
+            if (sectionName == "section3") {
+                page = 3;
+            }
+            Refresh();
+        }
+    });
+
+    //加载固定块(回到顶部按钮)
+    // layui.use('util', function () {
+    //     var util = layui.util;
+    //     util.fixbar({
+    //         // bar1: true,
+    //         click: function (type) {
+    //             console.log(type);
+    //             if (type === 'bar1') {
+    //                 alert('点击了bar1')
+    //             }
+    //         }
+    //     });
+    // });
+}
+
+
+//全局变量初始化
+function initvariable() {
+
+
+
+    $("#gcpageindex").val("1");
+    $("#qypageindex").val("1");
+    $("#rypageindex").val("1");
+
+    $("#listcontent").empty();
+    $("#qycontent").empty();
+    $("#rycontent").empty();
+
+    $("#txtGcmc").val("");
+    $("#txtQymc").val("");
+    $("#txtGcmcForRy").val("");
+    $("#txtRymc").val("");
+    $("#txtLableGcmc").val("");
+    $("#txtLableQymc").val("");
+    $("#txtLableGcmcForRy").val("");
+    $("#txtLableRymc").val("");
+
+
+
+    //第一页所需参数
+    gclistAll = new Array();
+    qylistAll = new Array();
+    rylistAll = new Array();
+    refreshmaptabflg1 = true; //tab1刷新flg
+    refreshmaptabflg2 = true; //tab2刷新flg
+    refreshmaptabflg3 = true; //tab3刷新flg
+
+
+
+    //第三页所需参数
+
+}
+var onceTime = true;
+//刷新
+function Refresh() {
+
+    //统计页
+    if (page == 1) {
+        refresh1();
+    }
+    if (page == 2) {
+        refresh2();
+    }
+
+    //地图页面
+    if (page == 3) {
+        refresh3();
+    }
+    //一览页面
+    if (page == 4) {
+        
+        refresh4();
+    }
+}
+
+function refresh1() {
+    statistics0();
+    statistics1();
+    statistics2();
+    statistics3();
+    statistics4();
+    statistics5();
+}
+//第二图刷新
+function refresh2() {
+    statistics21();
+    statistics22();
+    statistics23();
+    statistics24();
+    statistics25();
+}
+
+function refresh3() {
+
+}
+
+function refresh4() {
+    $("#item").height($("#panel3").height() - 100);
+    $("#tabTitle").find('.active').click();
+}
+
+
+
+
+
+function statistics0(data) {
+    ajaxTpl("/tz/GetStatistics", paramsData, function(data) {
+        var tmp = data.rows[0];
+        // 在建总工程  总面积  总造价，竣工，注册，在岗，备案设备，在用设备
+        var zmj = (tmp.zmj / 10000).toFixed(2) + '万方';
+        var zzj = (tmp.zzj / 10000).toFixed(2) + '亿元';
+        var jggc = (tmp.jggc / 10000).toFixed(2) + '万方';
+
+        $("#enginner_qyzs").html(tmp.zjgcs + "个"); //在建总工程
+        $("#enginner_zgcs").html(zmj); //总面积
+        $("#enginner_jzmj").html(zzj); //总造价
+        $("#enginner_gczj").html(jggc); //竣工
+        $("#enginner_zcry").html(tmp.zcry + "个"); //注册
+        $("#enginner_yfje").html(tmp.zgry + "个"); //在岗
+        $("#enginner_sfje").html(tmp.basb + "个"); //备案设备
+        $("#enginner_ljffje").html(tmp.zysb + "个"); //在用设备
+    });
+
+}
+
+// 工程类型统计
+function statistics1() {
+    ajaxTpl("/tz/GetGCLX ", paramsData, function(data) {
+        var option = getPie("工程类型统计", data.Datas);
+        var doc = document.getElementById('enginner1');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+}
+// 工程异常统计
+function statistics2() {
+    ajaxTpl("/tz/GetGCYC ", paramsData, function(data) {
+        var option = getPie("工程异常统计", data.Datas);
+        var doc = document.getElementById('enginner2');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+}
+// 设备统计
+function statistics3() {
+    ajaxTpl("/machine/getsbtj", paramsData, function(data) {
+        var option = getPie("设备统计", data.Datas);
+        var doc = document.getElementById('enginner3');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+}
+
+function statistics4() {
+    ajaxTpl("/tz/GetJQGC", paramsData, function(data) {
+
+        var tmp;
+
+        for (var i = 0, len = data.Datas.line.length; i < len; i++) {
+            tmp = data.Datas.line[i];
+            tmp.type = 'line';
+        }
+
+        var option = getLine("近期工程统计", data.Datas.year, data.Datas.line);
+
+        var doc = document.getElementById('enginner4');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+}
+
+function statistics5() {
+    ajaxTpl("/tz/GetJCYC", paramsData, function(data) {
+        data.Datas = {
+            noPass: 0.4,
+            catch: 0.5
+        }
+        var pass = parseFloat(data.Datas.noPass);
+        var ary = [pass];
+
+        for (var i = 0; i < 4; i++) {
+            pass = pass - 0.1;
+            if (pass) {
+                ary.push(pass);
+            } else {
+                break;
+            }
+        }
+        var cat = parseFloat(data.Datas.catch);
+        var ary2 = [cat];
+        for (var i = 0; i < 2; i++) {
+            cat = cat - 0.1;
+            if (cat) {
+                ary2.push(cat);
+            } else {
+                break;
+            }
+        }
+
+        var option = getLiquidFill("不合格报告统计", ary);
+        var option2 = getLiquidFill("异常报告统计", ary2);
+
+        var doc = document.getElementById('enginner5');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+
+        var doc2 = document.getElementById('enginner6');
+        echarts.init(doc2).setOption(option2);
+        doc2.style.background = "white";
+    });
+}
+
+//在册人员
+function statistics21() {
+
+    ajaxTpl("/tz/GetRYTJ", paramsData, function(data) {
+
+        var option = getPie("在册人员统计", data.Datas);
+        var doc = document.getElementById('enginner2-1');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+}
+
+//人员记分
+function statistics22() {
+    ajaxTpl("/tz/GetRYJFTJ", paramsData, function(data) {
+        var option = getPie("2018人员记分统计", data.Datas);
+        var doc = document.getElementById('enginner2-2');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+}
+
+//上访人员
+function statistics23() {
+    ajaxTpl("/tz/GetSFRY", paramsData, function(data) {
+
+        // {"code":"0","msg":"","count":1,"data":[{"num":"2","gz":"粉刷工"}]}
+        var ary = [],tmp ;
+        for(var i = 0 , len = data.data.length ; i < len ; i++){
+            tmp = data.data[i];
+            ary.push({
+                name:tmp.gz,
+                value:tmp.num,
+            });
+        }
+        var option = getPie("2018上访人员统计", ary);
+        var doc = document.getElementById('enginner2-3');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+}
+
+//人员类型统计  
+function statistics24() {
+    ajaxTpl("/tz/GetRYLXFB", paramsData, function(data) {
+        var ary = [];
+        var val = [],tmp;
+        for(var i = 0 ,len = data.Datas.length; i < len ; i++){
+            var tmp = data.Datas[i];
+            ary.push(tmp.name);
+            val.push(tmp.value);
+        }
+
+        var option = getBar("员工工种统计",ary,val);
+     
+        option.grid = {y2: 140};
+        option.xAxis.axisLabel = {  
+            interval:0,//横轴信息全部显示  
+            rotate:-60,//-30度角倾斜显示  
+        }
+        
+        var doc = document.getElementById('enginner2-4');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+    });
+
+}
+
+function statistics25() {
+    // ajaxTpl("/wzwgry/GetGC_QYFBTJ", paramsData, function(data) {
+        var data = [];
+        var option = getBar("施工企业工资拖欠情况",[0,1,2],[0,0,0]);
+      
+        var doc = document.getElementById('enginner2-5');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+   
+}
+
+
+
+
+
+
+var paramsData = {};
+
+
+$("#tabTitle").on("click", "dt", function() {
+    $(this).addClass('active').siblings('dt').removeClass("active");
+    $(this).next().addClass('active').siblings('dd').removeClass("active");
+    var i = parseInt($(this).attr("value"));
+
+    switch (i) {
+        case 0:
+            initQyTable1();
+            break;
+        case 1:
+            initGcTable1();
+            break;
+        case 2:
+            initRyTable1();
+            break;
+        default:
+            break;
+    }
+
+})
+
+
+
+//企业一览初始化
+function initQyTable1(params) {
+    var src = "/WebList/EasyUiIndex?FormDm=QYGL_QYBA&FormStatus=1";
+    if ($("#qyTable").attr("src") != src) {
+        $("#qyTable").attr("src", src);
+    }
+}
+//工程一览初始化
+function initGcTable1(params) {
+    var src = "/WebList/EasyUiIndex?FormDm=GCZL_WDGC&FormStatus=4";
+    if ($("#gcTable").attr("src") != src) {
+        $("#gcTable").attr("src", src);
+    }
+}
+
+//人员一览初始化
+function initRyTable1(params) {
+    var src = "/WebList/EasyUiIndex?FormDm=QYGL_RYBA&FormStatus=1";
+    if ($("#ryTable").attr("src") != src) {
+        $("#ryTable").attr("src", src);
+    }
+}
+
+
+
+function toryformap(sfzhm, gcbh) {
+
+    //每个图表的宽度
+    var w = ($(".panel").width() * 0.95).toString() + "px";
+    //每个图表的高度
+    var h = ($(".panel").height() * 0.9).toString() + "px";
+
+    var index = parent.layer.open({
+        type: 2,
+        content: '/welcome/welcomeryz?sfzhm=' + sfzhm + '&gcbh=' + gcbh,
+        area: [w, h]
+    });
+}
+
+function togczsformap(gcbh, gcmc) {
+
+    //每个图表的宽度
+    var w = ($(".panel").width() * 0.95).toString() + "px";
+    //每个图表的高度
+    var h = ($(".panel").height() * 0.95).toString() + "px";
+
+    var index = parent.layer.open({
+        type: 2,
+        content: '/welcome/welcomegcqp?gcbh=' + gcbh + '&gcmc=' + gcmc,
+        area: [w, h]
+    });
+
+    //layer.full(index);
+}
+
+(function() {
+    var map = new BMap.Map("map");
+    // map.centerAndZoom(new BMap.Point(120.219512, 29.670882), 11);
+    // map.enableScrollWheelZoom();
+    // map.setMinZoom(10);
+    // map.setMaxZoom(14);
+    map.centerAndZoom("台州市",13);
+    var navigationControl = new BMap.NavigationControl({
+    // 靠左上角位置
+    anchor: BMAP_ANCHOR_TOP_RIGHT,
+    // LARGE类型
+    type: BMAP_NAVIGATION_CONTROL_LARGE,
+    // 启用显示定位
+    enableGeolocation: true
+  });
+  map.addControl(navigationControl);
+
+
+    function getBoundary() {
+        var bdary = new BMap.Boundary();
+        bdary.get("台州市", function(rs) { //获取行政区域
+            var count = rs.boundaries.length; //行政区域的点有多少个
+            if (count === 0) {
+                alert('未能获取当前输入行政区域');
+                return;
+            }
+            var pointArray = [];
+            for (var i = 0; i < count; i++) {
+                var ply = new BMap.Polygon(rs.boundaries[i], { strokeWeight: 2, strokeColor: "#EF7F44", fillColor: "#EF7F44", fillOpacity: 0.1 }); //建立多边形覆盖物
+                map.addOverlay(ply); //添加覆盖物
+                pointArray = pointArray.concat(ply.getPath());
+            }
+            //map.setViewport(pointArray);    //调整视野      
+        });
+    }
+    getBoundary();
+    // status=0表示在建工程，status=1表示异常工程，status=2表示停工工程
+    var myIcon = [
+        new BMap.Icon("data:image/svg+xml;charset=utf-8,<svg  xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' width='22px' height='22px'><circle cx='1' cy='1' r='1' fill='#2B58ED' /></svg>", new BMap.Size(22, 22)),
+        new BMap.Icon("data:image/svg+xml;charset=utf-8,<svg  xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' width='22px' height='22px'><circle cx='1' cy='1' r='1' fill='#FF1717' /></svg>", new BMap.Size(22, 22)),
+        new BMap.Icon("data:image/svg+xml;charset=utf-8,<svg  xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2 2' width='22px' height='22px'><circle cx='1' cy='1' r='1' fill='#FFA739' /></svg>", new BMap.Size(22, 22))
+    ];
+
+    function addLabel() {
+
+        ajaxTpl("/tz/GetProjectMap", "", function(val) {
+            var data= val.Datas;
+
+            var gc = [0, 0, 0];
+            for (var i = 0; i < data.length; i++) {
+                var pt = new BMap.Point(data[i].position[0], data[i].position[1]);
+                var marker = new BMap.Marker(pt, { icon: myIcon[data[i].status] });
+                map.addOverlay(marker);
+                gc[data[i].status]++;
+
+                // var opts = {
+                //       width : 200,     // 信息窗口宽度
+                //       height: 100,     // 信息窗口高度
+                //       title : "" , // 信息窗口标题
+                //       enableMessage:true,//设置允许信息窗发送短息
+                //       message:data[i].name
+                // }
+
+                (function() {
+                    var infopoint = data[i];
+                    // var gcbh = points[i].gcbh;
+                    marker.addEventListener("onclick", function(e) {
+                        showInfoGc(this, infopoint);
+                    });
+                })();
+
+               
+                // var infoWindow = new BMap.InfoWindow("", opts); 
+
+                // marker.addEventListener("click", function(){          
+                //     map.openInfoWindow(infoWindow,pt); //开启信息窗口
+                // });
+            
+                $('#gcAllNum').text(i);
+                $('#gcNum0').text(gc[0]);
+                $('#gcNum1').text(gc[1]);
+                $('#gcNum2').text(gc[2]);
+            }
+       
+        })
+    }
+    addLabel();
+})();
+
+function showInfoGc(thisMaker, point) {
+
+    var opts = {
+        width: 200, // 信息窗口宽度
+        height: 100, // 信息窗口高度
+    }
+
+    var enginnersingle = "<div onclick=loadView('"+ point.gcbh +"','"+ point.name+"')>" + point.name + "</div>";
+
+    var infoWindow = new BMap.InfoWindow(enginnersingle, opts);
+    var addnumber = point;
+   
+
+    infoWindow.addEventListener("open", function(type, target, point) {
+        $("#pepple_button_left").bind('click', function() {
+            togczsformap(addnumber.gcbh, addnumber.gcmc);
+        });
+    })
+    thisMaker.openInfoWindow(infoWindow);
+
+}
+
+
+function loadView(gcbh,GCMC) {
+    try {
+        var tabledesc = "工程信息";
+
+        // var rowindex = dataGrid.jqxGrid('getselectedrowindex');
+
+        // if (rowindex == -1) {
+            // alert("请选择要修改的预填信息");
+            // return;
+        // }
+        // var selected = pubselect();
+        // if (selected == undefined)
+        //     return;
+        var LX="N";
+        // var gclxbh=selected.GCLXBH;
+        // if(gclxbh=="01")
+        //     LX="N";
+        // else
+        //     LX="S";
+        
+        var jydbh = encodeURIComponent(gcbh);
+        var tabledesc = "工程信息";                // 表格描述
+        var zdzdtable = encodeURIComponent("ZDZD_TZ"); // zdzd名
+        var tablename = encodeURIComponent("I_M_GC");           // 表名
+        var tablerecid = encodeURIComponent("GCBH");    // 表主键
+        var title = encodeURIComponent(tabledesc);  // 标题
+        var formdm = tablename;                             // 列表key名称
+        var buttons = ""; // 按钮;//encodeURIComponent("临时保存|ZC| | ||完成报监|TJ| | "); // 按钮
+
+         var s_tablename = encodeURIComponent("I_S_GC_SGDW|I_S_GC_JSDW|I_S_GC_JLDW|I_S_GC_KCDW|I_S_GC_SJDW|I_S_GC_TSDW|I_S_GC_FGC");
+        //  都是从表中的字段：  主表对应字段,自己主键|……
+        var s_pri = encodeURIComponent("GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,RECID");
+        var s_title = encodeURIComponent("施工单位|建设单位|监理单位|勘察单位|设计单位|图审单位|单位工程");
+
+        var ss_tablename = encodeURIComponent("I_S_GC_SGDW|I_S_GC_SGRY||I_S_GC_JSDW|I_S_GC_JSRY||I_S_GC_JLDW|I_S_GC_JLRY||I_S_GC_KCDW|I_S_GC_KCRY||I_S_GC_SJDW|I_S_GC_SJRY");
+        //都是明细表中的字段：跟主表对应字段,跟从表对应字段,自己主键
+        var ss_pri = encodeURIComponent("GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID");
+        var ss_title = encodeURIComponent("施工人员|建设人员|监理人员|勘察人员|设计人员");
+
+        var rdm = Math.random();
+
+       
+        var js = encodeURIComponent("searchRYZS.js");//encodeURIComponent("jdbgService.js");
+        var callback = "";//encodeURIComponent("jdbgService.jdzcsb('$$GCBH$$')");
+
+        var rdm = Math.random();
+        var url = "/datainput/Index?zdzdtable=" + zdzdtable +
+            "&t1_tablename=" + tablename +
+            "&t1_pri=" + tablerecid +
+            "&t1_title=" + title +
+            "&button=" + buttons +
+            "&js=" + js +
+            "&callback=" + callback +
+            "&rownum=2" +
+            "&t2_tablename=" + s_tablename +
+            "&t2_pri=" + s_pri +
+            "&t2_title=" + s_title +
+            "&t3_tablename=" + ss_tablename +
+            "&t3_pri=" + ss_pri +
+            "&t3_title=" + ss_title +
+            "&view=true"+
+            "&jydbh=" + jydbh +
+            "&LX=" + LX +
+            "&_=" + rdm;
+
+        parent.layer.open({
+            type: 2,
+            title:GCMC,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['95%', '95%'],
+            content: url,
+            end: function () {
+                searchRecord();
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
+
+    </script>
+</body>
+
+</html>

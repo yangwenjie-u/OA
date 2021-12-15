@@ -1,0 +1,330 @@
+﻿@{
+    Layout = "~/Views/log/_loglayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+	var logs_g_pageSize = 20;
+	var logs_g_search_modules = null;
+	var logs_g_search_operations = null;
+	var logs_g_search_clienttype = null;
+	$(function () {
+		try {
+			logs_initDs();
+			$('#logs_maintable').datagrid({
+				title: '系统日志',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/log/getlogs?rows=' + logs_g_pageSize,
+				rownumbers: true,
+				nowrap: true,
+				idField: 'LogId',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: logs_g_pageSize,
+				pageList: [logs_g_pageSize, 40, 50, 100, 1000, 10000],
+				columns: [[
+				{ field: 'LogTime', title: '时间', width: 120, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (row.LogTime == null)
+							return "";
+						var dt = eval("new " + row.LogTime.substr(1, row.LogTime.length - 2));
+						return dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+					}
+				},
+				{ field: 'UserName', title: '操作用户', width: 150, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var str = row.UserName;
+						if (row.RealName != null && row.RealName != "")
+							str += "(" + row.RealName + ")";
+
+						return str;
+					}
+				},
+				{ field: 'ModuleName', title: '所属模块', width: 80, sortable: true, align: "center" },
+				{ field: 'Operation', title: '操作内容', width: 120, sortable: true, align: "center" },
+				{ field: 'Remark', title: '操作详情', width: 200, sortable: true, align: "center" },
+				{ field: 'Result', title: '是否成功', width: 60, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var str = row.Result;
+						if (str)
+							return "是";
+						else
+							return "否";
+					}
+				},
+				{ field: 'ClientType', title: '客户端类型', width: 100, sortable: true, align: "center" },
+				{ field: 'Ip', title: 'Ip地址', width: 100, sortable: true, align: "center" }
+
+				]],
+				toolbar: "#logs_tb",
+				onClickRow: function (rowIndex, rowData) {
+					logs_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					logs_viewRecord();
+				}
+			});
+
+			logs_initSearch();
+		} catch (e) {
+			$.messager.alert('提示', e.message, 'warning');
+		}
+
+	});
+	function logs_initDs() {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/log/getlogmodules",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					logs_g_search_modules = [{ "id": "", "text": "不限"}];
+					if (data != null) {
+						for (var i = 0; i < data.length; i++) {
+							logs_g_search_modules[i + 1] = { "id": data[i], "text": data[i] };
+						}
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载模块数据...");
+				}
+			});
+			$.ajax({
+				type: "POST",
+				url: "/log/getlogoperations",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					logs_g_search_operations = [{ "id": "", "text": "不限"}];
+					if (data != null) {
+						for (var i = 0; i < data.length; i++) {
+							logs_g_search_operations[i + 1] = { "id": data[i], "text": data[i] };
+						}
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载操作内容数据...");
+				}
+			});
+			$.ajax({
+				type: "POST",
+				url: "/log/getlogclitenttypes",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					logs_g_search_clienttype = [{ "id": "", "text": "不限"}];
+					if (data != null) {
+						for (var i = 0; i < data.length; i++) {
+							logs_g_search_clienttype[i + 1] = { "id": data[i], "text": data[i] };
+						}
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载客户端类型数据...");
+				}
+			});
+		} catch (e) {
+			$.messager.alert('提示', e.message, 'warning');
+		}
+	}
+	function logs_initSearch() {
+		try {
+
+			$("#logs_search_operation").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: logs_g_search_operations
+			});
+			$("#logs_search_module").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: logs_g_search_modules
+			});
+			$("#logs_search_clienttype").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: logs_g_search_clienttype
+			});
+			$("#logs_search_result").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: [
+					{ "id": "", "text": "不限" },
+					{ "id": "1", "text": "是" },
+					{ "id": "0", "text": "否" }
+				]
+			});
+			$("#logs_search_time1").datetimebox({
+				showSeconds: false
+			});
+			$("#logs_search_time2").datetimebox({
+				showSeconds: false
+			});
+		} catch (e) {
+			$.messager.alert('提示', e.message, 'warning');
+		}
+	}
+	function logs_showToolbar(rowData) {
+		try {
+			$("#logs_btnview").linkbutton('enable');
+		} catch (e) {
+			$.messager.alert('提示', e.message, 'warning');
+		}
+	}
+	function logs_showNoRecToolbar() {
+		try {
+			$("#logs_maintable").datagrid('unselectAll');
+			$("#logs_btnview").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('提示', e.message, 'warning');
+		}
+	}
+	function logs_search() {
+		try {
+
+			logs_gridReload();
+			logs_showNoRecToolbar();
+		} catch (e) {
+			$.messager.alert('提示', e.message, 'warning');
+		}
+	}
+	function logs_gridReload() {
+		try {
+			$('#logs_maintable').datagrid('load', {
+				username: $("#logs_search_username").val(),
+				modulename: $("#logs_search_module").combobox("getValue"),
+				result: $("#logs_search_result").combobox("getValue"),
+				operation: $("#logs_search_operation").combobox("getValue"),
+				remark: $("#logs_search_remark").val(),
+				ip: $("#logs_search_ip").val(),
+				clienttype: $("#logs_search_clienttype").combobox("getValue"),
+				time1: $("#logs_search_time1").datetimebox("getValue"),
+				time2: $("#logs_search_time2").datetimebox("getValue")
+			});
+		} catch (e) {
+			$.messager.alert('提示', e.message, 'warning');
+		}
+	}
+	function logs_RemoveAll() {
+		$.messager.confirm('提示', '确定要清除所有日志吗？清除操作无法恢复', function (r) {
+			if (r) {
+				$.ajax({
+					type: "POST",
+					url: "/log/clearlog",
+					dataType: "json",
+					success: function (data) {
+						try {
+							if (data.code == 0) {
+								logs_gridReload();
+							}
+							else
+								$.messager.alert('提示', data.msg, 'info');
+						} catch (e) {
+							$.messager.alert('提示', e.message, 'warning');
+						}
+					},
+					complete: function (XMLHttpRequest, textStatus) {
+						$("body").unmask();
+					},
+					beforeSend: function (XMLHttpRequest) {
+						$("body").mask("正在清除日志...");
+					}
+				});
+			}
+		});
+	}
+	function logs_viewRecord() {
+		var rec = $("#logs_maintable").datagrid('getSelected');
+		if (rec == null) {
+			$.messager.alert('提示', '请选择要查看的记录', 'info');
+			return;
+		}
+		$("#logs_viewdiv").dialog({
+			title: "操作详情",
+			collapsible: false,
+			minimizable: false,
+			maximizable: false,
+			resizable: true,
+			modal: true,
+			width: 400,
+			height: 300,
+			content: "<div style='margin-top:10px;margin-left:10px;margin-right:10px;'>" + rec.Remark + "</div>"
+		});
+	}
+	function logs_export() {
+		var form = $("<form>"); //定义一个form表单
+		form.attr("style", "display:none");
+		form.attr("target", "");
+		form.attr("method", "post");
+		form.attr("action", "/log/exportexcel");
+
+		logs_append_form_ctrl(form, "username", $("#logs_search_username").val());
+		logs_append_form_ctrl(form, "modulename", $("#logs_search_module").combobox("getValue"));
+		logs_append_form_ctrl(form, "result", $("#logs_search_result").combobox("getValue"));
+		logs_append_form_ctrl(form, "operation", $("#logs_search_operation").combobox("getValue"));
+		logs_append_form_ctrl(form, "remark", $("#logs_search_remark").val());
+		logs_append_form_ctrl(form, "ip", $("#logs_search_ip").val());
+		logs_append_form_ctrl(form, "clienttype", $("#logs_search_clienttype").combobox("getValue"));
+		logs_append_form_ctrl(form, "time1", $("#logs_search_time1").datetimebox("getValue"));
+		logs_append_form_ctrl(form, "time2", $("#logs_search_time2").datetimebox("getValue"));
+
+		$("body").append(form); //将表单放置在web中
+		form.submit(); //表单提交 
+
+		
+	}
+	function logs_append_form_ctrl(objform, ctrlname, ctrlvalue) {
+		var obj = $("<input>");
+		obj.attr("type", "hidden");
+		obj.attr("name", ctrlname);
+		obj.attr("value", ctrlvalue);
+		objform.append(obj);
+	}
+</script>
+<table id="logs_maintable"></table>  
+<div id="logs_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a href="#" onclick="logs_viewRecord();" id="logs_btnview" class="easyui-linkbutton" iconCls="icon-view" plain="true" disabled="true">查看详情</a>
+		<a href="#" onclick="logs_RemoveAll();" id="logs_btndelete" class="easyui-linkbutton" iconCls="icon-remove" plain="true">清除日志</a>
+		<a href="#" onclick="logs_export();" id="logs_btnexport" class="easyui-linkbutton" iconCls="icon-export" plain="true">查找结果导出成Excel</a>
+		
+	</div>  
+	<div>
+		操作用户：<input id="logs_search_username" style="width:80px" />
+		所属模块：<input id="logs_search_module"/>
+		操作内容：<input id="logs_search_operation" style="width:120px" />
+		详情：<input id="logs_search_remark" style="width:180px" />
+		是否成功：<input id="logs_search_result" /><br /><br />
+		操作IP：<input id="logs_search_ip" style="width:80px"/>
+		客户端类型：<input id="logs_search_clienttype" />		
+		操作时间：<input id="logs_search_time1" style="width:120px" />到<input id="logs_search_time2" style="width:120px" />
+		<a href="#" onclick="logs_search()" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+	</div>
+</div>
+<div id="logs_viewdiv"></div>
+<div id="logs_exportdiv"></div>

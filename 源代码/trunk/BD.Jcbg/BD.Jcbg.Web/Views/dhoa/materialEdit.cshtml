@@ -1,0 +1,387 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/oa/css/load.css" />
+    <style>
+        .main-view {
+            text-align: left;
+        }
+
+        .m-role {
+            width: 45%;
+        }
+
+            .m-role .xb {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .m-role .sfsyr {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .role-list .m-role input,
+            .m-role select {
+                width: 90%;
+            }
+
+        .role-line {
+            width: 60%;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .m-role span {
+            text-align: center;
+        }
+        /* .role-list {
+            min-width: 100px;
+            margin: 0 20px;
+            vertical-align: middle;
+        }
+
+        #roleLine .role-list {
+            margin: 0px;
+            width: 50%;
+            display: inline-block;
+            text-align: left;
+        }*/
+
+        .role-list .checkbox {
+            width: 16px;
+            height: 16px;
+        }
+        /*    .m-role label {
+            width: 400px;
+            display: inline-block;
+        }*/
+        /*    #roleLine .role-list {
+            width: 33%;
+        }*/
+
+        .role-list {
+        }
+
+        #roleLine {
+            border: 1px solid #C6C6C6;
+        }
+
+            #roleLine > div {
+                display: table-cell;
+                width: 50%;
+            }
+
+            #roleLine p {
+                background: #F1F1F1;
+                color: #303030;
+                height: 40px;
+                line-height: 40px;
+                border-bottom: 1px solid #E5E5E5;
+                border-left: 1px solid #E5E5E5;
+            }
+
+            #roleLine div:first-child p {
+                border-left: 0px;
+            }
+
+            #roleLine .role-list span {
+                width: 70%;
+                text-align: left;
+                margin-left: 10px;
+            }
+
+        #roleLeft,
+        #roleRight {
+            height: 300px;
+            overflow: auto;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+            #roleRight li {
+                width: 100%;
+                margin: 0;
+            }
+
+        #roleLine .role-list .close {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            background: url('/static/oa/images/close.png') no-repeat;
+            background-position: 7px 7px;
+        }
+
+        #roleRight .role-list:hover {
+            background: #E5E5E5;
+        }
+
+        .role-list {
+            width: 90%;
+        }
+
+        #mainView {
+            display: inline-block;
+            margin: 0px 10%;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        #selectRole span {
+            margin-top: 5px;
+            background: #5167D7;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .m-role input, .m-role select {
+            width: 60%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mainView" class="main-view">
+        <div class="m-role">
+            <label>
+                <span>名称</span>
+                <select id="materialName" onchange="ChangeMaterial(this.value)">
+                    <option value="0">请选择采购物品</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="m-role">
+            <label>
+                <span>型号规格</span>
+                <select id="materialUnit">
+                    <option value="0">请选择规格</option>
+                </select>
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>单价</span>
+                <input type="text" name="price" id="price" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>购入价格</span>
+                <input type="text" name="purchasePrice" id="purchasePrice" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+
+
+        <div class="m-role" >
+            <label>
+                <span>数量</span>
+                <input type="text" name="quantity" id="quantity" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>技术要求</span> 
+                <input type="text" name="technicalRequirement" id="technicalRequirement" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>供货单位</span> 
+                <input type="text" name="supplier" id="supplier" />
+            </label>
+        </div>
+
+        <div class="m-role">
+            <label>
+                <span>生产厂家</span> 
+                <input type="text" name="manufacturer" id="manufacturer" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>用途</span>
+                <input type="text" name="purpose" id="purpose" />
+            </label>
+        </div>
+
+
+        <div class="save" style="margin-top: 0px; border: 0px; float: right; display: inline-flex "><span class="btn">保存</span></div>
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script>
+        var type = getQueryVariable("type");
+        var dataType = getQueryVariable("dataType");
+        var materialRecid = "@ViewBag.recid";
+        var materialName = "@ViewBag.materialName";
+        var materialUnit = '@ViewBag.materialUnit';
+        $(function () {
+            if (materialRecid)
+            {
+                //$("#username").attr("readonly", true);
+                //$("#realname").attr("readonly", true);
+                //$("#sfzh").attr("readonly", true);
+                //$("#username").css({ background: "lightgray" })
+                //$("#realname").css({ background: "lightgray" })
+                //$("#sfzh").css({ background: "lightgray" })
+            }
+            ajaxTpl('/dhoa/GetMaterial', '', function (data) {
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                    }
+
+                    if (data.length == 1) {
+                        $('#materialName').html(str);
+                    } else {
+                        $('#materialName').append(str);
+                    }
+
+                }
+            });
+
+
+            if (materialRecid) {
+                @*$('#password').parents('.m-role').hide();
+                $('#materialName').val('@ViewBag.materialName');
+                $('#materialUnit').val('@ViewBag.materialUnit');
+                $('#price').val('@ViewBag.price');
+                $('#purchasePrice').val('@ViewBag.purchasePrice');
+                $('.xb').filter('[value="@ViewBag.xb"]').attr("checked", true);
+                $('.sfsyr').filter('[value="@ViewBag.sfsyr"]').attr("checked", true);*@
+            }
+        })
+
+        function ChangeMaterial(materialId) {
+            var obj;
+            obj = {
+                materialId: materialId
+            }
+            //$('#materialUnit').html("wu");
+            ajaxTpl('/dhoa/GetMaterialUnit', obj, function (data) {
+
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                    }
+                    if (data.length == 1) {
+                        $('#materialUnit').html(str);
+                    } else {
+                        $('#materialUnit').html("<option value='0'>请选择规格</option>");
+                        $('#materialUnit').append(str);
+                    }
+                    if (materialUnit) {
+                        $('#materialUnit').val(materialUnit);
+                    }
+                }
+                else {
+                    $('#materialUnit').html("<option value='0'>--------</option>");
+                }
+            });
+        }
+
+        $("#mainView .save").click(function () {
+
+            var matId = $("#materialName option:selected").val();
+            var matName = $("#materialName option:selected").text();
+            var unitId = $("#materialUnit option:selected").val();
+            var unitName = $("#materialUnit option:selected").text();
+            var price = $("#price").val();
+            var quantity = $("#quantity").val();
+            var purchasePrice = $("#purchasePrice").val();
+            var technicalRequirement = $("#technicalRequirement").val();
+            var supplier = $("#supplier").val();
+            var manufacturer = $("#manufacturer").val();
+            var purpose = $("#purpose").val();
+
+            if (matId == 0) {
+                layer.msg('请选择材料', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+            if (unitId == 0) {
+                layer.msg('请选择规格', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+            if (price.length==0) {
+                layer.msg('请输入价格', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+            if (purchasePrice.length == 0) {
+                layer.msg('请输入购入价格', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+            if (quantity.length == 0) {
+                layer.msg('请输入数量', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+
+            var obj = {
+                type: type,
+                dataType: dataType,
+                matId: matId,
+                matName: matName,
+                unitId: unitId,
+                unitName: unitName,
+                price: price,
+                price: price,
+                quantity: quantity,
+                purchasePrice: purchasePrice,
+                technicalRequirement: technicalRequirement,
+                supplier: supplier,
+                manufacturer: manufacturer,
+                purpose: purpose
+            }
+
+            ajaxTpl('/dhoa/ModifyMaterialInfo', obj, function (data) {
+                if (data.success == true) {
+                    layer.alert('保存成功');
+                    try {
+                        setTimeout(function () {
+                            parent.layer.closeAll();
+                        }, 1000)
+                    }
+                    catch (e) {
+                    }
+                }
+                else {
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

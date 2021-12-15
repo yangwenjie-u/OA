@@ -1,0 +1,73 @@
+﻿@using BD.Jcbg.Common;
+
+@{
+    Layout = "~/Views/xwwzUserHT/_f_common.cshtml";
+}
+@section head
+{
+   
+}
+@section body
+{
+<style>
+    body {
+        margin:0px auto;
+    }
+</style> 
+<div align="center">
+
+    <div style="margin:40px 0;"></div>
+    <div class="easyui-panel" title="修改密码" style="width:400px;">
+        <div style="padding:10px 60px 20px 60px">
+            <form id="ff" method="post" >
+                <table cellpadding="5">
+                    <tr>
+                        <td>原来密码:</td>
+                        <td><input class="easyui-validatebox textbox" type="text" name="oldpassword" data-options="required:true" /></td>
+                    </tr>
+                    <tr>
+                        <td>新密码:</td>
+                        <td><input class="easyui-validatebox textbox" type="password" name="newpassword" data-options="required:true" /></td>
+                    </tr>
+                    <tr>
+                        <td>重复新密码:</td>
+                        <td><input class="easyui-validatebox textbox" type="password" name="renewpassword" data-options="required:true" /></td>
+                    </tr>
+                </table>
+            </form>
+            <div style="text-align:center;padding:5px">
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">保存</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+            </div>
+        </div>
+    </div>
+    <script>
+    function submitForm() {
+         
+        // 提交表单 start  
+        $('#ff').form({
+            url: 'doChangePsw',
+            success: function (data) {     // 提交成功后的回调函数。  
+                
+                var data = eval('(' + data + ')');  // change the JSON string to javascript object  
+                //alert(data.msg);
+               
+                if (data.success) {
+                    layer.alert(data.msg, { icon: 6 });
+                } else {
+                    layer.alert(data.msg, { icon: 5 });
+                }
+               
+            }
+        });
+        $('#ff').submit();
+        // 提交表单 end   
+    }
+    function clearForm() {
+        $('#ff').form('clear');
+    }
+    </script>
+
+</div>
+}
+

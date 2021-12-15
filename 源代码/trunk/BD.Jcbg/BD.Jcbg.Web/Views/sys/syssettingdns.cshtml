@@ -1,0 +1,246 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+
+@section head 
+{
+<script language="javascript" type="text/javascript">
+    var setting_op_obj = null;
+    $(function () {
+        try {
+            //layer.msg('正在加载数据……', { icon: 16 });
+            setting_op_obj = sys_setting_dns_op_class.createNew();
+            setting_op_obj.loadData();
+            setting_op_obj.showData();
+            //layer.closeAll();
+        } catch (err) {
+            layer.alert("初始化失败，详细信息：" + err, { icon: 7 });
+        }
+    });
+    var sys_setting_dns_op_class = {
+        createNew: function () {
+            var settingOp={};
+            settingOp.grouplist=[];
+            settingOp.settingList=[];
+            settingOp.dnsSettingList = [];
+            settingOp.dnsList = [];
+
+            settingOp.loadData = function () {
+                try {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/sys/getsyssettings?isglobal=1",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            settingOp.grouplist = data.groups;
+                            settingOp.settingList = data.settings;
+                        }
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "/sys/GetSettingDns",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            settingOp.dnsSettingList = data;
+                            settingOp.dnsList = [];
+                            $.each(settingOp.dnsSettingList, function (i, item) {
+                                var finds = settingOp.dnsList.filter(function (dns) {
+                                    return dns == item.dns;
+                                });
+                                if (finds.length == 0)
+                                    settingOp.dnsList.push(item.dns);
+
+                            });
+                        }
+                    });
+
+                } catch (err) {
+                    layer.alert("加载数据失败，详细信息：" + err, { icon: 7 });
+                }
+            }
+            settingOp.showData=function(){
+                try {
+                    if (this.dnsList.length == 0) {
+                        $("#div_error").show();
+                        $("#div_main").hide();
+                    } else {
+                        $("#div_error").hide();
+                        $("#div_main").show();
+                        $("#main_tab_tab").html("");
+                        $("#main_tab_content").html("");
+                        $.each(settingOp.dnsList, function (i, dns) {
+                            var active1 = "";
+                            var active2 = "";
+                            if (i == 0) {
+                                active1 = "active";
+                                active2 = "active in"
+                            }
+                            var dnsid = dns.replace(/\./g, "_").replace(/\:/g, "-");
+                            var divId = "tab_dns_" + dnsid;
+                            var ulId = "content_dns_" + dnsid;
+
+                            var curDns = "<div class=\"tab-pane fade " + active2 + " \" id=\"" + divId + "\" style='padding:5px 5px 5px 5px'></div>";
+                            $("#main_tab_content").append(curDns);
+                            $("#main_tab_tab").append("<li class=\"" + active1 + "\"><a href=\"#" + divId + "\" data-toggle=\"tab\">" + dns + "</a></li>");
+                            var mainContentId = "main_content_" + dnsid;
+                            $("#" + divId).append("<div id='" + mainContentId + "'></div>");
+                            var listDivId = "block_" + dnsid;
+                            var listDiv = "<div id=\"" + listDivId + "\" style='padding:10px 10px 10px 10px;width:100%;float:left;'></div>";
+                            $("#" + mainContentId).append(listDiv);
+                            $.each(settingOp.grouplist, function (j, group) {
+                                
+                                
+
+                                $("#" + listDivId).append("<a class=\"list-group-item active text-center\">" + group.groupname + "</a>");
+                                $.each(settingOp.settingList, function (k, item) {
+                                    if (group.groupid != item.groupid)
+                                        return true;
+                                    var finds = settingOp.dnsSettingList.filter(function (dnsItem) {
+                                        return dnsItem.dns == dns && dnsItem.settingcode == item.settingcode;
+                                    });
+                                    var itemvalue = "";
+                                    if (finds.length > 0)
+                                        itemvalue = finds[0].settingvalue;
+                                    //$("#" + div_id).append("<li class=\"list-group-item\"><span style='cursor:pointer;' onclick='showWtdLrDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\")'>" + syxm.syxmmc + "</span><div style='cursor:pointer;' id='div_wtzs_" + syxm.syxmbh + "' class='badge' style='display:inline' onclick='showWtdCkDialog(\"" + syxm.syxmbh + "\",\"" + syxm.syxmmc + "\")'></div></li>");
+                                    $("#" + listDivId).append("<li class=\"list-group-item\" ><div class='input-group'><span class='input-group-addon'>" + item.settingname + "</span><input type='text' class='form-control' value='" + itemvalue + "' readonly/></div></li>");
+
+                                });
+                            });
+                        });
+                    }
+
+                } catch (err) {
+                    layer.alert("显示数据失败，详细信息：" + err, { icon: 7 });
+                }
+            }
+            settingOp.add = function () {
+                parent.layer.open({
+                    type: 2,
+                    title: '添加配置',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['98%', '98%'],
+                    content: "/sys/syssettingdnsedit?iscopy=0&dns=",
+                    end: function () {
+                        settingOp.loadData();
+                        settingOp.showData();
+                    }
+                });
+
+            }
+            settingOp.edit = function () {
+                var dnsItem = this.getCurItem();
+                if (dnsItem == null) {
+                    layer.alert("获取当前项失败", { icon: 7 });
+                    return;
+                }
+                parent.layer.open({
+                    type: 2,
+                    title: '修改配置',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['98%', '98%'],
+                    content: "/sys/syssettingdnsedit?iscopy=0&dns="+encodeURIComponent(dnsItem.dns),
+                    end: function () {
+                        settingOp.loadData();
+                        settingOp.showData();
+                    }
+                });
+            }
+            settingOp.copy = function () {
+                var dnsItem = this.getCurItem();
+                if (dnsItem == null) {
+                    layer.alert("获取当前项失败", { icon: 7 });
+                    return;
+                }
+                parent.layer.open({
+                    type: 2,
+                    title: '修改配置',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['98%', '98%'],
+                    content: "/sys/syssettingdnsedit?iscopy=1&dns=" + encodeURIComponent(dnsItem.dns),
+                    end: function () {
+                        settingOp.loadData();
+                        settingOp.showData();
+                    }
+                });
+            }
+            settingOp.delete = function () {
+                var dnsItem = this.getCurItem();
+                if (dnsItem == null) {
+                    layer.alert("获取当前项失败", { icon: 7 });
+                    return;
+                }
+                layer.confirm('确定要删除'+dnsItem.dns+'的配置？', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    layer.closeAll();
+                    $.ajax({
+                        type: "POST",
+                        url: "/sys/DeleteSysSettingDns",
+                        dataType: "json",
+                        data:"dns="+encodeURIComponent(dnsItem.dns),
+                        async: false,
+                        success: function (data) {
+                            if (data.code == "0") {
+                                layer.alert("删除成功", { icon: 1 }, function () {
+                                    layer.closeAll();
+                                    settingOp.loadData();
+                                    settingOp.showData();
+                                });
+                            } else {
+                                layer.alert("删除失败，详细信息："+data.msg, { icon: 7 });
+                            }
+                        }
+                    });
+                }, function () {
+                });
+            }
+            settingOp.getCurItem = function () {
+                var id = $("div.active").attr("id").replace("tab_dns_", "");
+                id = id.replace(/_/g, ".").replace(/-/g, ":");
+                var finds = settingOp.dnsSettingList.filter(function (dnsItem) {
+                    return dnsItem.dns == id;
+                });
+                if (finds.length == 0)
+                    return null;
+                return finds[0];
+            }
+            return settingOp;
+            
+        }
+    };
+</script>
+}
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div>
+            <button type="button" class="btn btn-warning navbar-btn" onclick="setting_op_obj.add();">
+                <span class="glyphicon glyphicon-plus"></span>
+                添加配置
+            </button>
+            <button type="button" class="btn btn-warning navbar-btn" onclick="setting_op_obj.copy();">
+                <span class="glyphicon glyphicon-file"></span>
+                复制当前配置
+            </button>
+            <button type="button" class="btn btn-warning navbar-btn" onclick="setting_op_obj.edit();">
+                <span class="glyphicon glyphicon-pencil"></span>
+                修改当前配置
+            </button>
+            <button type="button" class="btn btn-warning navbar-btn" onclick="setting_op_obj.delete();">
+                <span class="glyphicon glyphicon-trash"></span>
+                删除当前配置
+            </button>
+        </div>
+    </div>
+</nav>
+<div id="div_error" class="alert alert-info" style="display:none">当前没有设置项</div>
+<div id="div_main" style="display:none">
+    <ul id="main_tab_tab" class="nav nav-tabs"></ul>
+    <div id="main_tab_content" class="tab-content"></div>
+</div>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/jquery.scrollify.js" type="text/javascript" charset="utf-8"></script>
+   
+
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version; //b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/gcIndex.css" rel="stylesheet" type="text/css" /> 
+    <style type="text/css">
+        #top-fixed{
+            position: fixed;
+            width: 90%;
+            background: rgb(233, 236, 243);
+            z-index: 9999;
+            margin: 0 5%;
+            padding: 0 10px;
+        }
+        #enginner_title{
+            margin-top: 30px;
+        }
+       
+        .margin{
+            margin-top: 200px;
+        }
+        #panel1,#panel2{
+            margin-bottom: 0px;
+        }
+        #enginner_3,#enginner_4{
+            width: 48%;
+            background: white;
+        }
+    </style> 
+</head>
+
+<body class="wai_body font_faminly">
+    
+    <div id="top-fixed">
+        <p class="title-name">@ViewData["gcmc"]</p>
+        <div id="enginner_title">
+
+            <div class="enginner_title_content" id="enginner_QYGL" style="border-color:#5673d7">
+                <p class="all_title" id="smzry">0</p>
+                <p class="all_num" >实名制登记人数</p>
+            </div>
+            <div class="enginner_title_content" id="enginner_dqry" style="border-color:#73c8ef">
+                <p class="all_title" id="dqry">0</p>
+                <p class="all_num" >当前人员数</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5474d7">
+                <p class="all_title" id="yjrynum">0</p>
+                <p class="all_num" >违规预警人数</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_title" id="kqycnum">0</p>
+                <p class="all_num" >考勤异常人数</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_title" id="sbycnum">0</p>
+                <p class="all_num" >设备异常数</p>
+            </div>    
+        </div>
+    </div>
+
+    <section class="panel" id="panel1" style="background:rgb(233,236,243)" data-section-name="section1">
+        <div id="enginner_chart" class="clearfix margin">
+            <div id="enginner_1"></div>
+            <div id="enginner_2"></div>
+        </div>
+    </section>
+
+     <section class="panel" id="panel2" style="background:rgb(233,236,243)" data-section-name="section2">
+        <div id="enginner_chart" class="clearfix margin">
+            <div id="enginner_3"></div>
+            <div id="enginner_4"></div>
+        </div>
+    </section>
+
+
+    <section class="panel" id="panel3" style="background:rgb(233,236,243)" data-section-name="section3">
+        <p class="title-name" style="margin-bottom: 30px;">人员动态</p>
+        <div class="item" id="item" style="height: 100px;margin-left: -4px;">
+            <iframe id="qyTable" src="/WebList/EasyUiIndex?FormDm=WGRYZS_GC&FormStatus=0"></iframe>
+        </div>
+        
+    </section>
+
+    <script src="/static/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="/static/wgry/js/pub.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="/static/wgry/js/gcIndex.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

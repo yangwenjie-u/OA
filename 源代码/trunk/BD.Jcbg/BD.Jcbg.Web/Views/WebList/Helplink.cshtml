@@ -1,0 +1,113 @@
+﻿@using BD.WebListCommon;
+@using BD.WebListDataModel.Entities;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Helplink</title>
+    <script type="text/javascript" src="@Skins.GetHPath("js/jquery.min.js?v=2.1.4")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/plugins/bootstrap-table/bootstrap-table.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/plugins/layer/layer.js")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("helplink.js?v=2016012601")"></script>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/bootstrap.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/plugins/bootstrap-table/bootstrap-table.min.css")"/>
+</head>
+<body>
+    @{ IList<FormZdzd> zdzdList = ViewData["zdzd"] as IList<FormZdzd>; }
+    <input type="hidden" id="helplink" name="helplink" value="@ViewData["helplink"]" />
+    <table>
+        <tr>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="right">查询</td>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="left">
+                <select name="dlg_search" id="dlg_search" style="width:120px;">
+                    <option value=""></option>
+                    @foreach (var item in zdzdList)
+                    {
+                        <option value="@item.ZdName">@item.ZdSy</option>
+                    }
+                </select>
+            </td>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="right">
+                <input id="edt_search" name="edt_search"/>
+            </td>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="right">
+                <input type="button" name="btn_dlg" value="查找" onclick="searchRecord();""
+            </td>
+        </tr>
+    </table>
+
+
+    <table  id="table" 
+            data-click-to-select="true"
+            data-single-select="true"
+            data-pagination="true"
+            data-side-pagination="server"
+            data-page-number = "1"
+     @*       data-page-size = "@form.PageSize"*@
+            data-height="500"
+   @*         data-page-list="@form.LimitSize"*@
+            data-striped = "true"
+            >
+            <thead>
+                <tr>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th 
+                        data-field="num" 
+                        data-width="10px" 
+                        data-switchable="false" 
+                        data-halign="center"
+                        data-align="center"
+                        >序号</th>
+                    @foreach (var item in zdzdList)
+                    {
+                        <th 
+                            data-field="@item.ZdName" 
+                            data-sortable="@item.Sfpx.GetString().ToLower()" 
+                            data-visible="@item.SfShow.GetString().ToLower()" 
+                            data-switchable="@item.SfSwitch.GetString().ToLower()"
+                            data-halign="center"
+                            data-align="@item.Align"
+                            data-width="@item.ZdWidth.GetInt()px"
+                            data-title-tooltip="@item.ZdTip"
+                            data-footer-formatter= "<div id='@(item.ZdName)Footer' align='left'></div>"
+                        >@item.ZdSy</th>
+                    }
+                </tr>
+            </thead>
+        </table>
+          
+
+    <script type="text/javascript" language="javascript">
+        var dataGrid;
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        //初始化显示Table界面
+        function iniTableForm() {
+            dataGrid = $("#table").bootstrapTable({
+                //分页事件
+                onPageChange: function (number, size) {
+                    loadData(dataGrid.bootstrapTable('getOptions').pageNumber);
+                },
+                //排序事件
+                onSort: function (name, order) {
+                    loadData(dataGrid.bootstrapTable('getOptions').pageNumber);
+                },
+                //双击事件
+                onDblClickRow: function (row, $element) {
+                    @Html.Raw(ViewData["dbclick"].GetString());
+                    parent.layer.close(index);
+                }
+            });
+        }
+        //查询数据
+
+        //初始化数据
+        $(function () {
+            //初始化显示Table界面
+            iniTableForm();
+            //查询数据
+            searchRecord();
+        });
+    </script>
+</body>
+</html>

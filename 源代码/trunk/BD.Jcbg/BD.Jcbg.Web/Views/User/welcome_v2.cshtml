@@ -1,0 +1,823 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/User/_welcomelayout.cshtml";
+}
+@section head
+{
+
+    <script language="javascript" type="text/javascript">
+    var g_menus = [];
+    var g_menugroups = [];
+    var g_imageRoot = "@SkinManager.GetImagePath("")";
+
+    $(function () {
+        //loadMenus();
+        setReportSum();
+        setSums();
+        run();
+        setGcs();
+        setAnnounce();
+        $("tr td").not("tr td:first-child").bind('click', function () {
+            alert("123");
+        });
+    });
+    function loadMenus() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/user/getmenus",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_menus = data;
+
+
+                    $.each(g_menus, function(index,group){
+                        if (!group.IsGroup)
+                            return true;
+                        g_menugroups[g_menugroups.length] = group;
+                        var menuIcon = group.ImageUrl;
+                        if (menuIcon == "")
+                            menuIcon = "fa fa-balance-scale";
+                        var menustr = "<li><a href=\"javascript:void(0)\" onclick=\"zhu_ci_tiz('"+group.MenuCode+"')\"><div class=\"kuang_left_top\"><i class=\""+menuIcon+"\"></i></div><div class=\"kuang_left_last\">"+group.MenuName+"</div></a></li>";
+
+                        $("#menu_group").append(menustr);
+                        menustr = "<div class=\"fenlei_middle\" id=\"" + group.MenuCode + "\"></div>";
+                        $("#menu_item").append(menustr);
+                        $("#" + group.MenuCode).append("<div class=\"middle_word\">" + group.MenuName + "</div>");
+                        $("#" + group.MenuCode).append("<ul class=\"nei_tubiao\" id=\"ul_" + group.MenuCode + "\"></ul>");
+                        $.each(g_menus, function (index, item) {
+                            if (item.ParentCode == group.MenuCode) {
+                                var menuIcon = item.ImageUrl
+                                if (menuIcon == "")
+                                    menuIcon = "fa fa-object-group";
+                                $("#ul_" + group.MenuCode).append("<li ><a onclick=\"tubiao_zhu_nei('" + item.MenuCode + "','" + item.MenuName + "','" + item.MenuUrl + "')\" href=\"javascript:void(0)\"><div class=\"nei_tubiao_div\"><i class=\"" + menuIcon + "\"></i></div><div class=\"nei_tubiao_word\">" + item.MenuName + "</div><div class='shangbiao display_no' id='count_" + item.MenuCode + "'></div></a></li>");
+                                getSumString(item.MenuCode);
+                            }
+                        });
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll('loading');
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.load();
+                }
+            });
+        } catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    }
+
+    //var g_run_menus = ["QYGL_QYSQSP", "QYGL_QYZZSP", "NBYJ","DBGZ","GCBAGL"];
+    var g_run_menus = ["NBYJ", "DBGZ"];
+    // 设置轮询
+    function run() {
+        setInterval("setSums()", 60000);
+    }
+    function setSums(){
+        for (var i=0; i<g_run_menus.length; i++){
+            getSumString(g_run_menus[i]);
+        }
+    }
+    var g_haswork_img = "@SkinManager.GetImagePath("side_icon04.gif")";
+    var g_nowork_img = "@SkinManager.GetImagePath("side_icon04.png")";
+    /*
+    function getSumString(menucode) {
+        if ($("#count_" + menucode).length == 0 &&
+            $(window.parent.document).find("#pcount_" + menucode).length == 0 &&
+            $(window.parent.document).find("#spcount_" + menucode).length == 0)
+            return;
+        if (menucode == "QYGL_QYSQSP" ||
+            menucode == "QYGL_QYZZSP" ||
+            menucode == "NBYJ" ||
+            menucode == "DBGZ" ||
+            menucode == "GCBAGL") {
+            var sum = 0;
+            if (menucode == "QYGL_QYSQSP")
+                sum = getQysqsl() * 1;
+            else if (menucode == "QYGL_QYZZSP")
+                sum = getQyzzsqsl() * 1;
+            else if (menucode == "NBYJ") {
+                sum = getNewMailSum() * 1;
+                if ($("#mail_count").length > 0)
+                    $("#mail_count").html(sum);
+            }
+            else if (menucode == "GCBAGL")
+                sum = getGcsbSum() * 1;
+            else if (menucode == "DBGZ") {
+                sum = getWorkSum() * 1;
+                if ($(window.parent.document).find("#sp_work_sum").length > 0) {
+                    $(window.parent.document).find("#sp_work_sum").text(sum);
+                }
+
+                if ($(window.parent.document).find("#img_todo").length > 0) {
+                    var imgsrc = "";
+                    if (sum == 0)
+                        imgsrc = g_nowork_img;
+                    else
+                        imgsrc = g_haswork_img;
+                    $(window.parent.document).find("#img_todo").attr("src", imgsrc);
+                }
+                if ($("#task_count").length > 0) {
+                    $("#task_count").html(sum);
+                }
+            }
+            if ($("#count_" + menucode).length > 0) {
+                if (sum > 0) {
+                    if ($("#count_" + menucode).hasClass("display_no")) {
+                        $("#count_" + menucode).removeClass("display_no");
+                        $("#count_" + menucode).text(sum);
+                    }
+                } else {
+                    if (!$("#count_" + menucode).hasClass("display_no")) {
+                        $("#count_" + menucode).addClass("display_no");
+                    }
+                }
+            }
+            if ($(window.parent.document).find("#pcount_" + menucode).length > 0) {
+                if (sum > 0) {
+                    if ($(window.parent.document).find("#pcount_" + menucode).hasClass("display_no")) {
+                        $(window.parent.document).find("#pcount_" + menucode).removeClass("display_no");
+                        $(window.parent.document).find("#pcount_" + menucode).text(sum);
+                    }
+                } else {
+                    if (!$(window.parent.document).find("#pcount_" + menucode).hasClass("display_no")) {
+                        $(window.parent.document).find("#pcount_" + menucode).addClass("display_no");
+                    }
+                }
+            }
+            if ($(window.parent.document).find("#spcount_" + menucode).length > 0) {
+                if (sum > 0) {
+                    if ($(window.parent.document).find("#spcount_" + menucode).hasClass("display_no")) {
+                        $(window.parent.document).find("#spcount_" + menucode).removeClass("display_no");
+                        $(window.parent.document).find("#spcount_" + menucode).text(sum);
+                        console.log($(window.parent.document).find("#spcount_" + menucode).text());
+                    }
+                } else {
+                    if (!$(window.parent.document).find("#spcount_" + menucode).hasClass("display_no")) {
+                        $(window.parent.document).find("#spcount_" + menucode).addClass("display_no");
+                    }
+                }
+            }
+        }
+    }*/
+    function getSumString(menucode) {
+        if (menucode == "NBYJ" ||
+            menucode == "DBGZ") {
+            var sum = 0;
+            if (menucode == "NBYJ") {
+                sum = getNewMailSum() * 1;
+                if ($(window.parent.document).find("#mail_count").length > 0) {
+                    $(window.parent.document).find("#mail_count").text(sum);
+                }
+                if ($("#mail_count").length > 0)
+                    $("#mail_count").html(sum);
+            }
+            else if (menucode == "DBGZ") {
+                sum = getWorkSum() * 1;
+                if ($(window.parent.document).find("#sp_work_sum").length > 0) {
+                    $(window.parent.document).find("#sp_work_sum").text(sum);
+                }
+
+                if ($("#task_count").length > 0) {
+                    $("#task_count").html(sum);
+                }
+                /*
+                if ($(window.parent.document).find("#img_todo").length > 0) {
+                    var imgsrc = "";
+                    if (sum == 0)
+                        imgsrc = g_nowork_img;
+                    else
+                        imgsrc = g_haswork_img;
+                    $(window.parent.document).find("#img_todo").attr("src", imgsrc);
+                }*/
+            }
+        }
+    }
+    function getQysqsl() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/qy/getqysqsl",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == 0)
+                        ret = data.msg;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (e) {
+        }
+        return ret;
+    }
+    function getQyzzsqsl() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/qy/getqyzzsqsl",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == 0)
+                        ret = data.msg;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (e) {
+        }
+        return ret;
+    }
+    function getNewMailSum() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/oa/getnewmailsum",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == 0)
+                        ret = data.msg*1;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            setMail();
+        } catch (e) {
+        }
+        return ret;
+    }
+    function getWorkSum() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/workflow/getworktodocount",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    ret = data.count * 1;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            showWorkList();
+            showTodayWorkList();
+        } catch (e) {
+        }
+        return ret;
+    }
+
+    function getGcsbSum() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/getgcsbsum",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    ret = data.msg * 1;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (e) {
+        }
+        return ret;
+    }
+
+    function setReportSum() {
+        var ret = 0;
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/getreportsum?jcjg=",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $("#report_sum_1").html(data.msg);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/getreportsum?jcjg=1",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $("#report_sum_2").html(data.msg);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/getreportsum?jcjg=2",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $("#report_sum_3").html(data.msg);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+        return ret;
+    }
+    function showReport(reporttype) {
+        try {
+            var title = '';
+            var JCJG = '';
+            switch (reporttype) {
+                case "1":
+                    title = '所有报告';
+                    JCJG = 'ALL';
+                    break;
+                case "2":
+                    title = '合格报告';
+                    JCJG = '1';
+                    break;
+                case "3":
+                    title = '不合格报告';
+                    JCJG = '2';
+                    break;
+                default:
+                    break;
+
+            }
+            window.parent.tubiao_zhu_nei("BGCX", title, "/WebList/EasyUiIndex?FormDm=BGCX&FormStatus=0&FormParam=PARAM--ALL|" +JCJG);
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function setGcs() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/getgcs",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $.each(data, function (index, row) {
+                        //$("#table_gc").append("<tr><td>" + row.zjdjh + "</td><td>" + row.gcmc + "</td><td>" + row.sy_jsdwmc + "</td><td>" + row.sgdwmc + "</td><td>" + row.jldwmc + "</td><td>" + row.kcdwmc + "</td><td>" + row.sjdwmc + "</td><td>" + row.spzt + "</td><td>" + row.jdgcsxm + "," + row.tjjdyxm + "," + row.azjdyxm + "</td></tr>");
+                        $("#table_gc").append("<tr onclick=\"gcinfo('" + row.zjdjh + "');\"><td>" + row.zjdjh + "</td><td>" + row.gcmc + "</td><td>" + row.gcjdzt + "</td><td>" + row.jdgcsxm + "</td><td>" + row.tjjdyxm + "," + row.azjdyxm + "</td></tr>");
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function gcinfo(zjdjh) {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/DwgxWzLc/GetGcinfo?zjdjh=" + encodeURIComponent(zjdjh),
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var json = data.msg;
+                    var obj = eval('(' + json + ')');
+                    var g_gcbh = obj[0].gcbh;
+                    var g_gclxbh = obj[0].gclxbh;
+                    try {
+                        var LX = "";
+                        if (g_gclxbh == "03")
+                            LX = "YL";
+                        else if (g_gclxbh == "02")
+                            LX = "SZ";
+                        else
+                            LX = "N";
+
+                        var jydbh = encodeURIComponent(g_gcbh);
+                        var tabledesc = "工程信息";                // 表格描述
+                        var zdzdtable = encodeURIComponent("ZDZD_JC"); // zdzd名
+                        var tablename = encodeURIComponent("I_M_GC"); 			// 表名
+                        var tablerecid = encodeURIComponent("GCBH"); 	// 表主键
+                        var title = encodeURIComponent(tabledesc); 	// 标题
+                        var formdm = tablename;                             // 列表key名称
+                        var buttons = ""; // 按钮;//encodeURIComponent("临时保存|ZC| | ||完成报监|TJ| | "); // 按钮
+
+                        var s_tablename = encodeURIComponent("View_I_S_GC_JSDW_WITH_LZ|View_I_S_GC_KCDW_WITH_LZ|View_I_S_GC_SJDW_WITH_LZ|View_I_S_GC_JLDW_WITH_LZ|View_I_S_GC_SGDW_WITH_LZ|I_S_GC_TSDW|I_S_GC_FGC");
+                        //  都是从表中的字段：  主表对应字段,自己主键|……
+                        var s_pri = encodeURIComponent("GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,RECID");
+                        var s_title = encodeURIComponent("建设单位|勘察单位|设计单位|监理单位|施工单位|图审单位|单位工程");
+
+                        var ss_tablename = encodeURIComponent("View_I_S_GC_JSDW_WITH_LZ|VIEW_I_S_GC_JSRY_WITH_LZ||View_I_S_GC_KCDW_WITH_LZ|VIEW_I_S_GC_KCRY_WITH_LZ||View_I_S_GC_SJDW_WITH_LZ|VIEW_I_S_GC_SJRY_WITH_LZ||View_I_S_GC_JLDW_WITH_LZ|VIEW_I_S_GC_JLRY_WITH_LZ||View_I_S_GC_SGDW_WITH_LZ|VIEW_I_S_GC_SGRY_WITH_LZ||I_S_GC_TSDW|I_S_GC_TSRY");
+                        //都是明细表中的字段：跟主表对应字段,跟从表对应字段,自己主键
+                        var ss_pri = encodeURIComponent("GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID");
+                        var ss_title = encodeURIComponent("建设人员|勘察人员|设计人员|监理人员|施工人员|图审人员");
+
+                        var rdm = Math.random();
+
+                        var js = "";//encodeURIComponent("jdbgService.js");
+                        var callback = "";//encodeURIComponent("jdbgService.jdzcsb('$$GCBH$$')");
+
+                        var rdm = Math.random();
+                        var url = "/datainput/Index?zdzdtable=" + zdzdtable +
+                            "&t1_tablename=" + tablename +
+                            "&t1_pri=" + tablerecid +
+                            "&t1_title=" + title +
+                            "&button=" + buttons +
+                            "&js=" + js +
+                            "&callback=" + callback +
+                            "&rownum=2" +
+                            "&t2_tablename=" + s_tablename +
+                            "&t2_pri=" + s_pri +
+                            "&t2_title=" + s_title +
+                            "&t3_tablename=" + ss_tablename +
+                            "&t3_pri=" + ss_pri +
+                            "&t3_title=" + ss_title +
+                            "&view=true" +
+                            "&jydbh=" + jydbh +
+                            "&LX=" + LX +
+                            "&bottomdiv=false" +
+                            "&_=" + rdm;
+                        parent.layer.open({
+                            type: 2,
+                            title: tabledesc,
+                            shadeClose: true,
+                            shade: 0.8,
+                            area: ['95%', '95%'],
+                            content: url,
+                            end: function () {
+                              
+                            }
+                        });
+                    } catch (ex) {
+                        alert(ex);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+           
+            
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function setAnnounce() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/oa/getannounce?page=1&rows=100&hasread=0&key=",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $.each(data.rows, function (index, row) {
+                        $("#table_announce").append("<tr><td onclick='showAnnounce(\""+row.recid+"\")' style='cursor:pointer'>" + row.title + "</td></tr>");
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showAnnounce(recid) {
+        parent.layer.open({
+            type: 2,
+            title: '公告详情',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['98%', '98%'],
+            content: "/oa/announceview?read=true&id=" + recid,
+            //content: "/jdbg/player",
+            end: function () {
+            }
+        });
+    }
+    function showWorkList() {
+        $.ajax({
+            type: "POST",
+            url: "/workflow/getworktodolist?page=1&rows=1000&key=",
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                $("#table_task").html("");
+                if (data.total > 0) {
+                    $.each(data.rows, function (i, item) {
+                        var extrainfo = "";
+                        if (item.ExtraInfo2 != "")
+                            extrainfo = "[" + item.ExtraInfo2 + "]";
+
+                        var dt = eval("new " + item.DateAccepted.substr(1, item.DateAccepted.length - 2));
+                        var acceptDate = dt.pattern("yyyy-MM-dd HH:mm");
+
+                        $("#table_task").append("<tr><td><a href='javascript:showCheckWorkDialog(" + item.Taskid + ")'>[" + acceptDate + "][来自：" + item.PreUserRealName + "]" + item.ActivityName + extrainfo + "</a></td></tr>");
+                    });
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+    }
+
+    function showCheckWorkDialog(taskid) {
+        parent.layer.open({
+            type: 2,
+            title: '',
+            shadeClose: true,
+            shade: 0.5,
+            area: ['95%', '95%'],
+            content: "/workflow/checkwork?taskid=" + taskid + "&DlgId=1&_=" + Math.random(),
+            end: function () {
+            }
+        });
+    }
+    function showTodayWorkList() {
+        $.ajax({
+            type: "POST",
+            url: "/dwgxwzlc/GetTodayWorkTodoList",
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                $("#table_todaytask").html("");
+                if ($("#todaytask_count").length > 0)
+                    $("#todaytask_count").html(data.total);
+                if (data.total > 0) {
+                    $.each(data.rows, function (i, item) {
+                        var extrainfo = "";
+                        if (item.extrainfo2 != "")
+                            extrainfo = "[" + item.extrainfo2 + "]";
+
+                        var dt = new Date( item.dateaccepted); 
+                        var acceptDate = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds(); //dt.pattern("yyyy-MM-dd HH:mm");
+
+                        $("#table_todaytask").append("<tr><td><a href='javascript:showCheckWorkDialog(" + item.taskid + ")'>[" + acceptDate + "][来自：" + item.preuserrealname + "]" + item.activityname + extrainfo + "</a></td></tr>");
+                    });
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+    }
+
+    function setMail() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/oa/getmails?page=1&rows=100&hasread=0",
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    $("#table_mail").html("");
+                    $.each(data.rows, function (index, row) {
+                        $("#table_mail").append("<tr><td onclick='showMail(\"" + row.recid + "\")' style='cursor:pointer'>["+row.sy_sendtime+"]&nbsp;&nbsp;" + row.title + "&nbsp;&nbsp;[来自："+row.senderrealname+"]</td></tr>");
+                    });
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showMail(recid) {
+        parent.layer.open({
+            type: 2,
+            title: '邮件详情',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['98%', '98%'],
+            content: "/oa/mailview1?read=true&id=" + recid,
+            //content: "/jdbg/player",
+            end: function () {
+            }
+        });
+    }
+    function showAllWorkList() {
+        try {
+            window.parent.tubiao_zhu_nei("DBGZ", "待办工作", "/workflow/worktodo");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showAllAnnounce() {
+        try {
+            window.parent.tubiao_zhu_nei("GRGL_GGCK", "公告查看", "/oa/announcelist2");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function showAllMail() {
+        try {
+            window.parent.tubiao_zhu_nei("NBYJ", "内部邮件", "/oa/maillist");
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    </script>
+}
+
+<div id="page1" style="display:none;">
+    <div class="ruanjianming font_faminly_yishu">
+        @GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_TITLE1")
+    </div>
+
+    <div class="index_2_left" id="left_150">
+        <ul class="kuang_left" id="menu_group"></ul>
+    </div>
+    <!--1-->
+    <div class="juti_tubiao" style="float: left; height: 100%; margin: 0px; padding: 0; width: 97%;" id="menu_item">
+        <a href="javascript:void(0)" class="left_jiantou" onclick="fanhui(g_menugroups)">
+            <div class="jiantou">
+                <i class="fa fa-chevron-left"></i>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="right_jiantou" onclick="right_jiantou_click()">
+        <i class="fa fa-angle-right"></i>
+    </div>
+    <div class="company_name font_faminly_yishu">@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_TAIL1")</div>
+</div>
+
+<div id="page2">
+    <!--
+    <div class="page2_top">
+        <div class="page2_top_neirong" onclick="showReport('1')" style="cursor:pointer">
+            <div style=" background-color:rgba(218,95,83,0.7)" class="top_color">
+
+                <p class="num"><span id="report_sum_1"></span></p>
+                <p class="name">我的总报告数</p>
+
+            </div>
+
+        </div>
+        <div class="page2_top_neirong" onclick="showReport('2')" style="cursor:pointer">
+            <div style=" background-color:rgba(57,198,139,0.7);" class="top_color">
+                <p class="num"><span id="report_sum_2"></span></p>
+                <p class="name">我的合格报告数</p>
+            </div>
+        </div>
+        <div class="page2_top_neirong" onclick="showReport('3')" style="cursor:pointer">
+            <div style="background-color:rgba(101,145,163,0.7);" class="top_color">
+                <p class="num"><span id="report_sum_3"></span></p>
+                <p class="name">我的不合格报告数</p>
+
+            </div>
+        </div>
+
+    </div>-->
+    <div class="page2_middle">
+        <div class="page2_middle_left">
+            <div class="nei">
+                <div class="title">
+                    <p>工程信息</p>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_gc">
+                        <thead>
+                            <tr>
+                                <th width="100">监督登记号</th>
+                                <th>工程名称</th>
+                                <th width="90">状态</th>
+                                <th width="90">分管站长</th>
+                                <th width="150">监督员</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+        <div class="page2_middle_right">
+            <div class="nei">
+                <div class="title" style="cursor:pointer" onclick="showAllAnnounce();">
+                    <p>公告通知</p>
+                </div>
+                <div class="page2_middle_right_last">
+
+                    <table class="table table-hover" id="table_announce">
+
+                        <thead>
+
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <div class="page2_last">
+        <div class="page2_last_left">
+            <div class="nei">
+                <div class="title" style="cursor:pointer" onclick="showAllWorkList();">
+                    <i class="fa fa-file-text-o"></i>
+                    <div class="title_word">  <p><span id="task_count"></span>条</p> <p>待办任务</p></div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_task">
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+
+
+            </div>
+
+        </div>
+        <div class="page2_last_right" style="@ViewData["pageTask"]">
+            <div class="nei">
+                <div class="title" style="cursor:pointer">
+                    <i class="fa fa-envelope-square"></i>
+                    <div class="title_word">  <p><span id="todaytask_count"></span>个</p> <p>今日任务</p></div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_todaytask">
+
+
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="page2_last_right" style="@ViewData["pageMail"]">
+            <div class="nei">
+                <div class="title" style="cursor:pointer" onclick="showAllMail();">
+                    <i class="fa fa-envelope-square"></i>
+                    <div class="title_word">  <p><span id="mail_count"></span>封</p> <p>新邮件</p></div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover" id="table_mail">
+
+
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+</div> 

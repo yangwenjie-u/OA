@@ -1,0 +1,869 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/jquery.scrollify.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version; //b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/tz/css/show.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+
+    </style>
+
+</head>
+
+<body class="wai_body font_faminly">
+    <form class="form-inline" id="formData">
+        <div id="distpicker5">
+            <div class="form-group" style="margin-left: 10px;">
+                <select class="form-control" id="province10" val="ViewBag.provinceName">
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="city10" val="ViewBag.cityName">
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="district10" val="ViewBag.districtName">
+                    <option value=''>请选择</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="street10">
+                    <option value=''>请选择</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" id="selectQylx" style="display: none;">
+                    <option value="">所有企业</option>
+                    <option value="11">施工企业</option>
+                    <option value="12">监理企业</option>
+                    <option value="13">建设企业</option>
+                    <option value="14">设计企业</option>
+                    <option value="15">勘察企业</option>
+                </select>
+                <select class="form-control selectpicker" data-live-search="true" id="selectQy" style="width: 120px;"></select>
+                <select class="form-control" id="selectGczt" style="width: 180px;">
+                    <option value="">所有工程</option>
+                </select>
+                <label class="sr-only">状态</label>
+            </div>
+            &nbsp;&nbsp;
+            <div class="form-group">
+                <select class="form-control" id="gcxz" style="width: 100px;">
+                    <option selected='selected' value=''>全部类型</option>
+                </select>
+                <input type="text" name="" id="keyVal" class="form-control" style="width: 180px;" placeholder="公司名称/工程名称" />
+                <!--<input type="text" name="" class="form-control" style="width: 180px;padding-right: 70px;" />
+                            <button class="search" style="position: relative;left: -60px;width: 50px;top: 2px;" id="searchAll">检索</button> -->
+            </div>
+            <div style="float:right;margin-right: 10px;padding-top: 9px;">
+                <!-- <select class="form-control" style="width: 0px;"></select> -->
+                <span class="custombutton" id="fullscreen">开启全屏</span>
+            </div>
+        </div>
+    </form>
+    <section class="panel" id="panel1" style="background:rgb(233,236,243)" data-section-name="section1">
+        <div id="enginner_title">
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_qyzs">0个</p>
+                <p class="all_title">在建总工程</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_zgcs">0个</p>
+                <p class="all_title">总面积</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5474d7">
+                <p class="all_num" id="enginner_jzmj">0人</p>
+                <p class="all_title">总造价</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_gczj">0人</p>
+                <p class="all_title">竣工</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_zcry">0人</p>
+                <p class="all_title">注册</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_yfje">0亿元</p>
+                <p class="all_title">在岗</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_sfje">0亿元</p>
+                <p class="all_title">备案设备</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_ljffje">0亿元</p>
+                <p class="all_title">在用设备</p>
+            </div>
+        </div>
+        <div id="panel1-2" class="three-lines">
+            <div id="enginner1"></div>
+            <div id="enginner2"></div>
+            <div id="enginner3"></div>
+        </div>
+        <div id="panel1-3" class="two-lines">
+            <div id="enginner4" style="width: 50%;"></div>
+            <div style="box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);">
+                <div id="enginner5" style="width: 50%;height: 100%;float: right;"></div><div id="enginner6" style="width: 50%;height: 100%;float: right;"></div>
+            </div>
+        </div>
+    </section>
+    <section class="panel" id="panel2" style="background:rgb(233,236,243)" data-section-name="section2">
+        <div id="panel2-1" class="three-lines" style="height: 40%;margin-top: 50px;">
+            <div id="enginner2-1"></div>
+            <div id="enginner2-2"></div>
+            <div id="enginner2-3"></div>
+        </div>
+        <div id="panel2-2" class="two-lines" style="height: 50%;">
+            <div id="enginner2-4" style="width: 100%;"></div>
+            <div id="enginner2-5" style="width: 49%;margin: 0 1%;display: none;"></div>
+        </div>
+    </section>
+    <section class="panel" id="panel3" data-section-name="section3" style="background: rgb(233, 236, 243);">
+        <dl class="dltabs" style="position: relative;">
+            <dt class="active"><span>工程状态图</span></dt>
+            <dd class="active" id="gczzt">
+                <div id="mapwrap">
+                    <div id="map"></div>
+                    <div style="display:none;">
+                        <img class="gps-icon" src="/static/image/show/gps7.png">
+                    </div>
+                    <div id="mapInfo">
+                        <p class="subtitle-name">
+                            <div style="font-size: 20px;">已标定工程：</div>
+                            <span id="gcAllNum" style="font-size:20px;"></span>
+                        </p>
+                        <p style="margin-bottom:12px;"><img class="icon-img" src="/static/image/show/icon-2.png" />&emsp;在建工程：<span id="gcNum0"></span>个</p>
+                        <p style="margin-bottom:12px;"><img class="icon-img" src="/static/image/show/icon-1.png" />&emsp;异常工程：<span id="gcNum1"></span>个</p>
+                        <p style="margin-bottom:12px;"><img class="icon-img" src="/static/image/show/icon-3.png" />&emsp;停工工程：<span id="gcNum2"></span>个</p>
+                    </div>
+                </div>
+            </dd>
+            <dt><span>视频监控</span></dt>
+            <dd></dd>
+            <div class="show-more">
+                <span class="more-btn" id="moreBtn">展开搜索</span>
+            </div>
+            <div class="more-search" id="moreArea" style="display:none;overflow: hidden;">
+                <ul class="tab-title" id="tabData">
+                    <li class="active" id="GcList">工程</li>
+                    <!--  <li id="QyList">企业</li>
+                        <li id="Rylist">人员</li> -->
+                </ul>
+                <div class="item">
+                    <div class="item-content" style="display: block;">
+                        <div class="searchbutton">
+                            <!-- <label>工程名称</label> -->
+                            <input type="text" placeholder="工程名称" class="form-control" id="txtGcmc" style="width: 90%;">
+                            <button style="margin-top: 10px;" onclick="btnSearch(1);">确认</button>
+                            <button style="margin-top: 10px;" onclick="btnSearch(0);">置空</button>
+                        </div>
+                        <div class="listgc-warp">
+                            <div id="listGc" class="list-gc"></div>
+                        </div>
+                    </div>
+                    <!-- <div class="item-content">
+                            <div class="searchbutton">
+                                <label>企业名称</label>
+                                <input type="text" placeholder="企业名称" class="form-control" id="txtQymc">
+                                <button onclick="btnSearch(2);">检索</button>
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <div class="searchbutton">
+                                <div>
+                                    <label>所属工程</label>
+                                    <input type="text" placeholder="所属工程" class="form-control" id="txtGcmcForRy">
+                                </div>
+                                <label style="width: 56px;display: inline-block;">人员</label>
+                                <input type="text" class="form-control" placeholder="姓名或者身份证号" id="txtRymc">
+                                <button onclick="btnSearch(3);">检索</button>
+                            </div>
+                        </div>
+                         -->
+                </div>
+            </div>
+        </dl>
+    </section>
+    <section class="panel" id="panel4" style="background:rgb(233,236,243)" data-section-name="section4">
+        <dl class="dltabs" id="tabTitle">
+            <dt class="active" value="0" style="margin-left: 1px;"><span>企业一览</span></dt>
+            <dd class="active">
+                <iframe id="qyTable" src=""></iframe>
+            </dd>
+            <dt value="1"><span>工程一览</span></dt>
+            <dd>
+                <iframe id="gcTable" src=""></iframe>
+            </dd>
+            <dt value="2"><span>人员一览</span></dt>
+            <dd>
+                <iframe id="ryTable" src=""></iframe>
+            </dd>
+        </dl>
+    </section>
+    <script src="/static/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="/static/lib/echarts-liquidfill.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" type="text/javascript" charset="utf-8" src="/static/tz/js/pub.js"></script>
+	
+    <script type="text/javascript" type="text/javascript" charset="utf-8" src="/static/tz/js/initMap.js"></script>
+	
+    <script type="text/javascript">
+    var tempCity = "浙江省温州市";
+
+    var page = 1; //页面page，1，2，3
+
+    $(function() {
+
+        //全局初始化
+        init();
+
+        $(".all_num").css("line-height", $('.all_num').height() + "px");
+        $(".all_title").css("line-height", $('.all_title').height() + "px");
+
+        var height = $("#panel1").height()
+        $("#panel1-2").height(height * 0.35 + "px");
+        $("#panel1-3").height(height * 0.35 + "px");
+
+        setHeight();
+
+        refresh1();
+        initQyTable1();
+    });
+
+    function setHeight() {
+        var height = $("#panel1").height();
+
+        $('#panel2-1').height(height * 0.4);
+        $('#panel2-2').height(height * 0.45);
+
+        $("#gczzt").height(height - 110);
+        $("#tabTitle").find("dd").height(height - 110);
+
+        var h = $("#panel1-3").height();
+        $("#enginner5").height(h);
+        $("#enginner6").height(h);
+
+    }
+
+
+    //全局初始化
+    function init() {
+
+        //鼠标滚动全屏
+        $('.panel').css({
+            'height': $(window).height()
+        });
+        $.scrollify({
+            section: 'section',
+            scrollbars: false,
+            before: function() {
+                var sectionName = $.scrollify.current()[0].dataset.sectionName;
+                if (sectionName == "section1") {
+                    page = 1;
+                }
+                if (sectionName == "section2") {
+                    page = 2;
+                }
+                if (sectionName == "section3") {
+                    page = 3;
+                }
+
+                Refresh();
+            }
+        });
+
+        //加载固定块(回到顶部按钮)
+        // layui.use('util', function () {
+        //     var util = layui.util;
+        //     util.fixbar({
+        //         // bar1: true,
+        //         click: function (type) {
+        //             console.log(type);
+        //             if (type === 'bar1') {
+        //                 alert('点击了bar1')
+        //             }
+        //         }
+        //     });
+        // });
+    }
+
+
+
+    var onceTime = true;
+    //刷新
+    function Refresh() {
+        //统计页
+        if (page == 1) {
+            refresh1();
+        }
+        if (page == 2) {
+            refresh2();
+        }
+        //地图页面
+        if (page == 3) {
+            refresh3();
+        }
+        //一览页面
+        if (page == 4) {
+            refresh4();
+        }
+    }
+
+    function refresh1() {
+        statistics0();
+        statistics1();
+        statistics2();
+        statistics3();
+        statistics4();
+        statistics5();
+        statistics5 = function() {}
+
+    }
+    //第二图刷新
+    function refresh2() {
+        statistics21();
+        statistics22();
+        statistics23();
+        statistics24();
+        //  statistics25();
+    }
+
+    function refresh3() {
+
+    }
+
+    function refresh4() {
+        $("#item").height($("#panel3").height() - 100);
+        $("#tabTitle").find('.active').click();
+    }
+
+
+
+
+
+
+
+    function statistics0(data) {
+        ajaxTpl("/dwgxzj/GetStatistics", paramsData, function(data) {
+            var tmp = data.rows[0];
+            // 在建总工程  总面积  总造价，竣工，注册，在岗，备案设备，在用设备
+            var zmj = (tmp.zmj / 10000).toFixed(2) + '万方';
+            var zzj = (tmp.zzj / 10000).toFixed(2) + '亿元';
+            var jggc = (tmp.jggc / 10000).toFixed(2) + '万方';
+
+            $("#enginner_qyzs").html(tmp.zjgcs + "个"); //在建总工程
+            $("#enginner_zgcs").html(zmj); //总面积
+            $("#enginner_jzmj").html(zzj); //总造价
+            $("#enginner_gczj").html(jggc); //竣工
+            $("#enginner_zcry").html(tmp.zcry + "个"); //注册
+            $("#enginner_yfje").html(tmp.zgry + "个"); //在岗
+            $("#enginner_sfje").html(tmp.basb + "个"); //备案设备
+            $("#enginner_ljffje").html(tmp.zysb + "个"); //在用设备
+        });
+
+    }
+
+    // 工程类型统计
+    function statistics1() {
+        ajaxTpl("/dwgxzj/GetGCLX ", paramsData, function(data) {
+            var option = getPie("工程类型统计", data.Datas);
+            var doc = document.getElementById('enginner1');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+    // 工程异常统计
+    function statistics2() {
+        ajaxTpl("/dwgxzj/GetGCYC ", paramsData, function(data) {
+            var option = getPie("工程异常统计", data.Datas);
+            var doc = document.getElementById('enginner2');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+    // 设备统计
+    function statistics3() {
+        ajaxTpl("/machine/getsbtj", paramsData, function(data) {
+            var option = getPie("设备统计", data.Datas);
+            var doc = document.getElementById('enginner3');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+
+    function statistics4() {
+        ajaxTpl("/dwgxzj/GetJQGC", paramsData, function(data) {
+
+            var tmp;
+
+            for (var i = 0, len = data.Datas.line.length; i < len; i++) {
+                tmp = data.Datas.line[i];
+                tmp.type = 'line';
+            }
+
+            var option = getLine("近期工程统计", data.Datas.year, data.Datas.line);
+
+            var doc = document.getElementById('enginner4');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+
+    function statistics5() {
+        ajaxTpl("/dwgxzj/GetJCYC", paramsData, function(data) {
+            data.Datas = {
+                noPass: 0.4,
+                catch: 0.5
+            }
+            var pass = parseFloat(data.Datas.noPass);
+            var ary = [pass];
+
+            for (var i = 0; i < 4; i++) {
+                pass = pass - 0.1;
+                if (pass) {
+                    ary.push(pass);
+                } else {
+                    break;
+                }
+            }
+            var cat = parseFloat(data.Datas.catch);
+            var ary2 = [cat];
+            for (var i = 0; i < 2; i++) {
+                cat = cat - 0.1;
+                if (cat) {
+                    ary2.push(cat);
+                } else {
+                    break;
+                }
+            }
+
+            var option = getLiquidFill("不合格报告统计", ary);
+            var option2 = getLiquidFill("异常报告统计", ary2);
+
+            var doc = document.getElementById('enginner5');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+
+            var doc2 = document.getElementById('enginner6');
+            echarts.init(doc2).setOption(option2);
+            doc2.style.background = "white";
+        });
+    }
+
+    //在册人员
+    function statistics21() {
+
+        ajaxTpl("/dwgxzj/GetRYTJ", paramsData, function(data) {
+
+            var option = getPie("在册人员统计", data.Datas);
+            var doc = document.getElementById('enginner2-1');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+
+    //人员记分
+    function statistics22() {
+        ajaxTpl("/dwgxzj/GetRYJFTJ", paramsData, function(data) {
+            var option = getPie("2018人员记分统计", data.Datas);
+            var doc = document.getElementById('enginner2-2');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+
+    //上访人员
+    function statistics23() {
+        ajaxTpl("/dwgxzj/GetSFRY", paramsData, function(data) {
+
+            // {"code":"0","msg":"","count":1,"data":[{"num":"2","gz":"粉刷工"}]}
+            var ary = [],
+                tmp;
+            for (var i = 0, len = data.data.length; i < len; i++) {
+                tmp = data.data[i];
+                ary.push({
+                    name: tmp.gz,
+                    value: tmp.num,
+                });
+            }
+            var option = getPie("2018上访人员统计", ary);
+            var doc = document.getElementById('enginner2-3');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+    }
+
+    //人员类型统计  
+    function statistics24() {
+        ajaxTpl("/dwgxzj/GetRYLXFB", paramsData, function(data) {
+            var ary = [];
+            var val = [],
+                tmp;
+            for (var i = 0, len = data.Datas.length; i < len; i++) {
+                var tmp = data.Datas[i];
+                ary.push(tmp.name);
+                val.push(tmp.value);
+            }
+
+            var option = getBar("员工工种统计", ary, val);
+            // option.title.left = 
+
+            // option.grid = {y2: 140};
+            option.xAxis.axisLabel = {
+                interval: 0, //横轴信息全部显示  
+                rotate: -20, //-30度角倾斜显示  
+            }
+
+            var doc = document.getElementById('enginner2-4');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        });
+
+    }
+
+    function statistics25() {
+        // ajaxTpl("/wzwgry/GetGC_QYFBTJ", paramsData, function(data) {
+        var data = [];
+        var option = getBar("施工企业工资拖欠情况", [0, 1, 2], [0, 0, 0]);
+
+        var doc = document.getElementById('enginner2-5');
+        echarts.init(doc).setOption(option);
+        doc.style.background = "white";
+
+    }
+
+    var paramsData = {};
+
+
+    $("#tabTitle").on("click", "dt", function() {
+        $(this).addClass('active').siblings('dt').removeClass("active");
+        $(this).next().addClass('active').siblings('dd').removeClass("active");
+        var i = parseInt($(this).attr("value"));
+
+        switch (i) {
+            case 0:
+                initQyTable1();
+                break;
+            case 1:
+                initGcTable1();
+                break;
+            case 2:
+                initRyTable1();
+                break;
+            default:
+                break;
+        }
+
+    })
+
+    //企业一览初始化
+    function initQyTable1(params) {
+        var src = "/WebList/EasyUiIndex?FormDm=QYGL_QYBA&FormStatus=1";
+        if ($("#qyTable").attr("src") != src) {
+            $("#qyTable").attr("src", src);
+        }
+    }
+    //工程一览初始化
+    function initGcTable1(params) {
+        var src = "/WebList/EasyUiIndex?FormDm=GCZL_WDGC&FormStatus=4";
+        if ($("#gcTable").attr("src") != src) {
+            $("#gcTable").attr("src", src);
+        }
+    }
+
+    //人员一览初始化
+    function initRyTable1(params) {
+        var src = "/WebList/EasyUiIndex?FormDm=QYGL_RYBA&FormStatus=1";
+        if ($("#ryTable").attr("src") != src) {
+            $("#ryTable").attr("src", src);
+        }
+    }
+
+
+
+    function addLabel(params) {
+        ajaxTpl("/dwgxzj/GetProjectMap", params, function(val) {
+            var data = val.Datas;
+
+            var gc = [0, 0, 0];
+            for (var i = 0; i < data.length; i++) {
+                var pt = new BMap.Point(data[i].position[0], data[i].position[1]);
+                var marker = new BMap.Marker(pt, { icon: myIcon[data[i].status] });
+                map.addOverlay(marker);
+                gc[data[i].status]++;
+
+
+                (function() {
+                    var infopoint = data[i];
+                    marker.addEventListener("onclick", function(e) {
+                        showInfoGc(this, infopoint);
+                    });
+                })();
+            }
+            $('#gcAllNum').text(data.length + "个");
+            $('#gcNum0').text(gc[0]);
+            $('#gcNum1').text(gc[1]);
+            $('#gcNum2').text(gc[2]);
+        })
+    }
+
+    function showInfoGc(thisMaker, point) {
+
+        var opts = {
+            width: 400, // 信息窗口宽度
+            height: 100, // 信息窗口高度
+        }
+
+var enginnersingle = "<div class='showInfoGc' ><span onclick=loadView('" + point.gcbh + "','" + point.name + "')>" + point.name + "</span></div>";        
+
+        var infoWindow = new BMap.InfoWindow(enginnersingle, opts);
+        var addnumber = point;
+
+
+        infoWindow.addEventListener("open", function(type, target, point) {
+            $("#pepple_button_left").bind('click', function() {
+                togczsformap(addnumber.gcbh, addnumber.gcmc);
+            });
+        })
+        thisMaker.openInfoWindow(infoWindow);
+    }
+
+    function togczsformap(gcbh, gcmc) {
+
+        //每个图表的宽度
+        var w = ($(".panel").width() * 0.95).toString() + "px";
+        //每个图表的高度
+        var h = ($(".panel").height() * 0.95).toString() + "px";
+
+        var index = parent.layer.open({
+            type: 2,
+            content: '/welcome/welcomegcqp?gcbh=' + gcbh + '&gcmc=' + gcmc,
+            area: [w, h]
+        });
+    }
+
+    $(function() {
+        initMap();
+        getBoundary();
+        addLabel();
+    })
+
+    function loadView(gcbh, GCMC) {
+		return;
+        try {
+            var tabledesc = "工程信息";
+
+            // var rowindex = dataGrid.jqxGrid('getselectedrowindex');
+
+            // if (rowindex == -1) {
+            // alert("请选择要修改的预填信息");
+            // return;
+            // }
+            // var selected = pubselect();
+            // if (selected == undefined)
+            //     return;
+            // var LX = "N";
+            // var gclxbh=selected.GCLXBH;
+            if (gcbh == "01")
+                LX = "N";
+            else
+                LX = "S";
+
+            var jydbh = encodeURIComponent(gcbh);
+            var tabledesc = "工程信息"; // 表格描述
+            var zdzdtable = encodeURIComponent("ZDZD_JC"); // zdzd名
+            var tablename = encodeURIComponent("I_M_GC"); // 表名
+            var tablerecid = encodeURIComponent("GCBH"); // 表主键
+            var title = encodeURIComponent(tabledesc); // 标题
+            var formdm = tablename; // 列表key名称
+            var buttons = ""; // 按钮;//encodeURIComponent("临时保存|ZC| | ||完成报监|TJ| | "); // 按钮
+
+            var s_tablename = encodeURIComponent("I_S_GC_SGDW|I_S_GC_JSDW|I_S_GC_JLDW|I_S_GC_KCDW|I_S_GC_SJDW|I_S_GC_TSDW|I_S_GC_FGC");
+            //  都是从表中的字段：  主表对应字段,自己主键|……
+            var s_pri = encodeURIComponent("GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,RECID");
+            var s_title = encodeURIComponent("施工单位|建设单位|监理单位|勘察单位|设计单位|图审单位|单位工程");
+
+            var ss_tablename = encodeURIComponent("I_S_GC_SGDW|I_S_GC_SGRY||I_S_GC_JSDW|I_S_GC_JSRY||I_S_GC_JLDW|I_S_GC_JLRY||I_S_GC_KCDW|I_S_GC_KCRY||I_S_GC_SJDW|I_S_GC_SJRY");
+            //都是明细表中的字段：跟主表对应字段,跟从表对应字段,自己主键
+            var ss_pri = encodeURIComponent("GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID");
+            var ss_title = encodeURIComponent("施工人员|建设人员|监理人员|勘察人员|设计人员");
+
+            var rdm = Math.random();
+
+
+            var js = "";encodeURIComponent("searchRYZS.js"); //encodeURIComponent("jdbgService.js");
+            var callback = ""; //encodeURIComponent("jdbgService.jdzcsb('$$GCBH$$')");
+
+            var rdm = Math.random();
+            var url = "/datainput/Index?zdzdtable=" + zdzdtable +
+                "&t1_tablename=" + tablename +
+                "&t1_pri=" + tablerecid +
+                "&t1_title=" + title +
+                "&button=" + buttons +
+                "&js=" + js +
+                "&callback=" + callback +
+                "&rownum=2" +
+                "&t2_tablename=" + s_tablename +
+                "&t2_pri=" + s_pri +
+                "&t2_title=" + s_title +
+                "&t3_tablename=" + ss_tablename +
+                "&t3_pri=" + ss_pri +
+                "&t3_title=" + ss_title +
+                "&view=true" +
+                "&jydbh=" + jydbh +
+                "&LX=" + LX +
+                "&_=" + rdm;
+
+            parent.layer.open({
+                type: 2,
+                title: GCMC,
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '95%'],
+                content: url,
+                end: function() {
+                    searchRecord();
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    $("#moreBtn").click(function() {
+        var area = $("#moreArea");
+        if (area.is(":hidden")) {
+            area.show();
+            $(this).text("隐藏搜索");
+        } else {
+            area.hide();
+            $(this).text("展开搜索");
+
+        }
+    });
+
+    var myIcon = [
+        new BMap.Icon("/static/image/show/icon-2.png", new BMap.Size(22, 22), {
+            imageSize: new BMap.Size(22, 22)
+        }),
+        new BMap.Icon("/static/image/show/icon-1.png", new BMap.Size(22, 22), {
+            imageSize: new BMap.Size(22, 22)
+        }),
+        new BMap.Icon("/static/image/show/icon-3.png", new BMap.Size(22, 22), {
+            imageSize: new BMap.Size(22, 22)
+        })
+    ];
+
+    var thisMaker = [];
+    var markerData = [];
+
+    function btnSearch(flag) {
+        var obj = {};
+        if (flag) {
+            obj.gcmc =  $("#txtGcmc").val();
+        }else{
+            $("#txtGcmc").val("");
+        }
+
+
+        ajaxTpl("/dwgxzj/GetProjectMap", obj, function(val) {
+
+            var data = val.Datas;
+
+            var gc = [0, 0, 0];
+            var str = "",
+                tmp;
+
+            map.clearOverlays();
+            markerData = [];
+            thisMaker = [];
+            for (var i = 0; i < data.length; i++) {
+                tmp = data[i];
+                var pt = new BMap.Point(tmp.position[0], tmp.position[1]);
+                var marker = new BMap.Marker(pt, { icon: myIcon[tmp.status] });
+                map.addOverlay(marker);
+
+                str += '<div class="gc-li" value="' + i + '"><p title="' + tmp.name + '">工程名称: ' + tmp.name + '</p><p title="' + tmp.gcdd + '">工程地点: ' + tmp.gcdd + '</p></div>';
+                thisMaker.push(marker);
+                markerData.push(tmp);
+
+
+                (function() {
+                    var infopoint = tmp;
+                    marker.addEventListener("onclick", function(e) {
+                        showInfoGc(this, infopoint);
+                    });
+                })();
+            }
+            $("#listGc").html(str);
+            $(".more-search").height($("#gczzt").height());
+	 $(".listgc-warp").height($("#mapwrap").height()-111);
+            //$(".listgc-warp").height($("#mapInfo").height()-71);
+        });
+    }
+    $("#listGc").on("click", ".gc-li", function() {
+        var i = $(this).attr("value");
+        showInfoGc(thisMaker[i], markerData[i]);
+    });
+    function openVideo(url){
+        parent.layer.open({
+                type: 2,
+                title: "",
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '95%'],
+                content: "/hk/mpv.html?gcbh="+url,
+                end: function() {
+                    //searchRecord();
+                }
+            });
+
+    }
+    $(".gps-icon").click(function(){
+        map.centerAndZoom("台州市", 9);
+    });
+    </script>
+</body>
+
+</html>

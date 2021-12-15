@@ -1,0 +1,235 @@
+﻿@{
+    ViewBag.Title = "工程标段的企业考勤统计图";
+    Layout = "/Views/Shared/_Header.cshtml";
+}
+@RenderPage("~/Views/Shared/_BootstrapSelect.cshtml")
+@RenderPage("~/Views/Shared/_BootstrapDate.cshtml")
+<style type="text/css">
+    body {
+        background-color: transparent;
+    }
+
+    .form-control {
+        height: 34px;
+    }
+
+    .tdlabel {
+        padding: 5px;
+        width: 90px;
+        font-weight: 700;
+        text-align: right;
+        margin-left: 20px;
+    }
+
+    .tdinput {
+        padding: 5px;
+        width: 210px;
+        text-align: left;
+    }
+
+    .dropdown-menu {
+        margin-top: 0;
+    }
+
+    .ibox-content {
+        padding: 15px 20px 10px;
+        background-color: transparent;
+    }
+</style>
+<div class="animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <!--查询条件-->
+                <div id="search">
+                    <form id="ProjectsForm">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td class="tdlabel">工程标段</td>
+                                    <td class="tdinput">
+                                        <select id="GcId" name="gcId" class="form-control" data-size="4"></select>
+                                    </td>
+                                    <td class="tdlabel">考勤时间</td>
+                                    <td class="tdinput">
+                                        <input id="datetimepicker" type="text" value="@ViewData["KqTime"]" read readonly class="form-control" />
+                                    </td>
+                                    <td colspan="2" class="tdlabel">
+                                        <a onclick="Search()" class="btn btn-primary" style="float: right;">查询</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="ibox-content">
+                    <div id="toolbar">
+                    </div>
+                    <div id="main"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $(function () {
+        SetBodyWidth();
+        $('#datetimepicker').datetimepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left",
+            startView: 2,
+            language: 'zh-CN',
+            minView: 3,
+            maxView: 4
+        });
+        LoadGc();
+        Search();
+    });
+
+    $(window).resize(function () {
+        SetBodyWidth();
+        Search();
+    });
+
+    //设置宽高
+    function SetBodyWidth() {
+        var width = $(window).width();
+        var height = $(window).height() - 100;
+        $("#main").width(width).height(height);
+    };
+
+    //加载工程标段
+    function LoadGc() {
+        $.ajax({
+            url: "/Kqj/GetGcName",
+            type: "get",
+            dataType: "json",
+            async: false,
+            cache: false,
+            success: function (json) {
+                var html = "";
+                for (var i = 0; i < json.length; i++) {
+                    html += "<option value='" + json[i].gcbh + "'>" + json[i].gcmc + "</option>";
+                }
+                $("#GcId").html(html).selectpicker();
+
+            }
+        });
+    };
+
+    //查询操作
+    function Search() {
+        $.ajax({
+            url: "/Kqj/GetGcQyKq?gcbh=" + $("#GcId").val() + "&kqTime=" + $("#datetimepicker").val(),
+            type: "get",
+            dataType: "json",
+            async: false,
+            success: function (json) {
+                LoadCharts(json);
+            },
+            complete: function () {
+                top.layer.closeAll();
+            }
+        });
+    };
+
+    //加载wct
+    function LoadCharts(json) {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                textStyle: {
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                },
+                text: json.title
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                data: json.legend,
+                textStyle: {
+                    fontSize: 16,
+                    fontWeight: 'bold'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '3%',
+                bottom: '10%',
+                containLabel: false
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: true,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 10
+                    },
+                    axisLine: {
+                        lineStyle: {
+                        }
+                    },
+                    data: json.xAxis
+                }],
+            yAxis: [
+                {
+                    type: 'value',
+                    min: 0,
+                    max: 1,
+                    interval: 0.2,
+                    axisLine: {
+                        lineStyle: {
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: json.legend[0],
+                    type: 'bar',
+                    data: json.series,
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true,
+                                position: 'top',
+                                textStyle: {
+                                }
+                            }
+                        }
+                    },
+                    barWidth: 80
+                }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+        myChart.on("click", function (params) {
+            var date = $("#datetimepicker").val();
+            var qymc = params.name;
+            var gcbh = $("#GcId").val();
+            var param = encodeURIComponent(gcbh + "|" + qymc + "|" + date);
+            var url = "/WebList/EasyUiIndex?FormDm=BBGL_GCKQ&FormStatus=0&FormParam=PARAM--" + param;
+            top.layer.open({
+                title: "工程标段的企业考勤记录",
+                shade: 0.8,
+                type: 2,
+                content: url,
+                area: ['100%', '100%'],
+                maxmin: false
+            });
+        });
+    };
+
+</script>

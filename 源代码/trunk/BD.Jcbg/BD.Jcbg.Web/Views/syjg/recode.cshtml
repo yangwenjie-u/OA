@@ -1,0 +1,140 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+    function Open_Dialog() {
+        var savedisable = true;
+        var canceldisable = true;
+        if ("@ViewBag.btntext" == "0") {
+            savedisable = false;
+            canceldisable = true;
+        }
+        else if ("@ViewBag.btntext" == "1") {
+            savedisable = false;
+            canceldisable = false;
+        }
+        else
+        {
+            savedisable = true;
+            canceldisable = true;
+        }
+
+
+        $('#maindlg').dialog({
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            resizable: false,
+            shadow: true,
+            modal: false,
+            closable: false,
+            buttons: [{
+                text: '保存',
+                disabled: savedisable,
+                iconCls: 'icon-ok',
+                handler: function () {
+                    submitForm();
+                }
+            }, {
+                text: '注销',
+                disabled: canceldisable,
+                iconCls: 'icon-remove',
+                handler: function () {
+                    removerecode()
+                }
+            }
+            ]
+        });
+    }
+    $(function () {
+
+
+        Open_Dialog();
+    });
+    function removerecode()
+    {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/syjg/removemachineicp?id=@ViewBag.id",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+                        alert("注销成功！");
+                       
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "注销失败！";
+                        alert(data.msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    function submitForm() {
+        $("#formmain").form('submit', {
+            url: "/syjg/submachineicp?id=@ViewBag.id",
+            onSubmit: function (param) {
+                var ret = false;
+                try {
+                    var isValid = $(this).form('validate');
+                    if (!isValid)
+                        return false;
+                    //$("#formmain").mask("正在保存……");
+                    ret = true;
+                }
+                catch (err) {
+                    ret = false;
+                    //$.messager.alert('提示', err, 'info');
+                }
+                return ret;
+            },
+            success: function (data) {
+                try {
+                    $("#formmain").unmask();
+
+                    var data = eval('(' + data + ')');
+                    var code = data.code;
+                    var msg = data.msg;
+                    if (msg == "") {
+                        if (code == 0)
+                            msg = "备案成功！";
+                        else
+                            msg = "备案失败！";
+                    }
+                    $.messager.alert('提示', msg, 'info');
+                    
+                }
+                catch (err) {
+                    $.messager.alert('提示', err, 'info');
+                }
+            }
+        });
+    }
+</script>
+
+
+<div id="maindlg" style="padding:20px;width:350px;height:320px;" title="备案登记">
+    <form id="formmain" method="post" action="">
+        备案编号：　　
+        <input id="icp" name="icp" type="text" style="width:200px" class="easyui-validatebox" data-options="required:true" value="@ViewBag.icp" />
+        <br /><br />
+        经办人：　　
+        <input id="handleman" name="handleman" type="text" style="width:200px" class="easyui-validatebox" data-options="required:true" value="@ViewBag.handleman" />
+        <br /><br />
+        批准人：　　
+        <input id="replyman" name="replyman" type="text" style="width:200px" class="easyui-validatebox" data-options="required:true" value="@ViewBag.name" />
+        <br /><br />
+        设备备案机关意见：<br />
+        <input id="replycontext" name="replycontext" type="text" style="width:300px" class="easyui-validatebox" value="@ViewBag.context" />
+    </form>
+</div> 

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.DcLog,BD.Jcbg.DataModal" table="DCLog" lazy="false">
+    <id name="Recid" column="RECID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="DepCode" column="[DepCode]" />
+    <property type="string" length="5" name="Csylb" column="[CSYLB]" />
+    <property type="Decimal" name="Nsylb" column="[NSYLB]" />
+    <property type="Decimal" name="Xz" column="[XZ]" />
+    <property type="string" length="50" name="Wtbh" column="[WTBH]" />
+    <property type="string" length="50" name="Zh" column="[ZH]" />
+    <property type="string" length="20" name="Syr" column="[SYR]" />
+    <property type="string" length="20" name="Syfhr" column="[SYFHR]" />
+    <property type="DateTime" name="Syrq" column="[SYRQ]" />
+    <property type="Decimal" name="Qycs" column="[QYCS]" />
+    <property type="string" length="20" name="Sbmcbh" column="[SBMCBH]" />
+    <property type="string" length="40" name="Beizhu" column="[BEIZHU]" />
+    <property type="Boolean" name="Sfwc" column="[SFWC]" />
+    <property type="string" length="50" name="Sysj1" column="[SYSJ1]" />
+    <property type="string" length="50" name="Sysj2" column="[SYSJ2]" />
+    <property type="string" length="50" name="Sysj3" column="[SYSJ3]" />
+    <property type="string" length="50" name="Sysj4" column="[SYSJ4]" />
+    <property type="string" length="50" name="Sysj5" column="[SYSJ5]" />
+    <property type="string" length="50" name="Sysj6" column="[SYSJ6]" />
+    <property type="string" length="50" name="Sysj7" column="[SYSJ7]" />
+    <property type="string" length="50" name="Sysj8" column="[SYSJ8]" />
+    <property type="string" length="50" name="Sysj9" column="[SYSJ9]" />
+    <property type="string" length="50" name="Sysj10" column="[SYSJ10]" />
+    <property type="string" length="50" name="Sysj11" column="[SYSJ11]" />
+    <property type="string" length="50" name="Sysj12" column="[SYSJ12]" />
+    <property type="string" length="50" name="Sysj13" column="[SYSJ13]" />
+    <property type="string" length="50" name="Sysj14" column="[SYSJ14]" />
+    <property type="string" length="50" name="Sysj15" column="[SYSJ15]" />
+    <property type="string" length="50" name="Sysj16" column="[SYSJ16]" />
+    <property type="string" length="50" name="Sysj17" column="[SYSJ17]" />
+    <property type="string" length="50" name="Sysj18" column="[SYSJ18]" />
+    <property type="string" length="50" name="Sysj19" column="[SYSJ19]" />
+    <property type="string" length="50" name="Sysj20" column="[SYSJ20]" />
+    <property type="string" length="50" name="Sysj21" column="[SYSJ21]" />
+    <property type="string" length="50" name="Sysj22" column="[SYSJ22]" />
+    <property type="string" length="50" name="Sysj23" column="[SYSJ23]" />
+    <property type="string" length="50" name="Sysj24" column="[SYSJ24]" />
+    <property type="string" length="50" name="Sysj25" column="[SYSJ25]" />
+    <property type="string" length="50" name="Sysj26" column="[SYSJ26]" />
+    <property type="string" length="50" name="Sysj27" column="[SYSJ27]" />
+    <property type="string" length="50" name="Sysj28" column="[SYSJ28]" />
+    <property type="string" length="50" name="Sysj29" column="[SYSJ29]" />
+    <property type="string" length="50" name="Sysj30" column="[SYSJ30]" />
+    <property type="string" length="50" name="Sysj31" column="[SYSJ31]" />
+    <property type="string" length="50" name="Sysj32" column="[SYSJ32]" />
+    <property type="string" length="50" name="Sysj33" column="[SYSJ33]" />
+    <property type="string" length="50" name="Sysj34" column="[SYSJ34]" />
+    <property type="string" length="50" name="Sysj35" column="[SYSJ35]" />
+    <property type="string" length="50" name="Sysj36" column="[SYSJ36]" />
+    <property type="string" length="50" name="Sysj37" column="[SYSJ37]" />
+    <property type="string" length="50" name="Sysj38" column="[SYSJ38]" />
+    <property type="string" length="50" name="Sysj39" column="[SYSJ39]" />
+    <property type="string" length="50" name="Sysj40" column="[SYSJ40]" />
+    <property type="string" length="50" name="Sysj41" column="[SYSJ41]" />
+    <property type="string" length="50" name="Sysj42" column="[SYSJ42]" />
+    <property type="string" length="50" name="Sysj43" column="[SYSJ43]" />
+    <property type="string" length="50" name="Sysj44" column="[SYSJ44]" />
+    <property type="string" length="50" name="Sysj45" column="[SYSJ45]" />
+    <property type="string" length="50" name="Sysj46" column="[SYSJ46]" />
+    <property type="string" length="50" name="Sysj47" column="[SYSJ47]" />
+    <property type="string" length="50" name="Sysj48" column="[SYSJ48]" />
+    <property type="string" length="50" name="Sysj49" column="[SYSJ49]" />
+    <property type="string" length="50" name="Sysj50" column="[SYSJ50]" />
+    <property type="string" length="50" name="Sysj51" column="[SYSJ51]" />
+    <property type="string" length="50" name="Sysj52" column="[SYSJ52]" />
+    <property type="string" length="50" name="Sysj53" column="[SYSJ53]" />
+    <property type="string" length="50" name="Sysj54" column="[SYSJ54]" />
+    <property type="string" length="50" name="Sysj55" column="[SYSJ55]" />
+    <property type="string" length="50" name="Sysj56" column="[SYSJ56]" />
+    <property type="string" length="50" name="Sysj57" column="[SYSJ57]" />
+    <property type="string" length="50" name="Sysj58" column="[SYSJ58]" />
+    <property type="string" length="50" name="Sysj59" column="[SYSJ59]" />
+    <property type="string" length="50" name="Sysj60" column="[SYSJ60]" />
+    <property type="string" length="2147483647" name="DataList" column="[DataList]" />
+    <property type="string" length="50" name="UniqCode" column="[UniqCode]" />
+    <property type="string" length="1000" name="VideoFile" column="[VideoFile]" />
+    <property type="DateTime" name="Syksrq" column="[SYKSRQ]" />
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/Views/workflow/_workflowdo.cshtml";
+}
+
+@section head
+{
+    <script type="text/javascript" src="/skins/WebList/pub/layer/layer.js"></script>
+
+    <script language="javascript" type="text/javascript">
+        var idlist = '@ViewBag.idlist';
+        var namelist = '@ViewBag.namelist';
+
+        $(function () {
+            try {
+
+                // 处理附件
+                if (idlist == "") {
+                    $('#fjdiv').html("没有附件");
+                }
+                else {
+                    var ids = idlist.split(',');
+                    var names = namelist.split(',');
+                    if (ids.length > 0) {
+                        var fjlist = "";
+                        $.each(ids, function (index, fileid) {
+                            fjlist += "<div><a href=\"/workflow/fileview?id=" + fileid + "\">" + names[index] + "</a></div>"
+                        });
+                        $('#fjdiv').html(fjlist);
+                    }
+                }
+
+            } catch (e) {
+                $.messager.alert('初始化页面异常', e.message, 'warning');
+            }
+
+        });
+
+
+
+
+
+    </script>
+
+}
+<div>
+    <div style="padding:25px;height:auto;">
+        <div style="margin-bottom:10px;">
+            <div>文件列表：</div>
+            <div id="fjdiv" style="padding:5px;height:auto;">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+

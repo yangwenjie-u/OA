@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <title>sxjz</title>
+    <style type="text/css">
+    h2 {
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        font-weight: 600;
+        font-size: 24px;
+    }
+
+    .save-boottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        left: 0px;
+        background: rgba(55, 55, 55, 0.5);
+        height: 60px;
+    }
+
+    .layui-input {
+        border: 0px;
+    }
+
+    .ipt-line {
+        border-bottom: 1px solid rgb(230, 230, 230);
+        display: inline-block;
+        width: 80%;
+        box-sizing: border-box;
+        /*padding-right: 60px;*/
+    }
+
+    .tab .layui-table tbody tr:hover {
+        background: none;
+    }
+
+    .tbody-list td {
+        vertical-align: middle;
+    }
+
+    .wid160 {
+        width: 160px;
+    }
+
+    .wid80 {
+        width: 80px;
+    }
+
+    .margin50 {
+        margin-right: 50px;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;padding-bottom: 80px;box-sizing: border-box;">
+        <form class="layui-form tab" id="tabWarp" action="/dwgxsxjzy/SaveZZSBSCYJ" method="POST">
+            <table class="layui-table ipt-no-border" style="width: 90%;margin:0 5%;">
+                <thead id="thead">
+                    <tr>
+                        <th colspan="7">
+                            <h2>技术负责人简历</h2>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="tbody-list" id="list">
+                    <tr>
+                        <td>姓名</td>
+                        <td><input type="text" name="ryxm" class="layui-input"></td>
+                        <td>性别</td>
+                        <td style="width: 160px;"><input type="text" name="xb" class="layui-input"></td>
+                        <td>出生年月</td>
+                        <td><input type="text" name="birthyear" class="layui-input ipt-line" style="width: 80px;">-<input type="text" name="birthmonth" class="layui-input ipt-line" style="width: 40px;"></td>
+                        <td rowspan="5" style="width: 15%;">照片</td>
+                    </tr>
+                    <tr>
+                        <td>职称</td>
+                        <td><input type="text" name="zc" class="layui-input"></td>
+                        <td>职称专业</td>
+                        <td><input type="text" name="zczy" class="layui-input"></td>
+                        <td>执业资格</td>
+                        <td><input type="text" name="zyzg" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td>身份证</td>
+                        <td colspan="2"><input type="text" name="sfzhm" class="layui-input"></td>
+                        <td>注册证书编号</td>
+                        <td colspan="2"><input type="text" name="zczsbh" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">何时/何校/何专业毕业</td>
+                        <td colspan="2"><input type="text" name="bysj" class="layui-input ipt-line" style="width: 240px;">/<input type="text" name="byxy" class="layui-input ipt-line" style="width: 240px;">/<input type="text" name="byzy" class="layui-input ipt-line" style="width: 240px;"></td>
+                        <td>最高学历</td>
+                        <td><input type="text" name="zgxl" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">工程管理资历</td>
+                        <td colspan="2"><input type="text" name="gcglzl" class="layui-input ipt-line">年</td>
+                        <td>负责资质类别</td>
+                        <td><input type="text" name="fzzzlb" class="layui-input"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="layui-table ipt-no-border" style="width: 90%;margin:0 5%;">
+                <tbody id="gzjl" class="tbody-list">
+                    <tr>
+                        <td style="width:50px;border-top: 0px;" rowspan="11">工作简历</td>
+
+                        <td style="border-top: 0px;">由何年何月至何年何月</td>
+                        <td style="border-top: 0px;">在何单位、从事何工作、任何职</td>
+                    </tr>
+
+
+
+
+                </tbody>
+            </table>
+            <div style="width: 90%;margin:30px 5%;font-weight: 600;font-size: 14px;">
+                <span style="width: 40px;display:inline-block;">注：</span><span>1.工作简历从参加工作开始连续填写；</span>
+                <div style="margin:10px 0 0 40px;">2.每名技术负责人1页。</div>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- <div class="save-boottom" style="text-align: center;">
+        <button class="layui-btn" id="save" style="margin-top: 10px;">保存</button>
+    </div> -->
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/lib/jquery.form.min.js"></script>
+
+    <script type="text/javascript">
+    var list = [];
+    var uploadList = [];
+
+    var params = getParams();
+
+    $(function () {
+        if (params.rybh) {
+            loadDtl(params.rybh);
+        }
+    })
+
+    function loadDtl(rybh) {
+        ajaxTpl("/dwgxsxjzy/GetJsfzrjl", {
+            rybh: rybh
+        }, function (res) {
+            if (res.code == 0) {
+                var tab = $("#tabWarp");
+                for (var key in res.data) {
+                    tab.find("[name='" + key + "']").val(res.data[key]);
+                }
+                var list = res.data.gzjllist;
+                var tmp, tr;
+
+
+                var str = '';
+                for (var i = 0, len = list.length; i < len; i++) {
+                    str += '<tr><td><input type="text" name="starty" class="layui-input ipt-line wid160">年<input type="text" name="startm" class="layui-input ipt-line wid80">月<span style="padding: 0 10px;">至</span><input type="text" name="endy" class="layui-input ipt-line wid160">年<input type="text" name="endm" class="layui-input ipt-line wid80">月</td><td><input type="text" name="dwmc" class="layui-input ipt-line wid160 margin50"><input type="text" name="gzmc" class="layui-input ipt-line wid160 margin50"><input type="text" name="zwmc" class="layui-input ipt-line wid160"></td></tr>'
+                }
+                $("#gzjl").append(str);
+                setDate(list);
+            }
+        });
+    }
+
+    function setDate(list) {
+        var child = $("#gzjl").children();
+        for (var i = 0, len = list.length; i < len; i++) {
+            tmp = list[i];
+            tr = child.eq(i + 1);
+            for (var key in tmp) {
+                tr.find("[name='" + key + "']").val(tmp[key]);
+            }
+        }
+    }
+    </script>
+
+</body>
+
+</html>

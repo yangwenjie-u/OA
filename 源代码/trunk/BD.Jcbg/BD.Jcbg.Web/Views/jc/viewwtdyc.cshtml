@@ -1,0 +1,114 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+<link href="@SkinManager.GetCheckTreePath("css/zTreeStyle.css")" rel="stylesheet" type="text/css" />
+<script src=@SkinManager.GetCheckTreePath("js/jquery.ztree.core.js") type="text/javascript" charset="utf-8"></script>
+<script src=@SkinManager.GetCheckTreePath("js/jquery.ztree.excheck.min.js") type="text/javascript" charset="utf-8"></script>
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+    var g_yczt = @ViewBag.yczt;
+    var objYcs = [];
+
+    $(function () {
+        try {
+            var height = $(document).height() - 30;
+            if (height<100)
+                height = 500;
+            $("#frm_detail").css("height", height + "px");
+
+            initData(g_yczt);
+            if (objYcs.length > 0){
+                showDetail(objYcs[0].id);
+            }
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+    function initData(yczt) {
+        try {
+
+            var setting = {
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                },
+                callback: {
+                    onClick: treeClick
+                }
+            };
+
+            var zt = yczt * 1;
+            if ((zt & 1) > 0)
+                objYcs.push({"id":"1","pId":"","name":"委托单有修改"});
+            if ((zt & 2) > 0)
+                objYcs.push({"id":"2","pId":"","name":"委托书字段未全部上传"});
+            if ((zt & 4) > 0)
+                objYcs.push({"id":"4","pId":"","name":"自动采集数据有修改"});
+            if ((zt & 8) > 0)
+                objYcs.push({"id":"8","pId":"","name":"自动采集有未保存数据"});
+            if ((zt & 16) > 0)
+                objYcs.push({"id":"16","pId":"","name":"自动采集有重做数据"});
+            if ((zt & 32) > 0)
+                objYcs.push({"id":"32","pId":"","name":"自动采集有重复试验"});
+            if ((zt & 64) > 0)
+                objYcs.push({"id":"64","pId":"","name":"有重复报告"});
+            if ((zt & 128) > 0)
+                objYcs.push({"id":"128","pId":"","name":"比对人员找不到"});
+            if ((zt & 256) > 0)
+                objYcs.push({"id":"256","pId":"","name":"人员考勤记录找不到"});
+            if ((zt & 512) > 0)
+                objYcs.push({"id":"512","pId":"","name":"数据上传时间超差"});
+            if ((zt & 1024) > 0)
+                objYcs.push({"id":"1024","pId":"","name":"报告上传超差"});
+
+            $.fn.zTree.init($("#ptree"), setting, objYcs);
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function treeClick(event, treeId, treeNode, clickFlag) {
+        var t = treeNode.id;
+        showDetail(t);
+
+    }
+    function showDetail(t){
+        if (t == "64")
+            showUrl("/jc/viewwtdreport?wtdwyh=" + encodeURIComponent(g_wtdwyh));
+        else if (t == "8")
+            showUrl("/jc/viewwtdsysjs?wtdwyh=" + encodeURIComponent(g_wtdwyh)+"&wbc=1");
+        else if (t == "16")
+            showUrl("/jc/viewwtdsysjs?wtdwyh=" + encodeURIComponent(g_wtdwyh)+"&cz=1");
+        else if (t == "32")
+            showUrl("/jc/viewwtdsysjs?wtdwyh=" + encodeURIComponent(g_wtdwyh)+"&cfsy=1");
+        else if (t == "4")
+            showUrl("/jc/viewwtdsysjbj?wtdwyh=" + encodeURIComponent(g_wtdwyh));
+    }
+    function showUrl(url) {
+        try{
+            if (url != "")
+                $("#frm_detail").attr("src", url);
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+</script>
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+            <div class="">
+                <ul id="ptree" class="ztree"></ul>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-10">
+            <iframe width='98%' name='frm_detail' id='frm_detail' frameborder='0' scrolling='auto' />
+        </div>
+    </div>
+</div>

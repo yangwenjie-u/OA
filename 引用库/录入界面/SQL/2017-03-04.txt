@@ -1,0 +1,2 @@
+--2017-03-04 Ìí¼ÓËõÂÔÍ¼
+alter table DATAFILE add SMALLCONTENT image

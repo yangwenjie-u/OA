@@ -1,0 +1,633 @@
+﻿@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/ycba/_listlayout.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_remotebase = '@ViewBag.url';
+    var g_callid = '@ViewBag.callid';
+    var g_version = '@ViewBag.version';
+    var g_url = {};
+    var g_tables = [];
+    var g_relations = [];
+    var g_searchs = [];
+    var g_fields = [];
+    var g_pagesize = 10;
+
+    $(function () {
+        try {
+            var maskId = layer.load(1, {
+                shade: [1.0, '#fff'] //0.1透明度的白色背景
+            });
+
+            loadDefine();
+
+            layer.close(maskId);
+
+            loadData(1);
+
+
+        } catch (e) {
+            layer.alert('初始化页面异常:' + e, { icon: 0 });
+        }
+
+    });
+    var g_datas = [];
+    var g_topRemoteTableMame = "";
+    // 获取列表定义
+    function loadDefine() {
+
+        $.ajax({
+            type: "POST",
+            url: "/ycba/getycdydefine",
+            dataType: "json",
+            data: "callid=" + encodeURIComponent(g_callid) + "&version=" + encodeURIComponent(g_version),
+            async: false,
+            success: function (data) {
+                if (data.code != "0") {
+                    layer.alert('获取远程调用模块失败:' + data.msg, { icon: 0 });
+                } else {
+                    g_url = data.url;
+                    g_tables = data.tables;
+                    g_relations = data.relations;
+                    g_searchs = data.searchs;
+                    g_fields = data.fields;
+                    if (g_url != null)
+                        g_pagesize = g_url.PageSize;
+
+                    setSearch(g_searchs);
+                    setTableHeads(g_fields);
+
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+    }
+    // 显示查找条件
+    function setSearch(searchs) {
+        try {
+            searchs.sort(sortBy("DisplayOrder", false))
+            var appendStr = "";
+            $.each(searchs, function (i, item) {
+                if (item.CtrlType.toLowerCase() == "text" || item.CtrlString == "") {
+                    appendStr += "<div class=\"form-group\">" +
+                        "<input type=\"text\" class=\"form-control\" placeholder=\"" + item.ParamDesc + "\" id=\"" + item.ParamName + "\">" +
+                        "</div>&nbsp;&nbsp;";
+                } else {
+                    appendStr += "<div class=\"form-group\">" +
+                        getCtrlString(item) +
+                        "</div>&nbsp;&nbsp;";
+                }
+            });
+            $("#frmsearch").html(appendStr + $("#frmsearch").html());
+        } catch (err) {
+            layer.alert('设置查询条件异常:' + err, { icon: 0 });
+        }
+    }
+    // 获取查找条件的ctrlstring
+    function getCtrlString(search) {
+        var ret = "";
+        try {
+
+            $.ajax({
+                type: "POST",
+                url: "/ycba/getctrlinfo",
+                dataType: "json",
+                data: "ctrlstring=" + encodeURIComponent(search.CtrlString),
+                async: false,
+                success: function (data) {
+                    if (data.code != "0") {
+                        layer.alert('获取查询控件内容失败:' + data.msg, { icon: 0 });
+                    } else {
+                        var jsondata = data.records;
+
+                        if (search.CtrlType.toLowerCase() == "select") {
+                            ret += "<select id='" + search.ParamName + "' class=\"form-control\">";
+                            $.each(jsondata, function (i, item) {
+                                ret += "<option value='" + item.itemvalue + "'";
+                                if (item.selected == "1")
+                                    ret += " selected ";
+                                ret += ">" + item.itemdesc + "</option>";
+                            });
+                            ret += "</select>";
+                        }
+
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (err) {
+
+        }
+        return ret;
+    }
+    // 设置列表表格头
+    function setTableHeads(fields) {
+        try {
+            var listFields = fields.filter(function (item) {
+                return item.ListShow;
+            });
+            listFields.sort(sortBy("ListDisplayOrder", false))
+            var appendStr = "<th width=\"60\" style='text-align:center'>序号</th>";
+            $.each(listFields, function (i, item) {
+                var width = "";
+                if (item.ListWidth > 0)
+                    width = "width='" + item.ListWidth + "'";
+                appendStr += "<th " + width + " style='text-align:center'>" + item.FieldDesc + "</th>";
+            });
+            appendStr += "<th width=\"140\" style=\"text-align:center\">操作</th>";
+            $("#thead").html(appendStr);
+        } catch (err) {
+            layer.alert('设置表格头异常:' + err, { icon: 0 });
+        }
+    }
+    // 获取查找字符串
+    function getQueryString(pagesize, pageindex) {
+        var queryStr = "rows=" + pagesize + "&page=" + pageindex;
+        try {
+            $.each(g_searchs, function (i, item) {
+                var key = item.ParamName;
+                var keyValue = $("#" + key).val();
+
+                queryStr += "&" + key + "=" + encodeURIComponent(keyValue);
+            });
+        } catch (err) {
+            layer.alert('设置表格头异常:' + err, { icon: 0 });
+        }
+        return queryStr;
+    }
+    // 加载表格数据
+    function loadData(pageindex) {
+        var maskId = layer.load(1, {
+            shade: [1.0, '#fff'] //0.1透明度的白色背景
+        });
+        try {
+            $.ajax({
+                type: "POST",
+                url: g_remotebase + g_url.UrlPath,
+                dataType: "json",
+                data: getQueryString(g_url.PageSize, pageindex),
+                async: false,
+                success: function (data) {
+                    showData(pageindex, data);
+                    layer.close(maskId);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (err) {
+            layer.close(maskId);
+            layer.alert('加载数据异常:' + err, { icon: 0 });
+        }
+    }
+    // 获取顶级远程表格名称，LocalParentTable为空，只能有一个
+    function getTopRemoteTableName(tables, relations) {
+        var ret = "";
+        try {
+            if (tables.length > 0) {
+                if (tables.length > 1) {
+                    var rootRelations = relations.filter(function (item) {
+                        return item.LocalParentTable == "";
+                    });
+
+                    if (rootRelations.length > 0) {
+                        var rootRelation = rootRelations[0];
+                        var rootTable = tables.filter(function (item) {
+                            return item.LocalTableName == rootRelation.LocalTableName;
+                        });
+                        if (rootTable.length > 0)
+                            ret = rootTable[0].RemoteTable;
+                    }
+                }
+                if (ret == "")
+                    ret = tables[0].RemoteTable;
+            }
+
+        } catch (err) {
+            layer.alert('获取顶层表异常:' + err, { icon: 0 });
+        }
+        return ret;
+    }
+    // 显示列表数据
+    function showData(pageindex, data) {
+        try {
+            var total = data[g_url.TotalProperty];
+            g_datas = data[g_url.DataRoot];
+            g_topRemoteTableMame = getTopRemoteTableName(g_tables, g_relations);
+
+            $("#table_main tr:not(:first)").empty();
+            var listFields = g_fields.filter(function (item) {
+                return item.ListShow && item.RemoteField.indexOf("Local-") == -1;
+            });
+            listFields.sort(sortBy("ListDisplayOrder", false))
+
+            $.each(g_datas, function (i, item) {
+                var idx = (pageindex - 1) * g_url.PageSize + i + 1;
+                var row = "<tr><td style=\"text-align:center\">" + idx + "</td>";
+                $.each(listFields, function (j, field) {
+                    var align = "";
+                    if (field.ListAlign != "")
+                        align = "style='text-align:" + field.ListAlign + "'";
+                    row += "<td " + align + ">" + getListFieldValue(item, g_topRemoteTableMame, field) + "</td>";
+                });
+                row += "<td style=\"text-align:center\"><button class=\"btn btn-warning btn-xs\" type=\"button\" onclick=\"downData(" + i + ")\"><span class=\"glyphicon glyphicon-download-alt\"></span>下载</button>&nbsp;&nbsp;" +
+                       "<button class=\"btn btn-warning btn-xs\" type=\"button\" onclick=\"view(" + i + ")\"><span class=\"glyphicon glyphicon-list-alt\"></span>查看</button></td></tr>";
+                $("#table_main").append(row);
+            });
+            loadPager(pageindex, total);
+        } catch (err) {
+            layer.alert('展示数据异常:' + err, { icon: 0 });
+        }
+    }
+    // 获取列表字段值
+    function getListFieldValue(data, remotetable, field) {
+        var ret = "";
+        try {
+
+            var issub = field.RemoteField.indexOf(".") > -1;
+            if (!issub) {
+                ret = data[remotetable][field.RemoteField];
+            } else {
+                var arr = field.RemoteField.split(".");
+                if (arr.length == 2) {
+                    ret = getListSubTableValue(data[arr[0]], "", arr[1], field.SubTableFieldType);
+                } else if (arr.length == 3) {
+                    ret = getListSubTableValue(data[arr[0]], arr[1], arr[2], field.SubTableFieldType);
+                }
+            }
+        } catch (err) {
+            layer.alert('获取字段值:' + err, { icon: 0 });
+        }
+        return ret;
+    }
+    // 获取列表从表字段值
+    function getListSubTableValue(datas, detailfield, fieldname, subtype) {
+        var ret = "";
+        try {
+            if (datas.length > 0) {
+                if (detailfield == "") {
+                    // 取第一个
+                    if (subtype == 1) {
+                        ret = datas[0][fieldname];
+                    } else {
+                        $.each(datas, function (i, item) {
+                            if (ret != "")
+                                ret += ",";
+                            ret += item[fieldname];
+                        });
+                    }
+                } else {
+                    // 取第一个
+                    if (subtype == 1) {
+                        ret = datas[0][detailfield][fieldname];
+                    } else {
+                        $.each(datas, function (i, item) {
+                            if (ret != "")
+                                ret += ",";
+                            ret += item[detailfield][fieldname];
+                        });
+                    }
+                }
+            }
+
+
+        } catch (err) {
+
+        }
+        return ret;
+    }
+    // 设置分页
+    function loadPager(pageIndex, totalCount) {
+
+        var totalPage = Math.ceil(totalCount / g_pagesize);
+        var preEnable = pageIndex > 1 ? "" : "disabled=\"disabled\"";
+        var nextEnable = totalPage > pageIndex ? "" : "disabled=\"disabled\"";
+
+        $("#table_caption").html("");
+        $("#table_caption").append("<button class=\"btn btn-success\" type=\"button\" " + preEnable + " onclick=\"loadData(1)\"><span class=\"glyphicon glyphicon-fast-backward\"></span>首页</button>&nbsp;");
+        $("#table_caption").append("<button class=\"btn btn-success\" type=\"button\" " + preEnable + " onclick=\"loadData(" + (pageIndex - 1) + ")\"><span class=\"glyphicon glyphicon-backward\"></span>上一页</button>&nbsp;");
+        $("#table_caption").append("<button class=\"btn btn-info\" type=\"button\"  disabled=\"disabled\">第" + pageIndex + "页/共" + totalPage + "页，共" + totalCount + "条记录</button>&nbsp;");
+        $("#table_caption").append("<button class=\"btn btn-success\" type=\"button\" " + nextEnable + " onclick=\"loadData(" + (pageIndex + 1) + ")\"><span class=\"glyphicon glyphicon-forward\"></span>下一页</button>&nbsp;");
+        $("#table_caption").append("<button class=\"btn btn-success\" type=\"button\" " + nextEnable + " onclick=\"loadData(" + (totalPage) + ")\"><span class=\"glyphicon glyphicon-fast-forward\"></span>尾页</button>&nbsp;");
+
+    }
+    // 根据远程表格名获取表格定义，远程表格名为一级表格名，可能获取多个表格。譬如远程表格名为监理单位，数据库定义为监理单位.单位，监理单位.人员
+    function getTableByRemoteTableName(tables, remoteTablename) {
+        var ret = {
+            find: false,
+            isdetail: false,
+            tables: []
+        };
+        try {
+            var tables = tables.filter(function (item) {
+                return item.RemoteTable.toLowerCase() == remoteTablename.toLowerCase() ||
+                    item.RemoteTable.toLowerCase().indexOf(remoteTablename.toLowerCase() + ".") == 0;
+            });
+            var isdetail = false;
+            $.each(tables, function (i, item) {
+                item["order"] = item.IsJsonArray ? 1 : 0;
+                if (item.RemoteTable.indexOf('.') > -1) {
+                    isdetail = true;
+                }
+            });
+            tables.sort(sortBy("order", false));
+            ret["isdetail"] = isdetail;
+            ret["tables"] = tables;
+            ret["find"] = tables.length > 0;
+        } catch (err) {
+            layer.alert('根据远程表名获取表对象异常:' + err, { icon: 0 });
+        }
+        return ret;
+    }
+    // 查看详情
+    function view(index) {
+        try {
+            var data = g_datas[index];
+            var topRemoteTable = g_topRemoteTableMame.toLowerCase();
+            g_tables.sort(sortBy("DisplayOrder", false))
+
+            var detail = "<div class='container' style='padding:5px 5px 5px 5px'>";
+            var tabStr = "";
+            var bodyStr = "";
+            for (var remoteTable in data) {
+                var active1 = tabStr == "" ? "active" : "";
+                var active2 = bodyStr == "" ? "in active" : "";
+
+                var tableObjs = getTableByRemoteTableName(g_tables, remoteTable);
+                if (!tableObjs.find)
+                    continue;
+                var title = tableObjs.tables[0].TableDesc.split('.')[0];
+                tabStr += "<li class='" + active1 + "'><a href='#" + title + "' data-toggle='tab'>" + title + "</a></li>";
+                bodyStr += "<div class='tab-pane fade " + active2 + "' id='" + title + "'>";
+                // 主表，二级表（远程不带下级），二级表（远程带下级本地不需要）
+                if (tableObjs.tables.length == 1) {
+                    tableObj = tableObjs.tables[0];
+                    var tableFields = g_fields.filter(function (item) {
+                        return item.DetailShow && item.TableName.toLowerCase() == tableObj.LocalTableName.toLowerCase() && item.RemoteField != "" && item.RemoteField.indexOf("Local-") != 0;
+                    });
+                    tableFields.sort(sortBy("DetailDisplayOrder", false))
+                    // 显示主表
+                    if (tableObj.RemoteTable.toLowerCase() == topRemoteTable) {
+                        bodyStr += getDetailMainTable(tableObj, tableFields, data, data[tableObj.RemoteTable]);
+                    } else {
+                        // 显示二级表（远程获取不带下级）
+                        if (!tableObjs.isdetail) {
+                            bodyStr += getDetailSubTable(tableObj, tableFields, data, data[tableObj.RemoteTable], "");
+
+                        }
+                            // 显示二级表（远程带下级，本地不需要下级）
+                        else if (tableObjs.tables.length == 1) {
+                            var arr = tableObj.RemoteTable.split('.');
+
+                            bodyStr += getDetailSubTable(tableObj, tableFields, data, data[arr[0]], arr[1]);
+                        }
+                    }
+                }
+                    // 三级表
+                else {
+                    var subTabStr = "";
+                    var subBodyStr = "";
+                    var firstTable = tableObjs.tables[0];
+                    var subRootFieldName = firstTable.RemoteTable.split('.')[0];
+                    var subRootDatas = data[subRootFieldName];
+                    var subTitle = firstTable.RemoteTable.split('.')[1];
+                    var index = 1;
+                    $.each(subRootDatas, function (j, subData) {
+                        var subActive1 = subTabStr == "" ? "active" : "";
+                        var subActive2 = subBodyStr == "" ? "in active" : "";
+                        var curTitle = subTitle + index;
+                        var curId = firstTable.RemoteTable + index;
+                        subTabStr += "<li class='" + subActive1 + "'><a href='#" + curId + "' data-toggle='tab'>" + curTitle + "</a></li>";
+                        subBodyStr += "<div class='tab-pane fade " + subActive2 + "' id='" + curId + "'>";
+
+                        for (var subTable in subData) {
+                            var findTables = tableObjs.tables.filter(function (item) {
+                                return item.RemoteTable.indexOf("." + subTable) > -1;
+                            });
+                            if (findTables.length > 0) {
+                                var findTable = findTables[0];
+                                var tableFields = g_fields.filter(function (item) {
+                                    return item.DetailShow && item.TableName.toLowerCase() == findTable.LocalTableName.toLowerCase() && item.RemoteField != "" && item.RemoteField.indexOf("Local-") != 0;
+                                });
+                                tableFields.sort(sortBy("DetailDisplayOrder", false))
+                                var tableStr = "";
+                                if (!findTable.IsJsonArray) {
+                                    tableStr = getDetailMainTable(findTable, tableFields, data, subData[subTable]);
+                                } else {
+                                    tableStr = getDetailSubTable(findTable, tableFields, data, subData[subTable], "");
+                                }
+                                subBodyStr += tableStr;
+                            }
+
+                        }
+
+                        subBodyStr += "</div>";
+                    });
+
+                    subTabStr = "<ul class=\"nav nav-tabs\">" + subTabStr + "</ul>";
+                    subBodyStr = "<div class=\"tab-content\">" + subBodyStr + "</div>";
+
+
+
+                    bodyStr += "<div>" + subTabStr + subBodyStr + "</div>";
+                }
+
+                bodyStr += "</div>";
+            }
+            tabStr = "<ul class=\"nav nav-tabs\">" + tabStr + "</ul>";
+            bodyStr = "<div class=\"tab-content\">" + bodyStr + "</div>";
+            detail += tabStr + bodyStr + "</div>";
+
+            layer.open({
+                title: "",
+                type: 1,
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '95%'], //宽高
+                content: detail,
+                btn: ["关闭"]
+            });
+        } catch (err) {
+            layer.alert('查看详情异常:' + err, { icon: 0 });
+        }
+    }
+    // 获取详情主表表格
+    function getDetailMainTable(table, fields, alldatas, data) {
+        var ret = "";
+        try {
+            ret = "<table class=\"table table-bordered table-striped\" >";
+            var index = 1;
+            $.each(fields, function (j, field) {
+                var obj = getMainTableCell(alldatas, data, table.RemoteTable, field, index);
+                ret += obj.msg;
+                index = obj.index;
+            });
+            if (index % 2 == 0) {
+                ret += "<td>&nbsp;</td><td>&nbsp;</td></tr>";
+            }
+
+            ret += "</table>"
+        } catch (err) {
+            layer.alert('获取显示表格' + table.TableDesc + '异常:' + err, { icon: 0 });
+        }
+        return ret;
+    }
+    // 获取详情从表
+    function getDetailSubTable(table, fields, alldatas, data, detailfield) {
+
+        var ret = "";
+        try {
+            ret = "<table class=\"table table-bordered table-striped\" >";
+            ret += "<thead><tr>";
+            $.each(fields, function (j, field) {
+                ret += "<th style='text-align:center'>" + field.FieldDesc + "</th>";
+            });
+            ret += "</tr></thead><tbody>";
+            $.each(data, function (j, row) {
+                ret += "<tr>";
+                $.each(fields, function (k, field) {
+                    if (detailfield == "")
+                        ret += "<td style='text-align:center'>" + row[field.RemoteField] + "</td>";
+                    else
+                        ret += "<td style='text-align:center'>" + row[detailfield][field.RemoteField] + "</td>";
+                });
+                ret += "</tr>";
+            });
+            ret += "</tbody>";
+            ret += "</table>"
+        } catch (err) {
+            layer.alert('获取显示表格' + table.TableDesc + '异常:' + err, { icon: 0 });
+        }
+        return ret;
+    }
+    // 获取详情主表单元格
+    function getMainTableCell(alldatas, data, remotetable, field, index) {
+        var obj = {};
+        var ret = "";
+        try {
+            if (index % 2 > 0) {
+                ret += "<tr>";
+            }
+            if (index % 2 == 0 && field.DetailFullRow) {
+                ret += "<td>&nbsp;</td><td>&nbsp;</td></tr><tr>";
+                index++;
+            }
+            var step = 1;
+            var cols = "";
+            var cellWidth = " width='30%' ";
+            if (field.DetailFullRow) {
+                step = 2;
+                cols = "colspan='3'";
+                cellWidth = "";
+            }
+            var fieldvalue = "";
+            if (remotetable.toLowerCase() == g_topRemoteTableMame.toLowerCase())
+                fieldvalue = getListFieldValue(alldatas, remotetable, field);
+            else
+                fieldvalue = getDetailFieldValue(data, field);
+            ret += "<td width='20%'>&nbsp;" + field.FieldDesc + "</td><td " + cols + " " + cellWidth + ">&nbsp;" + fieldvalue + "</td>";
+
+            if (index % 2 == 0 || step == 2) {
+                ret += "</tr>";
+            }
+            index += step;
+        } catch (err) {
+        }
+        obj.msg = ret;
+        obj.index = index;
+        return obj;
+    }
+    // 获取列表字段值
+    function getDetailFieldValue(data, field) {
+        var ret = "";
+        try {
+            ret = data[field.RemoteField];
+        } catch (err) {
+            layer.alert('获取详情字段值异常:' + err, { icon: 0 });
+        }
+        return ret;
+    }
+    // 保存数据
+    function downData(index) {
+        try {
+            var data = g_datas[index];
+            $.ajax({
+
+                type: "POST",
+                url: "/ycba/dosaveapiitem",
+                dataType: "json",
+                data: "callid=" + encodeURIComponent(g_callid) + "&version=" + encodeURIComponent(g_version) + "&key=" + encodeURIComponent(JSON.stringify(data)),
+                async: false,
+                success: function (data) {
+                    if (data.code != "0")
+                        alert("下载失败，详细信息：" + data.msg);
+                    else {
+                        alert("下载成功");
+                    }
+
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在下载……', { icon: 16 });
+                }
+            });
+        } catch (err) {
+            layer.alert('下载数据异常:' + err, { icon: 0 });
+        }
+    }
+    // 排序
+    var sortBy = function (filed, rev, primer) {
+        rev = (rev) ? -1 : 1;
+        return function (a, b) {
+            a = a[filed];
+            b = b[filed];
+            if (typeof (primer) != 'undefined') {
+                a = primer(a);
+                b = primer(b);
+            }
+            if (a < b) { return rev * -1; }
+            if (a > b) { return rev * 1; }
+            return 1;
+        }
+    };
+</script>
+}
+
+
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">查找条件</a>
+        </div>
+        <form class="navbar-form navbar-left" role="search" id="frmsearch">
+            
+            <button type="button" class="btn btn-warning" onclick="loadData(1);">
+                <span class="glyphicon glyphicon-search"></span>查找
+            </button>
+            <button type="button" class="btn btn-warning" onclick="downAll();">
+                <span class="glyphicon glyphicon glyphicon-download-alt"></span>下载所有
+            </button>
+        </form>
+    </div>
+</nav>
+<div class="container ">
+    <table id="table_main" class="table table-bordered table-hover">
+        <caption style="text-align:left; padding:4px 4px 4px 4px;" id="table_caption"></caption>
+        <thead>
+            <tr id="thead"></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+

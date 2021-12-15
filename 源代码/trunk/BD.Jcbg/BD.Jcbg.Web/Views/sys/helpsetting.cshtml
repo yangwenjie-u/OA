@@ -1,0 +1,120 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_blx = '@ViewBag.Blx';
+    var g_tables = [];
+    $(function () {
+        try {
+            setFrameHeight();
+            $(window).resize(function () {
+                setFrameHeight();
+            })
+            
+            initData();
+            showData();
+        } catch (e) {
+            alert(e);
+        }
+
+    });
+    function setFrameHeight() {
+        var setHeight = $(window).height()-100;
+        $('#frmMain').css('height', setHeight + 'px')
+
+    }
+    function initData() {
+        try {
+
+            $.ajax({
+                type: "POST",
+                url: "/jc/gethelptables?blx=" + encodeURIComponent(g_blx),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    try {
+                        g_tables = data;
+                    } catch (e) {
+                        alert(e);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function showData() {
+        try {
+            $.each(g_tables, function (i, table) {
+                $("#ctrlBzb").append("<option value='" + table.recid+ "'>" + table.sjbhy + "</option>");
+            });
+            $("#ctrlBzb").combobox();
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function loadPage(tableid) {
+        try {
+            if (tableid == "")
+                return;
+            var tableinfo = getTable(tableid);
+            if (tableinfo == null) {
+                alert("获取表定义失败");
+                return;
+            }
+            if (tableinfo.sszdzd == "") {
+                alert("zdsm中未定义所属zdzd");
+                return;
+            }
+            if (tableinfo.sjbmc == "") {
+                alert("zdsm中未定义表名称");
+                return;
+            }
+            var css = "";
+            var js = "";
+            var button = encodeURIComponent("mc-新建|funname-addRecord()|icon-icon-add||mc-修改|funname-modifyRecord()|icon-icon-modify||mc-保存|funname-saveRecord()|icon-icon-save||mc-删除|funname-delRecord()|icon-icon-del");
+            var limitsize = encodeURIComponent("[10,20,40,100]");
+            var zdzdtable = tableinfo.sszdzd;
+            var tablename = tableinfo.sjbmc;
+            var url = "/WebList/InputEasyUiList?css=" + css + "&js=" + js + "&pagesize=20&limitsize=" + limitsize + "&button=" + button + "&zdzdtable=" + zdzdtable + "&tablename=" + tablename + "&singleselect=true";
+            $("#frmMain").attr("src", url);
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+    function getTable(tableid) {
+        var ret = null;
+        try{
+            $.each(g_tables, function (i, table) {
+                if (table.recid == tableid) {
+                    ret = table;
+                    return false;
+                }
+            });
+        }
+        catch (ex) {
+            alert(ex);
+        }
+        return ret;
+    }
+</script>
+} 
+<div class="panel panel-warning">
+    <div class="panel-heading">
+                    <select id="ctrlBzb" class="combobox form-control" onchange="loadPage(this.value)">
+                        <option value="">请选择帮助表</option>
+                    </select>
+    </div>
+    <div class="panel-body">
+        <iframe style="width:100%;height:100%" frameborder="0" id="frmMain" />
+    </div>
+</div>

@@ -1,0 +1,120 @@
+﻿@using BD.Jcbg.Common;
+@using BD.WorkFlow.Common;
+<!DOCTYPE html>
+<html>
+<head>
+    <!--移动设备-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--高速模式,webkit内核-->
+    <meta name="renderer" content="webkit">
+    <!--不支持IE兼容模式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--禁止搜索引擎转码,并附带广告-->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <meta http-equiv="Refresh" content="0;url=http://www.bing.com">
+    <![endif]-->
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="@SkinManager.GetCssPath("font-awesome.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@WorkFlowSkins.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript"></script>
+    <script src=@SkinManager.GetBootstrapPath("/PlugIns/Layer/layer.js") type="text/javascript" charset="utf-8"></script>
+    <link href="@WorkFlowSkins.GetCssPath("easyui/themes/gray/easyui.css")" rel="stylesheet" type="text/css" />
+    <link href="@WorkFlowSkins.GetCssPath("easyui/themes/icon.css")" rel="stylesheet" type="text/css" />
+    <script src="@WorkFlowSkins.GetJsPath("jquery.easyui.min.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetJsPath("easyui-exend.js")" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        var gcbh = '@ViewBag.gcbh';
+        var g_jcjglist = [];
+        $(function () {
+            loadjcjg();
+        });
+
+        function loadjcjg() {
+            //var testqylist = [{
+            //    qybh: "C9601301D19E4D3D87ECFA589A0E8DBC",
+            //    qymc: "温州市建筑质监科学研究所有限公司"
+            //}];
+            //g_jcjglist = testqylist;
+            //showJcjg(g_jcjglist);
+            $.ajax({
+                type: "POST",
+                url: "/dwgxwz/GetJCJGS",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    try {
+                        if (data.code == "0") {
+                            g_jcjglist = data.qylist
+                            showJcjg(g_jcjglist);
+                        }
+                        else {
+                            var msg = data.msg || "加载检测机构列表失败！";
+                            alert(msg);
+                        }
+                    } catch (e) {
+                        alert(e);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+
+        function showJcjg(jcjglist) {
+            $('#jcjg').combobox("loadData", jcjglist);
+        }
+
+        function getJcjg() {
+            var ret = null
+            var qybh = $('#jcjg').combobox('getValue');
+            if (qybh) {
+                var qymc = "";
+                var isfind = false;
+                $.each(g_jcjglist, function (i, qy) {
+                    if (qy.qybh == qybh) {
+                        qymc = qy.qymc;
+                        isfind = true;
+                        return true;
+                    }
+                });
+                if (isfind) {
+                    ret = { qybh: qybh, qymc: qymc };
+                }
+            }
+            return ret;
+            
+        }
+
+
+
+
+
+
+
+
+
+
+    </script>
+</head>
+<body>
+    <div style="margin-left: 50px; margin-top:20px;">
+        <form id="frmimportcy" enctype="multipart/form-data">
+            <table cellspacing="0" cellpadding="0">
+                <tr>
+                    <td style="height:40px; width:200px;">检测机构：</td>
+                    <td style="height:40px;"><input id="jcjg" name="jcjg" class="easyui-combobox" data-options="valueField:'qybh',textField:'qymc'" style="width:400px;"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
+
+
+

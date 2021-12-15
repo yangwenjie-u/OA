@@ -1,0 +1,204 @@
+/*新增样式*/
+
+.top-nav {
+    background: #20A6F7;
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-left: 30%;
+}
+
+.top-nav i {
+    background-image: url("./newDataInput/main_icon.png");
+    width: 16px;
+    height: 16px;
+    background-size: 100% 100%;
+    display: inline-block;
+    position: absolute;
+}
+
+.top-nav div {
+    margin-top: 10px;
+    display: inline-block;
+    text-align: center;
+    width: 100px;
+    cursor: pointer;
+}
+
+.top-nav span {
+    color: white;
+    font-size: 16px;
+    line-height: 30px;
+    display: inline-block;
+}
+
+.top-nav .active span {
+    border-bottom: 3px solid white;
+    font-size: 18px;
+}
+
+#baseInfo {
+    display: block;
+}
+
+
+
+/*覆盖原样式*/
+
+
+
+.tabs-container {
+    display: none;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+#contentDiv .add_del_stj {
+    position: absolute;
+    width: 340px;
+    height: 50px;
+    top: 50px;
+    left: 0;
+    z-index: 999;
+    background: white;
+    color: black;
+    margin: 0;
+    border-right: 3px solid #DCDCDC;
+}
+
+.ryxx {
+    font-size: 18px;
+    text-align: left;
+    margin: 10px 0 0 120px;
+}
+
+.btn-group {
+    float: right;
+    margin: 10px;
+}
+
+#contentDiv .btn-add,
+#contentDiv .btn-copy {
+
+    background-size: 100% 100%;
+    background-color: white;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    float: right;
+}
+
+#contentDiv .btn-add {
+    background-image: url("./newDataInput/add_btn.png");
+}
+
+#contentDiv .btn-copy {
+    background-image: url("./newDataInput/copy_btn.png");
+}
+
+.left-nav {
+
+    position: absolute;
+    width: 340px;
+    height: 600px;
+    top: 100px;
+    left: 0;
+    z-index: 999;
+    background: white;
+    color: black;
+    border-right: 3px solid #DCDCDC;
+    overflow: auto;
+}
+
+
+.stj_nav {
+    margin-left: 60px;
+    position: fixed;
+    width: 277px;
+    overflow: auto;
+}
+
+.stj_nav>li.active {
+    background: #20A6F7;
+    color: white;
+
+    border: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.t2-close {
+    background-image: url('./newDataInput/delete.png');
+    background-size: 100% 100%;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    float: right;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+#contentDiv .stj_nav .active a {
+    color: white;
+}
+
+.nav-tabs>li>a {
+    padding-left: 50px;
+
+    background-color: transparent;
+    border-width: 0px;
+}
+.stj_lr_tab{
+	margin-left: 340px;
+}
+#contentDiv .stj_nav li {
+    display: inline-block;
+    width: 100%;
+    color: black;
+    border-bottom: 1px solid #EAEAEA;
+}
+
+
+
+
+/*
+*/
+.ryxx {
+    margin: 10px 0 0 30px;
+}
+
+#contentDiv .add_del_stj {
+    width: 300px;
+}
+
+.left-nav {
+    width: 300px;
+}
+
+.stj_nav {
+    margin-left: 0;
+    width: 297px;
+}
+.table_wai{
+    padding-left: 300px;
+}
+.stj_lr_tab{
+    margin-left: 0;
+    margin: 0 auto;
+}
+
+.stj_lr_td .stj_label {
+	width:108px;
+}
+
+
+
+.wfa_frame_div_image a {
+    width: 90%;
+}
+.wfa_frame_div_image a  img{
+    width: 100%;
+}

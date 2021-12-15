@@ -1,0 +1,101 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_dialoglayout.cshtml";
+}
+<script src="/Contents/Js/jquery.js"></script>
+<link href="@SkinManager.GetCssPath("users.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetEasyuiPath("/themes/icon.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetEasyuiPath("/themes/default/easyui.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetJsPath("jquery-base64.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("fileupload.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("user.js")" type="text/javascript" charset="utf-8"></script>
+
+
+<script language="javascript" type="text/javascript">
+    var parentid = '@ViewBag.Recid';
+	$(function () {
+		try {
+
+			dispUpFiles('divfile', '@ViewBag.FileIds');
+		    $("#td_content").html($.base64.decode('@ViewBag.Content'));
+
+		}
+	    catch (e) {
+	        alert(e.message);
+	    }
+	});
+
+    function ryly(qybh)
+    {
+        try{
+            parent.layer.open({
+                type: 2,
+                title: '人员确认',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['250px', '180px'],
+                content: "/dwgxwzlc/qylyry?parentid=" + parentid,
+                btn: ["保存", "关闭"],
+                yes: function (index) {
+                    var checkvalue = window.parent[layerObj.find('iframe')[0]['name']].getValue();
+                    $.ajax({
+                        type: "POST",
+                        url: "/dwgxwzlc/qylyryqr?qybh=" + qybh + "&checkoption=" + checkvalue,
+                        dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.msg != "")
+                            alert(data.msg);
+                        else
+                            alert("确认成功");
+                        parent.layer.closeAll();
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+        } ,
+        success: function (layero, index) {
+            layerObj = layero;
+        },
+        btn2: function (index) {
+            parent.layer.closeAll();
+        },
+        end: function () {
+        }
+    });
+    }
+        catch(e)
+    {
+        alert(e.message);
+    }
+    }
+
+	</script>
+	
+		<table class="form2" width="800" align="center" cellspacing="1" border="0" style="margin-top:10px">
+			<tr>
+				<th width="100">标题：</th>
+				<td width="300">@ViewBag.Title</td>
+				<th width="100">发件人：</th>
+				<td width="300">@ViewBag.Sender</td>
+			</tr>
+			<tr>
+				<th>收件人：</th>
+				<td colspan="3">
+					@ViewBag.Receiver
+				</td>
+			</tr>
+			<tr>
+				<th>附件：</th>
+				<td colspan="3">
+					<div id="divfile"></div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="4" id="td_content">
+				</td>
+			</tr>
+		</table>

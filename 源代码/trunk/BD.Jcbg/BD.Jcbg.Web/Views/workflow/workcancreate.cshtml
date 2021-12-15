@@ -1,0 +1,418 @@
+﻿@{
+    Layout = "~/Views/workflow/_workflow.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+	var workflow_process_g_pageSize = 20;
+
+	var workflow_process_g_edit_companys = null;
+	var workflow_process_g_search_companys = null;
+	var workflow_process_g_search_groups = null;
+	var workflow_process_g_edit_groups = null;
+	var workflow_process_g_all_groups = null;
+	var workflow_process_g_edit_templates = null;
+	var workflow_process_g_edit_templates_phone =null;
+	var workflow_process_g_all_templates = null;
+	
+
+	$(function () {
+		try {
+			workflow_process_initDs();
+			
+
+			$('#workflow_process_maintable').datagrid({
+				title: '流程管理',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/workflow/getmyprocess?rows=' + workflow_process_g_pageSize+'&_='+Math.random(),
+				rownumbers: true,
+				nowrap: true,
+				idField: 'Processid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: workflow_process_g_pageSize,
+				pageList: [workflow_process_g_pageSize, 40, 50, 100, 1000, 10000],
+				columns: [[
+				{ field: 'Processid', title: '流程ID', width: 50, sortable: true, align: "center"},
+				{ field: 'CompanyName', title: '所属单位', width: 180, sortable: true, align: "center"},
+				{ field: 'ProcessName', title: '流程名称', width: 180, sortable: true, align: "center" },
+				{ field: 'GroupName', title: '流程分组', width: 100, sortable: true, align: "center" },
+				{ field: 'TemplateName', title: '流程模板', width: 160, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var zdzd = row.ZdzdProcess;
+						var formname = row.TemplateName;
+						if (zdzd) {
+							formname = "字段字典表单(";
+							if (row.ZdzdKey == "")
+								formname += "所有项目";
+							else
+								formname += row.ZdzdKey;
+							formname += ")";
+						}
+						return formname;
+					}
+				},
+				{ field: 'UseInPhone', title: '手机流程', width: 160, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (row.UseInPhone == 0)
+							return "否";
+						var formname = "是";
+						if (row.CreateInPhone == 1)
+							formname = "手机创建";
+						formname += "(" + row.PhoneTemplate+")";
+						return formname;
+					}
+				},
+				{ field: 'SubProcess', title: '子流程', width: 60, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (value)
+							return "是";
+						return "否";
+					}
+				},
+				{ field: 'FixProcess', title: '自由流程', width: 60, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (value)
+							return "否";
+
+						return "是";
+					}
+				},
+				{ field: 'InUse', title: '状态', width: 60, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (row.InUse)
+							return "正常";
+						return "禁用";
+					}
+				},
+				{ field: 'UserRealName', title: '创建人', width: 60, sortable: true, align: "center" },
+				{ field: 'CreateTime', title: '创建时间', width: 120, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var timeVal = row.CreateTime;
+						if (timeVal == null || timeVal == "")
+							return "";
+						var dt = eval("new " + timeVal.substr(1, timeVal.length - 2));
+						return dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+					}
+				}
+				]],
+				toolbar: "#workflow_process_tb",
+				onClickRow: function (rowIndex, rowData) {
+						workflow_process_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+						workflow_process_editRecord();
+				}
+			});
+			workflow_process_initSearch();
+		} catch (e) {
+			$.messager.alert('初始化页面异常', e.message, 'warning');
+		}
+
+	});
+	function workflow_process_getCompanyGroups(companyid, issearch){
+		var ret = new Array();
+		try{
+			if (issearch)
+				ret[0] = { "Groupid": "", "GroupName": "不限"};
+			if (workflow_process_g_all_groups == null){
+				if (!issearch)
+					ret[0] = { "Groupid": "", "GroupName": "请选择流程分组"};
+				return;
+			}
+			for (var i=0; i<workflow_process_g_all_groups.length; i++)
+				if (companyid == "" || companyid == workflow_process_g_all_groups[i].CompanyId)
+					ret[ret.length] = workflow_process_g_all_groups[i];
+		}catch(e){
+			$.messager.alert('获取流程分组异常', e.message, 'warning');
+		}
+		return ret;
+	}
+	function workflow_process_getCompanyTemplates(companyid, issearch){
+		var ret = new Array();
+		try{
+			if (issearch)
+				ret[0] = { "Templateid": "", "TemplateName": "不限"};
+			if (!issearch)
+				ret[0] = { "Templateid": "", "TemplateName": "无"};
+			if (workflow_process_g_all_templates == null){
+				
+				return;
+			}
+			for (var i=0; i<workflow_process_g_all_templates.length; i++)
+				if (companyid == "" || companyid == workflow_process_g_all_templates[i].CompanyId)
+					ret[ret.length] = workflow_process_g_all_templates[i];
+		}catch(e){
+			$.messager.alert('获取表单模板异常', e.message, 'warning');
+		}
+		return ret;
+	}
+	function workflow_process_initDs() {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/workflow/getcompanygroups",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					workflow_process_g_all_groups = new Array();
+					if (data != null && data.length != 0){
+						for (var i = 0; i < data.length; i++) {
+							workflow_process_g_all_groups[workflow_process_g_all_groups.length] = data[i];
+						}
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				},
+				beforeSend: function (XMLHttpRequest) {
+				}
+			});
+			$.ajax({
+				type: "POST",
+				url: "/workflow/getcompanytemplates",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					workflow_process_g_all_templates = new Array();
+					if (data != null && data.length != 0){
+						for (var i = 0; i < data.length; i++) {
+							workflow_process_g_all_templates[workflow_process_g_all_templates.length] = data[i];
+						}
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				},
+				beforeSend: function (XMLHttpRequest) {
+				}
+			});
+			$.ajax({
+				type: "POST",
+				url: "/workflow/getcompanys",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					workflow_process_g_edit_companys = new Array();
+
+					workflow_process_g_search_companys = [{ "CompanyId": "", "CompanyName": "不限"}];
+					if (data == null || data.length == 0)
+						workflow_process_g_edit_companys = [{ "CompanyId": "", "CompanyName": "请选择单位"}];
+					else {
+						for (var i = 0; i < data.length; i++) {
+							workflow_process_g_edit_companys[workflow_process_g_edit_companys.length] = data[i];
+							workflow_process_g_search_companys[workflow_process_g_search_companys.length] = data[i];
+						}
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				},
+				beforeSend: function (XMLHttpRequest) {
+				}
+			});
+			
+		} catch (e) {
+			$.messager.alert('加载初始化数据集异常', e.message, 'warning');
+		}
+	}
+	function workflow_process_initSearch() {
+		try {
+			$("#workflow_process_search_companys").combobox({
+				valueField: "CompanyId",
+				textField: "CompanyName",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_process_g_search_companys,
+				onSelect:function(record){
+					workflow_process_g_search_groups = workflow_process_getCompanyGroups(record.CompanyId, true);
+					$("#workflow_process_search_groups").combobox("loadData", workflow_process_g_search_groups);
+					if (workflow_process_g_search_groups != null)
+						$("#workflow_process_search_groups").combobox("select",workflow_process_g_search_groups[0].Groupid);
+				}
+			});
+			$("#workflow_process_search_groups").combobox({
+				valueField: "Groupid",
+				textField: "GroupName",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: workflow_process_g_search_groups
+			});
+
+			$("#workflow_process_search_companys").combobox("select",workflow_process_g_search_companys[0].CompanyId);
+			
+			$("#workflow_process_search_zdzd").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: [
+					{ "id": "", "text": "不限" },
+					{ "id": "1", "text": "是" },
+					{ "id": "0", "text": "否" }
+				]
+			});
+			$("#workflow_process_search_status").combobox({
+				valueField: "id",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: [
+					{ "id": "", "text": "不限" },
+					{ "id": "1", "text": "启用" },
+					{ "id": "0", "text": "禁用" }
+				]
+			});
+			
+		} catch (e) {
+			$.messager.alert('初始化查询控件异常', e.message, 'warning');
+		}
+	}
+	function workflow_process_search() {
+		try {
+			workflow_process_gridReload();
+		} catch (e) {
+			$.messager.alert('查找记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_process_showToolbar(rowData) {
+		try {
+			$("#workflow_process_btnstartwork").linkbutton('enable');
+
+		} catch (e) {
+			$.messager.alert('显示工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_process_showNoRecToolbar() {
+		try {
+			$("#workflow_process_maintable").datagrid('unselectAll');
+			$("#workflow_process_btnstartwork").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('显示无记录工具条异常', e.message, 'warning');
+		}
+	}
+
+
+
+	function workflow_process_gridReload() {
+		try {
+			$('#workflow_process_maintable').datagrid('load', {
+				companyid: $("#workflow_process_search_companys").combobox("getValue"),
+				groupid: $("#workflow_process_search_groups").combobox("getValue"),
+				zdzdprocess: $("#workflow_process_search_zdzd").combobox("getValue"),
+				inuse: $("#workflow_process_search_status").combobox("getValue"),
+				processname: $("#workflow_process_search_processname").val(),
+				zdzdkey: $("#workflow_process_search_zdzdkey").val(),
+			});
+			workflow_process_showNoRecToolbar();
+		} catch (e) {
+			$.messager.alert('加载表格异常', e.message, 'warning');
+		}
+	}
+
+
+	function workflow_process_getRecordParams(record) {
+		var ret = "";
+		try {
+			ret = "processid="+record.Processid+"&companyid=" + record.CompanyId + 
+			"&processname=" + encodeURIComponent(record.ProcessName) +"&groupid=" + record.Groupid + 
+			"&FormTemplateid=" + record.FormTemplateid + "&UniqueType=" + record.UniqueType +
+			"&UseInPhone="+record.UseInPhone+"&PhoneTemplateID="+record.PhoneTemplateid +
+			"&CreateInPhone="+record.CreateInPhone+"&InUse="+record.InUse+
+			"&PreListUrl="+encodeURIComponent(record.PreListUrl)+"&PreWhere="+encodeURIComponent(record.PreWhere)+
+			"&ZdzdProcess="+record.ZdzdProcess+"&ZdzdKey="+encodeURIComponent(record.ZdzdKey)+
+			"&SubProcess="+record.SubProcess+"&FixProcess="+record.FixProcess+"&AfterPostFunc="+record.AfterPostFunc+
+			"&CompanyName="+encodeURIComponent(record.CompanyName);
+		} catch (e) {
+			$.messager.alert('表单数据序列化异常', e.message, 'warning');
+		}
+		return ret;
+
+	}
+	function workflow_process_getRecord(isedit){
+		var rec={
+		};
+		try{
+			if (isedit)
+				rec = $('#workflow_process_maintable').datagrid('getSelected');
+			else
+				rec.Processid = 0;
+
+			rec.CompanyId = $("#workflow_process_edit_companyid").combobox("getValue");
+			rec.CompanyName = $("#workflow_process_edit_companyid").combobox("getText");
+			rec.ProcessName = $("#workflow_process_edit_processname").val();
+			rec.Groupid = $("#workflow_process_edit_groupid").combobox("getValue");
+			rec.FormTemplateid = $("#workflow_process_edit_templateid").combobox("getValue");
+			//rec.UniqueType = $("#workflow_process_edit_uniqtype").combobox("getValue");
+			rec.ZdzdProcess = $("#workflow_process_edit_zdzdprocess").combobox("getValue")==1?true:false;
+			rec.SubProcess = $("#workflow_process_edit_subprocess").combobox("getValue")==1?true:false;
+			rec.FixProcess = $("#workflow_process_edit_nfixprocess").combobox("getValue")==1?false:true;
+			rec.ZdzdKey = $("#workflow_process_edit_zdzdkey").val();
+			rec.UseInPhone = $("#workflow_process_edit_phoneflowtype").combobox("getValue") != "0" ? 1:0;
+			rec.CreateInPhone = $("#workflow_process_edit_phoneflowtype").combobox("getValue") == "2" ? 1:0;
+			rec.PhoneTemplateid = $("#workflow_process_edit_phonetemplateid").combobox("getValue");
+			rec.InUse = $("#workflow_process_edit_status").combobox("getValue") == 1?true:false;
+            rec.AfterPostFunc = $("#workflow_process_edit_nfixprocess_afterpostfunc").val();
+		}catch(e){
+			$.messager.alert('获取编辑记录异常', e.message, 'warning');
+		}
+
+		return rec;
+	}
+
+
+	function workflow_process_startWork()
+	{
+		try {
+			var rec = $("#workflow_process_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			//var buttons = encodeURIComponent("提交|TJ|/WebForm/Index?FormDm=userinfo1&FormStatus=0||返回|HH|/WebForm/Index?FormDm=userinfo1&FormStatus=0"); // 按钮
+			//window.top.location ="DataEntry/Index?activityid=31&taskid=267&processid=31&companycode=01&zdzdtable=zdzd&t1_tablename=UserInfo&t1_pri=username&t1_title=&button=" + buttons;
+			window.location = "/workflow/startwork?processid="+rec.Processid+"&returnurl="+encodeURIComponent(window.location)
+				+"&companycode=01&zdzdtable=zdzd&t1_tablename=UserInfo&t1_pri=recid&t1_title=";
+			//var url = "/workflow/startworkoframe?templateid=25";
+			/*var url="/workflow/startwork?processid="+rec.Processid+"&returnurl="+encodeURIComponent(window.location)
+				+"&companycode=01&zdzdtable=zdzd&t1_tablename=UserInfo&t1_pri=recid&t1_title=";
+			$("#workflow_process_testflow_div").window({
+				title: rec.ProcessName + "-测试",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				cache: false,
+				content: "<iframe width='100%' height='99%' name='workflow_process_frm_start' id='workflow_process_frm_start' frameborder='0' scrolling='auto' src='" + url +  "'></iframe>",
+			});*/
+		} catch (e) {
+			$.messager.alert('预览异常', e.message, 'warning');
+		}
+	}
+</script>
+<table id="workflow_process_maintable"></table>  
+<div id="workflow_process_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a onclick="workflow_process_startWork();" id="workflow_process_btnstartwork" class="easyui-linkbutton" iconCls="icon-test-flow" plain="true" disabled="true">发起流程</a>
+	</div>  
+	<div>
+		所属单位：<input id="workflow_process_search_companys" style="width:200px" />
+		所属分组：<input id="workflow_process_search_groups" style="width:100px" />
+		流程名称：<input id="workflow_process_search_processname" style="width:100px" />
+		字段字典流程：<input id="workflow_process_search_zdzd" style="width:50px" />
+		项目代码：<input id="workflow_process_search_zdzdkey" style="width:80px" />
+		状态：<input id="workflow_process_search_status" style="width:50px" />
+		<a href="javascript:workflow_process_search();" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+	</div>
+</div>
+<div id="workflow_process_testflow_div" style="margin:0px; text-align:center;">
+</div>

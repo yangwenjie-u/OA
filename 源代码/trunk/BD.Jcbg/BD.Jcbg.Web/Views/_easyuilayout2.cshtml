@@ -1,0 +1,90 @@
+
+@using BD.Jcbg.Common;
+@using BD.WebListCommon;
+@using BD.WebListDataModel.Entities;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>条件筛选</title>
+	@*<link href="@SkinManager.GetCssPath("users.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetEasyuiPath("/themes/icon.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetEasyuiPath("/themes/default/easyui.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetCssPath("jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript"></script>
+	<script src="@SkinManager.GetJsPath("jquery.easyui.min.js")" type="text/javascript"></script>
+	<script src="@SkinManager.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript"></script>
+	<script src="@SkinManager.GetJsPath("jquery.loadmask.min.js")" type="text/javascript"></script>
+	<script src="@SkinManager.GetJsPath("jquery.zclip.min.js")" type="text/javascript"></script>*@
+
+
+    <link id="easyuiTheme" rel="stylesheet" href="@Skins.GetPubPath("easyui/themes/bootstrap/easyui.css")" type="text/css" />
+    <link rel="stylesheet" href="@Skins.GetPubPath("easyui/themes/icon.css")" type="text/css" />
+    <link rel="stylesheet" href="@Skins.GetPubPath("layer/skin/default/layer.css")" />
+    <link rel="stylesheet" href="@Skins.GetHPath("css/font-awesome.min.css")" />
+    <link rel="stylesheet" href="@Skins.GetCssPath("easyuistj.css?v1")" />
+    <script type="text/javascript" src="@Skins.GetPubPath("easyui/jquery.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("easyui/jquery.easyui.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("easyui/plugins/datagrid-filter.js?v=2017020815")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("easyui/locale/easyui-lang-zh_CN.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("layer/layer.js")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("webeasyuilist.js?v=2017020811")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("prefixfree.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("pubselect.js")"></script>    
+    <style type="text/css">
+        <!--
+        .datagrid-btable tr {
+            height: 30px;
+        }
+
+        .datagrid-cell {
+            font-size: 14px;
+        }
+
+        .datagrid-header .datagrid-cell span {
+            font-size: 14px;
+        }
+
+        .panel-title {
+            font-size: 16px;
+        }
+
+        .datagrid-cell, .datagrid-cell-group, .datagrid-header-rownumber, .datagrid-cell-rownumber {
+            text-overflow: ellipsis;
+        }
+        -->
+    </style> 
+	@RenderSection("head", false)
+    <script>
+        $(function(){
+            //Extend the 'combogrid' editor.
+            $.extend($.fn.datagrid.defaults.editors, {
+                combogrid: {
+                    init: function(container, options){
+                        var input = $('<input type="text" class="datagrid-editable-input">').appendTo(container); 
+                        input.combogrid(options);
+                        return input;
+                    },
+                    destroy: function(target){
+                        $(target).combogrid('destroy');
+                    },
+                    getValue: function(target){
+                        return $(target).combogrid('getValue');
+                    },
+                    setValue: function(target, value){
+                        $(target).combogrid('setValue', value);
+                    },
+                    resize: function(target, width){
+                        $(target).combogrid('resize',width);
+                    }
+                }
+            });
+        })
+    </script>
+</head>
+<body>
+	@RenderBody()
+</body>
+</html>

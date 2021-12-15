@@ -1,0 +1,16 @@
+﻿@using BD.WorkFlow.Common;
+<!DOCTYPE>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>@ViewBag.Title</title>	
+    <script src="@WorkFlowSkins.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript"></script>
+	@RenderSection("head", false) 
+</head>
+<body style="margin:0 0 0 0; overflow-y:hidden;overflow-x:hidden;">
+	@RenderBody()
+	
+</body>
+</html>

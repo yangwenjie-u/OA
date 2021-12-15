@@ -1,0 +1,126 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuieditlayout.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+
+    $(function () {
+        try {
+            $('#companychange_maintable').datagrid({
+                title: '建设项目设计变更明细表',
+                loadMsg: "正在加载……",
+                border: false,
+                url: '/oa/GetChangeItem?id=@ViewBag.Recid',
+                rownumbers: true,
+                nowrap: true,
+                idField: 'recid',
+                striped: false,
+                fit: true,
+                singleSelect: true,
+                pagination: false,
+                showFooter: true,
+                columns: [[
+				{ field: 'ChangeTypeName', title: '变更类型', width: 150, sortable: true, align: "left" },
+                { field: 'ChangeType', title: '变更类型', width: 150, sortable: true, align: "left",hidden:true },
+				{ field: 'ChangeNo', title: '编号', width: 200, sortable: true, align: "center" },
+                { field: 'ChangeDate', title: '发生时间', width: 100, sortable: true, align: "center" },
+                { field: 'ChangeContent', title: '变更地点、原因和主要内容', width: 300, sortable: true, align: "center" },
+                { field: 'ChangeWork', title: '主要工程量', width: 200, sortable: true, align: "center" },
+                { field: 'ChangeMoney', title: '变更金额(万元)', width: 100, sortable: true, align: "center" },
+                { field: 'ChangeApprove', title: '审批情况', width: 100, sortable: true, align: "center" },
+				{ field: 'ChangeRemark', title: '备注', width: 100, sortable: true, align: "center" }
+				]],
+                toolbar: "#companychange_tb",
+                onLoadSuccess: function (data) {
+                    company_change_countitem();
+                }
+            });
+
+
+
+
+        } catch (e) {
+            $.messager.alert('初始化页面异常', e.message, 'warning');
+        }
+
+    });
+
+    function company_change_countitem()
+    {
+        var company_change_c_no = 0;
+        var company_change_c_money = 0;
+        var company_change_b_no = 0;
+        var company_change_b_money = 0;
+        var company_change_a_no = 0;
+        var company_change_a_money = 0;
+        var company_change_big_no = 0;
+        var company_change_big_money = 0;
+        var company_change_no=0;
+        var company_change_money = 0;
+
+        var rows = $('#companychange_maintable').datagrid('getRows'); //获取当前的数据行
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i]['ChangeType'] == 1) {
+                company_change_c_no++;
+                company_change_c_money = company_change_c_money + rows[i]['ChangeMoney'];
+            }
+            else if (rows[i]['ChangeType'] == 2) {
+                company_change_b_no++;
+                company_change_b_money = company_change_b_money + rows[i]['ChangeMoney'];
+            }
+            else if (rows[i]['ChangeType'] == 3) {
+                company_change_a_no++;
+                company_change_a_money = company_change_a_money + rows[i]['ChangeMoney'];
+            }
+            else {
+                company_change_big_no++;
+                company_change_big_money = company_change_big_money + rows[i]['ChangeMoney'];
+            }
+            company_change_no++;
+            company_change_money = company_change_money + rows[i]['ChangeMoney'];
+        }
+        $("#companychange_count_c").text("数量[" + company_change_c_no + "] 金额" + company_change_c_money + "万元");
+        $("#companychange_count_b").text("数量[" + company_change_b_no + "] 金额" + company_change_b_money + "万元");
+        $("#companychange_count_a").text("数量[" + company_change_a_no + "] 金额" + company_change_a_money + "万元");
+        $("#companychange_count_big").text("数量[" + company_change_big_no + "] 金额" + company_change_big_money + "万元");
+        $("#companychange_count").text("数量[" + company_change_no + "] 金额" + company_change_money + "万元");
+    }
+
+    function company_change_excel() {
+        try {
+            window.location = "/oa/getchangeitemexcel?id=@ViewBag.Recid";
+        /*
+            $.ajax({
+                type: "POST",
+                url: "/oa/getchangeitemexcel?id=@ViewBag.Recid",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    try {
+                        alert('导出excel成功！');
+                        window.location = data; //执行下载操作
+                    } catch (e) {
+                        $.messager.alert('提示', e, 'warning');
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("excel生成中...");
+                }
+            });*/
+        } catch (e) {
+            $.messager.alert('提示', e, 'info');
+        }
+     }
+</script>
+<table id="companychange_maintable"></table>  
+<div id="companychange_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<span style="font-weight:bolder">合同段名称：</span>@ViewBag.Dep；  &nbsp;&nbsp;<span style="font-weight:bolder">填报人：</span>@ViewBag.User； &nbsp;&nbsp;<span style="font-weight:bolder">填报时间：</span>@ViewBag.Date。<br />
+        <span style="font-weight:bolder">C类一般设计变更：</span><span id='companychange_count_c'></span>； <span style="font-weight:bolder">B类一般设计变更：</span><span id='companychange_count_b'></span>；  &nbsp;&nbsp;<span style="font-weight:bolder">A类一般设计变更：</span><span id='companychange_count_a'></span>；  &nbsp;&nbsp;<span style="font-weight:bolder">重大设计变更：</span><span id='companychange_count_big'></span>；<br />
+        <span style="font-weight:bolder">合计：</span><span id='companychange_count'></span> <a onclick="company_change_excel();" id="company_change_excel_btnrename" class="easyui-linkbutton" iconCls="icon-print" plain="true" >导出excel</a>
+</div>

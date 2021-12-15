@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.Sysjsd,BD.Jcbg.DataModal" table="SYSJSD" lazy="false">
+    <id name="Recid" column="RECID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="DepCode" column="[DepCode]" />
+    <property type="string" length="40" name="Csylb" column="[CSYLB]" />
+    <property type="int" name="MId" column="[M_ID]" />
+    <property type="int" name="Rsylb" column="[RSYLB]" />
+    <property type="int" name="Nsylb" column="[NSYLB]" />
+    <property type="string" length="50" name="Commsylb" column="[COMMSYLB]" />
+    <property type="string" length="12" name="Otheritem" column="[OTHERITEM]" />
+    <property type="int" name="Syxz" column="[SYXZ]" />
+    <property type="string" length="20" name="SysjZd" column="[SYSJ_ZD]" />
+    <property type="string" length="20" name="SubZd" column="[SUB_ZD]" />
+    <property type="string" length="40" name="Sy" column="[SY]" />
+    <property type="int" name="DataOff" column="[DATA_OFF]" />
+    <property type="int" name="DataLen" column="[DATA_LEN]" />
+    <property type="int" name="DotPos" column="[DOT_POS]" />
+    <property type="int" name="Manual" column="[MANUAL]" />
+    <property type="int" name="DisplayOrder" column="[DisplayOrder]" />
+    <property type="string" length="50" name="DefaultValue" column="[DefaultValue]" />
+    <property type="int" name="BlockNumber" column="[BlockNumber]" />
+    <property type="string" length="100" name="CalculFunc" column="[CalculFunc]" />
+    <property type="int" name="ManuPicIdx" column="[ManuPicIdx]" />
+    <property type="string" length="100" name="AltFunc" column="[AltFunc]" />
+    <property type="int" name="PortNum" column="[PortNum]" />
+    <property type="Boolean" name="EnterValue" column="[EnterValue]" />
+    <property type="short" name="ShowImageIndex" column="[ShowImageIndex]" />
+    <property type="string" length="50" name="CjZd" column="[CJ_ZD]" />
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,128 @@
+﻿@using BD.Jcbg.Web.Func;
+@using BD.Jcbg.Common;
+@{
+    ViewBag.Title = "软件超市";
+    Layout = "~/Views/User/_loginlayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        $(function () {
+        });
+    </script>
+}
+
+<div class="s_container font_size_normal font_faminly font_color_black">
+    <div class="s_container_top sj_dark_red">
+        <div class="width_auto">
+            <div class="width_1000_left">
+                <div class="word">
+                    <p class="font_faminly_yishu font_size_xxxl sj_dark_red logo_left_name">
+                        @GlobalVariable.GetSysSettingValue("GLOBAL_PAGE_LOGIN_TITLE1", Request)
+                        @GlobalVariable.GetSysSettingValue("GLOBAL_PAGE_LOGIN_TITLE2", Request)
+                    </p>
+                </div>
+
+
+            </div>
+            <div class="width_1000_right">
+                <ul class="font_color_white font_size_l font_color_black top_tab_tiaozhuan">
+
+                    <li class="" onclick="top_tiaozhun(1)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">首页</li>
+                    
+                    <li class="active" onclick="top_tiaozhun(5)">下载</li>
+
+
+                </ul>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+    <div class="S_container_middle_xiazai">
+        <div class="top">
+            <div class="width_1000">
+
+                <img src="@SkinManager.GetImagePath("down-back.png")" />
+
+            </div>
+
+        </div>
+
+        <div class="middle width_1000">
+            <div>  <img src="@SkinManager.GetImagePath("kongjianxiazai.png")" />      </div>
+
+            <div>
+                <table class="down_kongjian_table">
+                    <tr class="first">
+                        <th>控件名称</th>
+                        <th>更新时间</th>
+                        <th>控件大小</th>
+                        <th>备注</th>
+                        <th>下载</th>
+                    </tr>
+                    <tr>
+                        <td>虹膜注册控件V1</td>
+                        <td>2016.12.26</td>
+                        <td>641 KB</td>
+                        <td></td>
+                        <td> <a href="/downs/BioID.exe"> <img src="@SkinManager.GetImagePath("downloads.png")" border="0" alt="" />  </a>  </td>
+
+                    </tr>
+                    <tr>
+                        <td>虹膜注册控件V2</td>
+                        <td>2017.03.27</td>
+                        <td>964 KB</td>
+                        <td></td>
+                        <td> <a href="/downs/SY305控件.exe"> <img src="@SkinManager.GetImagePath("downloads.png")" border="0" alt="" />  </a>  </td>
+
+                    </tr>
+                    <tr class="sed">
+                        <td>虹膜注册驱动</td>
+                        <td>2016.12.26</td>
+                        <td>52.4 KB</td>
+                        <td></td>
+                        <td> <a href="/downs/BioIDDriver.rar"> <img src="@SkinManager.GetImagePath("downloads.png")" border="0" alt="" />  </a>  </td>
+
+                    </tr>
+
+
+
+                    <tr>
+                        <td>身份证刷卡器控件</td>
+                        <td>2016.12.26</td>
+                        <td>1.03 MB </td>
+                        <td></td>
+                        <td> <a href="/downs/idr.exe"> <img src="@SkinManager.GetImagePath("downloads.png")" border="0" alt="" />  </a>  </td>
+
+                    </tr>
+
+                    <tr class="sed">
+                        <td>IE安全设置</td>
+                        <td>2016.12.26</td>
+                        <td>3.32 KB</td>
+                        <td></td>
+                        <td> <a href="/downs/ie安全设置.rar"> <img src="@SkinManager.GetImagePath("downloads.png")" border="0" alt=""/>  </a>  </td>
+
+                    </tr>
+                </table>
+
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+    </div>
+</div>

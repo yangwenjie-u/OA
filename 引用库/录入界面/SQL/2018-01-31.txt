@@ -1,0 +1,2 @@
+1.在各ZDZD中,添加“是否加密”字段
+alter table *ZDZD add ENCRYPT bit

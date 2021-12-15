@@ -1,0 +1,453 @@
+    body {
+        background-color: #f3f3f4;
+        color: #676a6c;
+    }
+
+    .sed-dtl {
+        padding: 0 0 10px 0;
+    }
+
+    .top-warp,
+    .line-warp,
+    .ipt-warp,
+    .right-warp {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .right-warp {
+        width: 98%;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        border-width: 1px solid #ddd;
+        padding: 30px 0 0px 30px;
+        overflow: auto;
+        margin-bottom: 30px;
+    }
+
+    .top-warp {
+        text-align: left;
+        width: 40%;
+        min-width: 700px;
+        margin: 0 auto;
+    }
+
+    .line-warp {
+        width: 48%;
+        margin-bottom: 10px;
+        position: relative;
+        white-space: nowrap;
+        clear: both;
+    }
+
+    .ipt-warp {
+        vertical-align: middle;
+    }
+
+    .ipt-warp input,
+    .ipt-warp-nolab input,
+    .ipt-warp select,
+    .ipt-warp textarea {
+        background-color: #FFF;
+        background-image: none;
+        border: 1px solid #e5e6e7;
+        border-radius: 1px;
+        color: inherit;
+        display: block;
+        padding: 6px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .ipt-warp select {
+        padding: 0 6px;
+    }
+
+    .ipt-warp textarea {
+        height: 80px;
+    }
+
+    .line-warp span {
+        font-weight: 700;
+        line-height: 30px;
+        display: inline-block;
+        width: 120px;
+        text-align: right;
+        padding-right: 5px;
+        white-space: normal;
+        vertical-align: middle;
+    }
+
+    .fir-type {
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        word-wrap: break-word;
+    }
+
+    #firData {
+        display: inline-block;
+        width: 100%;
+        vertical-align: top;
+        /*padding-top: 30px;*/
+    }
+
+    #firData>div {
+        display: none;
+        text-align: left;
+        width: 100%;
+    }
+
+    #firData>div>div {
+        width: 730px;
+        padding-top: 30px;
+        margin: 0 auto;
+    }
+
+    .line-one .ipt-warp {
+        width: 534px;
+    }
+
+    #firData>.active {
+        display: inline-block;
+    }
+
+    .sed-warp {
+        display: none;
+    }
+
+    .sed-warp.active {
+        display: inline-block;
+    }
+
+    .fir-warp {
+        padding: 0 20px;
+    }
+
+    .layui-table {
+        margin: 0px;
+        background-color: #f3f3f4;
+    }
+
+    .ipt-warp {
+        margin-left: 120px;
+        position: relative;
+        left: -120px;
+    }
+
+    input[readonly],
+    textarea[readonly] {
+        background-color: #eee;
+    }
+
+    .line-warp .line-btn {
+        width: 40px;
+        background-color: #b42f2f;
+        color: white;
+        text-align: center;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        padding: 0px;
+        cursor: pointer;
+    }
+
+    .line-one {
+        width: 100%;
+        text-align: left;
+    }
+
+    .fir-type span {
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        display: inline-block;
+        cursor: pointer;
+        margin-right: 5px;
+        color: #A7B1C2;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .fir-type .active {
+        background: #f0f7fd;
+        color: #555;
+        border: 1px solid #ccc;
+        border-radius: 8px 8px 0px 0px;
+        border-bottom-width: 0px;
+    }
+
+    #firData>.active {
+        background-color: #f0f7fd;
+    }
+
+    .top-view {
+        width: 100% !important;
+        height: 100% !important;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        z-index: 999;
+    }
+
+    .right-warp>div {
+        display: none;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        padding: 10px;
+    }
+
+    .sed-title {
+        display: inline-block;
+        width: 110px;
+        text-align: right;
+        font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 700;
+    }
+
+    .sed-head {
+        margin-top: 26px;
+    }
+
+    .sed-head>span {
+        padding: 3px 20px;
+        display: inline-block;
+        height: 36px;
+        line-height: 30px;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .sed-head>span.active {
+        background-color: #f0f7fd;
+        border: 1px solid #ccc;
+        border-bottom-width: 0px;
+        border-radius: 8px 8px 0px 0px;
+    }
+
+    .sed-dtl>div {
+        display: none;
+        text-align: center;
+    }
+
+    .sed-dtl>div.active {
+        display: inline-block;
+        background-color: #f0f7fd;
+        border: 1px solid #e7eaec;
+        border-radius: 2px;
+        border-top: 0;
+        padding: 40px 20px 30px 20px;
+        position: relative;
+    }
+
+    .back {
+        background: #FF5722;
+        display: inline-block;
+        width: 80px;
+        height: 36px;
+        border-radius: 4px;
+        line-height: 36px;
+        text-align: center;
+        color: white;
+        cursor: pointer;
+    }
+
+    .save-boottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        left: 0px;
+        background: rgba(55, 55, 55, 0.5);
+        height: 60px;
+        text-align: center;
+    }
+
+    .icp {
+        width: 80%;
+        margin: 20px 10%;
+        height: 200px;
+        font-size: 18px;
+        padding: 10px;
+        line-height: 30px;
+        border-radius: 5px;
+        resize: none;
+    }
+
+    .table td,
+    .table th {
+        white-space: normal;
+        word-break: break-all;
+    }
+
+    td {
+        vertical-align: middle;
+    }
+
+    .files span {
+        cursor: pointer;
+    }
+
+
+    #imgWarp img {
+        max-width: 100%;
+        max-height: 100%;
+        min-width: 100px;
+        min-height: 100px;
+    }
+
+    #imgWarp {
+        display: none;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        /* 水平居中 */
+        align-items: center;
+        /* 垂直居中 */
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 29891016;
+        background-color: rgba(0, 0, 0, .5);
+        text-align: center;
+        font-size: 0;
+        white-space: nowrap;
+        overflow: auto;
+    }
+
+    #imgWarp>div {
+        background-color: lightGray;
+        border: 1px solid lightGray;
+        text-align: center;
+        min-width: 100px;
+        min-height: 100px;
+        max-width: 96%;
+        max-height: 96%;
+        overflow: auto;
+        position: relative;
+        background: url(/static/tz/images/onload.jpg) no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .close {
+        color: white;
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        background: url(/static/image/main/guanbi2.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 9;
+    }
+
+    .add {
+        cursor: pointer;
+        color: #1E9FFF;
+        display: block;
+        /*width: ;*/
+        text-align: center;
+    }
+
+    #edit {
+        padding: 30px;
+        overflow-x: hidden;
+    }
+
+    #edit .line-warp {
+        width: 100%;
+    }
+
+    #edit .ipt-warp {
+        width: 70%;
+    }
+
+    #save {
+        margin: 40px auto 0 auto;
+        display: block;
+        width: 120px;
+    }
+
+    .upload-warp {
+        width: 70%;
+        margin: 10px 0 0 120px;
+    }
+
+    .down-warp {
+        display: block;
+    }
+
+    .ipt-warp .wdate {
+        background-color: #fff;
+        background-image: url(/skins/DataInput/css/datePicker.png);
+        background-repeat: no-repeat;
+        background-position: right;
+    }
+
+    #tbody .del {
+        color: #FF5722;
+        cursor: pointer;
+    }
+
+    .edit,
+    .sure {
+        cursor: pointer;
+    }
+
+    .split:before {
+        content: "|";
+        display: inline-block;
+        width: 30px;
+        text-align: center;
+        color: #666;
+    }
+
+    .line-warp .must-val {
+        position: absolute;
+        top: 0px;
+        right: -15px;
+        color: red;
+        width: auto;
+        line-height: 34px;
+        padding-left: 2px;
+        font-size: 20px;
+        width: auto;
+    }
+
+    .down-warp span.downLoad-link {
+        width: 86%;
+        text-align: left;
+        vertical-align: middle;
+        height: 24px;
+        line-height: 24px;
+        cursor: pointer;
+    }
+
+    .down-warp .downLoad-link-file {
+        text-align: left;
+        vertical-align: middle;
+        height: 24px;
+        line-height: 24px;
+        display: inline-block;
+        width: 86%;
+        text-overflow: ellipsis;
+        box-sizing: border-box;
+        color: #1c96f2;
+        text-decoration: none;
+        overflow: hidden;
+        white-space: nowrap;
+        font-weight: 600;
+    }
+
+    .red-color td {
+        color: orange;
+    }
+    .down-warp .del-upload{
+        width: 30px;
+        text-align: center;
+    }

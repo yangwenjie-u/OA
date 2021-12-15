@@ -1,0 +1,126 @@
+	.dhtmlgoodies_tabPane{
+	/*	height:21px;	原大小*//* Height of tabs */
+	/*
+	height:35px;
+		border-bottom:1px solid #0099ff;
+
+		margin-top: 10px;
+    margin-left: 10px;
+
+*/
+padding-left: 40px;
+	height: 35px;
+	color:#FFF;
+	/*
+    border-bottom: 3px solid #0099cc;
+  */
+	background-color:#0099cc;
+	}
+	.dhtmlgoodies_aTab{
+
+		border-left:1px solid #919b9c;
+		border-right:1px solid #919b9c;
+		border-bottom:1px solid #919b9c;
+		
+		font-family: Trebuchet MS, Lucida Sans Unicode, Arial, sans-serif;
+		padding:5px;		
+		
+	}
+	.dhtmlgoodies_tabPane DIV{
+		float:left;
+		height:100%;	/* Height of tabs */
+		padding-left:3px;
+		vertical-align:middle;
+		background-repeat:no-repeat;
+		background-position:bottom left;
+		cursor:pointer;
+		position:relative;
+		bottom:-1px;
+		margin-left:0px;
+		margin-right:0px;
+	}
+	.dhtmlgoodies_tabPane .tabActive{
+	/*
+	    background-image:url('../images/tab_left_active.gif');
+		*/
+		margin-left:7px;
+		margin-right:7px;	
+		z-index:10;	
+		color:#000;
+		background-color:#eaeff2;
+		height:34px;
+
+		    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(0, 153, 204);
+    border-radius: 5px 5px 0px 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-bottom-width: 0px;
+
+
+
+	}
+	.dhtmlgoodies_tabPane .tabInactive{
+	/*
+		background-image:url('../images/tab_left_inactive.gif');
+		*/
+	/*	background-color:#d2ddeb;*/
+	    background-color: transparent;
+		margin-left:7px;
+		margin-right:7px;
+		/*
+		margin-left:0px;
+		margin-right:0px;
+		*/
+		z-index:1;
+	/*	background-color: #d6dde5;*/
+		/*
+		    border-bottom: 1px solid #0099ff;*/
+
+
+
+
+
+	}
+
+	.dhtmlgoodies_tabPane .inactiveTabOver{
+	/*
+		background-image:url('../images/tab_left_over.gif');
+		*/
+		  background-color: transparent;
+		/*background-color:#969da6;*/
+		margin-left:7px;
+		margin-right:7px;
+		height:34px;
+		/*
+		  border-bottom: 1px solid #0099ff;*/
+
+
+	}
+	.dhtmlgoodies_tabPane span{
+		font-family:arial;
+		vertical-align:top;
+        /*font-size:11px;
+		line-height:21px;*/
+		/*    stj修改   */
+		font-size:20px;
+		line-height:35px;
+		/***************/
+		padding-left:3px;
+		padding-right:3px;		
+		
+		float:left;
+	}
+	.dhtmlgoodies_tabPane .tabActive span{
+	/*	padding-bottom:1px;  */
+		/*line-height:20px;  原*/
+		line-height:35px;
+		
+	}
+	
+	.dhtmlgoodies_tabPane img{
+		float:left;
+	}

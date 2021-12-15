@@ -1,0 +1,109 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+    function Open_Dialog() {
+        var savedisable = true;
+        var canceldisable = true;
+        if ("@ViewBag.btntext" == "0") {
+            savedisable = false;
+            canceldisable = true;
+        }
+        else if ("@ViewBag.btntext" == "1") {
+            savedisable = false;
+            canceldisable = false;
+        }
+        else
+        {
+            savedisable = true;
+            canceldisable = true;
+        }
+
+
+        $('#maindlg').dialog({
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            resizable: false,
+            shadow: true,
+            modal: false,
+            closable: false,
+            buttons: [{
+                text: '通过',
+                disabled: savedisable,
+                iconCls: 'icon-ok',
+                handler: function () {
+                    submitForm();
+                }
+            }
+            ]
+        });
+    }
+    $(function () {
+
+        Open_Dialog();
+    });
+   
+
+    function submitForm() {
+        $("#formmain").form('submit', {
+            url: "/syjg/subbahandle?id=@ViewBag.id",
+            onSubmit: function (param) {
+                var ret = false;
+                try {
+                    var isValid = $(this).form('validate');
+                    if (!isValid)
+                        return false;
+                    //$("#formmain").mask("正在保存……");
+                    ret = true;
+                }
+                catch (err) {
+                    ret = false;
+                    //$.messager.alert('提示', err, 'info');
+                }
+                return ret;
+            },
+            success: function (data) {
+                try {
+                    $("#formmain").unmask();
+
+                    var data = eval('(' + data + ')');
+                    var code = data.code;
+                    var msg = data.msg;
+                    if (msg == "") {
+                        if (code == 0)
+                        {
+                            msg = "审核成功！";
+                            alert(msg);
+                            $('#maindlg').dialog('close');
+                            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                            parent.layer.close(index);
+                        }
+
+                        else
+                        {
+                            msg = "审核失败！";
+                            $.messager.alert('提示', msg, 'info');
+                        }
+
+                    }
+
+                    
+                }
+                catch (err) {
+                    $.messager.alert('提示', err, 'info');
+                }
+            }
+        });
+    }
+</script>
+
+
+<div id="maindlg" style="padding:20px;width:350px;height:220px;" title="备案审核">
+    <form id="formmain" method="post" action="">
+        经办人：　　
+        <input id="handleman" name="handleman" type="text" style="width:200px" class="easyui-validatebox" data-options="required:true" value="@ViewBag.handleman" />   
+        <br /><br />  
+    </form>
+</div> 

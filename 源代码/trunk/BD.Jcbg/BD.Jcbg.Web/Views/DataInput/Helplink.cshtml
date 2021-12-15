@@ -1,0 +1,232 @@
+﻿@using BD.DataInputCommon;
+@using BD.DataInputModel.Entities;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Helplink</title>
+    <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/jquery.min.js?v=2.1.4")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/plugins/bootstrap-table/bootstrap-table.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetPubPath("layer/layer.js")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("helplink.js?v=2016012602")"></script>
+    <link rel="stylesheet" href="@Skins.GetPubPath("hplus/css/bootstrap.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetPubPath("hplus/css/plugins/bootstrap-table/bootstrap-table.min.css")"/>
+    <script type="text/javascript" src="@Skins.GetJsPath("base64.js")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("myControlDetailList.js?v=2016040501")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("myControl.js?v=2016040502")"></script>
+    <script type="text/javascript" src="@Skins.GetJsPath("myContent.js?v=2016040504")"></script>
+    @Html.Raw(ViewData["js"].ToString())
+</head>
+<body>
+    @{ IList<Zdzd> zdzdList = ViewData["zdzd"] as IList<Zdzd>; }
+    <input type="hidden" id="helplink" name="helplink" value="@ViewData["helplink"]" />
+    <table>
+        <tr>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="right">查询</td>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="left">
+                <select name="dlg_search" id="dlg_search" style="width:120px;">
+                    <option value=""></option>
+                    @{
+                        int num = 0;
+                        for(int i = 0;i < zdzdList.Count; i ++)
+                        {
+                            //是否显示
+                            if (!zdzdList[i].SFXS)
+                            {
+                                continue;
+                            }
+                            num++;
+                            if (num == 1)
+                            {        
+                                <option value="@zdzdList[i].ZDMC" selected="selected">@zdzdList[i].SY</option>
+                            }
+                            else
+                            { 
+                                <option value="@zdzdList[i].ZDMC">@zdzdList[i].SY</option>
+                            }
+                        }
+                    }
+                </select>
+            </td>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="right">
+                <input id="edt_search" name="edt_search" onkeypress="searchKeyPress()"/>
+            </td>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="right">
+                <input type="button" name="btn_dlg" value="查找" onclick="searchRecord();" />
+            </td>
+            <td style="width:60px;padding:1px 5px 1px 5px;" align="right">
+                <input type="button" name="btn_choose" value="@(ViewData["datainputchoosename"].ToString())" onclick="chooseRecord();" />
+            </td>
+            @if (ViewData["datainputnew"].GetString() == "1")
+            {
+                <td style="width:60px;padding:1px 5px 1px 5px;" align="right">
+                    <input type="button" name="btn_new" value="新建" onclick="newData();" />
+                </td>
+            }
+            
+            @if (ViewData["datainputmodify"].GetString() == "1")
+            {
+                <td style="width:60px;padding:1px 5px 1px 5px;" align="right">
+                    <input type="button" name="btn_modify" value="修改" onclick="modifyData();" />
+                </td>
+            }
+        </tr>
+    </table>
+
+
+    <table  id="table" 
+            data-click-to-select="true"
+            data-single-select="true"
+            data-pagination="true"
+            data-side-pagination="server"
+            data-page-number = "1"
+     @*       data-page-size = "@form.PageSize"*@
+            data-height="500"
+   @*         data-page-list="@form.LimitSize"*@
+            data-striped = "true"
+            >
+            <thead>
+                <tr>
+                    <th data-field="state" data-checkbox="true"></th>
+                    <th 
+                        data-field="num" 
+                        data-width="10px" 
+                        data-switchable="false" 
+                        data-halign="center"
+                        data-align="center"
+                        >序号</th>
+                    @foreach (var item in zdzdList)
+                    {
+                        <th 
+                            data-field="@item.ZDMC" 
+                            @*data-sortable="@item.SFXS.GetString().ToLower()"*@ 
+                            data-visible="@item.SFXS.GetString().ToLower()" 
+                            @*data-switchable="@item.SfSwitch.GetString().ToLower()"*@
+                            data-halign="center"
+                          @*  data-align="@item.Align"
+                            data-width="@item.ZdWidth.GetInt()px"
+                            data-title-tooltip="@item.ZdTip"*@
+                            data-footer-formatter= "<div id='@(item.ZDMC)Footer' align='left'></div>"
+                        >@item.SY</th>
+                    }
+                </tr>
+            </thead>
+        </table>
+          
+
+    <script type="text/javascript" language="javascript">
+        //新建或修改操作过的标志
+        var optStatus = "";
+        var dataGrid;
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        //helplink触发自动选中
+//        function helplinkAutoData(row) 
+//        {
+//             alert(row.RYBH);
+//             @Html.Raw(ViewData["checkfun"].ToString())
+//             @Html.Raw(ViewData["dbclick"].GetString());
+//             @Html.Raw(ViewData["afterfun"].GetString());
+//             parent.layer.close(index);
+//        }
+        //初始化显示Table界面
+        function iniTableForm() {
+            dataGrid = $("#table").bootstrapTable({
+                //数据加载成功
+//                onSearch: function(data) {
+//                    alert("EFGCG");
+//                },
+                //分页事件
+                onPageChange: function (number, size) {
+                    loadData(dataGrid.bootstrapTable('getOptions').pageNumber);
+                },
+                //排序事件
+                onSort: function (name, order) {
+                    loadData(dataGrid.bootstrapTable('getOptions').pageNumber);
+                },
+                //双击事件
+                onDblClickRow: function (row, $element) {
+                    @Html.Raw(ViewData["checkfun"].ToString());
+                    @Html.Raw(ViewData["dbclick"].GetString());
+                    @Html.Raw(ViewData["afterfun"].GetString());
+                    parent.layer.close(index);
+                }
+            });
+        }
+        //回车查询数据
+        function searchKeyPress()
+        {
+            if (event.keyCode == 13) {
+                searchRecord();
+            }
+        }
+        //初始化数据
+        $(function () {
+            //初始化显示Table界面
+            iniTableForm();
+            //查询数据
+            searchRecord();
+        });
+
+        //选中记录
+        function chooseRecord() {
+            var rows = dataGrid.bootstrapTable('getSelections');
+            if(rows.length == 0)
+            {
+                alert("请选择记录！");
+                return;
+            }
+            else if(rows.length > 1)
+            {
+                alert("只允许选择一条记录！");
+                return;
+            }
+            var row = rows[0];
+            @Html.Raw(ViewData["checkfun"].ToString());
+            @Html.Raw(ViewData["dbclick"].GetString());
+            @Html.Raw(ViewData["afterfun"].GetString());
+            parent.layer.close(index);
+        }
+        //新建
+        function newData() {
+            layer.open({
+                type: 2,
+                title: false,
+                area: ['95%', '95%'],
+                content: ['@ViewData["datainputfun"]&helplinkopt=1' ], //iframe的url，no代表不显示滚动条
+                end: function(){ //此处用于演示
+                    //查询数据
+                    searchRecord();
+                }
+            });
+        }
+
+        //修改
+        function modifyData() {
+            var rows = dataGrid.bootstrapTable('getSelections');
+            if(rows.length == 0)
+            {
+                alert("请选择记录！");
+                return;
+            }
+            //获取值
+            var jydbh = rows[0].@(ViewData["datainputjydbhfield"].GetString() == "" ? "jydbh" : ViewData["datainputjydbhfield"].GetString());
+            if(jydbh == "")
+            {
+                alert("修改时主键值不允许为空！");
+                return;
+            }
+            layer.open({
+                type: 2,
+                title: false,
+                area: ['95%', '95%'],
+                content: ['@ViewData["datainputfun"]&jydbh=' + jydbh+'&helplinkopt=1'], //iframe的url，no代表不显示滚动条
+                end: function(){ //此处用于演示
+                    //查询数据
+                    searchRecord();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

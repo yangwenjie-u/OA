@@ -1,0 +1,6 @@
+1.在ZDZD中,添加“是否保留数据”字段
+在
+1).基础字段字典
+2).项目字段字典
+3).单位字段字典
+alter table ****ZDZD add NOSAVE bit

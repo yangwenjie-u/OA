@@ -1,0 +1,431 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>扬尘设备统计图</title>
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/lib/layui/css/layui.css" rel="stylesheet" type="text/css" />
+    <link href="/static/lib/layer/theme/default/layer.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    .top-filter {
+        background: rgb(245, 248, 253);
+        width: 100%;
+        display: inline-block;
+        position: fixed;
+        height: 60px;
+        top: 0px;
+        z-index: 100;
+    }
+
+    #startTime,
+    #endTime {
+        display: inline-block;
+        width: 200px;
+        margin: 10px;
+    }
+
+
+
+
+    .btn {
+        display: inline-block;
+        width: 120px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 18px;
+        color: white;
+        background: #5180D8;
+        border-radius: 20px;
+        margin-right: 20px;
+        text-align: center;
+        cursor: pointer;
+        margin-left: 20px;
+    }
+
+
+    #firstPage,
+    #previousPage,
+    #nextPage,
+    #lastPage {
+        width: 18px;
+        height: 18px;
+        display: inline-block;
+        background-image: url(/static/lib/My97DatePicker/skin/default/img.gif);
+        background-repeat: no-repeat;
+        border-radius: 4px;
+        margin-right: 12px;
+        background-color: #fff;
+        cursor: pointer;
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        border: 1px solid #aaa;
+    }
+
+    #firstPage {
+        background-position: 0 0;
+    }
+
+    #previousPage {
+        background-position: -16px 0;
+    }
+
+    #nextPage {
+        background-position: -32px 0;
+    }
+
+    #lastPage {
+        background-position: -48px 0;
+    }
+
+    #firstPage:disabled,
+    #previousPage:disabled,
+    #nextPage:disabled,
+    #lastPage:disabled {
+        cursor: not-allowed;
+        border: 1px solid #eee;
+        box-shadow: none;
+    }
+
+    #wct table tr:nth-of-type(2n) {
+        background: #f1f2f3;
+    }
+
+    #pageCount {
+        text-align: right;
+        width: 42px;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        border-width: 1px;
+        height: 18px;
+        position: relative;
+        top: -4px;
+    }
+
+    #go {
+        height: 20px;
+        width: 60px;
+        border-top-right-radius: 4px;
+        border: none;
+        border-bottom-right-radius: 4px;
+        position: relative;
+        top: -4px;
+    }
+
+
+
+    .layui-table th {
+        background: white;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .pagination {
+        height: 36px;
+        background-color: #F5F5F5;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8px 12px 0 12px;
+        border-top: 1px solid #dddddd;
+    }
+
+    .sensor-list {
+        width: 18%;
+        display: inline-block;
+        vertical-align: top;
+        float: left;
+        margin-left: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        border: 1px solid lightgray;
+        border-radius: 10px;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        position: fixed;
+        padding: 10px 20px 20px 20px;
+        height: 420px;
+
+
+    }
+
+    .sensor-list li {
+        height: 40px;
+        padding: 5px 0 5px 20px;
+        width: 80%;
+        display: inline-block;
+        line-height: 40px;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .sensor-list .active {
+        border: 1px solid #e5e5e5;
+        background: lightgray;
+        border-radius: 50px;
+        width: 80%;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+        color: white;
+    }
+
+    #wct {
+        width: 78%;
+        height: 100%;
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 22%;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="top-filter">
+        <!-- <select id="sensorList" class="layui-select">
+            <option selected="selected" disabled="disabled" value="0">请选择设备</option>
+        </select> -->
+        <input type="hidden" value='@ViewData["DeviceCode"]' id="DeviceCode" />
+        <input type="text" class="layui-input" id="startTime" readonly="readonly" style="margin-left: 30%;"> -
+        <input type="text" class="layui-input" id="endTime" readonly="readonly">
+        <span class="btn" id="sure" style="margin-top: 10px;">确认</span>
+    </div>
+    <div id="mainBody" style="margin-top: 100px;overflow: auto;">
+        <ul class="sensor-list" id="sensorList">
+        </ul>
+        <div id="wct"></div>
+    </div>
+    <div class="pagination">
+        <button type="button" id="firstPage" title="第一页" disabled></button>
+        <button type="button" id="previousPage" title="上一页" disabled></button>
+        <input type="number" id="pageCount" value="1" size="5" min="1" max="1" /><button type="button" id="go">跳转</button>
+        <button type="button" id="nextPage" title="下一页" disabled></button>
+        <button type="button" id="lastPage" title="最后一页" disabled></button>
+        <span id="pageInfo"></span>
+    </div>
+    <script src="/static/lib/jquery-z.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    $(function() {
+        SetBodyWidth();
+
+        var obj = getParams();
+        var start = new Date(new Date().getTime() - 3600 * 24 * 3 * 1000);
+        var end = new Date();
+        if (obj.start) {
+            start = new Date(parseInt(obj.start));
+            end = new Date(parseInt(obj.end));
+        }
+
+        layui.use('laydate', function() {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#startTime',
+                type: 'datetime',
+                value: start
+            });
+            laydate.render({
+                elem: '#endTime',
+                type: 'datetime',
+                value: end
+            });
+            setTimeout(function() {
+                init();
+            }, 200)
+        });
+    });
+
+    function init() {
+        $.ajax({
+            url: "/DwgxWzOh/GetHpDustList",
+            type: "post",
+            dataType: "json",
+            success: function(json) {
+                var str = "";
+                json.Datas.forEach(function(item, index) {
+                    str += "<li value='" + item.Id + "'>" + item.Text + "</li>";
+
+                    // str += "<option value=\"" + item.Id + "\">" + item.Text + "</option>";
+                });
+                $("#sensorList").append(str);
+                var obj = getParams();
+                if (obj.sensorcode) {
+                    $("#sensorList").find("[value='" + obj.sensorcode + "']").click();
+                    // $("#sensorList").val(obj.sensorcode);
+                    // Search();
+                }
+            }
+        });
+    }
+
+    $("#sensorList").on("click", "li", function() {
+        $(this).addClass("active").siblings().removeClass("active");
+        Search();
+    })
+
+    function getParams() {
+        var url = location.search; //获取url中"?"符后的字串
+        var obj = {};
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            var strS = str.split("&");
+            for (var i = 0; i < strS.length; i++) {
+                obj[strS[i].split("=")[0]] = (strS[i].split("=")[1]);
+            }
+        }
+        return obj;
+    }
+
+    $(window).resize(function() {
+        SetBodyWidth();
+    });
+
+    //设置宽高
+    function SetBodyWidth() {
+
+        // var height = $(window).height() - 100;
+        // $("#wct").height(height);
+        var height = $(window).height() - 150;
+        $("#mainBody").height(height)
+    };
+
+
+
+    function compare(start, end) {
+        var a, b;
+        a = (new Date(start)).getTime();
+        b = (new Date(end)).getTime();
+        if (b - a > 3 * 24 * 60 * 60 * 1000) {
+            layer.msg("间隔时间在三天之内", {
+                icon: 2,
+                time: 2000
+            });
+            return false;
+        } else if (b < a) {
+            layer.msg("开始时间小于结束时间", {
+                icon: 2,
+                time: 2000
+            });
+            return false;
+        }
+        return true;
+    }
+
+    $("#sure").click(function() {
+        Search();
+    });
+
+    //查询操作
+    function Search(pageoffset) {
+        if (isNaN(pageoffset)) pageoffset = 0;
+        var DeviceCode = encodeURIComponent($("#DeviceCode").val());
+        // var dustType = $("#sensorList").val();
+        var dustType = $("#sensorList .active").attr("value");
+
+        if (dustType == null) {
+            layer.msg("请选择设备", {
+                icon: 2,
+                time: 2000
+            });
+            return;
+        }
+        var start = $("#startTime").val();
+        var end = $("#endTime").val();
+        var pageCount = parseInt($("#pageCount").val());
+        var pageSize = 15;
+        if (!start || !end) {
+            layer.msg("请选择时间间隔", {
+                icon: 2,
+                time: 2000
+            });
+            return;
+
+        } else if (!compare(start, end)) {
+            return;
+        }
+        if (pageoffset != 2) {
+            if (pageoffset == 0) pageCount = 1;
+            if (pageoffset == 1) pageCount++;
+            if (pageoffset == -1 && pageCount > 1) pageCount--;
+            if (pageoffset == -2) pageCount = parseInt($('#pageInfo').text().replace(/\D/g, ''));
+            $('#pageCount').val(pageCount);
+        }
+        layer.load(2, { shade: false });
+        $.ajax({
+            url: "/DwgxWzOh/GetDustErrorList",
+            type: "post",
+            data: {
+                pageCount: pageCount,
+                pageSize: pageSize,
+                deviceCode: DeviceCode,
+                sensorCode: dustType,
+                startTime: start,
+                endTime: end
+            },
+            dataType: "json",
+            async: false,
+            success: function(json) {
+                layer.closeAll("loading");
+                if (json.Code === 0) {
+                    if (pageCount > 1) $('#firstPage,#previousPage').prop("disabled", false);
+                    else $('#firstPage,#previousPage').prop("disabled", true);
+                    if (pageCount * pageSize < json.Row) $('#nextPage,#lastPage').prop("disabled", false);
+                    else $('#nextPage,#lastPage').prop("disabled", true);
+                    var totalPage = Math.ceil(json.Row / pageSize);
+                    $('#pageCount').attr("max", totalPage);
+                    $('#pageInfo').html("总共" + totalPage + "页");
+                    LoadCharts(json.Datas);
+                } else {
+                    layer.msg(json.Msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            },
+            fail: function() {
+                layer.closeAll("loading");
+            }
+        });
+    };
+
+    //加载wct
+    function LoadCharts(data) {
+        var tableHtml = '<table class="layui-table" style="width:100%"><thead><th>项目名称</th><th>设备编号</th><th>传感器编号</th><th>传感器名称</th><th>传感器序号</th><th>当前时间</th><th>传感器数值</th><th>最大阈值</th><th>最小阈值</th></tr></thead>\n<tbody>';
+        data.forEach(function(item, index) {
+            // var str =  item.Custom.split("|");
+            // if(str.length > 1){
+            //     str = str[1];
+            // }
+            var str = item.ProjectName;
+            if (item.Custom && item.Custom.length) {
+                var ary = item.Custom.split("|");
+                if (ary.length > 1) {
+                    str = ary[1];
+                }
+            };
+
+            tableHtml += '<tr><td>' + str + '</td><td>' + item.DeviceCode + '</td><td>' +
+                item.SensorCode + '</td><td>' + item.SensorName + '</td><td>' + item.SensorIndex + '</td><td>' + item.CurrentTime + '</td><td>' + item.SensorValue +
+
+                '</td><td>' + item.MaxLimit + '</td><td>' + item.MinLimit + '</td></tr>\n';
+        });
+        tableHtml += '</tbody></table>';
+        $('#wct').html(tableHtml);
+    };
+    $('#previousPage').on("click", function() {
+        Search(-1);
+    });
+    $('#nextPage').on("click", function() {
+        Search(1);
+    });
+    $('#firstPage').on("click", function() {
+        Search();
+    });
+    $('#lastPage').on("click", function() {
+        Search(-2);
+    });
+    $("#go").on("click", function() { Search(2) })
+    </script>
+</body>
+
+</html>

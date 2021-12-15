@@ -1,0 +1,118 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+    function Open_Dialog() {
+
+        $('#maindlg').dialog({
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            resizable: false,
+            shadow: true,
+            modal: false,
+            closable: false,
+            buttons: [{
+                text: '保存',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    submitForm();
+                }
+            }
+            ]
+        });
+    }
+    $(function () {
+
+        $("#readers").combotree({
+            url: '/oa/getusertree',
+            valueField: 'id',
+            textField: 'text',
+            multiple: true,
+            editable: false,
+            panelHeight: 200,
+            width: 250,
+            checkbox: true,
+            onlyLeafCheck: true,
+            animate: false,
+            onLoadSuccess: function (node, data) {
+                try {
+                    $('#readers').combotree('tree').tree("collapseAll");
+                    var users = '@ViewBag.spr';
+                    if (users != "") {
+                        var arrusers = users.split(',');
+                        $('#readers').combotree('setValues', arrusers);
+
+
+                    }
+                } catch (e) {
+                    alert(e);
+                }
+            }
+        });
+
+        Open_Dialog();
+    });
+   
+
+    function submitForm() {
+        $("#formmain").form('submit', {
+            url: "/syjg/subsbspr?recid=@ViewBag.id",
+            onSubmit: function (param) {
+                var ret = false;
+                try {
+                    var isValid = $(this).form('validate');
+                    if (!isValid)
+                        return false;
+                    //$("#formmain").mask("正在保存……");
+                    ret = true;
+                }
+                catch (err) {
+                    ret = false;
+                    //$.messager.alert('提示', err, 'info');
+                }
+                return ret;
+            },
+            success: function (data) {
+                try {
+                    $("#formmain").unmask();
+
+                    var data = eval('(' + data + ')');
+                    var code = data.code;
+                    var msg = data.msg;
+                    if (msg == "") {
+                        if (code == 0)
+                        {
+                            msg = "审核成功！";
+                            alert(msg);
+                            $('#maindlg').dialog('close');
+                            var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                            parent.layer.close(index);
+                        }
+
+                        else
+                        {
+                            msg = "审核失败！";
+                            $.messager.alert('提示', msg, 'info');
+                        }
+
+                    }
+
+                    
+                }
+                catch (err) {
+                    $.messager.alert('提示', err, 'info');
+                }
+            }
+        });
+    }
+</script>
+
+
+<div id="maindlg" style="padding:20px;width:350px;height:220px;" title="审核人设定">
+    <form id="formmain" method="post" action="">
+        审核人：　　
+        <input type="text" id="readers" name="readers" /><br /><br />  
+    </form>
+</div> 

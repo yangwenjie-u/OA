@@ -1,0 +1,219 @@
+HTML {
+    _overflow-x: hidden;
+}
+
+BODY {
+    FONT-FAMILY: "ºÚÌå", Arial, Helvetica, sans-serif;
+    FONT-SIZE: 14px;
+    MARGIN: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: content-box;
+}
+
+UL LI {
+    LIST-STYLE-TYPE: none;
+}
+
+LI {
+    -moz-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    OVERFLOW: hidden;
+    TEXT-OVERFLOW: ellipsis;
+}
+
+#logo {
+    LEFT: 5px;
+    POSITION: absolute;
+    TOP: 5px;
+}
+
+    #logo H1 {
+        POSITION: absolute;
+        TOP: -10000px;
+    }
+
+    #logo A {
+        HEIGHT: 40px;
+        LEFT: 5px;
+        POSITION: absolute;
+        WIDTH: 150px;
+    }
+
+#header {
+    HEIGHT: 50px;
+    MARGIN: 0 auto;
+    POSITION: relative;
+    WIDTH: 940px;
+    Z-INDEX: 1000;
+}
+
+    #header UL LI {
+        FLOAT: left;
+        LIST-STYLE-IMAGE: none;
+        LIST-STYLE-TYPE: none;
+        OVERFLOW: visible;
+    }
+
+.floatLeft {
+    FLOAT: left;
+}
+
+.floatRight {
+    FLOAT: right;
+}
+
+.textInput {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    BORDER-BOTTOM: #ccc 1px solid;
+    BORDER-LEFT: #ccc 1px solid;
+    border-radius: 3px;
+    BORDER-RIGHT: #ccc 1px solid;
+    BORDER-TOP: #ccc 1px solid;
+    HEIGHT: 18px;
+    padding: 5px;
+    VERTICAL-ALIGN: middle;
+}
+
+#loginFrame {
+    BACKGROUND: url(/Contents/Image/Login/login_bg.jpg) #4771a0 no-repeat;
+}
+
+    #loginFrame #header {
+        BACKGROUND: none transparent scroll repeat 0 0;
+    }
+
+    #loginFrame #logo A {
+        MARGIN: 45px 115px;
+    }
+
+#loginBox {
+    MARGIN: 65px auto 35px;
+    WIDTH: 718px;
+    _margin: 35px auto;
+}
+
+    #loginBox DIV {
+        BACKGROUND: url(/Contents/Image/Login/login_box_bg.png) #4771a0 no-repeat;
+    }
+
+    #loginBox #loginBoxHeader {
+        HEIGHT: 8px;
+        _overflow: hidden;
+    }
+
+    #loginBox #loginBoxBody {
+        BACKGROUND-POSITION: -719px 0;
+        BACKGROUND-REPEAT: repeat-y;
+        COLOR: #535353;
+        FONT-SIZE: 12px;
+        MAX-HEIGHT: 325px;
+        OVERFLOW: hidden;
+        padding: 0;
+    }
+
+        #loginBox #loginBoxBody P {
+            LINE-HEIGHT: 20px;
+            MARGIN-BOTTOM: 7px;
+        }
+
+#loginBoxBody LI {
+    MARGIN: 20px 0;
+    OVERFLOW: hidden;
+}
+
+#loginBoxBody SPAN {
+    FLOAT: none;
+    HEIGHT: auto;
+    LINE-HEIGHT: 25px;
+    MARGIN-RIGHT: 0;
+    TEXT-ALIGN: left;
+    WIDTH: auto;
+}
+
+#loginBoxBody .error {
+    FLOAT: none;
+    HEIGHT: auto;
+    LINE-HEIGHT: 24px;
+    TEXT-ALIGN: left;
+    WIDTH: auto;
+}
+
+#loginBox #loginBoxFooter {
+    BACKGROUND-POSITION: 0 bottom;
+    HEIGHT: 47px;
+}
+
+#loginBox .floatLeft {
+    MARGIN: 0 0 0 100px;
+    WIDTH: 310px;
+    _margin: 0 0 0 50px;
+}
+
+    #loginBox .floatLeft H4 {
+        COLOR: #426791;
+        MARGIN: 0;
+    }
+
+#loginBox .floatRight {
+    BACKGROUND: none transparent scroll repeat 0 0;
+    LINE-HEIGHT: 20px;
+    MARGIN-RIGHT: 15px;
+    PADDING-TOP: 85px;
+    WIDTH: 215px;
+    _margin-right: 8px;
+}
+
+    #loginBox .floatRight LI {
+        MARGIN: 10px 0;
+        PADDING-LEFT: 15px;
+    }
+
+    #loginBox .floatRight A {
+        COLOR: #446a94;
+    }
+
+#loginBox #loginBtn {
+    BACKGROUND: url(/Contents/Image/Login/login_btn.png) no-repeat;
+    BORDER-BOTTOM: medium none;
+    BORDER-LEFT: medium none;
+    BORDER-RIGHT: medium none;
+    BORDER-TOP: medium none;
+    COLOR: #fff;
+    CURSOR: pointer;
+    HEIGHT: 29px;
+    PADDING-RIGHT: 22px;
+    WIDTH: 75px;
+}
+
+#logo A {
+    BACKGROUND: url(/Contents/Image/Login/master_logo2.png) no-repeat;
+    DISPLAY: block;
+    FLOAT: none;
+    HEIGHT: 44px;
+    WIDTH: 337px;
+    _background-image: none;
+}
+
+#footer {
+    MARGIN: 0 auto 20px;
+    TEXT-ALIGN: center;
+    WIDTH: 940px;
+}
+
+#header {
+    BACKGROUND: none transparent scroll repeat 0 0;
+    HEIGHT: 90px;
+    MARGIN: 0 auto;
+    PADDING-TOP: 10px;
+    WIDTH: 940px;
+}
+
+.highlight {
+    font-size: 12px;
+    margin-left: 5px;
+    overflow: hidden;
+}

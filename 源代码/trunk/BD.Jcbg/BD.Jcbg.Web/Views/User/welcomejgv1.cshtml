@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/jquery.scrollify.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+
+
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version; //b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+    <!-- 47.97.22.69:15000 -->
+    <!-- lq000012 -->
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/welcome.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+   #enginner_title .enginner_title_content {
+
+    width: 18%;
+    background: white;
+    border-bottom: 10px solid black;
+    margin: 0 3px;
+    padding: 5px 8px 0 8px;
+    display: block;
+}
+
+#enginner_title .enginner_title_content .all_title {
+
+    margin: 0;
+    height: 50%;
+    color: #333333;
+    font-size: 16px;
+    background: white;
+    padding: 0px;
+    vertical-align: top;
+    text-align: left;
+    width: 100%;
+}
+
+#enginner_title .enginner_title_content .all_num {
+    height: 50%;
+    color: #888888;
+    font-size: 16px;
+    text-align: left;
+    margin: 0;
+    background: white;
+    vertical-align: middle;
+}
+    </style>
+</head>
+
+<body class="wai_body font_faminly">
+    <form class="form-inline" id="formData">
+                    <div id="distpicker5">
+                        <div class="form-group" style="margin-left: 10px;">
+                            <select class="form-control" id="province10">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="city10">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="district10">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control"  id="street10">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="jcjg10" style="width: 120px;"></select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control"  id="gc10"></select>
+                        </div>
+                        <div style="float:right;margin-right: 10px;padding-top: 9px;">
+                            <!-- <select class="form-control" style="width: 0px;"></select> -->
+                            <span class="custombutton" id="fullscreen">开启全屏</span>
+                        </div>
+                    </div>
+                </form>
+   
+    <section class="panel" id="panel2" style="background:rgb(233,236,243)" data-section-name="section1">
+        <div id="enginner_title">
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_jcjgzs">0个</p>
+                <p class="all_title">总检测机构数</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_gczs">0个</p>
+                <p class="all_title">总工程数</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#5474d7">
+                <p class="all_num" id="enginner_jzmj">0平米</p>
+                <p class="all_title">总建筑面积</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_wtds">0份</p>
+                <p class="all_title">总委托单数</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_bgs">0份</p>
+                <p class="all_title">总报告数</p>
+                
+            </div>
+        </div>
+        <div id="enginner_chart" class="clearfix margin">
+            <div id="enginner_1"></div>
+            <div id="enginner_2"></div>
+            <div id="enginner_3"></div>
+        </div>
+        <div id="enginner_4"  style="margin:10px 40px;"></div>
+    </section>
+
+    <section class="panel" id="panel1" style="position: relative;background:rgb(233,236,243);padding:40px;" data-section-name="section2">
+        <div style="margin-left: 40px; margin-right: 40px;margin-top: 40px;height:800px">
+            <div>
+                <div class="item" id="item2" style="height: 100px;margin-left: -4px;">
+                    <div class="item-content" style="display: block;">
+                        <iframe id="xcjcTable" src="/jc/mapxcjc"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+
+
+    <section class="panel" id="panel3" style="background:rgb(233,236,243)" data-section-name="section3">
+        <div style="margin-left: 40px; margin-right: 40px;margin-top: 40px;height:800px">
+            <div>
+                <div class="item" id="item" style="height: 100px;margin-left: -4px;">
+                    <div class="item-content" style="display: block;">
+                        <iframe id="qyTable" src="/WebList/EasyUiIndex?FormDm=ZTCX&FormStatus=1"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script src="/static/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="/static/jcjg/js/welcomev1.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/jcjg/js/head-select.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/jcjg/js/load.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(function(){
+            var src = window.location.href;
+            var frames = window.parent.frames;
+            var j = 0,href;
+            for(var i = 0 ,len = frames.length ; i < len ; i++){
+                href = frames[i].location.href.split("#");
+                if(href[0] == src){
+                    j++;
+                }
+            }
+            if(j > 1){
+                $("#fullscreen").click(function() {
+                    unfullscreen();
+                }).html("关闭全屏");
+            }else{
+                $("#fullscreen").click(function() {
+                    fullscreen();
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

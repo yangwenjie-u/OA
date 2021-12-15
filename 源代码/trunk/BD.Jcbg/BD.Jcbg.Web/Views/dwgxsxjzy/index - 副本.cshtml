@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link type="text/css" rel="Stylesheet" href="/static/qdy/css/cssReset.css">
+    <link type="text/css" rel="Stylesheet" href="/static/qdy/css/style.css">
+    <style type="text/css">
+        .table {
+            display: table;
+            width: 100%;
+            border-spacing: 20px;
+        }
+
+            .table a {
+                display: table-cell;
+                width: 30%;
+            }
+
+        .item .icon {
+            width: 72px;
+            height: 72px;
+            margin: 40px auto;
+            background-size: 100%;
+        }
+
+        a.item.active,
+        a.c:hover {
+            background: #669cf5;
+            background: -webkit-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: -o-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: -moz-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: linear-gradient(to bottom, #669cf5 0%, #2767d1 100%);
+        }
+.item{
+box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+}
+    </style>
+</head>
+
+<body>
+    
+    <div id="mainBody">
+        <div class="table">
+            <a class="item" href="" value="i_tzshow" href2="/dwgxzj/show"><i class="icon" style="background-image:url(/static/qdy/images/1.png)"></i>综合展现</a>
+<a class="item" href="" value="i_qzjx" href2="/zjmachine/index"><i class="icon" style="background-image:url(/static/qdy/images/7.png)"></i>起重机械</a>
+<a class="item" href="" value="i_wgry" href2="/dwgxzj/gotoWG"><i class="icon" style="background-image:url(/static/qdy/images/4.png)"></i>务工人员实名制</a>
+            
+           
+        </div>
+        <div class="table">
+ 
+            <a class="item" style="display:none"><i class="icon" style="background-image:url(/static/qdy/images/5.png)"></i>质安监系统</a>
+            <a class="item" style="display:none" href=""><i class="icon" style="background-image:url(/static/qdy/images/6.png)"></i>物联网数据中心</a>
+            <a class="item" href2="/dwgxzj/gotoJCJG" href="" value="i_jcjg"><i class="icon" style="background-image:url(/static/qdy/images/2.png)"></i>检测监管</a>
+            <a class="item" href2="/dwgxzj/gotoWDYKQ" href="" value="i_wdykq"><i class="icon" style="background-image:url(/static/qdy/images/3.png)"></i>五大员考勤</a>
+            <a class="item" href2="http://111.3.65.57:8090/zhty" href="" value="i_jkzx"><i class="icon" style="background-image:url(/static/qdy/images/8.png)"></i>监控中心</a>
+        </div>
+		<div class="table">
+			<a class="item" href2="/dwgxzj/gotoXYPJ" href="" value="i_xypj" ><i class="icon" style="background-image:url(/static/qdy/images/5.png)"></i>信用评价</a>
+			<a class="item" href2="http://47.97.22.69:10001/" href="" value="i_yhtj"><i class="icon" style="background-image:url(/static/qdy/images/5.png)"></i>用户系统</a>
+            <a class="item" href2="http://oa.zjzjzjz.com/" href="" value="i_zaj"><i class="icon" style="background-image:url(/static/qdy/images/5.png)"></i>质安监系统</a>
+            
+        </div>
+    </div>
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $("#mainBody").on("click", ".item", function () {
+            var that = $(this);
+            var url = that.attr("href2");
+            var id = that.attr("value");
+            var name = that.text();
+            if (url != undefined) {
+                parent.openPage(url, id, name);
+            }
+            else {alert("功能暂未开通") }
+            return false;
+        });
+    </script>
+</body>
+
+</html>

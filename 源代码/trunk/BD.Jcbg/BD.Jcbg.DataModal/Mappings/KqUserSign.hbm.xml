@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.KqUserSign,BD.Jcbg.DataModal" table="KqUserSign" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" not-null="true" length="50" name="UserCode" column="[UserCode]" />
+    <property type="DateTime" name="S1" column="[S1]" />
+    <property type="DateTime" name="S2" column="[S2]" />
+    <property type="DateTime" name="S3" column="[S3]" />
+    <property type="DateTime" name="S4" column="[S4]" />
+    <property type="string" length="50" name="S1Type" column="[S1Type]" />
+    <property type="string" length="50" name="S2Type" column="[S2Type]" />
+    <property type="string" length="50" name="S3Type" column="[S3Type]" />
+    <property type="string" length="50" name="S4Type" column="[S4Type]" />
+    <property type="string" length="100" name="SignDate" column="[SignDate]" />
+    <property type="string" length="1073741823" name="S1Text" column="[S1Text]" />
+    <property type="string" length="1073741823" name="S2Text" column="[S2Text]" />
+    <property type="string" length="1073741823" name="S3Text" column="[S3Text]" />
+    <property type="string" length="1073741823" name="S4Text" column="[S4Text]" />
+  </class>
+</hibernate-mapping>

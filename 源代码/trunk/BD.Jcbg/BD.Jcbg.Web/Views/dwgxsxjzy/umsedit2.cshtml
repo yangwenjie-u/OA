@@ -1,0 +1,415 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/tz/css/load.css" />
+    <style>
+    .person-view {
+        text-align: left;
+    }
+
+    .m-role {
+        width: 45%;
+    }
+
+    .m-role .xb {
+        width: 20px;
+        height: 20px;
+        margin-right: 20px;
+    }
+
+    .role-list .m-role input,
+    .m-role select {
+        width: 60%;
+    }
+
+    .role-line {
+        width: 60%;
+        display: inline-block;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .m-role span {
+        text-align: center;
+    }
+    /* .role-list {
+        min-width: 100px;
+        margin: 0 20px;
+        vertical-align: middle;
+    }
+
+    #roleLine .role-list {
+        margin: 0px;
+        width: 50%;
+        display: inline-block;
+        text-align: left;
+    }*/
+
+    .role-list .checkbox {
+        width: 16px;
+        height: 16px;
+    }
+    /*    .m-role label {
+        width: 400px;
+        display: inline-block;
+    }*/
+    /*    #roleLine .role-list {
+        width: 33%;
+    }*/
+
+    .role-list {}
+
+    #roleLine {
+        border: 1px solid #C6C6C6;
+    }
+
+    #roleLine>div {
+        display: table-cell;
+        width: 50%;
+    }
+
+    #roleLine p {
+        background: #F1F1F1;
+        color: #303030;
+        height: 40px;
+        line-height: 40px;
+        border-bottom: 1px solid #E5E5E5;
+        border-left: 1px solid #E5E5E5;
+    }
+
+    #roleLine div:first-child p {
+        border-left: 0px;
+    }
+
+    #roleLine .role-list span {
+        width: 70%;
+        text-align: left;
+        margin-left: 10px;
+    }
+
+    #roleLeft,
+    #roleRight {
+        height: 300px;
+        overflow: auto;
+        padding: 10px 0;
+        cursor: pointer;
+    }
+
+    #roleRight li {
+        width: 100%;
+        margin: 0;
+    }
+
+    #roleLine .role-list .close {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        background: url('/static/tz/images/close.png') no-repeat;
+        background-position: 7px 7px;
+    }
+
+    #roleRight .role-list:hover {
+        background: #E5E5E5;
+    }
+
+    .role-list {
+        width: 90%;
+    }
+
+    #personView {
+        display: inline-block;
+        margin: 0px 10%;
+        padding-top: 20px;
+        box-sizing: border-box;
+    }
+
+    #selectRole span {
+        margin-top: 5px;
+        background: #5167D7;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .m-role input, .m-role select{
+        width: 60%;
+    }
+    /*860px; 700px*/
+    </style>
+</head>
+
+<body>
+    <div id="personView" class="person-view">
+        <div class="m-role">
+            <label><span>账号</span>
+                <input type="text" name="username" id="username" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label><span>姓名</span>
+                <input type="text" name="realname" id="realname" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label><span>密码</span>
+                <input type="password" name="password" id="password" />
+            </label>
+        </div>
+        <div class="m-role">
+            <span>性别</span>
+            <div class="role-line">
+                <label style="width: 150px;">
+                    <input type="radio" class="xb" name="xb" value="女" />女</label>
+                <label style="width: 140px;">
+                    <input type="radio" class="xb" name="xb" value="男" />男</label>
+            </div>
+        </div>
+        <div class="m-role">
+            <label><span>手机号码</span>
+                <input type="text" name="sjhm" id="sjhm" />
+            </label>
+        </div>
+        <div class="m-role" style="margin-left: 4px;">
+            <label><span>身份证号</span>
+                <input type="text" name="sfzh" id="sfzh" />
+            </label>
+        </div>
+        <div class="m-role" style="float: left;">
+            <label><span>所属单位</span>
+                <select id="cpcode">
+                    <option value="0">请选择单位</option>
+                </select>
+            </label>
+        </div>
+        <div class="m-role" style="width: 100%">
+            <div>
+                <span style="vertical-align: top;float: left;">角色</span>
+                <div id="roleLine" class="role-line" style="display: table;float: left;width: 80%;">
+                    <div>
+                        <p>可选择权限</p>
+                        <ul id="roleLeft"></ul>
+                    </div>
+                    <div style="border-left: 1px solid #E5E5E5;">
+                        <p>已有权限</p>
+                        <ul id="roleRight"></ul>
+                    </div>
+                    <div style="display: table-row;background: #F1F1F1;height: 40px;">
+                        <div id="selectRole" style="display: table-cell;"><span>确认</span></div>
+                        <div style="display: table-cell;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="save" style="margin-top: 0px;border: 0px;"><span class="btn">保存</span></div>
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script>
+    var usercode = "@ViewBag.usercode";
+    var cpcode = '@ViewBag.cpcode';
+    $(function() {
+        ajaxTpl('/dwgxsxjzy/GetCompanys', '', function(data) {
+            if (data.length) {
+                var str = '';
+                for (var i = 0, len = data.length; i < len; i++) {
+                    str += "<option value='" + data[i].CompanyId + "'>" + data[i].CompanyName + "</option>";
+                }
+                if (data.length == 1) {
+                    $('#cpcode').html(str);
+                } else {
+                    $('#cpcode').append(str);
+                }
+                if (cpcode) {
+                    $('#cpcode').val(cpcode);
+                }
+            }
+        });
+        if (usercode) {
+            $('#password').parents('.m-role').hide();
+            $('#username').val('@ViewBag.username');
+            $('#realname').val('@ViewBag.realname');
+
+            $('#sfzh').val('@ViewBag.sfzh');
+            $('#sjhm').val('@ViewBag.sjhm');
+            $('.xb').filter('[value="@ViewBag.xb"]').attr("checked", true);
+        }
+        GetRoleList();
+    })
+
+    function GetRoleList() {
+        var obj;
+        if (usercode) {
+            obj = {
+                method: 'Role',
+                opt: 'GetOwnerRoleListByUsercode',
+                usercode: usercode,
+                cpcode: cpcode != 0 ? cpcode : ''
+            }
+        } else {
+            obj = {
+                method: 'Role',
+                opt: 'GetRoleList',
+                cpcode: cpcode != 0 ? cpcode : ''
+            }
+        }
+        //角色列表
+        ajaxTpl("/dwgxsxjzy/UmsApiService", obj, function(data) {
+            var lf = '',
+                rig = '',
+                tmp;
+            for (var i = 0, len = data.data.rows.length; i < len; i++) {
+                tmp = data.data.rows[i];
+                if (tmp.hasUser == true) {
+                    rig += getRig(tmp);
+                } else {
+                    lf += getLf(tmp);
+                }
+            }
+
+            $("#roleLeft").html(lf);
+            $("#roleRight").html(rig);
+            // $("#roleLine").html(str);
+        });
+    }
+
+    function getRig(tmp) {
+        return "<li class='role-list' value='" + tmp.rolecode + "' text='" + tmp.rolename + "'><span>" + tmp.rolename + "</span><span class='close'></span></li>";
+    }
+
+    function getLf(tmp) {
+        return "<li class='role-list' value='" + tmp.rolecode + "' text='" + tmp.rolename + "' ><label><input type='checkbox'  class='checkbox' /><span>" + tmp.rolename + "</span></label></li>";
+    }
+
+    $("#cpcode").change(function() {
+        cpcode = $('#cpcode').val();
+        GetRoleList();
+    });
+
+    $("#personView .save").click(function() {
+        var sfzh = $('#sfzh').val();
+        var username = $('#username').val();
+        var realname = $('#realname').val();
+        var password = $('#password').val();
+        var cpcode = $('#cpcode').val();
+        if (cpcode == 0) {
+            layer.msg('请选择单位', {
+                icon: 2,
+                time: 2000
+            });
+            return;
+        }
+        var xb = $(".xb:checked").val() || '';
+        var sjhm = $('#sjhm').val();
+        var ary = $("#roleRight").children();
+        var rolecodelist = [];
+        if (ary.length) {
+            for (var i = 0, len = ary.length; i < len; i++) {
+                rolecodelist.push(ary.eq(i).attr('value'));
+            }
+        }
+
+        if (username.length && realname.length && sfzh.length && sjhm.length && rolecodelist.length && xb.length) {
+
+            var obj = {
+                username: username,
+                realname: realname,
+                sfzh: sfzh,
+                cpcode: cpcode,
+                sjhm: sjhm,
+                xb: xb,
+                rolecodelist: rolecodelist.join(',')
+            };
+
+            if (!usercode) {
+                //身份校验
+                if (password.length) {
+                    ajaxTpl('/dwgxsxjzy/UmsApiService', {
+                        method: 'User',
+                        opt: 'CheckUserBySfzh',
+                        sfzh: sfzh
+                    }, function(data) {
+                        if (data) {
+                            // data false表示唯一码不存在，true表示唯一码已存在
+                            if (data.data == false) {
+                                obj.method = 'User';
+                                obj.opt = 'AddUser';
+                                save(obj);
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 2,
+                                    time: 2000
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    layer.msg('请输入密码!', {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            } else {
+                obj.method = 'User';
+                obj.opt = 'ModifyUserInfoByUsercode';
+                obj.usercode = usercode;
+                save(obj);
+            }
+        } else {
+            layer.msg('请将表单填写完整', {
+                icon: 2,
+                time: 2000
+            });
+        }
+    });
+
+    function save(obj) {
+        ajaxTpl('/dwgxsxjzy/UmsApiService', obj, function(data) {
+            if (data.success == true) {
+                layer.msg('保存成功！', {
+                    icon: 1,
+                    time: 1500
+                });
+            } else {
+                layer.msg(data.msg, {
+                    icon: 2,
+                    time: 2000
+                });
+            }
+        });
+    }
+
+    $("#selectRole").click(function() {
+        var cli = $("#roleLeft").find(":checked");
+        var par, str = '';
+        if (cli.length) {
+            for (var i = 0, len = cli.length; i < len; i++) {
+                par = cli.eq(i).parents('.role-list');
+                str += getRig({
+                    rolecode: par.attr('value'),
+                    rolename: par.attr('text')
+                });
+                par.remove();
+            }
+            $("#roleRight").append(str);
+        }
+    });
+    $("#roleRight").on('click', '.close', function() {
+        var par = $(this).parents('.role-list');
+        var str = getLf({
+            rolecode: par.attr('value'),
+            rolename: par.attr('text')
+        });
+        par.remove();
+
+        $("#roleLeft").append(str);
+    });
+    </script>
+</body>
+
+</html>

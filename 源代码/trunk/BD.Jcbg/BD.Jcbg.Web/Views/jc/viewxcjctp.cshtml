@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/User/_albumlayout.cshtml";
+}
+@section head{
+<script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+    $(function () {
+        
+        $.ajax({
+            type: "POST",
+            url: "/jc/GetXcjctps",
+            dataType: "json",
+            data: "id=" + encodeURIComponent(g_wtdwyh),
+            async: false,
+            success: function (data) {
+                if (data.code != "0") {
+                    alert(data.msg);
+                } else {
+                    var firstId = "";
+                    $.each(data.result.images, function (i, item) {
+                        if (firstId == "")
+                            firstId = "img_" + i;
+                        var imgStr = "<li><div class=\"thumbnail\"><img data-original=\"" + item.url + "\" src=\"" + item.url + "\" alt=\"\" id='" + "img_" + i + "'><div class=\"caption\" style='text-align:center'><h3>" + item.scsj + "</h3></div></div></li>";
+                        $("#images").append(imgStr);
+
+                    });
+
+                    $('#images').viewer();
+                    //if (firstId != "")
+                    //    $("#" + firstId).click();
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+    });
+</script>
+}
+<div class="row">
+    <div class="docs-galley">
+        <ul id="images" class="docs-pictures clearfix"></ul>
+    </div>
+</div>

@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/jquery.scrollify.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+
+
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version; //b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+    <!-- 47.97.22.69:15000 -->
+    <!-- lq000012 -->
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/welcome.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+   #enginner_title .enginner_title_content {
+
+    width: 18%;
+    background: white;
+    border-bottom: 10px solid black;
+    margin: 0 3px;
+    padding: 5px 8px 0 8px;
+    display: block;
+}
+
+#enginner_title .enginner_title_content .all_title {
+
+    margin: 0;
+    height: 50%;
+    color: #333333;
+    font-size: 16px;
+    background: white;
+    padding: 0px;
+    vertical-align: top;
+    text-align: left;
+    width: 100%;
+}
+
+#enginner_title .enginner_title_content .all_num {
+    height: 50%;
+    color: #888888;
+    font-size: 16px;
+    text-align: left;
+    margin: 0;
+    background: white;
+    vertical-align: middle;
+}
+
+
+#tabTitle {
+    display: table;
+}
+#tabTitle li {
+    display: table-cell;
+}
+
+    </style>
+
+
+
+</head>
+
+<body class="wai_body font_faminly">
+    <form class="form-inline" id="formData">
+                    <div id="distpicker5">
+                        <div class="form-group" style="margin-left: 10px;">
+                            <select class="form-control" id="province10" val="ViewBag.provinceName">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="city10" val="ViewBag.cityName">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="district10" val="ViewBag.districtName">
+                                <option value=''>请选择</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="street10">
+                                <option value=''>请选择</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="selectQylx" style="display: none;">
+                                <option value="">所有企业</option>
+                                <option value="11">施工企业</option>
+                                <option value="12">监理企业</option>
+                                <option value="13">建设企业</option>
+                                <option value="14">设计企业</option>
+                                <option value="15">勘察企业</option>
+                            </select>
+                            <select class="form-control selectpicker" data-live-search="true" id="selectQy" style="width: 120px;"></select>
+
+                            <select class="form-control" id="selectGczt" style="width: 180px;">
+                                <option value="">所有工程</option>
+                            </select>
+                            <label class="sr-only">状态</label>
+                            
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="form-group">
+                            <select class="form-control" id="gcxz" style="width: 100px;">
+                                <option selected='selected' value=''>全部类型</option>
+                            </select>
+                            <input type="text" name="" id="keyVal" class="form-control" style="width: 180px;" placeholder="公司名称/工程名称" />
+
+                             <!--<input type="text" name="" class="form-control" style="width: 180px;padding-right: 70px;" />
+                            <button class="search" style="position: relative;left: -60px;width: 50px;top: 2px;" id="searchAll">检索</button> -->
+                        </div>
+                        <div style="float:right;margin-right: 10px;padding-top: 9px;">
+                            <!-- <select class="form-control" style="width: 0px;"></select> -->
+                            <span class="custombutton" id="fullscreen">开启全屏</span>
+                        </div>
+                    </div>
+                </form>
+   
+    <section class="panel" id="panel2" style="background:rgb(233,236,243)" data-section-name="section1">
+        <div id="enginner_title">
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_qyzs">0个</p>
+                <p class="all_title">企业总数</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_zgcs">0个</p>
+                <p class="all_title">总工程数</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#5474d7">
+                <p class="all_num" id="enginner_jzmj">0人</p>
+                <p class="all_title">建筑面积</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_gczj">0人</p>
+                <p class="all_title">造价总计</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_zcry">0人</p>
+                <p class="all_title">在册人员</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_yfje">0亿元</p>
+                <p class="all_title">应付金额</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_sfje">0亿元</p>
+                <p class="all_title">实付金额</p>
+                
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_ljffje">0亿元</p>
+                <p class="all_title">累计发放</p>
+                
+            </div>
+        </div>
+        <div id="enginner_chart" class="clearfix margin">
+            <div id="enginner_1"></div>
+            <div id="enginner_2"></div>
+            <div id="enginner_3"></div>
+        </div>
+        <div id="enginner_4"  style="margin:10px 40px;"></div>
+    </section>
+
+    <section class="panel" id="panel1" style="position: relative;background:rgb(233,236,243);padding:40px;" data-section-name="section2">
+        <div id="placeselect">
+            <div id="mapselect">
+                
+            </div>
+        </div>
+        <div id="allMap"></div>
+        <div id="allprograme" style="top: 70px;left: 40px;">展开所有</div>
+        <div id="moresearch" style="display:none;overflow: hidden;">
+            <ul class="tab-title" id="tabData">
+                <li class="active" id="GcList">工程</li>
+                <li id="QyList">企业</li>
+                <li id="Rylist">人员</li>
+            </ul>
+            <div class="item">
+                <div class="item-content" style="display: block;">
+                    <div class="searchbutton">
+                        <label>工程名称</label>
+                        <input type="text" placeholder="工程名称" class="form-control" id="txtGcmc">
+                        <button onclick="btnSearch(1);">检索</button>
+                    </div>
+                    <div class="moresearchtitle">
+                        <div id="listcontent"></div>
+                        <div style="text-align:center" onclick="morelist(1);" class="morebutton">加载更多
+                            <input id="gcpageindex" type="hidden" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <div class="searchbutton">
+                        <label>企业名称</label>
+                        <input type="text" placeholder="企业名称" class="form-control" id="txtQymc">
+                        <button onclick="btnSearch(2);">检索</button>
+                    </div>
+                    <div class="moresearchtitle">
+                        <div id="qycontent"></div>
+                        <div style="text-align:center" onclick="morelist(2);" class="morebutton">加载更多
+                            <input id="qypageindex" type="hidden" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <div class="searchbutton">
+                        <div><label>所属工程</label>
+                        <input type="text" placeholder="所属工程" class="form-control" id="txtGcmcForRy">
+                        </div>
+                        <label style="width: 56px;display: inline-block;">人员</label>
+                        <input type="text" class="form-control" placeholder="姓名或者身份证号" id="txtRymc">
+                        <button onclick="btnSearch(3);">检索</button>
+                    </div>
+                    <div class="moresearchtitle">
+                        <div id="rycontent"></div>
+                        <div style="text-align:center" onclick="morelist(3);" class="morebutton">加载更多
+                            <input id="rypageindex" type="hidden" value="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    
+
+
+    <section class="panel" id="panel3" style="background:rgb(233,236,243)" data-section-name="section3">
+        <div style="margin-left: 40px; margin-right: 40px;margin-top: 40px;height:800px">
+            <div>
+                <ul class="tab-title" id="tabTitle">
+                    <li id="qytab" >企业一览</li>
+                    <li  id="gctab">工程一览</li>
+                    <li id="rytab">人员一览</li>
+                </ul>
+                <div class="item" id="item" style="height: 100px;margin-left: -4px;">
+                    <div class="item-content" style="display: block;">
+                        <iframe id="qyTable" src=""></iframe>
+                    </div>
+
+                    <div class="item-content" >
+                        <iframe id="gcTable" src=""></iframe>
+
+                    </div>
+                    <div class="item-content" >
+                        <iframe id="ryTable" src=""></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <script src="/static/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script src="/static/wgry/js/welcomezf.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/wgry/js/map-zf.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/wgry/js/head-select.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/wgry/js/load.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(function(){
+            var src = window.location.href;
+            var frames = window.parent.frames;
+            var j = 0,href;
+            for(var i = 0 ,len = frames.length ; i < len ; i++){
+                href = frames[i].location.href.split("#");
+                if(href[0] == src){
+                    j++;
+                }
+            }
+            if(j > 1){
+                $("#fullscreen").click(function() {
+                    unfullscreen();
+                }).html("关闭全屏");
+            }else{
+                $("#fullscreen").click(function() {
+                    fullscreen();
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

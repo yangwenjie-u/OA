@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.DcLogRedo,BD.Jcbg.DataModal" table="DCLogRedo" lazy="false">
+    <id name="Recid" column="RECID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="DepCode" column="[DepCode]" />
+    <property type="string" length="5" name="Csylb" column="[CSYLB]" />
+    <property type="string" length="50" name="Wtbh" column="[WTBH]" />
+    <property type="string" length="50" name="Zh" column="[ZH]" />
+    <property type="string" length="20" name="Syr" column="[SYR]" />
+    <property type="string" length="20" name="Syfhr" column="[SYFHR]" />
+    <property type="DateTime" name="Syrq" column="[SYRQ]" />
+    <property type="string" length="20" name="Sbmcbh" column="[SBMCBH]" />
+    <property type="string" length="50" name="Jh" column="[JH]" />
+    <property type="string" length="2147483647" name="DataList" column="[DataList]" />
+    <property type="string" length="50" name="UniqCode" column="[UniqCode]" />
+    <property type="string" length="50" name="CheckUser" column="[CheckUser]" />
+    <property type="string" length="500" name="Czyy" column="[CZYY]" />
+  </class>
+</hibernate-mapping>

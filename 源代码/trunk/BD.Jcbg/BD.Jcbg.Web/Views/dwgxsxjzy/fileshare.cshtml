@@ -1,0 +1,793 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuieditlayout.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+	var fileshare_g_curNode = {
+		folderid:"",
+		foldertype:"3",
+		foldername:"根目录"
+	};
+	var fileshare_g_parentNodes = new Array();
+	fileshare_g_parentNodes[0] = fileshare_g_curNode;
+	$(function () {
+		try {
+			$('#fileshare_maintable').datagrid({
+				title: '文件管理',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/dwgxzj/GetShareFile',
+				rownumbers: true,
+				nowrap: true,
+				idField: 'recid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: false,
+				columns: [[
+				{ field: 'imagename', title: '', width: 24, sortable: false, align: "center",
+					formatter: function (value, row, index) {
+						var ret = value;
+						if (ret != "") {
+							ret = "<img width='16' height='16' src='" + '@SkinManager.GetFileImagePath("")' + ret + "' border='0' alt=''/>";
+						}
+						return ret;
+					}
+				},
+				{ field: 'filename', title: '名称', width: 400, sortable: true, align: "left" },
+				{ field: 'createdtime', title: '创建时间', width: 120, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (row.isvirtual == 1)
+							return "";
+						else
+							return value;
+					}
+				},
+				{ field: 'filetypedesc', title: '类型', width: 200, sortable: true, align: "center" },
+				{ field: 'filesize', title: '大小', width: 100, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (row.filetype == 1)
+							return "";
+						else {
+							return formatDigital(value,3);
+						}
+					}
+				},
+				{ field: 'realname', title: '所有人', width: 100, sortable: true, align: "center" }
+				]],
+				toolbar: "#fileshare_tb",
+				onClickRow: function (rowIndex, rowData) {
+					fileshare_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					fileshare_rowDblClick(rowData);
+				}
+			});
+
+			fileshare_setLocation();
+
+		} catch (e) {
+			$.messager.alert('初始化页面异常', e.message, 'warning');
+		}
+
+	});
+	function fileshare_search() {
+		try {
+			fileshare_g_curNode = fileshare_g_parentNodes[0];
+			fileshare_g_parentNodes.splice(1, fileshare_g_parentNodes.length - 1);
+			fileshare_gridReload();
+		} catch (e) {
+			$.messager.alert('查找记录异常', e.message, 'warning');
+		}
+	}
+	function fileshare_canEdit(rowData) {
+		return rowData.sharetype == "0";
+	}
+	function fileshare_isFile(rowData) {
+		return rowData.filetype == "2";
+	}
+	function fileshare_isNormalFolder() {
+		return fileshare_g_curNode.foldertype != "1" && fileshare_g_curNode.foldertype != "2";
+	}
+	function fileshare_showToolbar(rowData) {
+		try {
+			var canedit = fileshare_canEdit(rowData);
+			var isfile = fileshare_isFile(rowData);
+			var isnormalFolder = fileshare_isNormalFolder();
+			$("#fileshare_btnaddfile").linkbutton(isnormalFolder ? 'enable' : 'disable');
+			$("#fileshare_btnaddfolder").linkbutton(isnormalFolder ? 'enable' : 'disable');
+			$("#fileshare_btnrename").linkbutton(canedit ? 'enable' : 'disable');
+			$("#fileshare_btnshare").linkbutton(canedit ? 'enable' : 'disable');
+			$("#fileshare_btnmove").linkbutton(canedit ? 'enable' : 'disable');
+			$("#fileshare_btndelete").linkbutton(canedit ? 'enable' : 'disable');
+			$("#fileshare_btnopen").linkbutton(isfile || fileshare_g_curNode.foldertype == "2" ? 'disable' : 'enable');
+			$("#fileshare_btndown").linkbutton(isfile ? 'enable' : 'disable');
+			
+		} catch (e) {
+			$.messager.alert('显示工具条异常', e.message, 'warning');
+		}
+	}
+	function fileshare_showNoRecToolbar() {
+		try {
+			var isnormalFolder = fileshare_isNormalFolder();
+			$("#fileshare_maintable").datagrid('unselectAll');
+			$("#fileshare_btnaddfile").linkbutton(isnormalFolder ? 'enable' : 'disable');
+			$("#fileshare_btnaddfolder").linkbutton(isnormalFolder ? 'enable' : 'disable');
+			$("#fileshare_btnrename").linkbutton('disable');
+			$("#fileshare_btnshare").linkbutton('disable');
+			$("#fileshare_btnmove").linkbutton('disable');
+			$("#fileshare_btndelete").linkbutton('disable');
+			$("#fileshare_btnopen").linkbutton('disable');
+			$("#fileshare_btndown").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('显示无记录工具条异常', e.message, 'warning');
+		}
+	}
+	function fileshare_gridReload() {
+		try {
+			$('#fileshare_maintable').datagrid('load', {
+				folderid: fileshare_g_curNode.folderid,
+				foldertype: fileshare_g_curNode.foldertype,
+				key: $("#fileshare_search_key").val()
+			});
+			fileshare_showNoRecToolbar();
+			fileshare_setLocation();
+		} catch (e) {
+			$.messager.alert('加载表格异常', e.message, 'warning');
+		}
+	}
+	function fileshare_addFolder() {
+		$.messager.prompt('创建文件夹', '请输入文件夹名称：', function (r) {
+			if (r) {
+				$.ajax({
+					type: "POST",
+					url: "/oa/addfolder?foldername=" + encodeURIComponent(r) + "&parentid=" + encodeURIComponent(fileshare_g_curNode.folderid),
+					dataType: "json",
+					success: function (data) {
+						try {
+							if (data.code == 0) {
+								var record = data.record[0];
+								$('#fileshare_maintable').datagrid('insertRow', {
+									index: 0,
+									row: record
+								});
+							}
+							else
+								$.messager.alert('提示', data.msg, 'info');
+						} catch (e) {
+							$.messager.alert('提示', e, 'warning');
+						}
+					},
+					complete: function (XMLHttpRequest, textStatus) {
+						$("body").unmask();
+					},
+					beforeSend: function (XMLHttpRequest) {
+						$("body").mask("正在保存...");
+					}
+				});
+			}
+		});
+
+
+	}
+	function fileshare_setLocation() {
+		try {
+			var html = "当前路径：&nbsp;&nbsp;";
+			for (var i = 0; i < fileshare_g_parentNodes.length; i++) {
+				if (i > 0)
+					html += "&nbsp;&nbsp;/&nbsp;&nbsp;";
+				html += "<a onclick='fileshare_loadNode(" + i + ")' style='color:blue;cursor:pointer;'>" + fileshare_g_parentNodes[i].foldername + "</a>";
+			}
+			$("#divLocation").html(html);
+		}
+		catch (e) {
+			$.messager.alert('提示', err, 'info');
+		}
+		
+	}
+	function fileshare_loadNode(i) {
+		try {
+			$("#fileshare_search_key").val("");
+			fileshare_g_curNode = fileshare_g_parentNodes[i];
+			fileshare_g_parentNodes.splice(i + 1, fileshare_g_parentNodes.length - i - 1);
+			fileshare_gridReload();
+		} catch (e) {
+			$.messager.alert('提示', err, 'info');
+		}
+
+	}
+	function fileshare_addFile() {
+		fileshare_initFileCtrl();
+		$("#div_fileshare_addfile").dialog({
+			title: "上传文件",
+			collapsible: false,
+			minimizable: false,
+			maximizable: false,
+			resizable: false,
+			draggable: false,
+			closable: true,
+			modal: true,
+			fit: false,
+			cache: false,
+			width: 600,
+			height:200,
+			buttons: [{
+				text: "关闭",
+				iconCls: "icon-cancel",
+				id: "fileshare_btn_addfile",
+				handler: function () {
+					$("#div_fileshare_addfile").dialog("close");
+				}
+			}]
+		});
+	}
+	function fileshare_initFileCtrl() {
+		try {
+			var width = 100;
+			var fileid = "fileshare_fj";
+			$('#' + fileid).uploadify({
+				'formData': {
+					'parentid': fileshare_g_curNode.folderid
+				},
+				'swf': '/skins/default/images/uploadify.swf',
+				'uploader': '/oa/addsharefile',
+				'onUploadSuccess': function (file, data, response) {
+					var jdata = eval('(' + data + ')');
+
+					if (jdata.code == 0) {
+						var record = jdata.record[0];
+						$('#fileshare_maintable').datagrid('insertRow', {
+							index: 0,
+							row: record
+						});
+
+						$("#div_fileshare_addfile").dialog("close");
+					}
+					else
+						$.messager.alert('提示', '上传文件' + file.name + '失败，错误信息：' + msg, 'info');
+				},
+				'onFallback': function () {
+					$.messager.alert('提示', '当前未安装flash控件，请从百度搜索flash player下载安装', 'info');
+				},
+
+				'onUploadError': function (file, errorCode, errorMsg, errorString) {
+					$.messager.alert('提示', file.name + '上传失败，' + errorString + '，请稍后再试', 'info');
+				},
+
+				'buttonText': '请选择文件',
+				'width': width,
+				'height': '25'
+			});
+		}
+		catch (err) {
+			$.messager.alert('提示', err, 'info');
+		}
+	}
+	function fileshare_rowDblClick(rowdata) {
+		try{
+			if (fileshare_isFile(rowdata)) {
+				fileshare_downFile();
+			} else {
+				fileshare_openFolder();
+			}
+		}catch (err) {
+			$.messager.alert('提示', err, 'info');
+		}
+	}
+	function fileshare_openFolder() {
+		try {
+			var rec = $("#fileshare_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			if (fileshare_g_curNode.foldertype == "2")
+				return;
+			var sharetype = rec.sharetype;
+			if (fileshare_g_parentNodes.length > 2)
+				sharetype = fileshare_g_parentNodes[1].foldertype;
+			fileshare_g_curNode = {
+				folderid:rec.recid,
+				foldertype: sharetype,
+				foldername:rec.filename
+			};
+			fileshare_g_parentNodes[fileshare_g_parentNodes.length] = fileshare_g_curNode;
+
+			$("#fileshare_search_key").val("");
+			fileshare_gridReload();
+		} catch (err) {
+			$.messager.alert('提示', err, 'info');
+		}
+	}
+	function fileshare_downFile() {
+		try {
+			var rec = $("#fileshare_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			 $.download("/oa/fileview", "id=" + rec.fileid, 'post');
+		} catch (err) {
+			$.messager.alert('提示', err, 'info');
+		}
+	}
+	function fileshare_delete() {
+		try {
+			var rec = $("#fileshare_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			if (fileshare_isFile(rec)) {
+				fileshare_deleteFile(rec);
+			} else {
+				fileshare_deleteFolder(rec);
+			}
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_deleteFile(rowData) {
+		try {
+			$.messager.confirm('提示', '确定要删除'+rowData.filename+'吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/oa/deletesharefile?id=" + rowData.recid,
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									var index = $("#fileshare_maintable").datagrid('getRowIndex', rowData);
+									$("#fileshare_maintable").datagrid('deleteRow', index);
+									fileshare_showNoRecToolbar();
+									$.messager.alert('提示', '删除成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在删除...");
+						}
+					});
+				}
+			});
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_deleteFolder(rowData) {
+		try {
+			$.messager.confirm('提示', '确定要删除' + rowData.filename + '吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/oa/deletesharefolder?id=" + rowData.recid,
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									var index = $("#fileshare_maintable").datagrid('getRowIndex', rowData);
+									$("#fileshare_maintable").datagrid('deleteRow', index);
+									fileshare_showNoRecToolbar();
+									$.messager.alert('提示', '删除成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在删除...");
+						}
+					});
+				}
+			});
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_rename() {
+		try {
+			var rec = $("#fileshare_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$("#fileshare_filename").val(rec.filename);
+			$("#fileshare_rename").dialog({
+				title: "文件重命名",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: false,
+				cache: false,
+				width: 500,
+				height: 120,
+				buttons: [{
+					text: "确定",
+					iconCls: "icon-ok",
+					id: "fileshare_btn_renameok",
+					handler: function () {
+						try {
+							var newname = $("#fileshare_filename").val();
+							if (newname == "") {
+								$.messager.alert('提示', '请输入文件名', 'info');
+								return;
+							}
+							fileshare_renameFile(rec, newname);
+							$("#fileshare_rename").dialog("close");
+						} catch (e) {
+							$.messager.alert('提示', e, 'info');
+						}
+					}
+				}, {
+					text: "取消",
+					iconCls: "icon-cancel",
+					id: "fileshare_btn_renamecancel",
+					handler: function () {
+						$("#fileshare_rename").dialog("close");
+					}
+				}]
+			});
+			
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_renameFile(rowData, newname) {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/oa/renamesharefile?id=" + rowData.recid + "&filename=" + encodeURIComponent(newname) + "&filetype=" + rowData.filetype,
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					try {
+						if (data.code == 0) {
+							var index = $("#fileshare_maintable").datagrid('getRowIndex', rowData);
+							rowData.filename = newname;
+							$("#fileshare_maintable").datagrid('refreshRow', index);
+						}
+						else
+							$.messager.alert('提示', data.msg, 'info');
+					} catch (e) {
+						$.messager.alert('提示', e, 'warning');
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在保存...");
+				}
+			});
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_share() {
+		try {
+			var rec = $("#fileshare_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			var oldReaders = fileshare_getReaders(rec);
+			$("#fileshare_readers").combotree({
+				url: '/oa/getusertree',
+				valueField: 'id',
+				textField: 'text',
+				multiple: true,
+				editable: false,
+				panelHeight: 200,
+				width: 250,
+				checkbox: true,
+				onlyLeafCheck: false,
+				animate: false,
+				onLoadSuccess: function (node, data) {
+					$("body").unmask();
+					try {
+						var users = oldReaders;
+						if (users != "") {
+							var arrusers = users.split(',');
+							$('#fileshare_readers').combotree('setValues', arrusers);
+						}
+					} catch (e) {
+						alert(e);
+					}
+				},
+				onBeforeLoad: function (node, param) {
+					$("body").mask("正在加载用户信息...");
+				}
+			});
+			$("#fileshare_recid").val(rec.recid);
+			$("#fileshare_filetype").val(rec.filetype);
+			$("#div_fileshare_readers").dialog({
+				title: "文件共享",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: false,
+				cache: false,
+				width: 400,
+				height: 120,
+				buttons: [{
+					text: "确定",
+					iconCls: "icon-ok",
+					id: "fileshare_btn_shareok",
+					handler: function () {
+						try {
+							fileshare_saveReaders();
+							$("#div_fileshare_readers").dialog("close");
+						} catch (e) {
+							$.messager.alert('提示', e, 'info');
+						}
+					}
+				}, {
+					text: "取消",
+					iconCls: "icon-cancel",
+					id: "fileshare_btn_sharecancel",
+					handler: function () {
+						$("#div_fileshare_readers").dialog("close");
+					}
+				}]
+			});
+
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_getReaders(rowData) {
+		var ret = "";
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/oa/getsharefilereader?id=" + rowData.recid + "&filetype=" + rowData.filetype,
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					try {
+						if (data.length > 0) {
+							for (var i = 0; i < data.length; i++) {
+								if (ret != "")
+									ret += ",";
+								ret += data[i].UserName;
+							}
+						}
+					} catch (e) {
+						$.messager.alert('提示', e, 'warning');
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载已共享用户信息...");
+				}
+			});
+		} catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+		return ret;
+	}
+	function fileshare_saveReaders() {
+		try{
+			$("#form_fileshare_readers").form('submit', {
+				url: "/oa/savesharefilereader",
+				onSubmit: function (param) {
+					$("body").mask("正在保存……");
+					return true;
+				},
+				success: function (data) {
+					try {
+						$("body").unmask();
+
+						var data = eval('(' + data + ')');
+						var code = data.code;
+						var msg = data.msg;
+						if (msg == "") {
+							if (code == 0)
+								msg = "保存成功！";
+							else
+								msg = "保存失败！";
+						}
+						$.messager.alert('提示', msg, 'info');
+
+					}
+					catch (err) {
+						$.messager.alert('提示', err, 'info');
+					}
+				}
+			});
+		} catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_move() {
+		try {
+			var rec = $("#fileshare_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$("#fileshare_moveto_recid").val(rec.recid);
+			$("#fileshare_moveto_filetype").val(rec.filetype);
+			$("#fileshare_folder_tree").combotree({
+				url: '/oa/getsharefolders?id=' + rec.recid + "&filetype=" + rec.filetype,
+				valueField: 'id',
+				textField: 'text',
+				multiple: false,
+				editable: false,
+				panelHeight: 200,
+				width: 250,
+				checkbox: false,
+				onlyLeafCheck: false,
+				animate: false,
+				onLoadSuccess: function (node, data) {
+					$("body").unmask();
+					try {
+						$('#fileshare_folder_tree').combotree('setValues', rec.parentid);
+					} catch (e) {
+						alert(e);
+					}
+				},
+				onBeforeLoad: function (node, param) {
+					$("body").mask("正在加载已用户信息...");
+				}
+			});
+			$("#div_fileshare_move").dialog({
+				title: "移动文件",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: false,
+				cache: false,
+				width: 400,
+				height: 120,
+				buttons: [{
+					text: "确定",
+					iconCls: "icon-ok",
+					id: "fileshare_btn_moveok",
+					handler: function () {
+						try {
+							fileshare_saveFolder();
+							$("#div_fileshare_move").dialog("close");
+						} catch (e) {
+							$.messager.alert('提示', e, 'info');
+						}
+					}
+				}, {
+					text: "取消",
+					iconCls: "icon-cancel",
+					id: "fileshare_btn_moveancel",
+					handler: function () {
+						$("#div_fileshare_move").dialog("close");
+					}
+				}]
+			});
+			
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+	function fileshare_saveFolder() {
+		try {
+			$("#form_fileshare_moveto").form('submit', {
+				url: "/oa/savesharefileparent",
+				onSubmit: function (param) {
+					$("body").mask("正在保存……");
+					return true;
+				},
+				success: function (data) {
+					try {
+						$("body").unmask();
+
+						var data = eval('(' + data + ')');
+						var code = data.code;
+						var msg = data.msg;
+						if (msg == "") {
+							if (code == 0) {
+								msg = "保存成功！";
+								fileshare_gridReload();
+							}
+							else
+								msg = "保存失败！";
+						}
+						$.messager.alert('提示', msg, 'info');
+
+					}
+					catch (err) {
+						$.messager.alert('提示', err, 'info');
+					}
+				}
+			});
+		}
+		catch (e) {
+			$.messager.alert('提示', e, 'info');
+		}
+	}
+</script>
+<table id="fileshare_maintable"></table>  
+<div id="fileshare_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a onclick="fileshare_addFile();" id="fileshare_btnaddfile" class="easyui-linkbutton" iconCls="icon-toolbar-file-addfile" plain="true">上传文件</a>
+		<a onclick="fileshare_addFolder();" id="fileshare_btnaddfolder" class="easyui-linkbutton" iconCls="icon-toolbar-file-addfolder" plain="true">创建文件夹</a>
+		<a onclick="fileshare_openFolder();" id="fileshare_btnopen" class="easyui-linkbutton" iconCls="icon-toolbar-file-openfolder" plain="true"  disabled="true">打开目录</a>
+		<a onclick="fileshare_downFile();" id="fileshare_btndown" class="easyui-linkbutton" iconCls="icon-toolbar-down" plain="true" disabled="true">下载文件</a>	
+		<a onclick="fileshare_rename();" id="fileshare_btnrename" class="easyui-linkbutton" iconCls="icon-edit" plain="true"  disabled="true">重命名</a>
+		<a onclick="fileshare_share();" id="fileshare_btnshare" class="easyui-linkbutton" iconCls="icon-toolbar-file-share" plain="true"  disabled="true">共享</a>
+		<a onclick="fileshare_move();" id="fileshare_btnmove" class="easyui-linkbutton" iconCls="icon-toolbar-file-move" plain="true"  disabled="true">移动</a>
+		<a onclick="fileshare_delete();" id="fileshare_btndelete" class="easyui-linkbutton" iconCls="icon-remove" plain="true" disabled="true">删除</a>	
+	</div>  
+	<div>
+		关键字：<input id="fileshare_search_key" style="width:300px" />
+		<a href="javascript:fileshare_search();" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+		
+	</div>
+	<div id="divLocation"></div>
+</div>
+<div id="div_fileshare_addfile">
+	<table width='100%' border="0" cellpadding="0" cellspacing="0" style="padding-top:10px;">
+		<tr>
+			<td width="10">
+			
+			</td>
+			<td>
+				<input type='file' id='fileshare_fj' name='fileshare_fj' size='100'/>
+			</td>
+		</tr>
+	</table>
+	
+</div>
+<div id="fileshare_view"></div>
+<div id="fileshare_rename"><br />
+	&nbsp;&nbsp;&nbsp;&nbsp;文件名：<input type='text' id="fileshare_filename" name="fileshare_filename" size="60" />
+</div>
+<div id="div_fileshare_readers">
+	<br />
+	<form id="form_fileshare_readers" method="post" action="">
+		<input type="hidden" id="fileshare_recid" name="fileshare_recid" />
+		<input type="hidden" id="fileshare_filetype" name="fileshare_filetype" />
+	&nbsp;&nbsp;&nbsp;&nbsp;共享给：<input type="text" id="fileshare_readers" name="fileshare_readers" />
+	</form>
+</div>
+<div id="div_fileshare_move">
+	<br />
+	<form id="form_fileshare_moveto" method="post" action="">
+		<input type="hidden" id="fileshare_moveto_recid" name="fileshare_moveto_recid" />
+		<input type="hidden" id="fileshare_moveto_filetype" name="fileshare_moveto_filetype" />
+	&nbsp;&nbsp;&nbsp;&nbsp;移动到：<input type="text" id="fileshare_folder_tree" name="fileshare_folder_tree" />  
+	</form>
+</div>

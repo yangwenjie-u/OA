@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <title>sxjz</title>
+    <style type="text/css">
+    h2 {
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        font-weight: 600;
+        font-size: 24px;
+    }
+
+    .save-boottom {
+        display: none;
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        left: 0px;
+        background: rgba(55, 55, 55, 0.5);
+        height: 60px;
+        text-align: center;
+    }
+
+    .layui-input {
+        border: 0px;
+    }
+
+    .ipt-line {
+        border-bottom: 1px solid rgb(230, 230, 230);
+        display: inline-block;
+        width: 80%;
+        box-sizing: border-box;
+        /*padding-right: 60px;*/
+    }
+
+    .tab .layui-table tbody tr:hover {
+        background: none;
+    }
+
+    .tbody-list td {
+        vertical-align: middle;
+    }
+
+    .check-warp {
+        margin-right: 20px;
+        display: inline-block;
+    }
+
+    .wid80 {
+        width: 80px;
+    }
+
+    .wid200 {
+        width: 200px;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;padding-bottom: 80px;box-sizing: border-box;">
+        <form id="tabWarp" class="layui-form tab" action="/dwgxsxjzy/SaveZZSBFHYJ" method="POST">
+
+  <!--           <input type="text" name="zzsblxbh" id="zzsblxbh" style="display:none;">
+            <input type="text" name="zzsblxmc" id="zzsblxmc" style="display:none;"> -->
+
+            <table class="layui-table ipt-no-border" style="width: 90%;margin:0 5%;">
+                <tbody class="tbody-list" id="list">
+                    <tr id="spyj">
+                        <td>复核意见</td>
+                        <td colspan="2">
+                            <textarea name="jsjfhyj" class="layui-input" style="height: 160px;" placeholder="请输入复核意见"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+           <!--  <p style="width: 90%;margin:20px 5%;"> 注：初审部门的审核意见在表中注明，不再另行出具其他文件；盖章为本单位公章或行政许可专用章，单位内设机构印章无效。
+            </p> -->
+        </form>
+    </div>
+    <div class="save-boottom">
+        <button class="layui-btn" id="save" style="margin-top: 10px;">保存</button>
+    </div>
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/lib/jquery.form.min.js"></script>
+
+    <script type="text/javascript">
+    var list = [];
+    var uploadList = [];
+
+    var params = getParams();
+    var editType = params.editType;
+
+    $(function () {
+
+        // $("#zzsblxbh").val(decodeURI(params.zzsblxbh)); //编号
+        // $("#zzsblxmc").val(decodeURI(params.zzsblxmc)); //名称
+
+
+        layui.use('form', function () {
+            var form = layui.form;
+            form.render();
+            if (params.editType == 1) {
+                $("#zzsblxmcView").find("[value='" + decodeURI(params.zzsblxmc) + "']").next().removeAttr('class').addClass('layui-form-checkbox layui-form-checked')
+            }
+
+            if ( params.id) {
+                $("#tabWarp").append('<input type="text" name="id" value="' + params.id + '" style="display:none;">');
+               // getEditDtl(params.id);
+            }
+        });
+        if (editType == 1 || editType == 2 || editType == 4) {
+            $(".save-boottom").show();
+        }
+        if (params.editType == 4) {
+            $("#tabWarp").find(":input").not(":hidden").attr("readonly", true);
+            $("#spyj").show();
+        }
+    })
+
+    $("#save").click(function (event) {
+        $("#tabWarp").submit();
+    });
+    $('#tabWarp').submit(function () {
+        $(this).ajaxSubmit(function (res) {
+            var data = JSON.parse(res);
+            if (data.code == 0) {
+                try {
+                    alert("保存成功");
+                    parent.layer.closeAll();
+                } catch (e) {
+
+                }
+            } else {
+                alert(data.msg);
+            }
+        });
+        return false;
+    });
+
+    function getEditDtl(id) {
+        ajaxTpl("/dwgxsxjzy/GetZZSBSQXQ", {
+            id: id
+        }, function (res) {
+            var tabWarp = $("#tabWarp");
+            if (res.code == 0) {
+                var tmp;
+                var ary = ["zzsblxmc"]; //checkbox 类型
+                for (var i = 0, len = res.data.length; i < len; i++) {
+                    tmp = res.data[i];
+                    if (tmp.itemname == "zzsblxmc") {
+                        $("#zzsblxmcView").find("[value='" + tmp.itemvalue + "']").next().removeAttr('class').addClass('layui-form-checkbox layui-form-checked')
+                    }
+                    tabWarp.find("[name='" + tmp.itemname + "']").val(tmp.itemvalue);
+                }
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

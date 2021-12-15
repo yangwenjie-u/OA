@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    <table cellspacing="1" width="100%" displaysteps="1,2">
+        <tbody>
+            <tr displaysteps="1,2">
+                <td align="center">
+                    <h3>天台县企业投资建设项目竣工<br />联合验收申请表</h3>
+                </td>
+            </tr>
+            <tr displaysteps="1,2">
+                <td align="center">
+                    <table cellspacing="0" class="table_3" displaysteps="1,2">
+                        <tbody>
+                            <tr displaysteps="1,2">
+                                <td width="15%" style="TEXT-ALIGN: center" colspan="1">项目名称</td>
+                                <td style="TEXT-ALIGN: left" colspan="3">
+                                    <input id="gcmc" name="gcmc"
+                                           value="#@@view_i_m_gc-gcmc-#" displaysteps="1" style="width: 100%;" />
+                                </td>
+                            </tr>
+                            <tr displaysteps="1,2">
+                                <td style="TEXT-ALIGN:center ">项目位置</td>
+                                <td style="TEXT-ALIGN: left" colspan="3">
+                                    <input id="gcdd" name="gcdd"
+                                           value="#@@view_i_m_gc-gcdd-#" displaysteps="1" style="width: 100%;" />
+                                </td>
+                            <tr displaysteps="1,2">
+                                <td style="TEXT-ALIGN:center ">建设单位</td>
+                                <td colspan="1" width="35%">
+                                    <input id="sy_jsdwmc" size="20" name="sy_jsdwmc"
+                                           value="#@@view_i_m_gc-sy_jsdwmc-#" displaysteps="1" style="width: 100%;" />
+                                </td>
+                                <td style="TEXT-ALIGN:center;width: 15%; ">法人代表</td>
+                                <td><input size="20" value="" displaysteps="1" />&nbsp;</td>
+                            </tr>
+                            <tr displaysteps="1,2">
+                                <td style="TEXT-ALIGN:center ">单体数量</td>
+                                <td><input size="20" id="sqd_dtsl" value="" displaysteps="1" />&nbsp;幢（栋）</td>
+                                <td style="TEXT-ALIGN:center ">建筑面积</td>
+                                <td><input style="TEXT-ALIGN: left" id="sqd_jzmj" displaysteps="1" /> m<sup>2</sup></td>
+                            </tr>
+                            <tr displaysteps="1,2">
+                                <td style="TEXT-ALIGN:center ">开工时间</td>
+                                <td><input id="kgrq" class="easyui-datebox" name="kgrq" value="" displaysteps="1" /></td>
+                                <td style="TEXT-ALIGN:center ">竣工时间</td>
+                                <td><input id="jgrq" class="easyui-datebox" name="jgrq" value="" displaysteps="1" /></td>
+                            </tr>
+                            <tr displaysteps="1,2">
+                                <td displaysteps="1" colspan="4">
+                                    <strong style="margin-left:33px;">企业类型 :</strong>
+                                    <input type="checkbox" id="yssq_qylx_gyqy" name="chk_qylx_gyqy" value="0"
+                                           onclick="checkboxOnclick(this)" style="margin-left:20px;" />工业企业
+                                    <input type="checkbox" id="yssq_qylx_fdc" name="chk_qylx_fdc" value="0"
+                                           onclick="checkboxOnclick(this)" style="margin-left:20px;" />房地产&nbsp; &nbsp;
+                                    <input type="checkbox" id="yssq_qylx_gc" name="chk_qylx_gc" value="0"
+                                           onclick="checkboxOnclick(this)" style="margin-left:20px;" />公建
+                                </td>
+
+                                <td displaysteps="2" colspan="4">
+                                    <strong style="margin-left:33px;">企业类型 :</strong>
+                                    <input type="checkbox" id="chk_qylx_gyqy" style="margin-left:20px;" disabled /> 工业企业
+                                    <input type="checkbox" id="chk_qylx_fdc" style="margin-left:20px;" disabled />房地产&nbsp;
+                                    &nbsp;
+                                    <input type="checkbox" id="chk_qylx_gc" style="margin-left:20px;" disabled />公建
+                                </td>
+
+                            </tr>
+                            <tr displaysteps="1,2">
+                                <td style="TEXT-ALIGN: center" colspan="4"><strong>验收内容 </strong></td>
+                            </tr>
+                            <tr displaysteps="1,2">
+                                <td style="TEXT-ALIGN: left" colspan="4">
+                                    <table displaysteps="1">
+                                        <tr>
+                                            <td width="49%" style="border: 0ch;height: 10px;">
+                                                <!-- 城建档案 -->
+                                                <span style="display: none;">
+                                                    #CTRL-USER-chk_ysnr_gczljgys_checkedUser-C-1-DPCQ29WzvA113c----all#
+                                                </span>
+                                                <input type="checkbox" name="chk_ysnr_gczljgys" class="checkbox_ysnr"
+                                                       onclick="PorjectCheckboxOnclick(this)"
+                                                       onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_gczljgys')"
+                                                       value="0" data-content="工程质量竣工验收" />
+                                                工程质量竣工验收;
+                                                <input type="button" id="uploadFilesButton_gczljgys"
+                                                       class="UploadFileButtonYSNR" value="上传资料" style="float: right;"
+                                                       onclick="UplaodFiles('gczljgys')"> </input>
+                                            </td>
+                                            <td style="border-bottom: 1ch;">
+                                                <!-- DPCQ29WyMGx4Du 人防办 -->
+                                                <span style="display: none;">#CTRL-USER-chk_ysnr_rfgc_checkedUser-C-1-DPCQ29WyMGx4Du----all#</span>
+                                                <input type="checkbox" name="chk_ysnr_rfgc" class="checkbox_ysnr"
+                                                       onclick="PorjectCheckboxOnclick(this)"
+                                                       onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_rfgc')"
+                                                       value="" data-content="人防工程验收" />
+                                                人防工程验收；
+                                                <input type="button" id="uploadFilesButton_rfgc"
+                                                       class="UploadFileButtonYSNR" value="上传资料" style="float: right;"
+                                                       onclick="UplaodFiles('rfgc' )"> </input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 0ch;">
+                                                <!-- DPCQ29WzvA113c 城建档案 -->
+                                                <span style="display: none;">#CTRL-USER-chk_ysnr_days_checkedUser-C-1-DPCQ29WzvA113c----all#</span>
+                                                <input type="checkbox" name="chk_ysnr_days" class="checkbox_ysnr"
+                                                       onclick="PorjectCheckboxOnclick(this)"
+                                                       onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_days')"
+                                                       value="" data-content="县住建局档案验收" />
+                                                县住建局档案验收；
+                                                <input type="button" id="uploadFilesButton_days"
+                                                       class="UploadFileButtonYSNR" value="上传资料" style="float: right;"
+                                                       onclick="UplaodFiles('days')"> </input>
+                                            </td>
+                                            <td style="border-bottom: 1ch;">
+                                                <!-- DPCQ284Ch6Shd4 县经信局 -->
+                                                <span style="display: none;">#CTRL-USER-chk_ysnr_5gydtx_checkedUser-C-1-DPCQ284Ch6Shd4----all#</span>
+                                                <input type="checkbox" name="chk_ysnr_5gydtx" class="checkbox_ysnr"
+                                                       onclick="PorjectCheckboxOnclick(this)"
+                                                       onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_5gydtx')"
+                                                       value="" data-content="5G移动同通信基础设施竣工验收" />
+                                                5G移动同通信基础设施竣工验收；
+                                                <input type="button" id="uploadFilesButton_5gydtx"
+                                                       class="UploadFileButtonYSNR" value="上传资料" style="float: right;"
+                                                       onclick="UplaodFiles('5gydtx')"> </input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 0ch;">
+                                                <input type="checkbox" name="chk_ysnr_jgfy" class="checkbox_ysnr"
+                                                       onclick="PorjectCheckboxOnclick(this)"
+                                                       onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_jgfy')"
+                                                       value="" data-content="筑工程竣工规划核实、用地竣工复验" />
+                                                建筑工程竣工规划核实、用地竣工复验；
+                                                <input type="button" id="uploadFilesButton_jgfy"
+                                                       class="UploadFileButtonYSNR" value="上传资料" style="float: right;"
+                                                       onclick="UplaodFiles('jgfy')"> </input>
+                                            </td>
+                                            <td style="border-bottom: 1ch;">
+                                                <input type="checkbox" name="chk_ysnr_ggfwpt" class="checkbox_ysnr"
+                                                       onclick="PorjectCheckboxOnclick(this)"
+                                                       onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_ggfwpt')"
+                                                       value="" data-content="社区用房、养老服务用房、公测、体育设备、移动通信基础设施、教育设施等公共服务配套设施验收" />
+                                                社区用房、养老服务用房、公测、体育设备、移动通信基础设施、教育设施等公共服务配套设施验收；
+
+                                                <input type="button" id="uploadFilesButton_ggfwpt"
+                                                       class="UploadFileButtonYSNR" value="上传资料" style="float: right;"
+                                                       onclick="UplaodFiles('ggfwpt')"> </input>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0ch;">
+                                    <!-- DPCQ284DMASJH6 县自然资源和规划局 -->
+                                    <span style="display: none;">#CTRL-USER-chk_ysnr_sfghhs_checkedUser-C-1-DPCQ284DMASJH6----all#</span>
+                                    <input type="checkbox" class="checkbox_ysnr" onclick="PorjectCheckboxOnclick(this)"
+                                           name="chk_ysnr_sfghhs"
+                                           onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_sfghhs')" value=""
+                                           data-content="市政规划核实" />市政规划核实；
+                                    <input type="button" id="uploadFilesButton_sfghhs" class="UploadFileButtonYSNR"
+                                           value="上传资料" style="float: right;" onclick="UplaodFiles('sfghhs')"> </input>
+                                </td>
+                                <td style="border-bottom: 1ch;">
+                                    <input type="checkbox" class="checkbox_ysnr"
+                                           onclick="PorjectCheckboxOnclick(this)" name="chk_ysnr_ysba"
+                                           onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_ysba')" value=""
+                                           data-content="建筑工程竣工验收备案" />建筑工程竣工验收备案；
+                                    <input type="button" id="uploadFilesButton_ysba" class="UploadFileButtonYSNR"
+                                           value="上传资料" style="float: right;" onclick="UplaodFiles('ysba')"> </input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0ch;">
+                                    <!-- DPCQ29WzkQZMRp 园林绿化市政 -->
+                                    <span style="display: none;">#CTRL-USER-chk_ysnr_lhgh_checkedUser-C-1-DPCQ29WzkQZMRp----all#</span>
+                                    <input type="checkbox" class="checkbox_ysnr" onclick="PorjectCheckboxOnclick(this)"
+                                           name="chk_ysnr_lhgh"
+                                           onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_lhgh')" value=""
+                                           data-content="绿化规划核实" />绿化规划核实；
+                                    <input type="button" id="uploadFilesButton_lhgh" class="UploadFileButtonYSNR"
+                                           value="上传资料" style="float: right;" onclick="UplaodFiles('lhgh')"> </input>
+                                </td>
+                                <td style="border-bottom: 1ch;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0ch;">
+                                    <!-- DPCQ29WzgYXsUG  消防验收-->
+                                    <span style="display: none;">#CTRL-USER-chk_ysnr_lhgh_checkedUser-C-1-DPCQ29WzgYXsUG----all#</span>
+                                    <input type="checkbox" class="checkbox_ysnr" onclick="PorjectCheckboxOnclick(this)"
+                                           name="chk_ysnr_xfys"
+                                           onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_xfys')" value=""
+                                           data-content="消防竣工验收" />消防竣工验收；
+                                    <input type="button" id="uploadFilesButton_xfys" class="UploadFileButtonYSNR"
+                                           value="上传资料" style="float: right;" onclick="UplaodFiles('xfys')"> </input>
+                                </td>
+                                <td style="border-bottom: 1ch;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 0ch;">
+                                    <input type="checkbox" class="checkbox_ysnr"
+                                           onclick="PorjectCheckboxOnclick(this)" name="chk_ysnr_wyglyyf"
+                                           onchange="CheckboxYSNRStateChange(this,'uploadFilesButton_wyglyyf')" value=""
+                                           data-content="物业管理用用房、垃圾分类设施、电瓶车集中充电桩、物业专项维修基金和保修金交纳情况验收（房地产项目）" />
+                                    物业管理用用房、垃圾分类设施、电瓶车集中充电桩、物业专项维修基金和保修金交纳情况验收（房地产项目）；
+                                    <input type="button" id="uploadFilesButton_wyglyyf" class="UploadFileButtonYSNR"
+                                           value="上传资料" style="float: right;" onclick="UplaodFiles('wyglyyf')"> </input>
+                                </td>
+                                <td style="border-bottom: 1ch;"> </td>
+                            </tr>
+                    </table>
+                    <table displaysteps="2">
+                        <tr>
+                            <td width="49%" style="border: 0ch;height: 10px;">
+                                <input type="checkbox" id="chk_ysnr_gczljgys" class="checkbox_ysnr" value="0" disabled />
+                                工程质量竣工验收;
+                                <input type="button" id="uploadFilesButton_gczljgys" class="UploadFileButtonYSNR"
+                                       value="查看资料" style="float: right;" onclick="UplaodFiles('gczljgys')"> </input>
+                            </td>
+                            <td style="border-bottom: 1ch;">
+                                <input type="checkbox" id="chk_ysnr_rfgc" checked class="checkbox_ysnr" value="0"
+                                       disabled />
+                                人防工程验收；
+                                <input type="button" id="uploadFilesButton_rfgc" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('rfgc')"/> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0ch;">
+                                <input type="checkbox" id="chk_ysnr_days" value="0"
+                                       class="checkbox_ysnr" disabled />县住建局档案验收；
+                                <input type="button" id="uploadFilesButton_days" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('days')"> </input>
+                            </td>
+                            <td style="border-bottom: 1ch;">
+                                <input type="checkbox" id="chk_ysnr_5gydtx"
+                                       class="checkbox_ysnr" value="0" disabled />5G移动同通信基础设施竣工验收；
+                                <input type="button" id="uploadFilesButton_5gydtx" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('5gydtx')"> </input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0ch;">
+                                <input type="checkbox" id="chk_ysnr_jgfy" value="0"
+                                       class="checkbox_ysnr" disabled />建筑工程竣工规划核实、用地竣工复验；
+                                <input type="button" id="uploadFilesButton_jgfy" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('jgfy')"> </input>
+                            </td>
+                            <td style="border-bottom: 1ch;">
+                                <input type="checkbox" id="chk_ysnr_ggfwpt" value="0"
+                                       class="checkbox_ysnr" disabled>社区用房、养老服务用房、公测、体育设备、移动通信基础设施、教育设施等公共服务配套设施验收；
+                                <input type="button" id="uploadFilesButton_ggfwpt" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('ggfwpt')"> </input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0ch;">
+                                <input type="checkbox" id="chk_ysnr_sfghhs" value="0"
+                                       class="checkbox_ysnr" disabled />市政规划核实；
+                                <input type="button" id="uploadFilesButton_sfghhs" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('sfghhs')"> </input>
+                            </td>
+                            <td style="border-bottom: 1ch;">
+                                <input type="checkbox" id="chk_ysnr_ysba" value="0"
+                                       class="checkbox_ysnr" disabled />建筑工程竣工验收备案；
+                                <input type="button" id="uploadFilesButton_ysba" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('ysba')"> </input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0ch;">
+                                <input type="checkbox" id="chk_ysnr_lhgh" value="0"
+                                       class="checkbox_ysnr" disabled />绿化规划核实；
+                                <input type="button" id="uploadFilesButton_lhgh" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('lhgh')"> </input>
+                            </td>
+                            <td style="border-bottom: 1ch;"> </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0ch;">
+                                <input type="checkbox" id="chk_ysnr_xfys" value="0"
+                                       class="checkbox_ysnr" disabled />消防竣工验收；
+                                <input type="button" id="uploadFilesButton_xfys" class="UploadFileButtonYSNR" value="查看资料"
+                                       style="float: right;" onclick="UplaodFiles('xfys')"> </input>
+                            </td>
+                            <td style="border-bottom: 1ch;"> </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 0ch;">
+                                <input type="checkbox" id="chk_ysnr_wyglyyf" value="0"
+                                       class="checkbox_ysnr" disabled />物业管理用用房、垃圾分类设施、电瓶车集中充电桩、物业专项维修基金和保修金交纳情况验收（房地产项目）；
+                                <input type="button" id="uploadFilesButton_wyglyyf" class="UploadFileButtonYSNR"
+                                       value="查看资料" style="float: right;" onclick="UplaodFiles('wyglyyf')"> </input>
+                            </td>
+                            <td style="border-bottom: 1ch;"> </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr displaysteps="1,2">
+                <td colspan="4" style="border-bottom: 0px;">
+                    &nbsp;&nbsp; &nbsp;&nbsp;
+                    &nbsp;&nbsp;本项目已具备竣工验收条件，现遵章自愿申请竣工联合验收，以上内容核实无误，所提供的申请材料真实、合法、有效，请予以受理。<br />
+                </td>
+            </tr>
+            <tr displaysteps="1,2">
+                <td colspan="2" style="border-right: 0px;border-bottom: 0px;">
+                    &nbsp;&nbsp;申请单位：<input id="sqd_sqdw"
+                                            size="20" value="" displaysteps="1" /><br />
+                </td>
+                <td colspan="2" style="border: 0ch;"> &nbsp;&nbsp;（加盖公章）<br /></td>
+            </tr>
+            <tr displaysteps="1,2">
+                <td colspan="2" style="border-right: 0px;border-bottom: 0px;">
+                    &nbsp;&nbsp;申 请 人：<input id="sqd_sqr"
+                                             size="20" value="" displaysteps="1" /><br />
+                </td>
+                <td colspan="2" style="border: 0ch;">
+                    &nbsp;&nbsp;联系方式：<input id="sqd_tel" size="20" value=""
+                                            displaysteps="1" /><br />
+                </td>
+            </tr>
+            <tr displaysteps="1,2">
+                <td colspan="2"> <br /></td>
+                <td colspan="2" style="border-left: 0px">
+                    &nbsp;&nbsp;申请日期：<input id="sqd_sqrq" class="easyui-datebox"
+                                            name="sqrq" value="" displaysteps="1" /><br />
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</body>
+</html>

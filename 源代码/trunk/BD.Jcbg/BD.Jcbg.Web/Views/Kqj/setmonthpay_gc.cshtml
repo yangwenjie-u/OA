@@ -1,0 +1,777 @@
+﻿@{
+    Layout = "~/Views/_easyuilayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+
+    var g_pageSize = 20;
+    var year=@ViewData["year"];
+    var month= @ViewData["month"];
+    var jdzch='@ViewData["jdzch"]';
+    var gz='@ViewData["gz"]';
+    var gw='@ViewData["gw"]';
+    var bzfzr='@ViewData["bzfzr"]';
+
+    $(function () {
+        var dt = new Date();
+        var sdt1 = dt.getFullYear();
+        var sdt2 = dt.getMonth();
+        if(year==0) year=sdt1;
+        if(month==0) month=sdt2;
+        $("#search_dt1").val(year);
+        $("#search_dt2").val(month);
+        //$('#search_gz').combobox('setText',gz)
+  
+        var dg=$('#dg').datagrid({
+            title: '月工资支付',
+            loadMsg: "正在加载……",
+            border: false,
+            url: "/kqj/GetUserMonthPay?rdm="+Math.random,
+            queryParams: {
+                year: year,
+                month: month,
+                jdzch:jdzch,
+                gz:gz,
+                gw:gw,
+                bzfzr:bzfzr
+            },
+            rownumbers: true,
+            nowrap: true,
+            idField: 'userid',
+            striped: false,
+            fit: true,
+            singleSelect: false,
+            pagination: true,
+            pageNumber: 1,
+            pageSize: g_pageSize,
+            pageList: [g_pageSize, 40, 50, 100, 1000, 10000],
+            columns: [[
+            { field: 'recid', title: '标识', width: 80, sortable: true, align: "center", checkbox : true},
+			{ field: 'ryxm', title: '姓名', width: 80, sortable: true, align: "center"},
+            { field: 'gcmc', title: '工程', width: 140, sortable: true, align: "center"  },
+			{ field: 'userid', title: '身份证号', width: 140, sortable: true, align: "center"},
+			//{ field: 'workday', title: '考勤天数', width: 100, sortable: true, align: "center" },
+            { field: 'totalsum', title: '考勤工数', width: 100, sortable: true, align: "center" },
+			{ field: 'gzdj', title: '单价（元）', width: 120, sortable: true, align: "center" },
+			{ field: 'sy_shouldpay', title: '应付', width: 120, sortable: true, align: "center",editor: { type: 'numberbox', options: { precision: 1 } } },     
+            { field: 'havepay', title: '实付', width: 120, sortable: true, align: "center", editor: { type: 'numberbox', options: { precision: 1 } } },
+            { field: 'yzpay', title: '预支', width: 120, sortable: true, align: "center" ,editor: { type: 'numberbox', options: { precision: 1 } } },
+            { field: 'notpay', title: '欠付', width: 120, sortable: true, align: "center" },
+            { field: 'bankpay', title: '到账', width: 120, sortable: true, align: "center" }
+            ]],
+            toolbar: "#tb",
+            onClickCell: function (rowIndex, field)
+            {
+                onClickCell(rowIndex, field);
+            },
+         
+            onDblClickRow: function (rowIndex, rowData) {
+                //view();
+            }
+        });
+
+        $('#search_gz').combobox({
+            url: '/zj_info/getgz',
+            valueField: 'gzname',
+            textField: 'gzname',
+            panelHeight: 'auto',
+            value:gz,
+            onChange: function (n, o) {
+                $('#search_gw').combobox({
+                    url: '/zj_info/getgzgw?gz=' + encodeURIComponent(n),
+                    valueField: 'gwname',
+                    textField: 'gwname',
+                    panelHeight: 'auto'
+
+                });
+            }
+
+        });
+        $('#search_gw').combobox({
+            url: '/zj_info/getgzgw',
+            valueField: 'gwname',
+            textField: 'gwname',
+            panelHeight: 'auto',
+            value:gw
+        });
+        $('#search_bz').combobox({
+            url: '/zj_info/getbzfzr',
+            valueField: 'sfzhm',
+            textField: 'ryxm',
+            panelHeight: 'auto',
+            value:bzfzr,
+            editable: false
+
+        });
+
+    });
+
+    function search() {
+        $('#dg').datagrid('load', {
+            jdzch:jdzch,
+            xm: $("#search_xm").val(),
+            sfz: $("#search_sfz").val(),
+            bzfzr: $("#search_bz").combobox("getValue"),
+            year: $("#search_dt1").val(),
+            month: $("#search_dt2").val(),
+            gz: $("#search_gz").combobox("getText"),
+            gw: $("#search_gw").combobox("getText")
+        });
+    }
+    var editIndex = undefined;
+    function endEditing() {
+        if (editIndex == undefined) { return true }
+        if ($('#dg').datagrid('validateRow', editIndex)) {
+            $('#dg').datagrid('endEdit', editIndex);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function append()
+    {
+        if (editIndex != undefined) {
+            $('#dg').datagrid('selectRow', $('#maintable').datagrid('getRowIndex', g_editrow));
+            $.messager.alert('提示', '请保存或取消当前编辑的记录！', 'info');
+            return;
+        }
+        ///*******获取工程名称
+        var columns = $('#dg').datagrid("options").columns;
+        // 得到rows对象
+        var rows = $('#dg').datagrid("getRows"); // 这段代码是// 对某个单元格赋值	  
+        var gcmc=rows[0][columns[0][1].field];
+        //******************
+
+        $('#dg').datagrid('appendRow',{projectname:gcmc,worknum:0});
+        editIndex = $('#dg').datagrid('getRows').length-1;
+        $('#dg').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+        g_editrow = $('#dg').datagrid('getSelected');
+
+    }
+    function editRecord() {
+        var selRows = $('#dg').datagrid('getChecked'); 
+        if(selRows.length>1)
+        {
+            alert("请选择一条记录进行编辑");
+            return 
+        }
+        if (editIndex != undefined) {
+            $('#dg').datagrid('selectRow', $('#maintable').datagrid('getRowIndex', g_editrow));
+            $.messager.alert('提示', '请保存或取消当前编辑的记录！', 'info');
+            return;
+        }
+        var g_editrow = $('#dg').datagrid('getSelected');
+        if (g_editrow != null) {
+            $('#dg').datagrid('beginEdit', $('#dg').datagrid('getRowIndex', g_editrow));
+
+            editIndex = $('#dg').datagrid('getRowIndex', $('#dg').datagrid('getSelected'));
+        }
+    }
+    function onClickCell(index, field) {
+        if ( editIndex!=undefined && editIndex != index) {
+            if ($('#dg').datagrid('validateRow', editIndex)) {
+                $('#dg').datagrid('endEdit', editIndex);
+                editIndex=undefined;
+                saveData();  
+                $('#dg').datagrid('acceptChanges');
+            }
+         
+        }
+        else
+        {
+            $('#dg').datagrid('selectRow', index)
+                   .datagrid('beginEdit', index);
+            editIndex = index;
+        }
+        return;
+        //if (editIndex != index) {
+        //    if (endEditing()) {
+        //        $('#dg').datagrid('selectRow', index)
+        //                .datagrid('beginEdit', index);
+        //        var ed = $('#dg').datagrid('getEditor', { index: index, field: field });
+        //        if (ed) {
+        //            ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+        //            editIndex = index;
+        //        }
+        //        else {
+        //               // accept();
+        //        }
+
+        //    } else {
+        //        setTimeout(function () {
+        //            $('#dg').datagrid('selectRow', editIndex);
+        //        }, 0);
+        //    }
+        //}
+        //else
+        //{
+        //   // accept();
+        //}
+    }
+    function saveData()
+    {
+        try{
+            var rows = $('#dg').datagrid('getChanges');
+            if (rows.length) 
+            {
+                var arr = $('#dg').datagrid('getChanges', "updated");
+
+                if (arr.length) {           
+                    var jsonstr = '';  
+                    for (i=0;i<arr.length;i++)
+                    {
+                        var gzgz =0;
+                        if (arr[i].sy_shouldpay != "" && arr[i].totalsum!=0&&arr[i].totalsum!=undefined)
+                            gzgz = parseFloat(arr[i].sy_shouldpay) /parseFloat(arr[i].totalsum);
+                        jsonstr += '{';  
+                        jsonstr += "\"jdzch\":\"" + jdzch+ "\",";  
+                        jsonstr += "\"userid\":\"" + arr[i].userid+ "\",";  
+                        jsonstr += "\"ryxm\":\"" + arr[i].ryxm + "\","; 
+                        jsonstr += "\"year\":\"" + year+ "\",";  
+                        jsonstr += "\"month\":\"" + month+ "\",";  
+                        jsonstr += "\"gzgz\":\"" + gzgz+ "\",";  
+                        jsonstr += "\"shouldpay\":\"" + arr[i].sy_shouldpay+ "\",";  
+                        jsonstr += "\"havepay\":\"" + arr[i].havepay+ "\",";  
+                        jsonstr += "\"yzpay\":\"" + arr[i].yzpay+ "\"";  
+                        jsonstr += '}'  
+                        jsonstr += ','                  
+                    }
+                    jsonstr = jsonstr.substring(0, jsonstr.length - 1);  
+                    jsonstr += '';  
+                    $.ajax({
+                        type: "POST",
+                        url: "/kqj/UpdateUserMonthPayByJson",
+                        dataType : 'json',
+                        data: {
+                            jsonstr:jsonstr                  
+                        },
+                        cache: false,
+                        success: function (data) {
+                            if (data.code == 0) {
+                                $.messager.alert('提示', '生成成功', 'info');
+                            }
+                            else
+                            {
+                                $.messager.alert('提示', data.msg, 'info');
+                      
+                            }
+
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                            $("body").unmask();
+                            // $('#dg').datagrid('reload');
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                            $("body").mask("正在保存...");
+                        }
+                    });
+               
+                }         
+            }
+        }
+        catch(e)
+        {alert(e);}
+    }
+    function saveAccept()
+    {
+        if ( editIndex!=undefined) {
+            if ($('#dg').datagrid('validateRow', editIndex)) {
+                $('#dg').datagrid('endEdit', editIndex);
+                editIndex=undefined;
+                saveData();  
+                $('#dg').datagrid('acceptChanges');
+            }
+         
+        }
+    }
+    function accept() {
+
+        if (!confirm("确定要提交数据？")) {
+            return;
+        }
+        var arr=$('#dg').datagrid('getChanges');
+        alert(arr.length);
+        try{
+            var  params = [];  
+            for (i=0;i<arr.length;i++)
+            {
+                var param = [];  
+                param.push({"jdzch":jdzch});  
+                param.push({"userid":arr[i].userid});  
+                param.push({"ryxm":arr[i].ryxm});  
+                param.push({"year":year});  
+                param.push({"month":month});  
+                var gzgz =0;
+                if (arr[i].sy_shouldpay != "" && arr[i].totalsum!=0&&arr[i].totalsum!=undefined)
+                    gzgz = parseFloat(arr[i].sy_shouldpay) /parseFloat(arr[i].totalsum);
+                param.push({"gzgz":gzgz});  
+                param.push({"shouldpay":arr[i].sy_shouldpay});  
+                param.push({"havepay":arr[i].havepay});  
+                param.push({"yzpay":arr[i].yzpay});  
+                params.push(param);  
+            }
+            var json = JSON.stringify(params);  
+            alert(json);  
+        }
+        catch(e)
+        {
+            alert(e);
+        }
+        $('#dg').datagrid('acceptChanges');
+
+        //if (endEditing()) {
+        //    $('#dg').datagrid('acceptChanges');
+        //    updateRow();
+        //    $("#dg").datagrid("unselectRow", editIndex);
+        //    editIndex = undefined;
+        //}
+    }
+    function reject() {
+        $('#dg').datagrid('rejectChanges');
+        editIndex = undefined;
+    }
+
+    function updateRow()
+    {
+        return ;
+        if (editIndex != undefined)
+        {
+            var row = $('#dg').datagrid('getData').rows[editIndex];
+            var year = $("#search_dt1").val();
+            var month = $("#search_dt2").val();
+            if (row.havepay == "" && row.sy_shouldpay == "")
+                return;
+            if (row.havepay == "")
+            {
+                alert("请输入实付金额");
+                return;
+            }
+
+            var gzgz =0;
+            if (row.sy_shouldpay != "" && row.totalsum!=0&&row.totalsum!=undefined)
+                gzgz = parseFloat(row.sy_shouldpay) /parseFloat(row.totalsum);
+            $.ajax({
+                type: "POST",
+                url: "/kqj/UpdateUserMonthPay",
+                dataType : 'json',
+                data: {
+                    jdzch:jdzch,
+                    userid: row.userid,
+                    ryxm:row.ryxm,
+                    year: year,
+                    month: month,
+                    gzgz: gzgz,
+                    shouldpay:row.sy_shouldpay,
+                    havepay: row.havepay,
+                    yzpay: row.yzpay,
+                },
+                cache: false,
+                success: function (data) {
+                    if (data.code == 0) {
+                        $.messager.alert('提示', '生成成功', 'info');
+                    }
+                    else
+                    {
+                        $.messager.alert('提示', data.msg, 'info');
+                      
+                    }
+
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                    $('#dg').datagrid('reload');
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在保存...");
+                }
+            });
+        }
+    }
+    document.onkeydown = function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if (e && e.keyCode == 13) { // enter 键
+            search();
+        }
+    };
+    function view() {
+        var data = $("#dg").datagrid('getSelected');
+        if (data == null) {
+            $.messager.alert('提示', '请选择要操作的记录', 'info');
+            return;
+        }
+
+        var dt1 = $("#search_dt1").val();
+        var dt2 = $("#search_dt2").val();
+        var url = "/statistic/Monthdetails?gcbh="+jdzch+"&realname=" + data.realname + "&userid=" + data.userid + "&dt1=" + dt1 + "&dt2=" + dt2 + "&worknum=" + data.worknum;
+        var title = data.realname;
+
+        title += "工资册结算明细";
+        $('#monthdetails').dialog({
+            title: title,
+            maximized: true,
+            closed: false,
+            cache: false,
+            content: '<iframe width=\"100%\" height=\"99%\" id=\"content\" frameborder=\"0\" scrolling=\"auto\" src=\"' + url + '\"></iframe>',
+            modal: true,
+            buttons: [{
+                iconCls: 'icon-cancel',
+                text: '关闭',
+                handler: function () {
+                    $('#monthdetails').dialog('close');
+                    $("#dg").datagrid('reload');
+                }
+            }]
+        });
+    }
+
+    function batchset()
+    {
+        var c_realpay=$('#plje').val();
+        if(c_realpay=='')
+            return;
+        var selRows = $('#dg').datagrid('getChecked'); 
+        if(selRows.length==0)
+            return ;
+        var jsonstr = '[';  
+        for(var i=0;i<selRows.length;i++)
+        { 
+            var gzgz =0;
+            if (selRows[i].sy_shouldpay != "" && selRows[i].totalsum!=0&&selRows[i].totalsum!=undefined)
+                gzgz = parseFloat(selRows[i].sy_shouldpay) /parseFloat(selRows[i].totalsum);
+            jsonstr += '{';  
+            jsonstr += "\"jdzch\":\"" + jdzch+ "\",";  
+            jsonstr += "\"userid\":\"" + selRows[i].userid+ "\",";  
+            jsonstr += "\"ryxm\":\"" + selRows[i].ryxm + "\","; 
+            jsonstr += "\"year\":\"" + year+ "\",";  
+            jsonstr += "\"month\":\"" + month+ "\",";  
+            jsonstr += "\"gzgz\":\"" + gzgz+ "\",";  
+            jsonstr += "\"shouldpay\":\"" + selRows[i].sy_shouldpay+ "\",";  
+            jsonstr += "\"havepay\":\"" + c_realpay+ "\",";  
+            jsonstr += "\"yzpay\":\"" + selRows[i].yzpay+ "\"";  
+            jsonstr += '}'  
+            jsonstr += ','   
+        }
+        jsonstr = jsonstr.substring(0, jsonstr.length - 1);  
+        jsonstr += ']';  
+
+        saveRowsDatas(jsonstr);
+        return;
+
+        //var c_realpay=$('#plje').val();
+        //if(c_realpay=='')
+        //    return;
+        //var selRows = $('#dg').datagrid('getChecked'); 
+        //for(var i=0;i<selRows.length;i++)
+        //{
+        //    update_pay(selRows[i],c_realpay)
+        //}
+        //$("body").mask("正在保存...");
+        //setTimeout(function(){$("body").unmask();$('#dg').datagrid('reload');},2000);       
+
+    }
+    function saveRowsDatas(json)
+    {
+        try{
+            var jsonstr=json;
+            $.ajax({
+                type: "POST",
+                url: "/kqj/UpdateUserMonthPayByRowsJson",
+                dataType : 'json',
+                data: {
+                    jsonstr:jsonstr                  
+                },
+                cache: false,
+                success: function (data) {
+                    if (data.code == 0) {
+                        $.messager.alert('提示', '保存成功', 'info');
+                    }
+                    else
+                    {
+                        $.messager.alert('提示', data.msg, 'info');
+                      
+                    }
+
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                    $('#dg').datagrid('reload');
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在保存...");
+                }
+            });
+        }
+        catch(e)
+        {
+            alert(e);
+        }
+    }
+    function update_pay(row,c_realpay)
+    {
+        var year = $("#search_dt1").val();
+        var month = $("#search_dt2").val();
+        if (row.sy_shouldpay == "")
+            return;
+        var gzgz =0;
+        if (row.sy_shouldpay != "" && row.totalsum!=0&&row.totalsum!=undefined)
+            gzgz = parseFloat(row.sy_shouldpay) /parseFloat(row.totalsum);
+        $.ajax({
+            type: "POST",
+            url: "/kqj/UpdateUserMonthPay",
+            dataType : 'json',
+            data: {
+                jdzch:jdzch,
+                userid: row.userid,
+                ryxm:row.ryxm,
+                year: year,
+                month: month,
+                gzgz: gzgz,
+                shouldpay:row.sy_shouldpay,
+                havepay: c_realpay,
+                yzpay: row.yzpay
+            },
+            cache: false,
+            success: function (data) {
+                if (data.code == 0) {
+                   // $.messager.alert('提示', '生成成功', 'info');
+                }
+                else
+                {
+                   // $.messager.alert('提示', data.msg, 'info');                    
+                }
+
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                //$("body").unmask();
+                //$('#dg').datagrid('reload');
+            },
+            beforeSend: function (XMLHttpRequest) {
+               // $("body").mask("正在保存...");
+            }
+        });
+    }
+
+    function startFF()
+    {
+        try{
+            var recidlist="";
+            var selRows = $('#dg').datagrid('getChecked'); 
+            for(var i=0;i<selRows.length;i++)
+            {
+                recidlist+=selRows[i].recid+",";
+            }
+            recidlist=(recidlist.substring(recidlist.length-1)==',')?recidlist.substring(0,recidlist.length-1):recidlist;
+
+            $.ajax({
+                type: "POST",
+                url: "/ZJ_Info/saveGZffRecid",
+                data: {
+                    recids:recidlist                 
+                },
+                dataType : 'json',            
+                cache: false,
+                success: function (data) {
+                    if (data.code == 0) {
+                        var guid=data.msg;
+                        var bcode = new Base64();
+                        var workurl="/workflow/startwork?processid=18&guid="+guid;
+                        var gcbh=jdzch;
+                        var extrainfo1 = bcode.encode("view_i_m_gc|" +  bcode.encode("gcbh='" + gcbh + "'"));
+                        var extrainfo2 = bcode.encode('[工资发放审核]');
+                        var extrainfo3 = bcode.encode(gcbh);
+                        
+                        var url=gotoStarkWork(workurl, "工资发放审批", extrainfo1, extrainfo2, extrainfo3, "", "");
+                        parent.layer.open({
+                            type: 2,
+                            title: '',
+                            shadeClose: true,
+                            shade: 0.8,
+                            area: ['95%', '95%'],
+                            content: url,
+                            end: function () {
+                            }
+                        });
+                    }
+                    else{
+                        alert(data.msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                 
+                },
+                beforeSend: function (XMLHttpRequest) {
+                   
+                }
+            });          
+        }
+        catch(e)
+        {
+            alert(e);
+        }
+    }
+
+    function gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, extrainfo4, fgcmc) {
+        try {
+            var rdm = Math.random();
+            var url = workurl +
+                // 加密的条件信息（表单中用到）
+                "&extrainfo=" + encodeURIComponent(extrainfo1) +
+                // 流程中显示的主体信息
+                "&extrainfo2=" + encodeURIComponent(extrainfo2) +
+                // 流程中用到的跟工程关联的主键
+                "&extrainfo3=" + encodeURIComponent(extrainfo3) +
+                // 流程中用到的分工程主键
+                "&extrainfo4=" + encodeURIComponent(extrainfo4) +
+                "&fgcmc=" + encodeURIComponent(fgcmc) +
+                "&callbackjs=" + encodeURIComponent("parent.layer.closeAll();")+
+                "&_=" + rdm;
+            return url;
+        }
+        catch (ex) {
+            alert(ex);
+        }
+    }
+  
+    function getQueryString(paramName) {
+    
+        var reg = new RegExp("(^|&)" + paramName + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null)
+            return unescape(r[2]);
+        return null;
+    }
+
+    function Base64() {
+
+        // private property
+        _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+        // public method for encoding
+        this.encode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = _utf8_encode(input);
+            while (i < input.length) {
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+                output = output +
+                _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+            }
+            return output;
+        }
+
+        // public method for decoding
+        this.decode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+            while (i < input.length) {
+                enc1 = _keyStr.indexOf(input.charAt(i++));
+                enc2 = _keyStr.indexOf(input.charAt(i++));
+                enc3 = _keyStr.indexOf(input.charAt(i++));
+                enc4 = _keyStr.indexOf(input.charAt(i++));
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
+                output = output + String.fromCharCode(chr1);
+                if (enc3 != 64) {
+                    output = output + String.fromCharCode(chr2);
+                }
+                if (enc4 != 64) {
+                    output = output + String.fromCharCode(chr3);
+                }
+            }
+            output = _utf8_decode(output);
+            return output;
+        }
+
+        // private method for UTF-8 encoding
+        _utf8_encode = function (string) {
+            string = string.replace(/\r\n/g, "\n");
+            var utftext = "";
+            for (var n = 0; n < string.length; n++) {
+                var c = string.charCodeAt(n);
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                } else if ((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                } else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+
+            }
+            return utftext;
+        }
+
+        // private method for UTF-8 decoding
+        _utf8_decode = function (utftext) {
+            var string = "";
+            var i = 0;
+            var c = c1 = c2 = 0;
+            while (i < utftext.length) {
+                c = utftext.charCodeAt(i);
+                if (c < 128) {
+                    string += String.fromCharCode(c);
+                    i++;
+                } else if ((c > 191) && (c < 224)) {
+                    c2 = utftext.charCodeAt(i + 1);
+                    string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                    i += 2;
+                } else {
+                    c2 = utftext.charCodeAt(i + 1);
+                    c3 = utftext.charCodeAt(i + 2);
+                    string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    i += 3;
+                }
+            }
+            return string;
+        }
+    }
+    
+</script>
+<body>
+    <table id="dg"  data-options="iconCls: 'icon-edit'">  
+    </table>
+
+    <div id="tb" style="height:auto">
+        <div>
+           @* <a href="javascript:void(0);" id="btnEdit" class="easyui-linkbutton" iconcls="icon-edit" plain="true" onclick="editRecord()">编辑</a>*@  
+            @*<a href="javascript:void(0);" id="btnDetail" class="easyui-linkbutton" iconcls="icon-edit" plain="true" onclick="view()">工资明细</a>*@  
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="saveAccept()">保存</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" onclick="reject()">取消</a>
+           @* <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="append()">添加</a>*@         
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-tip',plain:true" onclick="batchset()">批量设置</a>（批量设置实付金额<input id="plje" style="width:70px;" />元)
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-tip',plain:true" onclick="startFF()">申请发放</a>
+         </div>
+        <div>
+            班组长：<input id="search_bz" style="width:70px;" />
+            姓名：<input type="text" id="search_xm" style="width:70px" />
+            身份证号：<input type="text" id="search_sfz" style="width:120px" />
+            工种：<input id="search_gz" style="width:100px" />
+            岗位：<input id="search_gw" style="width:100px" />
+            时间 <input type="text" id="search_dt1" style="width:90px" />年<input type="text" id="search_dt2" style="width:90px" />月
+            <a href="javascript:search();" class="easyui-linkbutton" iconcls="icon-search">查找</a> 
+        </div>
+     </div>
+    <div id="monthdetails"></div>
+    <div id="cusDlg"></div>
+</body>
+
+
+

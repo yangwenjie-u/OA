@@ -1,0 +1,213 @@
+body {
+    background: url(/skins/default/images/img/login-background.jpg) no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    min-height: 600px;
+}
+
+
+.header {
+    background: -webkit-linear-gradient(left top, #5083DA, #446FB9);
+    /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(bottom right, #5083DA, #446FB9);
+    /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(bottom right, #5083DA, #446FB9);
+    /* Firefox 3.6 - 15 */
+    background: linear-gradient(to bottom right, #5083DA, #446FB9);
+    /* 标准的语法 */
+    height: 60px;
+}
+
+.header p {
+    padding-left: 70%;
+}
+
+.header .select {
+    background: #0055AA;
+}
+
+.header span {
+    color: white;
+    font-size: 18px;
+    line-height: 60px;
+    width: 100px;
+    display: inline-block;
+    text-align: center;
+}
+
+.title {
+    display: inline-block;
+    width: 40%;
+    margin:0 5%; 
+    vertical-align: top;
+}
+
+.title span {
+    font-family: "行楷体", "华文新魏", "华文行楷", System, sans-serif;
+    color: white;
+    display: inline-block;
+    font-size: 35px;
+    width: 100%;
+    text-align: center;
+}
+#title1 {
+    margin-top: 80px;
+    text-align: left;
+}
+
+#title2 {
+    text-align: right;
+}
+
+
+.g-body {
+
+    width: 738px;
+    height: 400px;
+    /*margin: 8% auto 0 auto;*/
+    background: url(/skins/default/images/img/main.png) no-repeat 50% 50%;
+    background-size: 100% 100%;
+    padding-top: 40px;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*transform: translateX(-50%);*/
+}
+
+.m-login {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+    /*margin-left: 50%;*/
+}
+
+.m-login p {
+    margin-bottom: 30px;
+    color: white;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.user,
+.pass {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.user-icon,
+.pass-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.user-icon {
+    background-image: url(/skins/default/images/img/user.png);
+    background-repeat: no-repeat;
+    background-position: 3px;
+}
+
+.pass-icon {
+    background-image: url(/skins/default/images/img/pass.png);
+    background-repeat: no-repeat;
+    background-position: 3px;
+}
+
+.input-text {
+    height: 40px;
+    border-radius: 5px;
+    padding-left: 40px;
+    font-size: 14px;
+}
+
+.login-btn {
+
+    background: -webkit-linear-gradient( #4983E7, #2E63BE);
+    /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient( #4983E7, #2E63BE);
+    /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient( #4983E7, #2E63BE);
+    /* Firefox 3.6 - 15 */
+    background: linear-gradient( #4983E7, #2E63BE);
+
+    /*background: #4680E3;*/
+    /*width: 80%;*/
+    text-align: center;
+    color: white;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    border-radius: 5px;
+}
+
+.forget {
+    margin-top: 10px;
+}
+
+.forget label,
+.forget span,
+.login-btn,
+.more-info {
+    cursor: pointer;
+}
+
+.forget label {
+    color: white;
+}
+
+.forget input {
+    margin-right: 10px;
+}
+
+.forget>span {
+    color: white;
+    float: right;
+    display: inline-block;
+    width: 70px;
+}
+
+.more-info {
+    margin-top: 40px;
+}
+
+.more-info div {
+    color: white;
+    width: 30%;
+    display: inline-block;
+    padding-top: 45px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.more-info .info1 {
+    background: url(/skins/default/images/img/company.png) no-repeat 50% 0;
+}
+
+.more-info .info2 {
+    background: url(/skins/default/images/img/person.png) no-repeat 50% 0;
+}
+
+.more-info .info3 {
+    background: url(/skins/default/images/img/internet.png) no-repeat 50% 0;
+}
+
+.foot {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+.foot p {
+    color: white;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+}

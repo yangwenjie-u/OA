@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.InfoWgryHistory,BD.Jcbg.DataModal" table="InfoWgryHistory" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="Sfzhm" column="[SFZHM]" />
+    <property type="string" length="50" name="RealName" column="[RealName]" />
+    <property type="string" length="50" name="CompanyId" column="[CompanyId]" />
+    <property type="string" length="400" name="CompanyName" column="[CompanyName]" />
+    <property type="string" length="50" name="ProjectId" column="[ProjectId]" />
+    <property type="string" length="200" name="ProjectName" column="[ProjectName]" />
+    <property type="string" length="50" name="Bzfzr" column="[Bzfzr]" />
+    <property type="string" length="50" name="BzfzrRealName" column="[BzfzrRealName]" />
+    <property type="DateTime" name="InTime" column="[InTime]" />
+    <property type="DateTime" name="OutTime" column="[OutTime]" />
+  </class>
+</hibernate-mapping>

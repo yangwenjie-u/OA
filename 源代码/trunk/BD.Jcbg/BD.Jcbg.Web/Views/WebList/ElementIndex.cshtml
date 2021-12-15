@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="http://res.jzyglxt.com/app/jcjg/bootstrap/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="http://res.jzyglxt.com/app/jcjg/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="http://res.jzyglxt.com/app/jcjg/element-ui/lib/theme-chalk/index.css" />
+    <link rel="stylesheet" href="/skins/WebList/css/element_index.css">
+    <script src="http://res.jzyglxt.com/app/jcjg/vue.min.js"></script>
+    <script src="http://res.jzyglxt.com/app/jcjg/element-ui/lib/index.js"></script>
+    <script src="http://res.jzyglxt.com/app/jcjg/jquery.js"></script>
+    <script src="http://res.jzyglxt.com/app/jcjg/layui/layui.all.js"></script>
+    <script src="http://res.jzyglxt.com/app/jcjg/layui/layui.all.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/skins/WebList/js/pubselect.js"></script>
+    <title>通用表格</title>
+</head>
+
+<body>
+    <div id="app" v-show="showApp" style="display: none;">
+        <!-- 工具栏开始 -->
+        <div id="tools">
+            <div class="tools_btn">
+                <el-button type="primary" size="medium" v-for="(item, index) in initDatas.buttonList"
+                    :onclick="item.funname" :key="index">
+                    {{item.mc}}
+                </el-button>
+                <!-- <el-button type="primary" size="medium" v-on:click="higherQueryStatus = true">高级筛选</el-button> -->
+            </div>
+            <div class="tools_content">
+
+            </div>
+        </div>
+        <!-- 工具栏结束 -->
+
+        <div id="content">
+            <!-- 表格开始 -->
+            <div class="my_tab_wrap">
+                <el-table :header-cell-style="{background:'rgb(250, 250, 250)',color:'#606266'}" :data="listDatas"
+                    :height="tabHeight" highlight-current-row v-loading="loading" v-on:row-click="chooseRow"
+                    v-on:selection-change="handleSelectionChange" :row-class-name="rowClass" ref="multipleTable" border>
+                    <el-table-column type="selection" width="40" align="center">
+                    </el-table-column>
+                    <el-table-column type="index" label="序号" width="55" align="center">
+                    </el-table-column>
+                    <el-table-column v-for="(item, index) in initDatas.zdzdList" v-if="!item.sfhidden"
+                        :prop="item.zdname" :width="item.zdwidth" :label="item.zdsy" :key="index">
+
+                        <template slot="header" slot-scope="scope">
+                            <div class="title" v-on:click="filterStatus=!filterStatus">
+                                <i class="el-icon-caret-bottom" v-if="!filterStatus"></i>
+                                <i class="el-icon-caret-top" v-if="filterStatus"></i>
+                                {{item.zdsy}}
+                            </div>
+                            <!-- input筛选 -->
+                            <div class="wrap" v-if="item.filtertype=='input'&&initDatas.filter&&filterStatus">
+                                <el-input size="mini" v-model="filterRules[index]['value']" />
+                            </div>
+                            <!-- list筛选 -->
+                            <div class="wrap" v-if="item.filtertype=='list'&&initDatas.filter&&filterStatus">
+                                <el-select size="mini" v-model="filterRules[index]['value']">
+                                    <el-option v-for="(item1, index1) in transListArr(item.datatype)"
+                                        :label="item1[0]==''?'请选择':item1[0]" :value="item1[1]" :key="index1">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <!-- date筛选 -->
+                            <div class="wrap" v-if="item.filtertype=='date'&&initDatas.filter&&filterStatus">
+                                <el-date-picker value-format="yyyy-MM-dd" size="mini" type="date" style="width:100%;"
+                                    v-model="filterRules[index]['value']" placeholder="时间">
+                                </el-date-picker>
+                            </div>
+                        </template>
+                        <template slot-scope="scope">
+                            <div v-if="!item.formatevent">{{scope.row[item.zdname]}}</div>
+                            <div v-if="item.formatevent"
+                                v-html="format(scope.row[item.zdname],scope.row,scope.$index,item.formatevent)"></div>
+                        </template>
+
+                    </el-table-column>
+
+                </el-table>
+            </div>
+            <!-- 表格结束 -->
+
+            <!-- 分页开始  -->
+            <div class="my_page_wrap">
+                <el-pagination :page-size="rows" :current-page.sync="page" :page-sizes="[50, 100, 150, 200]"
+                    :total="total" layout="total, sizes, prev, pager, next, jumper" v-on:current-change="getAllTabList"
+                    v-on:size-change="changeSize">
+                </el-pagination>
+                <el-button class="page_refresh" v-on:click="getAllTabList" icon="el-icon-refresh" size="mini">
+                </el-button>
+                <el-button class="page_refresh" v-on:click="filterStatus=!filterStatus" icon="el-icon-search"
+                    size="mini">
+                    筛选条件
+                </el-button>
+            </div>
+            <!-- 分页结束 -->
+
+        </div>
+        <el-dialog title="高级筛选" :visible.sync="higherQueryStatus" width="60%" top="5vh">
+            <div class="higher_wrap">
+                <div class="form_item" v-for="(item, index) in initDatas.zdzdList" v-if="!item.sfhidden" :key="index">
+                    <div class="my_label">
+                        {{item.zdsy}}：
+                    </div>
+                    <div class="my_content">
+                        <el-input v-if="item.filtertype=='input'" class="top_sel" v-model="filterRules[index]['value']"
+                            :placeholder="item.zdsy" />
+
+                    </div>
+                    <div class="my_content">
+                        <el-select v-if="item.filtertype=='list'" class="top_sel" v-model="filterRules[index]['value']"
+                            :placeholder="item.zdsy">
+                            <el-option v-for="(item1, index1) in transListArr(item.datatype)"
+                                :label="item1[0]==''?'请选择':item1[0]" :value="item1[1]" :key="index1">
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div class="my_content">
+                        <el-date-picker v-if="item.filtertype=='date'" class="top_sel" value-format="yyyy-MM-dd"
+                            type="date" style="width:100%;" v-model="filterRules[index]['value']"
+                            :placeholder="item.zdsy">
+                        </el-date-picker>
+                    </div>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" v-on:click="resetForm">重置</el-button>
+                <el-button v-on:click="higherQueryStatus=false">关闭</el-button>
+            </span>
+        </el-dialog>
+        <div id="export" style="display: none;">
+            <form id="dataExportForm" method="post">
+                <input type="hidden" id="exportparam" name="exportparam" value='@ViewData["param"]' />
+                <input type="hidden" id="exportfilter" name="exportfilter" value="" />
+                <input type="hidden" id="exportsort" name="exportsort" value="" />
+                <input type="hidden" id="exportorder" name="exportorder" value="" />
+                <input type="hidden" id="exportcustomzdzd" name="exportcustomzdzd" value="" />
+            </form>
+        </div>
+        <input type="hidden" id="J_param" name="param" value='@ViewData["param"]' />
+    </div>
+    <script>
+        // var layer, form
+        // layui.use(['layer', 'form'], function () {
+        //     layer = layui.layer,
+        //         form = layui.form;
+        // });
+        layer.load(1, {
+            shade: [0.8, '#fff']
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                param: '', //初始参数
+                showApp: false, //防止出现花括号
+                page: 1, //第几页
+                rows: 50, //每页几条
+                total: 0, //总条目数
+                filterRules: [], //表格筛选参数
+                initDatas: {}, //表格初始字段按钮
+                listDatas: [], //表格初始数据
+                tabHeight: 0, //表格高度
+                loading: false, //表格loading状态
+                selected: [], //多选的数据
+                higherQueryStatus: false, //高级筛选状态
+                filterStatus: false, //底下筛选条件按钮切换状态
+                selectRow: []
+            },
+            computed: {
+                newfilterRules: function () {
+                    return JSON.stringify(this.filterRules)
+                }
+            },
+            methods: {
+                // 多选高亮选中行
+                rowClass({
+                    row,
+                    rowIndex
+                }) {
+                    if (this.selectRow.includes(rowIndex)) {
+                        return 'selected_chosen'
+                    } else {
+                        return ''
+                    }
+                },
+                format: function (value, row, index, fun) { //每一项js渲染
+                    try {
+                        var str = window[fun](value, row, index)
+                        return str
+                    } catch (error) {}
+                },
+                resetForm: function () { //高级筛选重置
+                    this.filterRules.forEach(function (e) {
+                        e['value'] = ""
+                    })
+                },
+                chooseRow: function (row, column, event) { //单选或者多选
+                    if (this.initDatas.form.singleselect) {
+                        if (this.selected.length) {
+                            this.$refs.multipleTable.toggleRowSelection(this.selected[0])
+                        }
+                    }
+                    this.$refs.multipleTable.toggleRowSelection(row)
+                },
+                handleSelectionChange: function (val) { //单选或者多选之后数据变化
+                    this.selected = val;
+                    var that = this;
+                    that.selectRow = []
+                    val.forEach(function (e) {
+                        that.selectRow.push(that.listDatas.indexOf(e));
+                    })
+                },
+                transListArr: function (d) { //list字符串变化为数组
+                    var strArr = d.split('value--')[1].split('|')
+                    var newArr = strArr.map(function (e) {
+                        return e.split(',')
+                    })
+                    return newArr
+                },
+                changeSize: function (e) { //分页size大小改变重新请求数据
+                    this.rows = e;
+                    this.getAllTabList()
+                },
+                getInitData: function () { //获取初始表格字段和按钮
+                    var that = this;
+                    $.ajax({
+                        type: "post",
+                        url: "/WebList/InitEasyUIFormData",
+                        data: {
+                            param: that.param,
+                        },
+                        async: false,
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.success) {
+                                that.initDatas = res.data
+                                if (res.data.form.js) {
+                                    loadScript('/skins/WebList/custom/' + res.data.form.js)
+                                }
+                                var zds = res.data.zdzdList
+                                zds.forEach(function (e) {
+                                    var obj = {
+                                        field: e.zdname,
+                                        op: 'contains',
+                                        value: ''
+                                    }
+                                    that.filterRules.push(obj)
+                                })
+                            }
+                        }
+                    });
+                },
+                getAllTabList: function () { //获取表格数据
+                    var that = this;
+                    that.loading = true
+                    $.ajax({
+                        type: "post",
+                        url: "/WebList/SearchEasyUiFormData",
+                        data: {
+                            param: that.param,
+                            page: that.page,
+                            rows: that.rows,
+                            filterRules: JSON.stringify(that.filterRules)
+                        },
+                        dataType: "json",
+                        success: function (res) {
+                            that.loading = false
+                            if (res.msg == "") {
+                                that.listDatas = res.rows
+                                that.total = res.total
+                            }
+                        }
+                    });
+                },
+            },
+            watch: {
+                listDatas: function () { //改变表格高度
+                    this.$nextTick(function () {
+                        var h0 = $('#app').innerHeight();
+                        var h1 = $('#tools').innerHeight();
+                        var h2 = $('.my_page_wrap').innerHeight();
+                        this.tabHeight = h0 - h2 - h1
+                        if (this.initDatas.form.singleselect) { //切换单多选 全选按钮显示隐藏
+                            $('th .el-checkbox').hide()
+                            $('.el-table__row td:first-of-type').append(`
+                                <div style="width:100%;height:100%;cursor:pointer;position:absolute;left:0;top:0;z-index:1111;"></div>
+                            `)
+                        }
+                    });
+                },
+                filterStatus: function (newVal) {
+                    var h = $('.el-table__body-wrapper').height()
+                    if (newVal) {
+                        $('.el-table__body-wrapper').css({
+                            'height': h - 39 + 'px'
+                        })
+                    } else {
+                        $('.el-table__body-wrapper').css({
+                            'height': h + 39 + 'px'
+                        })
+                    }
+                },
+                filterRules: { //筛选条件
+                    deep: true,
+                    handler: function (newVal, oldVal) {
+                        var that = this
+                        setTimeout(function () {
+                            that.getAllTabList();
+                        }, 1000)
+                    }
+                },
+                // newfilterRules: { //筛选条件
+                //     deep: true,
+                //     handler: function (newVal, oldVal) {
+                //         var that = this
+                //         if(oldVal!='[]'){
+                //             setTimeout(function () {
+                //                 that.getAllTabList();
+                //             }, 1000)
+                //         }
+                //     }
+                // },
+            },
+            mounted() {
+                this.param = $('#J_param').val();
+                this.getInitData();
+                // this.getAllTabList()
+                this.showApp = true;
+                setTimeout(() => {
+                    layer.closeAll()
+                }, 1000);
+            }
+        })
+        //**** 刷新页面数据 ****
+        function searchRecord() {
+            app.getAllTabList();
+        }
+        //**** 加载js ****
+        function loadScript(url, callback) {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            if (typeof (callback) != "undefined") {
+                if (script.readyState) {
+                    script.onreadystatechange = function () {
+                        if (script.readyState == "loaded" || script.readyState == "complete") {
+                            script.onreadystatechange = null;
+                            callback();
+                        }
+                    };
+                } else {
+                    script.onload = function () {
+                        callback();
+                    };
+                }
+            };
+            if (url.includes('?')) {
+                url = url.split('?')[0]
+            }
+            script.src = url + '?' + new Date().getTime();
+            document.body.appendChild(script);
+        }
+        //**** 导出 ****
+        function exportRecord() {
+            //定义过滤
+            var rules = app.filterRules.filter(function (e) {
+                return e.value != ""
+            })
+            $("#exportfilter").val(JSON.stringify(rules));
+            $("#exportsort").val('');
+            $("#exportorder").val('asc');
+            $("#exportcustomzdzd").val('');
+
+            var frm = $("#dataExportForm");
+            frm.attr("action", "/WebList/ExportExcelData");
+            frm.submit();
+        }
+
+        //**** 加密导出 ****
+        function exportEncRecord() {
+            //定义过滤
+            var rules = app.filterRules.filter(function (e) {
+                return e.value != ""
+            })
+            $("#exportfilter").val(JSON.stringify(rules));
+            $("#exportsort").val('');
+            $("#exportorder").val('asc');
+            $("#exportcustomzdzd").val('');
+
+            var frm = $("#dataExportForm");
+            frm.attr("action", "/WebList/ExportEncData");
+            frm.submit();
+        }
+    </script>
+</body>
+
+</html>

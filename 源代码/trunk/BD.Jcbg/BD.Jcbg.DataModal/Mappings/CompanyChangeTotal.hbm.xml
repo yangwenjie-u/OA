@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.CompanyChangeTotal,BD.Jcbg.DataModal" table="CompanyChangeTotal" lazy="false">
+    <id name="ChangeTotalid" column="ChangeTotalID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="TotoleName" column="[TotoleName]" />
+    <property type="string" length="50" name="CreatedBy" column="[CreatedBy]" />
+    <property type="string" length="50" name="CreatedOn" column="[CreatedOn]" />
+    <property type="string" length="50" name="UserName" column="[UserName]" />
+    <property type="string" length="50" name="RealName" column="[RealName]" />
+    <property type="string" length="50" name="OldMoney" column="[OldMoney]" />
+    <property type="string" length="50" name="TempMoney" column="[TempMoney]" />
+    <property type="int" name="Cno" column="[CNo]" />
+    <property type="Decimal" name="Cmoney" column="[CMoney]" />
+    <property type="int" name="CtotalNo" column="[CTotalNo]" />
+    <property type="Decimal" name="CtotalMoney" column="[CTotalMoney]" />
+    <property type="int" name="Bno" column="[BNo]" />
+    <property type="Decimal" name="Bmoney" column="[BMoney]" />
+    <property type="int" name="BtotalNo" column="[BTotalNo]" />
+    <property type="Decimal" name="BtotalMoney" column="[BTotalMoney]" />
+    <property type="int" name="Ano" column="[ANo]" />
+    <property type="Decimal" name="Amoney" column="[AMoney]" />
+    <property type="int" name="AtotalNo" column="[ATotalNo]" />
+    <property type="Decimal" name="AtotalMoney" column="[ATotalMoney]" />
+    <property type="int" name="BigNo" column="[BigNo]" />
+    <property type="Decimal" name="BigMoney" column="[BigMoney]" />
+    <property type="int" name="BigTotalNo" column="[BigTotalNo]" />
+    <property type="Decimal" name="BigTotalMoney" column="[BigTotalMoney]" />
+    <property type="int" name="AlllNo" column="[AlllNo]" />
+    <property type="Decimal" name="AllMoney" column="[AllMoney]" />
+    <property type="int" name="TotalNo" column="[TotalNo]" />
+    <property type="Decimal" name="TotalMoney" column="[TotalMoney]" />
+  </class>
+</hibernate-mapping>

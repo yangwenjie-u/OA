@@ -1,0 +1,4347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://user.bd.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://user.bd.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://user.bd.com/">
+      <s:element name="CheckLogin">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="pwd" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckLoginResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CheckLoginResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCompanyList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="lxr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCompanyListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCompanyListResult" type="tns:ArrayOfVCompany" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVCompany">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VCompany" nillable="true" type="tns:VCompany" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VCompany">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPLXR" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPLXDH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPADDR" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ISALONE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PCPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PCPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetDepList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="depname" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDepListResult" type="tns:ArrayOfVDep" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVDep">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VDep" nillable="true" type="tns:VDep" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VDep">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DEPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DEPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PDEPCODE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ORDERNO" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetRoleList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="proname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="rolename" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRoleListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRoleListResult" type="tns:ArrayOfVRole" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVRole">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VRole" nillable="true" type="tns:VRole" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VRole">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ROLECODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PRONAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ROLENAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TCPNAME" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUserList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserListResult" type="tns:ArrayOfVUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVUser">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VUser" nillable="true" type="tns:VUser" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VUser">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="USERCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="REALNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERPWD" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERTYPE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SIGNIMG" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERIMG" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DEPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DEPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="POSTDM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="POSTMC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GLDEPCODE" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UPDATETIME" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VALIDATETYPE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SFZH" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ORDERNO" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetMenuList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMenuListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMenuListResult" type="tns:ArrayOfVMenu" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVMenu">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VMenu" nillable="true" type="tns:VMenu" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VMenu">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RECID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="MENUCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MENUNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PMENUCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ISMENU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FUNURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IMGURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ISUSED" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="GROUPNAME" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PXH" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="SFYW" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="INHERITED" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUserPower">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserPowerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserPowerResult" type="tns:ArrayOfSMenu" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfSMenu">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SMenu" nillable="true" type="tns:SMenu" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SMenu">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RECID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="MENUCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AREACODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MENUNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PMENUCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ISMENU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FUNURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IMGURL" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ISUSED" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PXH" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="INHERITED" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SFYW" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUserVPower">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserVPowerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserVPowerResult" type="tns:ArrayOfVMenu" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="companycode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="depcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="realname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="rolecode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="appid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="key" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="postdm" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddUserResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeUsername">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="oldusername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newusername" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="realname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeUsernameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ChangeUsernameResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeleteUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="DeleteUserResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCurrentUser">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetCurrentUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCurrentUserResult" type="tns:SUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SUser">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="USERCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AREACODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="REALNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERPWD" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="USERTYPE" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="SIGNIMG" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DEPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="POSTDM" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UPDATETIME" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="GLDEPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="VALIDATETYPE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SFZH" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERIMG" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ORDERNO" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddUserExtraCond">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="usercode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cond" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="memo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="projectcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="rolecode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="companycode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="key" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddUserExtraCondResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="AddUserExtraCondResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserInfoResult" type="tns:SUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserassistantList">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetUserassistantListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserassistantListResult" type="tns:ArrayOfVUserassistant" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVUserassistant">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VUserassistant" nillable="true" type="tns:VUserassistant" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VUserassistant">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UASSCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PRONAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ROLECODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ROLENAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ASSISTANTTYPE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ASSISTANTVALUE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetUserassistantByPower">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="appcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="usercode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="powercode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserassistantByPowerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserassistantByPowerResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ChangePass">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="oldpass" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newpass" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangePassResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="ChangePassResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserHasPower">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cpcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="power" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserHasPowerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="UserHasPowerResult" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCompanyListByMenuCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="menucode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCompanyListByMenuCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCompanyListByMenuCodeResult" type="tns:ArrayOfVCompany" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserMenuListByProcode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserMenuListByProcodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserMenuListByProcodeResult" type="tns:ArrayOfVMenu" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepListByCpCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpcode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepListByCpCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDepListByCpCodeResult" type="tns:ArrayOfVDep" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCompanyByCpcode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpcode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCompanyByCpcodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCompanyByCpcodeResult" type="tns:VCompany" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepByCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="depcode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDepByCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDepByCodeResult" type="tns:VDep" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRoleListByCpCode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRoleListByCpCodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRoleListByCpCodeResult" type="tns:ArrayOfVRole" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserListByCpcode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cpcode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserListByCpcodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserListByCpcodeResult" type="tns:ArrayOfVUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetHelpPostListByProcode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetHelpPostListByProcodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetHelpPostListByProcodeResult" type="tns:ArrayOfHelpPost" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfHelpPost">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="HelpPost" nillable="true" type="tns:HelpPost" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="HelpPost">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RECID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="POSTDM" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="POSTMC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPNAME" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetSignByUsername">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSignByUsernameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSignByUsernameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetSignByUsername">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="signimg" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetSignByUsernameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SetSignByUsernameResult" type="tns:ResultParam" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ResultParam">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Successed" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Msg" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Data" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetRoleListByProcodeAndUsername">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRoleListByProcodeAndUsernameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRoleListByProcodeAndUsernameResult" type="tns:ArrayOfVUserrole" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVUserrole">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VUserrole" nillable="true" type="tns:VUserrole" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VUserrole">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UROLECODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPNAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="USERCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ROLECODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ROLENAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PROCODE" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PRONAME" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SYLB" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MEMO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OAFlowInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="usercode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OAFlowInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OAFlowInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OAFlowInfoByProcode">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OAFlowInfoByProcodeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OAFlowInfoByProcodeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserCompany">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserCompanyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserCompanyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCurrentUserPortype">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetCurrentUserPortypeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCurrentUserPortypeResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserPortypeByUserName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetUserPortypeByUserNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetUserPortypeByUserNameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CompanyTableList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="appid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CompanyTableListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CompanyTableListResult" type="tns:ArrayOfVCompany" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DepTableList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="appid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DepTableListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DepTableListResult" type="tns:ArrayOfVDep" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RoleTableList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="appid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RoleTableListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RoleTableListResult" type="tns:ArrayOfVRole" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserTableList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="appid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UserTableListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UserTableListResult" type="tns:ArrayOfVUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AllUserTableList">
+        <s:complexType />
+      </s:element>
+      <s:element name="AllUserTableListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AllUserTableListResult" type="tns:ArrayOfVUser" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckExistsUserByName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckExistsUserByNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckExistsUserByNameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUserRole">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="usercode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="rolecode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetUserRoleResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SetUserRoleResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_AddUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="areacode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="companycode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="depcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="realname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="rolecode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="appid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="key" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="postdm" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_AddUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UMS_AddUserResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_GetUserPower">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="timestring" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sign" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="procode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_GetUserPowerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UMS_GetUserPowerResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_CheckExistsUserByName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="timestring" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sign" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_CheckExistsUserByNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UMS_CheckExistsUserByNameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_ResetPasswordByName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="timestring" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sign" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_ResetPasswordByNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UMS_ResetPasswordByNameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_AddUserRole">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="timestring" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sign" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="usercode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="rolecode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_AddUserRoleResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UMS_AddUserRoleResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_DelUserRole">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="timestring" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sign" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="usercode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="rolecode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UMS_DelUserRoleResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UMS_DelUserRoleResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="boolean" type="s:boolean" />
+      <s:element name="ArrayOfVCompany" nillable="true" type="tns:ArrayOfVCompany" />
+      <s:element name="ArrayOfVDep" nillable="true" type="tns:ArrayOfVDep" />
+      <s:element name="ArrayOfVRole" nillable="true" type="tns:ArrayOfVRole" />
+      <s:element name="ArrayOfVUser" nillable="true" type="tns:ArrayOfVUser" />
+      <s:element name="ArrayOfVMenu" nillable="true" type="tns:ArrayOfVMenu" />
+      <s:element name="ArrayOfSMenu" nillable="true" type="tns:ArrayOfSMenu" />
+      <s:element name="SUser" nillable="true" type="tns:SUser" />
+      <s:element name="ArrayOfVUserassistant" nillable="true" type="tns:ArrayOfVUserassistant" />
+      <s:element name="ArrayOfString" nillable="true" type="tns:ArrayOfString" />
+      <s:element name="VCompany" nillable="true" type="tns:VCompany" />
+      <s:element name="VDep" nillable="true" type="tns:VDep" />
+      <s:element name="ArrayOfHelpPost" nillable="true" type="tns:ArrayOfHelpPost" />
+      <s:element name="string" nillable="true" type="s:string" />
+      <s:element name="ResultParam" nillable="true" type="tns:ResultParam" />
+      <s:element name="ArrayOfVUserrole" nillable="true" type="tns:ArrayOfVUserrole" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CheckLoginSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckLogin" />
+  </wsdl:message>
+  <wsdl:message name="CheckLoginSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckLoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCompanyList" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCompanyListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDepList" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDepListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRoleList" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRoleListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserList" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMenuListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMenuList" />
+  </wsdl:message>
+  <wsdl:message name="GetMenuListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMenuListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPowerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserPower" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPowerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserPowerResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserVPowerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserVPower" />
+  </wsdl:message>
+  <wsdl:message name="GetUserVPowerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserVPowerResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddUserSoapIn">
+    <wsdl:part name="parameters" element="tns:AddUser" />
+  </wsdl:message>
+  <wsdl:message name="AddUserSoapOut">
+    <wsdl:part name="parameters" element="tns:AddUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChangeUsernameSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangeUsername" />
+  </wsdl:message>
+  <wsdl:message name="ChangeUsernameSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangeUsernameResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteUser" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCurrentUser" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCurrentUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddUserExtraCondSoapIn">
+    <wsdl:part name="parameters" element="tns:AddUserExtraCond" />
+  </wsdl:message>
+  <wsdl:message name="AddUserExtraCondSoapOut">
+    <wsdl:part name="parameters" element="tns:AddUserExtraCondResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserInfo" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantListSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserassistantList" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantListSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserassistantListResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantByPowerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserassistantByPower" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantByPowerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserassistantByPowerResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChangePassSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangePass" />
+  </wsdl:message>
+  <wsdl:message name="ChangePassSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangePassResponse" />
+  </wsdl:message>
+  <wsdl:message name="UserHasPowerSoapIn">
+    <wsdl:part name="parameters" element="tns:UserHasPower" />
+  </wsdl:message>
+  <wsdl:message name="UserHasPowerSoapOut">
+    <wsdl:part name="parameters" element="tns:UserHasPowerResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListByMenuCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCompanyListByMenuCode" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListByMenuCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCompanyListByMenuCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserMenuListByProcodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserMenuListByProcode" />
+  </wsdl:message>
+  <wsdl:message name="GetUserMenuListByProcodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserMenuListByProcodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListByCpCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDepListByCpCode" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListByCpCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDepListByCpCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyByCpcodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCompanyByCpcode" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyByCpcodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCompanyByCpcodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDepByCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDepByCode" />
+  </wsdl:message>
+  <wsdl:message name="GetDepByCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDepByCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByCpCodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRoleListByCpCode" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByCpCodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRoleListByCpCodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListByCpcodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserListByCpcode" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListByCpcodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserListByCpcodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetHelpPostListByProcodeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetHelpPostListByProcode" />
+  </wsdl:message>
+  <wsdl:message name="GetHelpPostListByProcodeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetHelpPostListByProcodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSignByUsernameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSignByUsername" />
+  </wsdl:message>
+  <wsdl:message name="GetSignByUsernameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSignByUsernameResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetSignByUsernameSoapIn">
+    <wsdl:part name="parameters" element="tns:SetSignByUsername" />
+  </wsdl:message>
+  <wsdl:message name="SetSignByUsernameSoapOut">
+    <wsdl:part name="parameters" element="tns:SetSignByUsernameResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByProcodeAndUsernameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRoleListByProcodeAndUsername" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByProcodeAndUsernameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRoleListByProcodeAndUsernameResponse" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:OAFlowInfo" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:OAFlowInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoByProcodeSoapIn">
+    <wsdl:part name="parameters" element="tns:OAFlowInfoByProcode" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoByProcodeSoapOut">
+    <wsdl:part name="parameters" element="tns:OAFlowInfoByProcodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="UserCompanySoapIn">
+    <wsdl:part name="parameters" element="tns:UserCompany" />
+  </wsdl:message>
+  <wsdl:message name="UserCompanySoapOut">
+    <wsdl:part name="parameters" element="tns:UserCompanyResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserPortypeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCurrentUserPortype" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserPortypeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCurrentUserPortypeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPortypeByUserNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetUserPortypeByUserName" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPortypeByUserNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetUserPortypeByUserNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="CompanyTableListSoapIn">
+    <wsdl:part name="parameters" element="tns:CompanyTableList" />
+  </wsdl:message>
+  <wsdl:message name="CompanyTableListSoapOut">
+    <wsdl:part name="parameters" element="tns:CompanyTableListResponse" />
+  </wsdl:message>
+  <wsdl:message name="DepTableListSoapIn">
+    <wsdl:part name="parameters" element="tns:DepTableList" />
+  </wsdl:message>
+  <wsdl:message name="DepTableListSoapOut">
+    <wsdl:part name="parameters" element="tns:DepTableListResponse" />
+  </wsdl:message>
+  <wsdl:message name="RoleTableListSoapIn">
+    <wsdl:part name="parameters" element="tns:RoleTableList" />
+  </wsdl:message>
+  <wsdl:message name="RoleTableListSoapOut">
+    <wsdl:part name="parameters" element="tns:RoleTableListResponse" />
+  </wsdl:message>
+  <wsdl:message name="UserTableListSoapIn">
+    <wsdl:part name="parameters" element="tns:UserTableList" />
+  </wsdl:message>
+  <wsdl:message name="UserTableListSoapOut">
+    <wsdl:part name="parameters" element="tns:UserTableListResponse" />
+  </wsdl:message>
+  <wsdl:message name="AllUserTableListSoapIn">
+    <wsdl:part name="parameters" element="tns:AllUserTableList" />
+  </wsdl:message>
+  <wsdl:message name="AllUserTableListSoapOut">
+    <wsdl:part name="parameters" element="tns:AllUserTableListResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckExistsUserByNameSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckExistsUserByName" />
+  </wsdl:message>
+  <wsdl:message name="CheckExistsUserByNameSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckExistsUserByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRoleSoapIn">
+    <wsdl:part name="parameters" element="tns:SetUserRole" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRoleSoapOut">
+    <wsdl:part name="parameters" element="tns:SetUserRoleResponse" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserSoapIn">
+    <wsdl:part name="parameters" element="tns:UMS_AddUser" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserSoapOut">
+    <wsdl:part name="parameters" element="tns:UMS_AddUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="UMS_GetUserPowerSoapIn">
+    <wsdl:part name="parameters" element="tns:UMS_GetUserPower" />
+  </wsdl:message>
+  <wsdl:message name="UMS_GetUserPowerSoapOut">
+    <wsdl:part name="parameters" element="tns:UMS_GetUserPowerResponse" />
+  </wsdl:message>
+  <wsdl:message name="UMS_CheckExistsUserByNameSoapIn">
+    <wsdl:part name="parameters" element="tns:UMS_CheckExistsUserByName" />
+  </wsdl:message>
+  <wsdl:message name="UMS_CheckExistsUserByNameSoapOut">
+    <wsdl:part name="parameters" element="tns:UMS_CheckExistsUserByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="UMS_ResetPasswordByNameSoapIn">
+    <wsdl:part name="parameters" element="tns:UMS_ResetPasswordByName" />
+  </wsdl:message>
+  <wsdl:message name="UMS_ResetPasswordByNameSoapOut">
+    <wsdl:part name="parameters" element="tns:UMS_ResetPasswordByNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserRoleSoapIn">
+    <wsdl:part name="parameters" element="tns:UMS_AddUserRole" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserRoleSoapOut">
+    <wsdl:part name="parameters" element="tns:UMS_AddUserRoleResponse" />
+  </wsdl:message>
+  <wsdl:message name="UMS_DelUserRoleSoapIn">
+    <wsdl:part name="parameters" element="tns:UMS_DelUserRole" />
+  </wsdl:message>
+  <wsdl:message name="UMS_DelUserRoleSoapOut">
+    <wsdl:part name="parameters" element="tns:UMS_DelUserRoleResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckLoginHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="pwd" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckLoginHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListHttpGetIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="lxr" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVCompany" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListHttpGetIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="depname" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVDep" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListHttpGetIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="proname" type="s:string" />
+    <wsdl:part name="rolename" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVRole" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListHttpGetIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="GetMenuListHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMenuListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVMenu" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPowerHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPowerHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSMenu" />
+  </wsdl:message>
+  <wsdl:message name="GetUserVPowerHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserVPowerHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVMenu" />
+  </wsdl:message>
+  <wsdl:message name="AddUserHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="companycode" type="s:string" />
+    <wsdl:part name="depcode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="realname" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+    <wsdl:part name="appid" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+    <wsdl:part name="postdm" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="ChangeUsernameHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="oldusername" type="s:string" />
+    <wsdl:part name="newusername" type="s:string" />
+    <wsdl:part name="realname" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangeUsernameHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserHttpGetIn" />
+  <wsdl:message name="GetCurrentUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:SUser" />
+  </wsdl:message>
+  <wsdl:message name="AddUserExtraCondHttpGetIn">
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="cond" type="s:string" />
+    <wsdl:part name="memo" type="s:string" />
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="projectcode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+    <wsdl:part name="companycode" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddUserExtraCondHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:SUser" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantListHttpGetIn" />
+  <wsdl:message name="GetUserassistantListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUserassistant" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantByPowerHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="appcode" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="powercode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantByPowerHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="ChangePassHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="oldpass" type="s:string" />
+    <wsdl:part name="newpass" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangePassHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="UserHasPowerHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="cpcode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="power" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UserHasPowerHttpGetOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListByMenuCodeHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="menucode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListByMenuCodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVCompany" />
+  </wsdl:message>
+  <wsdl:message name="GetUserMenuListByProcodeHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserMenuListByProcodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVMenu" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListByCpCodeHttpGetIn">
+    <wsdl:part name="cpcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListByCpCodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVDep" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyByCpcodeHttpGetIn">
+    <wsdl:part name="cpcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyByCpcodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:VCompany" />
+  </wsdl:message>
+  <wsdl:message name="GetDepByCodeHttpGetIn">
+    <wsdl:part name="depcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepByCodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:VDep" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByCpCodeHttpGetIn">
+    <wsdl:part name="cpcode" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByCpCodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVRole" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListByCpcodeHttpGetIn">
+    <wsdl:part name="cpcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListByCpcodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="GetHelpPostListByProcodeHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetHelpPostListByProcodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfHelpPost" />
+  </wsdl:message>
+  <wsdl:message name="GetSignByUsernameHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSignByUsernameHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SetSignByUsernameHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="signimg" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetSignByUsernameHttpGetOut">
+    <wsdl:part name="Body" element="tns:ResultParam" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByProcodeAndUsernameHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByProcodeAndUsernameHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUserrole" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoByProcodeHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoByProcodeHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UserCompanyHttpGetIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UserCompanyHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserPortypeHttpGetIn" />
+  <wsdl:message name="GetCurrentUserPortypeHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPortypeByUserNameHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPortypeByUserNameHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CompanyTableListHttpGetIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CompanyTableListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVCompany" />
+  </wsdl:message>
+  <wsdl:message name="DepTableListHttpGetIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DepTableListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVDep" />
+  </wsdl:message>
+  <wsdl:message name="RoleTableListHttpGetIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RoleTableListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVRole" />
+  </wsdl:message>
+  <wsdl:message name="UserTableListHttpGetIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UserTableListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="AllUserTableListHttpGetIn" />
+  <wsdl:message name="AllUserTableListHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="CheckExistsUserByNameHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckExistsUserByNameHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRoleHttpGetIn">
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRoleHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserHttpGetIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="companycode" type="s:string" />
+    <wsdl:part name="depcode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="realname" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+    <wsdl:part name="appid" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+    <wsdl:part name="postdm" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_GetUserPowerHttpGetIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_GetUserPowerHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_CheckExistsUserByNameHttpGetIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_CheckExistsUserByNameHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_ResetPasswordByNameHttpGetIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_ResetPasswordByNameHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserRoleHttpGetIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserRoleHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_DelUserRoleHttpGetIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_DelUserRoleHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckLoginHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="pwd" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckLoginHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListHttpPostIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="lxr" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVCompany" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListHttpPostIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="depname" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVDep" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListHttpPostIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="proname" type="s:string" />
+    <wsdl:part name="rolename" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVRole" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListHttpPostIn">
+    <wsdl:part name="cpname" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="GetMenuListHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMenuListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVMenu" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPowerHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPowerHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSMenu" />
+  </wsdl:message>
+  <wsdl:message name="GetUserVPowerHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserVPowerHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVMenu" />
+  </wsdl:message>
+  <wsdl:message name="AddUserHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="companycode" type="s:string" />
+    <wsdl:part name="depcode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="realname" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+    <wsdl:part name="appid" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+    <wsdl:part name="postdm" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="ChangeUsernameHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="oldusername" type="s:string" />
+    <wsdl:part name="newusername" type="s:string" />
+    <wsdl:part name="realname" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangeUsernameHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserHttpPostIn" />
+  <wsdl:message name="GetCurrentUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:SUser" />
+  </wsdl:message>
+  <wsdl:message name="AddUserExtraCondHttpPostIn">
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="cond" type="s:string" />
+    <wsdl:part name="memo" type="s:string" />
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="projectcode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+    <wsdl:part name="companycode" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddUserExtraCondHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:SUser" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantListHttpPostIn" />
+  <wsdl:message name="GetUserassistantListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUserassistant" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantByPowerHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="appcode" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="powercode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserassistantByPowerHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="ChangePassHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="oldpass" type="s:string" />
+    <wsdl:part name="newpass" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangePassHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="UserHasPowerHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="cpcode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="power" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UserHasPowerHttpPostOut">
+    <wsdl:part name="Body" element="tns:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListByMenuCodeHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="menucode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyListByMenuCodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVCompany" />
+  </wsdl:message>
+  <wsdl:message name="GetUserMenuListByProcodeHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserMenuListByProcodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVMenu" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListByCpCodeHttpPostIn">
+    <wsdl:part name="cpcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepListByCpCodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVDep" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyByCpcodeHttpPostIn">
+    <wsdl:part name="cpcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCompanyByCpcodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:VCompany" />
+  </wsdl:message>
+  <wsdl:message name="GetDepByCodeHttpPostIn">
+    <wsdl:part name="depcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDepByCodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:VDep" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByCpCodeHttpPostIn">
+    <wsdl:part name="cpcode" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByCpCodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVRole" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListByCpcodeHttpPostIn">
+    <wsdl:part name="cpcode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserListByCpcodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="GetHelpPostListByProcodeHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetHelpPostListByProcodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfHelpPost" />
+  </wsdl:message>
+  <wsdl:message name="GetSignByUsernameHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSignByUsernameHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SetSignByUsernameHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="signimg" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetSignByUsernameHttpPostOut">
+    <wsdl:part name="Body" element="tns:ResultParam" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByProcodeAndUsernameHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetRoleListByProcodeAndUsernameHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUserrole" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoByProcodeHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="OAFlowInfoByProcodeHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UserCompanyHttpPostIn">
+    <wsdl:part name="procode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UserCompanyHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentUserPortypeHttpPostIn" />
+  <wsdl:message name="GetCurrentUserPortypeHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPortypeByUserNameHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetUserPortypeByUserNameHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="CompanyTableListHttpPostIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CompanyTableListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVCompany" />
+  </wsdl:message>
+  <wsdl:message name="DepTableListHttpPostIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DepTableListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVDep" />
+  </wsdl:message>
+  <wsdl:message name="RoleTableListHttpPostIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RoleTableListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVRole" />
+  </wsdl:message>
+  <wsdl:message name="UserTableListHttpPostIn">
+    <wsdl:part name="appid" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UserTableListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="AllUserTableListHttpPostIn" />
+  <wsdl:message name="AllUserTableListHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfVUser" />
+  </wsdl:message>
+  <wsdl:message name="CheckExistsUserByNameHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckExistsUserByNameHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRoleHttpPostIn">
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetUserRoleHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserHttpPostIn">
+    <wsdl:part name="areacode" type="s:string" />
+    <wsdl:part name="companycode" type="s:string" />
+    <wsdl:part name="depcode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="realname" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+    <wsdl:part name="appid" type="s:string" />
+    <wsdl:part name="key" type="s:string" />
+    <wsdl:part name="postdm" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_GetUserPowerHttpPostIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="procode" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_GetUserPowerHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_CheckExistsUserByNameHttpPostIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_CheckExistsUserByNameHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_ResetPasswordByNameHttpPostIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="username" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_ResetPasswordByNameHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserRoleHttpPostIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_AddUserRoleHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_DelUserRoleHttpPostIn">
+    <wsdl:part name="timestring" type="s:string" />
+    <wsdl:part name="sign" type="s:string" />
+    <wsdl:part name="usercode" type="s:string" />
+    <wsdl:part name="rolecode" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UMS_DelUserRoleHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="ServicesSoap">
+    <wsdl:operation name="CheckLogin">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">登录</wsdl:documentation>
+      <wsdl:input message="tns:CheckLoginSoapIn" />
+      <wsdl:output message="tns:CheckLoginSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取单位信息</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyListSoapIn" />
+      <wsdl:output message="tns:GetCompanyListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取部门信息</wsdl:documentation>
+      <wsdl:input message="tns:GetDepListSoapIn" />
+      <wsdl:output message="tns:GetDepListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取角色信息</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListSoapIn" />
+      <wsdl:output message="tns:GetRoleListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserListSoapIn" />
+      <wsdl:output message="tns:GetUserListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMenuList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取指定项目所有菜单信息</wsdl:documentation>
+      <wsdl:input message="tns:GetMenuListSoapIn" />
+      <wsdl:output message="tns:GetMenuListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户指定菜单的所具体的菜单</wsdl:documentation>
+      <wsdl:input message="tns:GetUserPowerSoapIn" />
+      <wsdl:output message="tns:GetUserPowerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserVPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户权限</wsdl:documentation>
+      <wsdl:input message="tns:GetUserVPowerSoapIn" />
+      <wsdl:output message="tns:GetUserVPowerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">添加用户</wsdl:documentation>
+      <wsdl:input message="tns:AddUserSoapIn" />
+      <wsdl:output message="tns:AddUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">修改用户姓名</wsdl:documentation>
+      <wsdl:input message="tns:ChangeUsernameSoapIn" />
+      <wsdl:output message="tns:ChangeUsernameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">删除用户信息</wsdl:documentation>
+      <wsdl:input message="tns:DeleteUserSoapIn" />
+      <wsdl:output message="tns:DeleteUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户详细信息</wsdl:documentation>
+      <wsdl:input message="tns:GetCurrentUserSoapIn" />
+      <wsdl:output message="tns:GetCurrentUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUserExtraCond">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置用户的额外条件信息</wsdl:documentation>
+      <wsdl:input message="tns:AddUserExtraCondSoapIn" />
+      <wsdl:output message="tns:AddUserExtraCondSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoSoapIn" />
+      <wsdl:output message="tns:GetUserInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户的所有角色条件信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserassistantListSoapIn" />
+      <wsdl:output message="tns:GetUserassistantListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantByPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户某个权限的条件列表</wsdl:documentation>
+      <wsdl:input message="tns:GetUserassistantByPowerSoapIn" />
+      <wsdl:output message="tns:GetUserassistantByPowerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePass">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">修改用户密码</wsdl:documentation>
+      <wsdl:input message="tns:ChangePassSoapIn" />
+      <wsdl:output message="tns:ChangePassSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserHasPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">用户是否有某个权限</wsdl:documentation>
+      <wsdl:input message="tns:UserHasPowerSoapIn" />
+      <wsdl:output message="tns:UserHasPowerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyListByMenuCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个权限对应的单位列表（procode:项目代码 menucode:权限代码 username:用户名）</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyListByMenuCodeSoapIn" />
+      <wsdl:output message="tns:GetCompanyListByMenuCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserMenuListByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户指定项目所有菜单信息（procode:项目代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetUserMenuListByProcodeSoapIn" />
+      <wsdl:output message="tns:GetUserMenuListByProcodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepListByCpCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位的部门列表（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetDepListByCpCodeSoapIn" />
+      <wsdl:output message="tns:GetDepListByCpCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyByCpcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据单位代码获取单位信息（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyByCpcodeSoapIn" />
+      <wsdl:output message="tns:GetCompanyByCpcodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepByCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据部门代码获取部门信息（depcode:部门代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetDepByCodeSoapIn" />
+      <wsdl:output message="tns:GetDepByCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByCpCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位角色列表（cpcode:单位代码 procode:项目代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListByCpCodeSoapIn" />
+      <wsdl:output message="tns:GetRoleListByCpCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserListByCpcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位用户列表（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetUserListByCpcodeSoapIn" />
+      <wsdl:output message="tns:GetUserListByCpcodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetHelpPostListByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个项目的岗位列表（procode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetHelpPostListByProcodeSoapIn" />
+      <wsdl:output message="tns:GetHelpPostListByProcodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSignByUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个用户的签名（username:用户名称）</wsdl:documentation>
+      <wsdl:input message="tns:GetSignByUsernameSoapIn" />
+      <wsdl:output message="tns:GetSignByUsernameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetSignByUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置某个用户的签名（username:用户名称 signimg:签名字符串）</wsdl:documentation>
+      <wsdl:input message="tns:SetSignByUsernameSoapIn" />
+      <wsdl:output message="tns:SetSignByUsernameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByProcodeAndUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个用户的所对应的角色列表（procode:项目代码 username:用户名称）</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListByProcodeAndUsernameSoapIn" />
+      <wsdl:output message="tns:GetRoleListByProcodeAndUsernameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">OA工作流：根据【项目代码与用户代码】获取【办公流程用户部门角色信息】</wsdl:documentation>
+      <wsdl:input message="tns:OAFlowInfoSoapIn" />
+      <wsdl:output message="tns:OAFlowInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfoByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">OA工作流：根据【项目代码】获取【办公流程用户部门角色信息】</wsdl:documentation>
+      <wsdl:input message="tns:OAFlowInfoByProcodeSoapIn" />
+      <wsdl:output message="tns:OAFlowInfoByProcodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserCompany">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">检测：根据【项目代码】获取【用户所能操作的单位信息】</wsdl:documentation>
+      <wsdl:input message="tns:UserCompanySoapIn" />
+      <wsdl:output message="tns:UserCompanySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUserPortype">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户【用户所能操作的项目信息】</wsdl:documentation>
+      <wsdl:input message="tns:GetCurrentUserPortypeSoapIn" />
+      <wsdl:output message="tns:GetCurrentUserPortypeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPortypeByUserName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据用户名获取【用户所能操作的项目信息】</wsdl:documentation>
+      <wsdl:input message="tns:GetUserPortypeByUserNameSoapIn" />
+      <wsdl:output message="tns:GetUserPortypeByUserNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CompanyTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有单位信息</wsdl:documentation>
+      <wsdl:input message="tns:CompanyTableListSoapIn" />
+      <wsdl:output message="tns:CompanyTableListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DepTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有岗位信息</wsdl:documentation>
+      <wsdl:input message="tns:DepTableListSoapIn" />
+      <wsdl:output message="tns:DepTableListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RoleTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有角色信息</wsdl:documentation>
+      <wsdl:input message="tns:RoleTableListSoapIn" />
+      <wsdl:output message="tns:RoleTableListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有用户信息</wsdl:documentation>
+      <wsdl:input message="tns:UserTableListSoapIn" />
+      <wsdl:output message="tns:UserTableListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AllUserTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">不分项目获取所有用户信息</wsdl:documentation>
+      <wsdl:input message="tns:AllUserTableListSoapIn" />
+      <wsdl:output message="tns:AllUserTableListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckExistsUserByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据用户登录名判断用户是否存在</wsdl:documentation>
+      <wsdl:input message="tns:CheckExistsUserByNameSoapIn" />
+      <wsdl:output message="tns:CheckExistsUserByNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置用户的角色信息（Session已存在情况下）</wsdl:documentation>
+      <wsdl:input message="tns:SetUserRoleSoapIn" />
+      <wsdl:output message="tns:SetUserRoleSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：添加用户</wsdl:documentation>
+      <wsdl:input message="tns:UMS_AddUserSoapIn" />
+      <wsdl:output message="tns:UMS_AddUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_GetUserPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：获取用户权限</wsdl:documentation>
+      <wsdl:input message="tns:UMS_GetUserPowerSoapIn" />
+      <wsdl:output message="tns:UMS_GetUserPowerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_CheckExistsUserByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：判断用户名是否存在</wsdl:documentation>
+      <wsdl:input message="tns:UMS_CheckExistsUserByNameSoapIn" />
+      <wsdl:output message="tns:UMS_CheckExistsUserByNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_ResetPasswordByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：重置用户密码</wsdl:documentation>
+      <wsdl:input message="tns:UMS_ResetPasswordByNameSoapIn" />
+      <wsdl:output message="tns:UMS_ResetPasswordByNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ROLE：用户添加角色</wsdl:documentation>
+      <wsdl:input message="tns:UMS_AddUserRoleSoapIn" />
+      <wsdl:output message="tns:UMS_AddUserRoleSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_DelUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ROLE：用户删除角色</wsdl:documentation>
+      <wsdl:input message="tns:UMS_DelUserRoleSoapIn" />
+      <wsdl:output message="tns:UMS_DelUserRoleSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ServicesHttpGet">
+    <wsdl:operation name="CheckLogin">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">登录</wsdl:documentation>
+      <wsdl:input message="tns:CheckLoginHttpGetIn" />
+      <wsdl:output message="tns:CheckLoginHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取单位信息</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyListHttpGetIn" />
+      <wsdl:output message="tns:GetCompanyListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取部门信息</wsdl:documentation>
+      <wsdl:input message="tns:GetDepListHttpGetIn" />
+      <wsdl:output message="tns:GetDepListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取角色信息</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListHttpGetIn" />
+      <wsdl:output message="tns:GetRoleListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserListHttpGetIn" />
+      <wsdl:output message="tns:GetUserListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMenuList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取指定项目所有菜单信息</wsdl:documentation>
+      <wsdl:input message="tns:GetMenuListHttpGetIn" />
+      <wsdl:output message="tns:GetMenuListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户指定菜单的所具体的菜单</wsdl:documentation>
+      <wsdl:input message="tns:GetUserPowerHttpGetIn" />
+      <wsdl:output message="tns:GetUserPowerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserVPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户权限</wsdl:documentation>
+      <wsdl:input message="tns:GetUserVPowerHttpGetIn" />
+      <wsdl:output message="tns:GetUserVPowerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">添加用户</wsdl:documentation>
+      <wsdl:input message="tns:AddUserHttpGetIn" />
+      <wsdl:output message="tns:AddUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">修改用户姓名</wsdl:documentation>
+      <wsdl:input message="tns:ChangeUsernameHttpGetIn" />
+      <wsdl:output message="tns:ChangeUsernameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">删除用户信息</wsdl:documentation>
+      <wsdl:input message="tns:DeleteUserHttpGetIn" />
+      <wsdl:output message="tns:DeleteUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户详细信息</wsdl:documentation>
+      <wsdl:input message="tns:GetCurrentUserHttpGetIn" />
+      <wsdl:output message="tns:GetCurrentUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUserExtraCond">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置用户的额外条件信息</wsdl:documentation>
+      <wsdl:input message="tns:AddUserExtraCondHttpGetIn" />
+      <wsdl:output message="tns:AddUserExtraCondHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoHttpGetIn" />
+      <wsdl:output message="tns:GetUserInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户的所有角色条件信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserassistantListHttpGetIn" />
+      <wsdl:output message="tns:GetUserassistantListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantByPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户某个权限的条件列表</wsdl:documentation>
+      <wsdl:input message="tns:GetUserassistantByPowerHttpGetIn" />
+      <wsdl:output message="tns:GetUserassistantByPowerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePass">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">修改用户密码</wsdl:documentation>
+      <wsdl:input message="tns:ChangePassHttpGetIn" />
+      <wsdl:output message="tns:ChangePassHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserHasPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">用户是否有某个权限</wsdl:documentation>
+      <wsdl:input message="tns:UserHasPowerHttpGetIn" />
+      <wsdl:output message="tns:UserHasPowerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyListByMenuCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个权限对应的单位列表（procode:项目代码 menucode:权限代码 username:用户名）</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyListByMenuCodeHttpGetIn" />
+      <wsdl:output message="tns:GetCompanyListByMenuCodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserMenuListByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户指定项目所有菜单信息（procode:项目代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetUserMenuListByProcodeHttpGetIn" />
+      <wsdl:output message="tns:GetUserMenuListByProcodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepListByCpCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位的部门列表（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetDepListByCpCodeHttpGetIn" />
+      <wsdl:output message="tns:GetDepListByCpCodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyByCpcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据单位代码获取单位信息（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyByCpcodeHttpGetIn" />
+      <wsdl:output message="tns:GetCompanyByCpcodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepByCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据部门代码获取部门信息（depcode:部门代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetDepByCodeHttpGetIn" />
+      <wsdl:output message="tns:GetDepByCodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByCpCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位角色列表（cpcode:单位代码 procode:项目代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListByCpCodeHttpGetIn" />
+      <wsdl:output message="tns:GetRoleListByCpCodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserListByCpcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位用户列表（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetUserListByCpcodeHttpGetIn" />
+      <wsdl:output message="tns:GetUserListByCpcodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetHelpPostListByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个项目的岗位列表（procode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetHelpPostListByProcodeHttpGetIn" />
+      <wsdl:output message="tns:GetHelpPostListByProcodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSignByUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个用户的签名（username:用户名称）</wsdl:documentation>
+      <wsdl:input message="tns:GetSignByUsernameHttpGetIn" />
+      <wsdl:output message="tns:GetSignByUsernameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetSignByUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置某个用户的签名（username:用户名称 signimg:签名字符串）</wsdl:documentation>
+      <wsdl:input message="tns:SetSignByUsernameHttpGetIn" />
+      <wsdl:output message="tns:SetSignByUsernameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByProcodeAndUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个用户的所对应的角色列表（procode:项目代码 username:用户名称）</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListByProcodeAndUsernameHttpGetIn" />
+      <wsdl:output message="tns:GetRoleListByProcodeAndUsernameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">OA工作流：根据【项目代码与用户代码】获取【办公流程用户部门角色信息】</wsdl:documentation>
+      <wsdl:input message="tns:OAFlowInfoHttpGetIn" />
+      <wsdl:output message="tns:OAFlowInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfoByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">OA工作流：根据【项目代码】获取【办公流程用户部门角色信息】</wsdl:documentation>
+      <wsdl:input message="tns:OAFlowInfoByProcodeHttpGetIn" />
+      <wsdl:output message="tns:OAFlowInfoByProcodeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserCompany">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">检测：根据【项目代码】获取【用户所能操作的单位信息】</wsdl:documentation>
+      <wsdl:input message="tns:UserCompanyHttpGetIn" />
+      <wsdl:output message="tns:UserCompanyHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUserPortype">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户【用户所能操作的项目信息】</wsdl:documentation>
+      <wsdl:input message="tns:GetCurrentUserPortypeHttpGetIn" />
+      <wsdl:output message="tns:GetCurrentUserPortypeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPortypeByUserName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据用户名获取【用户所能操作的项目信息】</wsdl:documentation>
+      <wsdl:input message="tns:GetUserPortypeByUserNameHttpGetIn" />
+      <wsdl:output message="tns:GetUserPortypeByUserNameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CompanyTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有单位信息</wsdl:documentation>
+      <wsdl:input message="tns:CompanyTableListHttpGetIn" />
+      <wsdl:output message="tns:CompanyTableListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DepTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有岗位信息</wsdl:documentation>
+      <wsdl:input message="tns:DepTableListHttpGetIn" />
+      <wsdl:output message="tns:DepTableListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RoleTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有角色信息</wsdl:documentation>
+      <wsdl:input message="tns:RoleTableListHttpGetIn" />
+      <wsdl:output message="tns:RoleTableListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有用户信息</wsdl:documentation>
+      <wsdl:input message="tns:UserTableListHttpGetIn" />
+      <wsdl:output message="tns:UserTableListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AllUserTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">不分项目获取所有用户信息</wsdl:documentation>
+      <wsdl:input message="tns:AllUserTableListHttpGetIn" />
+      <wsdl:output message="tns:AllUserTableListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckExistsUserByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据用户登录名判断用户是否存在</wsdl:documentation>
+      <wsdl:input message="tns:CheckExistsUserByNameHttpGetIn" />
+      <wsdl:output message="tns:CheckExistsUserByNameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置用户的角色信息（Session已存在情况下）</wsdl:documentation>
+      <wsdl:input message="tns:SetUserRoleHttpGetIn" />
+      <wsdl:output message="tns:SetUserRoleHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：添加用户</wsdl:documentation>
+      <wsdl:input message="tns:UMS_AddUserHttpGetIn" />
+      <wsdl:output message="tns:UMS_AddUserHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_GetUserPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：获取用户权限</wsdl:documentation>
+      <wsdl:input message="tns:UMS_GetUserPowerHttpGetIn" />
+      <wsdl:output message="tns:UMS_GetUserPowerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_CheckExistsUserByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：判断用户名是否存在</wsdl:documentation>
+      <wsdl:input message="tns:UMS_CheckExistsUserByNameHttpGetIn" />
+      <wsdl:output message="tns:UMS_CheckExistsUserByNameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_ResetPasswordByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：重置用户密码</wsdl:documentation>
+      <wsdl:input message="tns:UMS_ResetPasswordByNameHttpGetIn" />
+      <wsdl:output message="tns:UMS_ResetPasswordByNameHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ROLE：用户添加角色</wsdl:documentation>
+      <wsdl:input message="tns:UMS_AddUserRoleHttpGetIn" />
+      <wsdl:output message="tns:UMS_AddUserRoleHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_DelUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ROLE：用户删除角色</wsdl:documentation>
+      <wsdl:input message="tns:UMS_DelUserRoleHttpGetIn" />
+      <wsdl:output message="tns:UMS_DelUserRoleHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ServicesHttpPost">
+    <wsdl:operation name="CheckLogin">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">登录</wsdl:documentation>
+      <wsdl:input message="tns:CheckLoginHttpPostIn" />
+      <wsdl:output message="tns:CheckLoginHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取单位信息</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyListHttpPostIn" />
+      <wsdl:output message="tns:GetCompanyListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取部门信息</wsdl:documentation>
+      <wsdl:input message="tns:GetDepListHttpPostIn" />
+      <wsdl:output message="tns:GetDepListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取角色信息</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListHttpPostIn" />
+      <wsdl:output message="tns:GetRoleListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserListHttpPostIn" />
+      <wsdl:output message="tns:GetUserListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMenuList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取指定项目所有菜单信息</wsdl:documentation>
+      <wsdl:input message="tns:GetMenuListHttpPostIn" />
+      <wsdl:output message="tns:GetMenuListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户指定菜单的所具体的菜单</wsdl:documentation>
+      <wsdl:input message="tns:GetUserPowerHttpPostIn" />
+      <wsdl:output message="tns:GetUserPowerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserVPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户权限</wsdl:documentation>
+      <wsdl:input message="tns:GetUserVPowerHttpPostIn" />
+      <wsdl:output message="tns:GetUserVPowerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">添加用户</wsdl:documentation>
+      <wsdl:input message="tns:AddUserHttpPostIn" />
+      <wsdl:output message="tns:AddUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">修改用户姓名</wsdl:documentation>
+      <wsdl:input message="tns:ChangeUsernameHttpPostIn" />
+      <wsdl:output message="tns:ChangeUsernameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">删除用户信息</wsdl:documentation>
+      <wsdl:input message="tns:DeleteUserHttpPostIn" />
+      <wsdl:output message="tns:DeleteUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户详细信息</wsdl:documentation>
+      <wsdl:input message="tns:GetCurrentUserHttpPostIn" />
+      <wsdl:output message="tns:GetCurrentUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUserExtraCond">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置用户的额外条件信息</wsdl:documentation>
+      <wsdl:input message="tns:AddUserExtraCondHttpPostIn" />
+      <wsdl:output message="tns:AddUserExtraCondHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserInfoHttpPostIn" />
+      <wsdl:output message="tns:GetUserInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户的所有角色条件信息</wsdl:documentation>
+      <wsdl:input message="tns:GetUserassistantListHttpPostIn" />
+      <wsdl:output message="tns:GetUserassistantListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantByPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取用户某个权限的条件列表</wsdl:documentation>
+      <wsdl:input message="tns:GetUserassistantByPowerHttpPostIn" />
+      <wsdl:output message="tns:GetUserassistantByPowerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePass">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">修改用户密码</wsdl:documentation>
+      <wsdl:input message="tns:ChangePassHttpPostIn" />
+      <wsdl:output message="tns:ChangePassHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserHasPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">用户是否有某个权限</wsdl:documentation>
+      <wsdl:input message="tns:UserHasPowerHttpPostIn" />
+      <wsdl:output message="tns:UserHasPowerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyListByMenuCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个权限对应的单位列表（procode:项目代码 menucode:权限代码 username:用户名）</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyListByMenuCodeHttpPostIn" />
+      <wsdl:output message="tns:GetCompanyListByMenuCodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserMenuListByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户指定项目所有菜单信息（procode:项目代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetUserMenuListByProcodeHttpPostIn" />
+      <wsdl:output message="tns:GetUserMenuListByProcodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepListByCpCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位的部门列表（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetDepListByCpCodeHttpPostIn" />
+      <wsdl:output message="tns:GetDepListByCpCodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyByCpcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据单位代码获取单位信息（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetCompanyByCpcodeHttpPostIn" />
+      <wsdl:output message="tns:GetCompanyByCpcodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDepByCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据部门代码获取部门信息（depcode:部门代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetDepByCodeHttpPostIn" />
+      <wsdl:output message="tns:GetDepByCodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByCpCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位角色列表（cpcode:单位代码 procode:项目代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListByCpCodeHttpPostIn" />
+      <wsdl:output message="tns:GetRoleListByCpCodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserListByCpcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个单位用户列表（cpcode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetUserListByCpcodeHttpPostIn" />
+      <wsdl:output message="tns:GetUserListByCpcodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetHelpPostListByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个项目的岗位列表（procode:单位代码）</wsdl:documentation>
+      <wsdl:input message="tns:GetHelpPostListByProcodeHttpPostIn" />
+      <wsdl:output message="tns:GetHelpPostListByProcodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSignByUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个用户的签名（username:用户名称）</wsdl:documentation>
+      <wsdl:input message="tns:GetSignByUsernameHttpPostIn" />
+      <wsdl:output message="tns:GetSignByUsernameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetSignByUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置某个用户的签名（username:用户名称 signimg:签名字符串）</wsdl:documentation>
+      <wsdl:input message="tns:SetSignByUsernameHttpPostIn" />
+      <wsdl:output message="tns:SetSignByUsernameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByProcodeAndUsername">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取某个用户的所对应的角色列表（procode:项目代码 username:用户名称）</wsdl:documentation>
+      <wsdl:input message="tns:GetRoleListByProcodeAndUsernameHttpPostIn" />
+      <wsdl:output message="tns:GetRoleListByProcodeAndUsernameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">OA工作流：根据【项目代码与用户代码】获取【办公流程用户部门角色信息】</wsdl:documentation>
+      <wsdl:input message="tns:OAFlowInfoHttpPostIn" />
+      <wsdl:output message="tns:OAFlowInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfoByProcode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">OA工作流：根据【项目代码】获取【办公流程用户部门角色信息】</wsdl:documentation>
+      <wsdl:input message="tns:OAFlowInfoByProcodeHttpPostIn" />
+      <wsdl:output message="tns:OAFlowInfoByProcodeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserCompany">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">检测：根据【项目代码】获取【用户所能操作的单位信息】</wsdl:documentation>
+      <wsdl:input message="tns:UserCompanyHttpPostIn" />
+      <wsdl:output message="tns:UserCompanyHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUserPortype">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取当前用户【用户所能操作的项目信息】</wsdl:documentation>
+      <wsdl:input message="tns:GetCurrentUserPortypeHttpPostIn" />
+      <wsdl:output message="tns:GetCurrentUserPortypeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPortypeByUserName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据用户名获取【用户所能操作的项目信息】</wsdl:documentation>
+      <wsdl:input message="tns:GetUserPortypeByUserNameHttpPostIn" />
+      <wsdl:output message="tns:GetUserPortypeByUserNameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CompanyTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有单位信息</wsdl:documentation>
+      <wsdl:input message="tns:CompanyTableListHttpPostIn" />
+      <wsdl:output message="tns:CompanyTableListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DepTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有岗位信息</wsdl:documentation>
+      <wsdl:input message="tns:DepTableListHttpPostIn" />
+      <wsdl:output message="tns:DepTableListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RoleTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有角色信息</wsdl:documentation>
+      <wsdl:input message="tns:RoleTableListHttpPostIn" />
+      <wsdl:output message="tns:RoleTableListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UserTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">获取所有用户信息</wsdl:documentation>
+      <wsdl:input message="tns:UserTableListHttpPostIn" />
+      <wsdl:output message="tns:UserTableListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AllUserTableList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">不分项目获取所有用户信息</wsdl:documentation>
+      <wsdl:input message="tns:AllUserTableListHttpPostIn" />
+      <wsdl:output message="tns:AllUserTableListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckExistsUserByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">根据用户登录名判断用户是否存在</wsdl:documentation>
+      <wsdl:input message="tns:CheckExistsUserByNameHttpPostIn" />
+      <wsdl:output message="tns:CheckExistsUserByNameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">设置用户的角色信息（Session已存在情况下）</wsdl:documentation>
+      <wsdl:input message="tns:SetUserRoleHttpPostIn" />
+      <wsdl:output message="tns:SetUserRoleHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUser">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：添加用户</wsdl:documentation>
+      <wsdl:input message="tns:UMS_AddUserHttpPostIn" />
+      <wsdl:output message="tns:UMS_AddUserHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_GetUserPower">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：获取用户权限</wsdl:documentation>
+      <wsdl:input message="tns:UMS_GetUserPowerHttpPostIn" />
+      <wsdl:output message="tns:UMS_GetUserPowerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_CheckExistsUserByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：判断用户名是否存在</wsdl:documentation>
+      <wsdl:input message="tns:UMS_CheckExistsUserByNameHttpPostIn" />
+      <wsdl:output message="tns:UMS_CheckExistsUserByNameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_ResetPasswordByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">USER：重置用户密码</wsdl:documentation>
+      <wsdl:input message="tns:UMS_ResetPasswordByNameHttpPostIn" />
+      <wsdl:output message="tns:UMS_ResetPasswordByNameHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ROLE：用户添加角色</wsdl:documentation>
+      <wsdl:input message="tns:UMS_AddUserRoleHttpPostIn" />
+      <wsdl:output message="tns:UMS_AddUserRoleHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UMS_DelUserRole">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ROLE：用户删除角色</wsdl:documentation>
+      <wsdl:input message="tns:UMS_DelUserRoleHttpPostIn" />
+      <wsdl:output message="tns:UMS_DelUserRoleHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServicesSoap" type="tns:ServicesSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CheckLogin">
+      <soap:operation soapAction="http://user.bd.com/CheckLogin" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyList">
+      <soap:operation soapAction="http://user.bd.com/GetCompanyList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepList">
+      <soap:operation soapAction="http://user.bd.com/GetDepList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleList">
+      <soap:operation soapAction="http://user.bd.com/GetRoleList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserList">
+      <soap:operation soapAction="http://user.bd.com/GetUserList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMenuList">
+      <soap:operation soapAction="http://user.bd.com/GetMenuList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPower">
+      <soap:operation soapAction="http://user.bd.com/GetUserPower" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserVPower">
+      <soap:operation soapAction="http://user.bd.com/GetUserVPower" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <soap:operation soapAction="http://user.bd.com/AddUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeUsername">
+      <soap:operation soapAction="http://user.bd.com/ChangeUsername" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <soap:operation soapAction="http://user.bd.com/DeleteUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <soap:operation soapAction="http://user.bd.com/GetCurrentUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUserExtraCond">
+      <soap:operation soapAction="http://user.bd.com/AddUserExtraCond" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfo">
+      <soap:operation soapAction="http://user.bd.com/GetUserInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantList">
+      <soap:operation soapAction="http://user.bd.com/GetUserassistantList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantByPower">
+      <soap:operation soapAction="http://user.bd.com/GetUserassistantByPower" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePass">
+      <soap:operation soapAction="http://user.bd.com/ChangePass" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserHasPower">
+      <soap:operation soapAction="http://user.bd.com/UserHasPower" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyListByMenuCode">
+      <soap:operation soapAction="http://user.bd.com/GetCompanyListByMenuCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserMenuListByProcode">
+      <soap:operation soapAction="http://user.bd.com/GetUserMenuListByProcode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepListByCpCode">
+      <soap:operation soapAction="http://user.bd.com/GetDepListByCpCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyByCpcode">
+      <soap:operation soapAction="http://user.bd.com/GetCompanyByCpcode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepByCode">
+      <soap:operation soapAction="http://user.bd.com/GetDepByCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByCpCode">
+      <soap:operation soapAction="http://user.bd.com/GetRoleListByCpCode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserListByCpcode">
+      <soap:operation soapAction="http://user.bd.com/GetUserListByCpcode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHelpPostListByProcode">
+      <soap:operation soapAction="http://user.bd.com/GetHelpPostListByProcode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSignByUsername">
+      <soap:operation soapAction="http://user.bd.com/GetSignByUsername" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetSignByUsername">
+      <soap:operation soapAction="http://user.bd.com/SetSignByUsername" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByProcodeAndUsername">
+      <soap:operation soapAction="http://user.bd.com/GetRoleListByProcodeAndUsername" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfo">
+      <soap:operation soapAction="http://user.bd.com/OAFlowInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfoByProcode">
+      <soap:operation soapAction="http://user.bd.com/OAFlowInfoByProcode" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserCompany">
+      <soap:operation soapAction="http://user.bd.com/UserCompany" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUserPortype">
+      <soap:operation soapAction="http://user.bd.com/GetCurrentUserPortype" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPortypeByUserName">
+      <soap:operation soapAction="http://user.bd.com/GetUserPortypeByUserName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CompanyTableList">
+      <soap:operation soapAction="http://user.bd.com/CompanyTableList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DepTableList">
+      <soap:operation soapAction="http://user.bd.com/DepTableList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RoleTableList">
+      <soap:operation soapAction="http://user.bd.com/RoleTableList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserTableList">
+      <soap:operation soapAction="http://user.bd.com/UserTableList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllUserTableList">
+      <soap:operation soapAction="http://user.bd.com/AllUserTableList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckExistsUserByName">
+      <soap:operation soapAction="http://user.bd.com/CheckExistsUserByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRole">
+      <soap:operation soapAction="http://user.bd.com/SetUserRole" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUser">
+      <soap:operation soapAction="http://user.bd.com/UMS_AddUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_GetUserPower">
+      <soap:operation soapAction="http://user.bd.com/UMS_GetUserPower" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_CheckExistsUserByName">
+      <soap:operation soapAction="http://user.bd.com/UMS_CheckExistsUserByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_ResetPasswordByName">
+      <soap:operation soapAction="http://user.bd.com/UMS_ResetPasswordByName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUserRole">
+      <soap:operation soapAction="http://user.bd.com/UMS_AddUserRole" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_DelUserRole">
+      <soap:operation soapAction="http://user.bd.com/UMS_DelUserRole" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServicesSoap12" type="tns:ServicesSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CheckLogin">
+      <soap12:operation soapAction="http://user.bd.com/CheckLogin" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyList">
+      <soap12:operation soapAction="http://user.bd.com/GetCompanyList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepList">
+      <soap12:operation soapAction="http://user.bd.com/GetDepList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleList">
+      <soap12:operation soapAction="http://user.bd.com/GetRoleList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserList">
+      <soap12:operation soapAction="http://user.bd.com/GetUserList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMenuList">
+      <soap12:operation soapAction="http://user.bd.com/GetMenuList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPower">
+      <soap12:operation soapAction="http://user.bd.com/GetUserPower" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserVPower">
+      <soap12:operation soapAction="http://user.bd.com/GetUserVPower" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <soap12:operation soapAction="http://user.bd.com/AddUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeUsername">
+      <soap12:operation soapAction="http://user.bd.com/ChangeUsername" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <soap12:operation soapAction="http://user.bd.com/DeleteUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <soap12:operation soapAction="http://user.bd.com/GetCurrentUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUserExtraCond">
+      <soap12:operation soapAction="http://user.bd.com/AddUserExtraCond" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfo">
+      <soap12:operation soapAction="http://user.bd.com/GetUserInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantList">
+      <soap12:operation soapAction="http://user.bd.com/GetUserassistantList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantByPower">
+      <soap12:operation soapAction="http://user.bd.com/GetUserassistantByPower" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePass">
+      <soap12:operation soapAction="http://user.bd.com/ChangePass" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserHasPower">
+      <soap12:operation soapAction="http://user.bd.com/UserHasPower" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyListByMenuCode">
+      <soap12:operation soapAction="http://user.bd.com/GetCompanyListByMenuCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserMenuListByProcode">
+      <soap12:operation soapAction="http://user.bd.com/GetUserMenuListByProcode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepListByCpCode">
+      <soap12:operation soapAction="http://user.bd.com/GetDepListByCpCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyByCpcode">
+      <soap12:operation soapAction="http://user.bd.com/GetCompanyByCpcode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepByCode">
+      <soap12:operation soapAction="http://user.bd.com/GetDepByCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByCpCode">
+      <soap12:operation soapAction="http://user.bd.com/GetRoleListByCpCode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserListByCpcode">
+      <soap12:operation soapAction="http://user.bd.com/GetUserListByCpcode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHelpPostListByProcode">
+      <soap12:operation soapAction="http://user.bd.com/GetHelpPostListByProcode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSignByUsername">
+      <soap12:operation soapAction="http://user.bd.com/GetSignByUsername" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetSignByUsername">
+      <soap12:operation soapAction="http://user.bd.com/SetSignByUsername" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByProcodeAndUsername">
+      <soap12:operation soapAction="http://user.bd.com/GetRoleListByProcodeAndUsername" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfo">
+      <soap12:operation soapAction="http://user.bd.com/OAFlowInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfoByProcode">
+      <soap12:operation soapAction="http://user.bd.com/OAFlowInfoByProcode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserCompany">
+      <soap12:operation soapAction="http://user.bd.com/UserCompany" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUserPortype">
+      <soap12:operation soapAction="http://user.bd.com/GetCurrentUserPortype" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPortypeByUserName">
+      <soap12:operation soapAction="http://user.bd.com/GetUserPortypeByUserName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CompanyTableList">
+      <soap12:operation soapAction="http://user.bd.com/CompanyTableList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DepTableList">
+      <soap12:operation soapAction="http://user.bd.com/DepTableList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RoleTableList">
+      <soap12:operation soapAction="http://user.bd.com/RoleTableList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserTableList">
+      <soap12:operation soapAction="http://user.bd.com/UserTableList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllUserTableList">
+      <soap12:operation soapAction="http://user.bd.com/AllUserTableList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckExistsUserByName">
+      <soap12:operation soapAction="http://user.bd.com/CheckExistsUserByName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRole">
+      <soap12:operation soapAction="http://user.bd.com/SetUserRole" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUser">
+      <soap12:operation soapAction="http://user.bd.com/UMS_AddUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_GetUserPower">
+      <soap12:operation soapAction="http://user.bd.com/UMS_GetUserPower" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_CheckExistsUserByName">
+      <soap12:operation soapAction="http://user.bd.com/UMS_CheckExistsUserByName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_ResetPasswordByName">
+      <soap12:operation soapAction="http://user.bd.com/UMS_ResetPasswordByName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUserRole">
+      <soap12:operation soapAction="http://user.bd.com/UMS_AddUserRole" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_DelUserRole">
+      <soap12:operation soapAction="http://user.bd.com/UMS_DelUserRole" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServicesHttpGet" type="tns:ServicesHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="CheckLogin">
+      <http:operation location="/CheckLogin" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyList">
+      <http:operation location="/GetCompanyList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepList">
+      <http:operation location="/GetDepList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleList">
+      <http:operation location="/GetRoleList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserList">
+      <http:operation location="/GetUserList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMenuList">
+      <http:operation location="/GetMenuList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPower">
+      <http:operation location="/GetUserPower" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserVPower">
+      <http:operation location="/GetUserVPower" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <http:operation location="/AddUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeUsername">
+      <http:operation location="/ChangeUsername" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <http:operation location="/DeleteUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <http:operation location="/GetCurrentUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUserExtraCond">
+      <http:operation location="/AddUserExtraCond" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfo">
+      <http:operation location="/GetUserInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantList">
+      <http:operation location="/GetUserassistantList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantByPower">
+      <http:operation location="/GetUserassistantByPower" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePass">
+      <http:operation location="/ChangePass" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserHasPower">
+      <http:operation location="/UserHasPower" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyListByMenuCode">
+      <http:operation location="/GetCompanyListByMenuCode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserMenuListByProcode">
+      <http:operation location="/GetUserMenuListByProcode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepListByCpCode">
+      <http:operation location="/GetDepListByCpCode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyByCpcode">
+      <http:operation location="/GetCompanyByCpcode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepByCode">
+      <http:operation location="/GetDepByCode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByCpCode">
+      <http:operation location="/GetRoleListByCpCode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserListByCpcode">
+      <http:operation location="/GetUserListByCpcode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHelpPostListByProcode">
+      <http:operation location="/GetHelpPostListByProcode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSignByUsername">
+      <http:operation location="/GetSignByUsername" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetSignByUsername">
+      <http:operation location="/SetSignByUsername" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByProcodeAndUsername">
+      <http:operation location="/GetRoleListByProcodeAndUsername" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfo">
+      <http:operation location="/OAFlowInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfoByProcode">
+      <http:operation location="/OAFlowInfoByProcode" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserCompany">
+      <http:operation location="/UserCompany" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUserPortype">
+      <http:operation location="/GetCurrentUserPortype" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPortypeByUserName">
+      <http:operation location="/GetUserPortypeByUserName" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CompanyTableList">
+      <http:operation location="/CompanyTableList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DepTableList">
+      <http:operation location="/DepTableList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RoleTableList">
+      <http:operation location="/RoleTableList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserTableList">
+      <http:operation location="/UserTableList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllUserTableList">
+      <http:operation location="/AllUserTableList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckExistsUserByName">
+      <http:operation location="/CheckExistsUserByName" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRole">
+      <http:operation location="/SetUserRole" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUser">
+      <http:operation location="/UMS_AddUser" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_GetUserPower">
+      <http:operation location="/UMS_GetUserPower" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_CheckExistsUserByName">
+      <http:operation location="/UMS_CheckExistsUserByName" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_ResetPasswordByName">
+      <http:operation location="/UMS_ResetPasswordByName" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUserRole">
+      <http:operation location="/UMS_AddUserRole" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_DelUserRole">
+      <http:operation location="/UMS_DelUserRole" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServicesHttpPost" type="tns:ServicesHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="CheckLogin">
+      <http:operation location="/CheckLogin" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyList">
+      <http:operation location="/GetCompanyList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepList">
+      <http:operation location="/GetDepList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleList">
+      <http:operation location="/GetRoleList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserList">
+      <http:operation location="/GetUserList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMenuList">
+      <http:operation location="/GetMenuList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPower">
+      <http:operation location="/GetUserPower" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserVPower">
+      <http:operation location="/GetUserVPower" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <http:operation location="/AddUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeUsername">
+      <http:operation location="/ChangeUsername" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteUser">
+      <http:operation location="/DeleteUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUser">
+      <http:operation location="/GetCurrentUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUserExtraCond">
+      <http:operation location="/AddUserExtraCond" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserInfo">
+      <http:operation location="/GetUserInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantList">
+      <http:operation location="/GetUserassistantList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserassistantByPower">
+      <http:operation location="/GetUserassistantByPower" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePass">
+      <http:operation location="/ChangePass" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserHasPower">
+      <http:operation location="/UserHasPower" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyListByMenuCode">
+      <http:operation location="/GetCompanyListByMenuCode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserMenuListByProcode">
+      <http:operation location="/GetUserMenuListByProcode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepListByCpCode">
+      <http:operation location="/GetDepListByCpCode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCompanyByCpcode">
+      <http:operation location="/GetCompanyByCpcode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDepByCode">
+      <http:operation location="/GetDepByCode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByCpCode">
+      <http:operation location="/GetRoleListByCpCode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserListByCpcode">
+      <http:operation location="/GetUserListByCpcode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHelpPostListByProcode">
+      <http:operation location="/GetHelpPostListByProcode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSignByUsername">
+      <http:operation location="/GetSignByUsername" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetSignByUsername">
+      <http:operation location="/SetSignByUsername" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRoleListByProcodeAndUsername">
+      <http:operation location="/GetRoleListByProcodeAndUsername" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfo">
+      <http:operation location="/OAFlowInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OAFlowInfoByProcode">
+      <http:operation location="/OAFlowInfoByProcode" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserCompany">
+      <http:operation location="/UserCompany" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentUserPortype">
+      <http:operation location="/GetCurrentUserPortype" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUserPortypeByUserName">
+      <http:operation location="/GetUserPortypeByUserName" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CompanyTableList">
+      <http:operation location="/CompanyTableList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DepTableList">
+      <http:operation location="/DepTableList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RoleTableList">
+      <http:operation location="/RoleTableList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UserTableList">
+      <http:operation location="/UserTableList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllUserTableList">
+      <http:operation location="/AllUserTableList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckExistsUserByName">
+      <http:operation location="/CheckExistsUserByName" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetUserRole">
+      <http:operation location="/SetUserRole" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUser">
+      <http:operation location="/UMS_AddUser" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_GetUserPower">
+      <http:operation location="/UMS_GetUserPower" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_CheckExistsUserByName">
+      <http:operation location="/UMS_CheckExistsUserByName" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_ResetPasswordByName">
+      <http:operation location="/UMS_ResetPasswordByName" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_AddUserRole">
+      <http:operation location="/UMS_AddUserRole" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UMS_DelUserRole">
+      <http:operation location="/UMS_DelUserRole" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Services">
+    <wsdl:port name="ServicesSoap" binding="tns:ServicesSoap">
+      <soap:address location="http://whums.jzyglxt.com/webservice/services.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServicesSoap12" binding="tns:ServicesSoap12">
+      <soap12:address location="http://whums.jzyglxt.com/webservice/services.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServicesHttpGet" binding="tns:ServicesHttpGet">
+      <http:address location="http://whums.jzyglxt.com/webservice/services.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServicesHttpPost" binding="tns:ServicesHttpPost">
+      <http:address location="http://whums.jzyglxt.com/webservice/services.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

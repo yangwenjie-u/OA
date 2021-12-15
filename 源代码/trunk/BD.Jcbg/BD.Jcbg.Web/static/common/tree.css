@@ -1,0 +1,132 @@
+.tree * {
+    box-sizing: border-box;
+}
+
+.fir .open,
+.fir .slide {
+    width: 15px;
+    text-align: center;
+}
+
+.fir .open,
+.fir.active .slide {
+    display: inline-block;
+}
+
+.fir.active .open,
+.fir .slide {
+    display: none;
+}
+
+.tree {
+    display: none;
+    height: 400px;
+    box-sizing: border-box;
+}
+
+.tree .left,
+.tree .right {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    padding: 20px;
+    overflow: auto;
+}
+
+.tree .left {
+    width: 40%;
+    border: 1px solid #EEEEEE;
+    background: white;
+}
+
+.tree input {
+    margin: 0 5px;
+    background: white;
+    border: 1px solid #949AA3;
+}
+
+.tree .fir:first-child {
+    margin-top: 0px;
+}
+
+.tree .fir {
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.tree .fir span {
+    font-size: 18px;
+    color: #515969;
+}
+
+.tree .fir-check {
+    width: 18px;
+    height: 18px;
+}
+
+.tree .sed {
+    padding: 10px 0 0 30px;
+    cursor: pointer;
+}
+
+
+.tree .sed span {
+    font-size: 16px;
+    color: #7c86a0;
+}
+
+.tree .sed.active span {
+    color: #5574D7;
+}
+
+.tree .sed-check,
+.tree .third-check {
+    width: 16px;
+    height: 16px;
+}
+
+.tree .third {
+    display: none;
+    cursor: pointer;
+}
+
+.tree .third.active {
+    display: inline-block;
+}
+
+.tree .right {
+    width: 55%;
+    background: #FCFCFC;
+    padding: ;
+}
+
+.tree .third span {
+    font-size: 16px;
+    color: #515969;
+}
+
+.fir ul {
+    display: none;
+}
+
+.fir.active ul {
+    display: inline-block;
+}
+
+.bottom {
+    height: 62px;
+    text-align: center;
+}
+
+.bottom .save {
+    display: inline-block;
+    width: 162px;
+    text-align: center;
+    color: white;
+    background: #6591e0;
+    height: 36px;
+    margin-top: 13px;
+    border-radius: 20px;
+    line-height: 36px;
+    font-size: 18px;
+}

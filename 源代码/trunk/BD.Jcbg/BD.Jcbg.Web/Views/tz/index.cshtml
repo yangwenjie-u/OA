@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>务工人员管理云平台--项目端 实名制登记</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link type="text/css" rel="Stylesheet" href="/static/qdy/css/cssReset.css">
+    <link type="text/css" rel="Stylesheet" href="/static/qdy/css/style.css">
+    <style type="text/css">
+        .table {
+            display: table;
+            width: 100%;
+            border-spacing: 20px;
+        }
+
+            .table a {
+                display: table-cell;
+                width: 25%;
+            }
+
+        .item .icon {
+            width: 72px;
+            height: 72px;
+            margin: 40px auto;
+            background-size: 100%;
+        }
+
+        a.item.active,
+        a.item:hover {
+            background: #669cf5;
+            background: -webkit-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: -o-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: -moz-linear-gradient(left, #669cf5 0%, #2767d1 100%);
+            background: linear-gradient(to bottom, #669cf5 0%, #2767d1 100%);
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div id="mainBody">
+        <div class="table">
+            <a class="item" href="" value="i_tzshow" href2="/tz/show"><i class="icon" style="background-image:url(/static/qdy/images/1.png)"></i>综合展现</a>
+            <a class="item" href=""><i class="icon" style="background-image:url(/static/qdy/images/2.png)"></i>检测监管</a>
+            <a class="item" href=""><i class="icon" style="background-image:url(/static/qdy/images/3.png)"></i>五大员考勤</a>
+            <a class="item" href="" value="i_wgry" href2="/tz/wgryindex"><i class="icon" style="background-image:url(/static/qdy/images/4.png)"></i>务工人员实名制</a>
+        </div>
+        <div class="table">
+            <a class="item" href=""><i class="icon" style="background-image:url(/static/qdy/images/5.png)"></i>质安监系统</a>
+            <a class="item" href=""><i class="icon" style="background-image:url(/static/qdy/images/6.png)"></i>物联网数据中心</a>
+            <a class="item" href="" value="i_qzjx" href2="/machine/index"><i class="icon" style="background-image:url(/static/qdy/images/7.png)"></i>起重机械</a>
+            <a class="item" href=""><i class="icon" style="background-image:url(/static/qdy/images/8.png)"></i>监控中心</a>
+        </div>
+    </div>
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+        $("#mainBody").on("click", ".item", function () {
+            var that = $(this);
+            var url = that.attr("href2");
+            var id = that.attr("value");
+            var name = that.text();
+            if (url != undefined) {
+                parent.openPage(url, id, name);
+            }
+            else {alert("功能暂未开通") }
+            return false;
+        });
+    </script>
+</body>
+
+</html>

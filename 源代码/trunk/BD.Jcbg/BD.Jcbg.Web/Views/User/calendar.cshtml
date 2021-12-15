@@ -1,0 +1,80 @@
+﻿@{
+    Layout = "~/Views/User/_calendarlayout.cshtml";
+}
+
+@section head 
+{
+<script language="javascript" type="text/javascript">
+	var ul = '@ViewData["ul"]';
+	$(function () {
+		try {
+			if (ul == "" || ul == "1") {
+				$("#pselect").hide();
+				$("#cbself").attr("checked", true);
+			}
+			$('#calendar').fullCalendar({
+				header: {
+					left: 'prev,next today',
+					center: 'title',
+					right: 'month,agendaWeek,agendaDay'
+				},
+
+				events: function (start, end, callback) {
+
+					$.ajax({
+						type: "POST",
+						url: '/user/getcalendarinfo',
+						dataType: 'json',
+						data: {
+							start: Math.round(start.getTime() / 1000),
+							end: Math.round(end.getTime() / 1000),
+							self: $("#cbself").is(':checked')
+						},
+						success: function (events) {
+							callback(events);
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("#calendar").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("#calendar").mask("正在加载数据...");
+						}
+					});
+
+				},
+				dayClick: function (date, allDay, jsEvent, view) {
+
+					var selDate = $.fullCalendar.formatDate(date, 'yyyy-MM-dd');
+					$.fancybox({
+						'type': 'ajax',
+						'href': '/user/calendaredit?date=' + selDate,
+						'autoDimensions':false,
+						'height':350,
+						'width':450
+					});
+				},
+				eventClick: function (calEvent, jsEvent, view) {
+					if (calEvent.canEdit) {
+
+						$.fancybox({
+							'type': 'ajax',
+							'href': '/user/calendaredit?id=' + calEvent.id,
+							'autoDimensions': false,
+							'height': 350,
+							'width': 450
+						});
+					}
+				}
+			});
+
+			$("#cbself").bind("click", function () {
+				$('#calendar').fullCalendar('refetchEvents');
+			});
+		} catch (err) {
+			$.messager.alert('初始化函数异常提示', err, 'info');
+		}
+	});
+</script>
+}
+<p id="pselect" style="margin-left:20px"><input type="checkbox" id="cbself" name="cbself"/>只看我的日程</p>
+ <div id='calendar'></div>

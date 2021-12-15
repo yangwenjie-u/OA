@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+	<style type="text/css">
+	html,
+	body {
+		padding: 0px;
+		margin: 0px;
+		box-sizing: border-box;
+	}
+
+	body {
+		width: 100%;
+		height: 100%;
+		background-image: url(/static/image/wlxf/cjbg.jpg);
+		overflow: hidden;
+		background-color: #121936;
+		background-size: 100% 100%;
+		background-position: center center;
+		background-repeat: no-repeat;
+	}
+
+	/*.btn-warp {
+        position: relative;
+        text-align: center;
+    }*/
+
+	.start-btn {
+		position: absolute;
+		width: 80px;
+		height: 30px;
+		line-height: 30px;
+		background-color: #0081ff;
+		color: #ffffff;
+		border-radius: 50px;
+		bottom: 10px;
+		left: 40%;
+		text-align: center;
+		cursor: pointer;
+	}
+
+	.batch {
+		display: none;
+		position: absolute;
+		width: 80%;
+		text-align: center;
+		/*display: flex;*/
+		/*    justify-content: center;
+        flex-wrap: wrap;*/
+		top: 50%;
+		color: #fff;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+
+	.player {
+		display: inline-block;
+		text-align: center;
+		font-size: 60px;
+		width: 200px;
+		background: #fff;
+		line-height: 60px;
+		color: #000;
+		margin: 5px;
+		border-radius: 10px;
+		box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+		padding: 10px 0;
+	}
+
+	.gray {
+		background: lightgray;
+	}
+
+	/*	.select {
+		border: 1px solid red;
+	}*/
+	.msg {
+		position: absolute;
+		color: #fff;
+		top: 100px;
+		right: 20px;
+	}
+
+	h2 {
+		color: white;
+		text-align: center;
+		padding: 0 10px;
+	}
+
+	.color-1 .player,
+	.color0 .player {
+		color:green;
+	}
+	</style>
+</head>
+
+<body>
+	<div class="msg" style="font-size:14px;">
+		<p><span style="color:yellow">黄色数字</span>表示抽中范围</p>
+		<p> 白色数字表示未抽中范围</p>
+		<p> 抽中数字标大显示, <span style="color:green">绿色数字</span>表示已抽中</p>
+		<p>白色数字表示已未抽中</p>
+	</div>
+	<h2></h2>
+	<!-- https://www.17sucai.com/pins/36182.html -->
+	<div id="myCanvasContainer" style="margin:30px auto;">
+		<canvas id="myCanvas">
+			<p>换个现代浏览器吧！</p>
+		</canvas>
+	</div>
+	<!-- <div class="btn-warp"> -->
+	<div id="start" class="start-btn">开始</div>
+	<!-- </div> -->
+	<!-- <div id="end">结束</div> -->
+	<div id="tags">
+	</div>
+	<div class="batch flexbox">
+		<div class="player"></div>
+	</div>
+	<script type="text/javascript" src="/static/lib/tagcanvas.js"></script>
+	<script type="text/javascript" src="/static/lib/jquery.js"></script>
+	<script type="text/javascript">
+	var response = null;
+	var canStart = true;
+	var option = getParams();
+
+	$(function() {
+		var canvas = document.getElementById("myCanvas");
+		canvas.width = document.body.offsetWidth;
+		canvas.height = window.innerHeight - 60;
+
+		$("#start").css("left", (window.innerWidth - 60) / 2 + "px")
+		var tmp, str = '<ul>',
+			j = 0;
+		for (var i = 1; i < 101; i++) {
+			str += "<li><a style='color:white;' href='#'>" + i + "</a></li>";
+		}
+		str += "</ul>";
+		$("#tags").append(str);
+		initData();
+		init();
+	})
+
+	function initData() {
+		ajaxTpl("/wlxf/HaveSelect", option, function(res) {
+			if (res.lx == "") {
+				canStart = false;
+				$("#start").addClass("gray");
+				// alert(res.msg);
+			} else {
+				$("h2").html(res.lx)
+			}
+			/*
+			-1 已经抽签抽中
+			-2 已经抽签没抽中
+			0 抽签抽中
+			1 抽签没抽中
+			2 没抽过
+			-100 报错
+			*/
+
+			if (res.zt == 0) {
+				res.zt = -1;
+			}
+			if (res.zt == 1) {
+				res.zt = -2;
+			}
+			getNext(res, 'begin');
+
+			// if (res.rows && res.rows.length) { //抽签已结束
+
+			// 	// }, 500)
+			// 	// TagCanvas.SetSpeed('myCanvas', [10, 1]);
+			// 	setTimeout(function() {
+			// 		end();
+			// 		reload(res, 'after');
+			// 		$(".batch").show();
+			// 		setTimeout(function() {
+			// 			alert("当前项目已经抽过签! " + res.msg);
+			// 		}, 100)
+			// 	}, 100)
+			// }
+		})
+	}
+
+	function getNext(res, type) {
+		// 0 已经抽签抽中
+		// 1 已经抽签没抽中
+
+		if (res.zt == -1 || res.zt == -2) { //已抽签
+			canStart = false;
+			$("#start").addClass("gray");
+			end();
+			reload(res, 'after');
+			$(".batch").addClass('color' + res.zt).show();
+			setTimeout(function() {
+				alert("当前项目已经抽过签! " + res.msg);
+			}, 100)
+		} else if (res.zt == 0 || res.zt == 1) { //抽签完成
+			reload(res, 'begin');
+			setTimeout(function() {
+				TagCanvas.SetSpeed('myCanvas', [10, 1]);
+			}, 500)
+
+			setTimeout(function() {
+				end();
+				reload(res, 'after');
+
+				$(".batch").addClass('color' + res.zt).show();
+				setTimeout(function() {
+					alert(res.msg);
+				}, 100)
+			}, 3000)
+		} else if (res.zt == 2) { //可抽签
+
+		} else {
+			alert(res.msg);
+		}
+	}
+
+	function reload(res, type) {
+		// -1 已经抽签抽中
+		// -2 已经抽签没抽中
+		// 0 抽签抽中
+		// 1 抽签没抽中
+		// 2 没抽过
+		// -100 报错
+
+		res.rows.sort(function compare(val, val2) {
+			return val - val2;
+		});
+		var tmp, str = '<ul>',
+			j = 0;
+		for (var i = 1; i < 101; i++) {
+			if (type == 'after' && i == res.total) {
+				// res.code == 0
+				if (res.msg.indexOf('没有') == -1) { // 绿色
+					str += "<li><a class='select' style='color:green;font-size:80px;' href='#'>" + i + "</a></li>";
+				} else {
+					str += "<li><a class='select' style='color:white;font-size:80px;' href='#'>" + i + "</a></li>";
+				}
+			} else if (i == res.rows[j]) {
+				str += "<li><a style='color:yellow;font-size:16px;' href='#'>" + i + "</a></li>";
+			} else {
+				str += "<li><a style='color:white;font-size:16px;' href='#'>" + i + "</a></li>"
+			}
+			if (i == res.rows[j]) {
+				j++;
+			}
+		}
+		str += "</ul>";
+		$("#tags").html(str);
+		TagCanvas.Reload('myCanvas');
+
+		$(".player").html(res.total)
+	}
+
+	function getData() {
+		ajaxTpl("/wlxf/CheckSelect", option, function(res) {
+			if (typeof res == "string") {
+				res = JSON.parse(res);
+			}
+			/*
+0 已经抽签抽中
+1 已经抽签没抽中
+2 没抽过
+-100 报错
+			*/
+			response = res;
+
+			getNext(res);
+
+			// if (res.code == 0) {
+
+			// } else {
+			// 	alert(res.msg)
+			// }
+		});
+	}
+	$("#start").click(function() {
+		if (canStart) {
+			canStart = false;
+			$("#start").addClass("gray")
+			getData();
+		}
+	})
+
+
+	function end() {
+		TagCanvas.SetSpeed('myCanvas', [0.1 * Math.random() + 0.01, -(0.1 * Math.random() + 0.01)]);
+	}
+
+	function init() {
+		try {
+			TagCanvas.Start('myCanvas', 'tags', {
+				textColour: null,
+				dragControl: 1,
+				decel: 0.95,
+				// textHeight: 14,
+				minSpeed: 0.01,
+				weight: true,
+				// weightMode: "both",
+				weightMode: "size",
+
+				initial: [
+					0.1 * Math.random() + 0.01,
+					-(0.1 * Math.random() + 0.01) * 2,
+				],
+			});
+		} catch (e) {
+			document.getElementById('myCanvasContainer').style.display =
+				'none';
+		}
+	}
+
+	function ajaxTpl(url, params, handle) {
+		$.ajax({
+			url: url,
+			type: 'post',
+			data: params,
+			dataType: 'json',
+			success: function(data) {
+				//console.log(data);
+				if (typeof handle == 'function') {
+					handle(data);
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log(XMLHttpRequest);
+			},
+			complete: function(XMLHttpRequest, textStatus) {
+				// console.log(XMLHttpRequest)
+			}
+		});
+	}
+
+	function getParams() {
+		var url = location.search; //获取url中"?"符后的字串
+		var obj = {};
+		if (url.indexOf("?") != -1) {
+			var str = url.substr(1);
+			var strS = str.split("&");
+			for (var i = 0; i < strS.length; i++) {
+				obj[strS[i].split("=")[0]] = (strS[i].split("=")[1]);
+			}
+		}
+		return obj;
+	}
+	</script>
+</body>
+
+</html>

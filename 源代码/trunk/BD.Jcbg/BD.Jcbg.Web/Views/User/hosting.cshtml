@@ -1,0 +1,193 @@
+﻿@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+	function Open_Dialog() {
+		$('#maindlg').dialog({
+			collapsible: false,
+			minimizable: false,
+			maximizable: false,
+			resizable: false,
+			shadow: true,
+			modal: false,
+			closable: false,
+			buttons: [{
+				text: '保存托管',
+				iconCls: 'icon-ok',
+				handler: function () {
+					submitForm();
+				}},
+				{
+				text: '取消托管',
+				iconCls: 'icon-cancel',
+				handler: function () {
+					cancelHosting();
+				}
+			}]
+		});
+	}
+	var g_users = null;
+	var g_curuser = '@ViewData["username"]';
+	var g_hosting = "";
+	$(function () {
+		initDs();
+
+		$("#hostuser").combobox({
+			valueField: "Key",
+			textField: "Value",
+			mode: "local",
+			editable: true,
+			panelHeight: 100,
+			data: g_users
+		});
+		if (g_hosting != "")
+			$("#hostuser").combobox('select', g_hosting);
+		Open_Dialog();
+	});
+	function initDs() {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/user/getinnerusers",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					g_users = new Array();
+					for (var i = 0; i < data.length; i++) {
+						if (data[i].Key != g_curuser)
+							g_users[g_users.length] = data[i];
+					}
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载用户数据...");
+				}
+			});
+			$.ajax({
+				type: "POST",
+				url: "/user/gethostinguser",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					g_hosting = data.msg;
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在加载用户数据...");
+				}
+			});
+		} catch (e) {
+			$.messager.alert('加载用户数据异常', e.message, 'warning');
+		}
+	}
+	function submitForm() {
+
+		$("#formmain").form('submit', {
+			url: "/user/dosavehosting?username=" +encodeURIComponent($("#hostuser").combobox('getValue')),
+			onSubmit: function (param) {
+				var ret = false;
+				try {
+					var hostuser = $("#hostuser").combobox('getValue');
+					var find = false;
+					for (var i = 0; i < g_users.length; i++) {
+						if (g_users[i].Key == hostuser) {
+							find = true;
+							break;
+						}
+					}
+					if (!find) {
+						$.messager.alert('提示', "请选择要托管的用户", 'info');
+						return ret;
+					}
+					$("#maindlg").mask("正在保存……");
+					ret = true;
+				}
+				catch (err) {
+					ret = false;
+					$.messager.alert('提示', err, 'info');
+				}
+				return ret;
+			},
+			success: function (data) {
+				try {
+					$("#maindlg").unmask();
+					var data = eval('(' + data + ')');
+					var code = data.code;
+					var msg = data.msg;
+					if (msg == "") {
+						if (code == 0)
+							msg = "工作托管成功！";
+						else
+							msg = "工作托管失败！";
+					}
+					if (code == 0){
+						g_hosting = $("#hostuser").combobox('getValue');
+					}
+					$.messager.alert('提示', msg, 'info');
+				}
+				catch (err) {
+					$.messager.alert('提示', err, 'info');
+				}
+			}
+		});
+	}
+	function cancelHosting() {
+
+		$("#formmain").form('submit', {
+			url: "/user/docancelhosting",
+			onSubmit: function (param) {
+				var ret = false;
+				try {
+					if (g_hosting == ""){
+						$.messager.alert('提示', "您当前没有托管工作", 'info');
+						return ret;
+					}
+					$("#maindlg").mask("正在取消托管……");
+					ret = true;
+				}
+				catch (err) {
+					ret = false;
+					$.messager.alert('提示', err, 'info');
+				}
+				return ret;
+			},
+			success: function (data) {
+				try {
+					$("#maindlg").unmask();
+					var data = eval('(' + data + ')');
+					var code = data.code;
+					var msg = data.msg;
+					if (msg == "") {
+						if (code == 0)
+							msg = "取消托管成功！";
+						else
+							msg = "取消托管失败！";
+					}
+					if (code == 0){
+						g_hosting = "";
+						$('#hostuser').combobox('setValue', '');
+					}
+					$.messager.alert('提示', msg, 'info');
+				}
+				catch (err) {
+					$.messager.alert('提示', err, 'info');
+				}
+			}
+		});
+	}
+</script>
+
+<div id="maindlg" style="padding:20px;width:300px;height:140px;" title="工作托管"> 
+<form id="formmain" method="post" action="">
+	
+	工作托管给：　　
+	<input id="hostuser" name="hostuser" />
+</form>
+</div> 
+
+

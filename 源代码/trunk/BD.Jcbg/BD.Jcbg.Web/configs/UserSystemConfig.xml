@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configs>
+  <!-- 应用ID -->
+  <appid>WZJDBG</appid>
+  <!-- 用户系统URL -->
+  <url>http://whums.jzyglxt.com/webservice/services.asmx</url>
+  <code>1</code>
+  <jsencode>1</jsencode>
+  <filetype>.jpg,jpeg,.xls,.xlsx,.doc,.docx,.bmp,.gif,.tiff,.pdf,.png,.rar,.zip</filetype>
+</configs>

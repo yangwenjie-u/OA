@@ -1,0 +1,557 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+.navbar-header
+{
+	padding:10px;
+	}
+.navbar-top-links .dropdown-shezhi{width:150px;min-width:0}
+.navbar-top-links .dropdown-shezhi{margin-left:-123px}
+.dropdown-shezhi{padding:10px}
+
+.dropdown-shezhi li a{font-size:12px}.dropdown-shezhi li em{font-size:10px}
+
+
+.nav.navbar-top-links .dropdown-shezhi a{font-size:12px}
+.img-circle {border-radius: 5%;}
+
+.nav-header {	padding: 33px 25px;	}
+/*
+.profile_left {	float: left;}
+.profile_right{	float:right; margin:auto;}
+
+.profile-element {padding: 0px 0px 80px 0px;}
+
+.btn-primary {font-size: 25px;padding: 0px;background-color: transparent;border-style: none;}
+.btn-primary.active, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open .dropdown-toggle.btn-primary {
+background-color: transparent;
+border-style:none;
+color: #1ab394;
+}
+*/
+.stj_check_select{padding-top:20px;}
+/*
+.stj_check_select_col{width:30%;float:left;}*/
+	
+.stj_check_select_col .col-sm-3.control-label {
+	text-align: right;
+	vertical-align: middle;
+	line-height:34px;
+}
+.stj_btn_y_f
+{
+	margin-left:10px;
+	margin-right:10px;
+	
+	}
+td .col-sm-3.control-label {
+	text-align: right;
+	vertical-align: middle;
+	/*line-height:34px;
+	max-height:38px;
+	max-width:75px;*/
+	overflow:auto;
+	padding-right:0px;
+	padding-left:0px;
+}
+.stj_lr_tab
+{
+/*	width:100%;*/
+	margin-top:20px;
+	
+	}
+.stj_lr_td
+{
+	width: 350px;
+padding-top: 5px;
+	
+	}
+	
+	.yyy
+	{
+	width: 330px;
+overflow: auto;
+padding-top: 5px;
+	
+	    }
+	    
+.yyy .form-control
+{
+    margin-left:15px;
+    }
+.stj_lr_tr
+{
+	margin-top:4px;}
+.Wdate.form-control
+{
+	background-color: #fff;
+	background-image: url(datePicker.png);
+	background-repeat: no-repeat;
+	background-position: right;
+	}
+.stj_lr_but
+{z-index: 999;
+ width: 100%;
+  position:fixed; 
+  bottom: 0px;
+  /* left: 391.5px;*/
+  padding-left:5%;
+  padding-right:5%;
+    height:50px;
+	background-color:rgba(0,0,0,.4)
+	}
+.st_lr_but_n
+{
+	width:95%;
+	text-align:center;
+	margin:auto;
+	vertical-align:middle;
+	line-height:50px;
+	height: 50px;
+	/*
+background-color: #463233;*/
+	}
+.st_lr_but_n .btn-sm
+{
+	margin-left:10px;
+	}
+	.add_del_stj
+	{margin-top: 10px;
+margin-bottom: 15px;
+margin-left: 5px;
+		}
+
+.stj_lr_but .but_tz
+{
+	float:left;
+	width:auto;
+	color:rgba(0,0,0,1);
+	}
+.st_lr_but_n_1
+{
+	float:left; width:30%}
+.background_tr
+{
+       height:auto;
+       min-height:34px;
+    }	
+.st_lr_but_n_1 .form-control
+{
+	float: left;
+width:auto;
+/* padding-left: 6px; */
+margin-left: 6px;
+margin-top: 10px;
+/*
+height: 30px;
+    line-height: 30px;
+*/
+	}
+.stj_label
+{
+	width:110px;
+	}
+.stj_input
+{
+	width:240px;
+	padding: 0px;
+    padding-left: 5px;
+	}
+	/*
+.stj_label2
+{
+	width:25px;
+	padding-left:5px;
+	
+	}
+.stj_input2
+{
+	
+	width:130px;
+	padding: 0px;
+    padding-left: 5px;
+	}*/
+.stj_tab_btn_table
+{
+	/*background-color:#f3f3f4;
+	color:#676a6c;*/
+	font-weight: 700;
+	border-color:#cfd8db;
+     background-color: #f3f7fa;
+    color: #333;
+	
+	}
+.stj_tab_btn_table i
+{
+	padding-right:10px;
+	}
+	.mustin{
+	width:20px;
+	}
+.col-sm-9.stj_input select
+{   
+   /*  height: 46px;
+font-size: 20px;*/
+}
+
+.col-sm-9.stj_input .mustinContent
+{   
+width:215px;
+    /*height: 46px;
+ font-size: 20px;*/
+}
+/*
+.col-sm-9.stj_input2 input
+{   
+ height: 46px;
+    font-size: 20px;
+	padding-left: 3px;
+    padding-right: 3px;
+    font-size: 18px;
+}*/
+.dayg input
+{
+	 /* font-size: 20px;
+	height:46px;*/
+	padding-left:5px;
+	}
+.table_wai
+{
+	width:100%;
+/*	overflow:auto;*/
+overflow:visible;
+	}
+.dayg
+{
+	display:inline-block;
+	padding-left:5px;
+	}
+.dayg .form-control
+{
+	width:565px;
+	    margin-left:0px;
+	}
+.stj_nav_2 li a
+{
+	display:inline-block;
+	padding-right:5px;
+	background-color:transparent;
+	border-width:0px;
+	}
+.stj_nav_2 li i
+{
+	font-size:14px;
+	color:#888;
+	vertical-align:10px
+	}
+.stj_nav_2 .active i
+{
+	font-size:14px;
+	color:#F00;
+	vertical-align:10px
+	}
+.stj_nav_2 .active
+{
+	    background-color: #dff0fa;
+    border-color: #ccc;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom-width: 0px;
+	}
+.stj_nav_2 li
+{
+	padding-right:10px;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.stj_nav li a
+{
+	display:inline-block;
+	padding-right:5px;
+	background-color:transparent;
+	border-width:0px;
+	}
+.stj_nav li i
+{
+	font-size:14px;
+	color:#888;
+	vertical-align:10px
+	}
+	.stj_nav .active i
+{
+	font-size:14px;
+	color:#F00;
+	vertical-align:10px
+	}
+.stj_nav .active
+{
+	    background-color: #f0f7fd;
+    border-color: #ccc;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom-width: 0px;
+	}
+.stj_nav li
+{
+    height:39px;
+	padding-right:10px;
+	}
+.ryxx
+{
+	display:inline-block;
+	    width: 110px;
+    text-align: right;
+	    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 700;
+	}
+.add_del_stj .btn-group
+{
+	padding-left:5px;
+	}
+.btn-666
+{
+	background-color:#666;
+	color:#FFF;
+	
+    border-right-color: #f3f3f4;
+    border-right-style: solid;
+    border-right-width: 2px;
+
+	}
+.btn-default i
+{
+	padding-right:7px;
+	}
+.tabs-container
+{
+	border-width:1px;
+	border-style:solid;
+	border-color:#ddd;
+    margin-bottom: 10px;
+	    margin-top: 10px;
+	}
+.stj_ti
+{
+	padding-left:20px;
+	padding-right:20px;
+    margin-right:10px;
+	}
+.stj_ti i
+{
+	padding-right:5px;}
+	
+.stj_nav>li.active
+{
+       background-color: #f0f7fd;
+       border-color: #ccc;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom-width: 0px;
+    border-radius: 8px 8px 0px 0px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    }
+   .stj_nav_2>li.active
+   {
+       background-color: #dff0fa;
+       border-color: #ccc;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom-width: 0px;
+    border-radius: 8px 8px 0px 0px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    } 
+.sousuo_btn_k_r
+{
+    height: 34px;
+	    border-width: 0px;
+}
+.stj_lr_tab
+{
+text-align:center;
+margin:0 auto;
+}
+.stj_lr_tab tbody
+{
+text-align:left;
+}
+
+.stj_input .multiselect-native-select .open .dropdown-menu
+{
+margin-bottom: 80px;
+z-index:999;
+}
+
+.stj_input .shuang-top-input
+{
+    position: absolute;
+    width: 75%;
+    border-right-width: 0;
+    padding-right: 0px;
+}
+
+.stj_input .uploadify
+{    display: inline-block;
+}
+
+/*解决select中的内容被保存按钮覆盖，选不中的问题*/
+.gray-bg .wrapper.wrapper-content{
+/*
+    z-index: 99999;
+    position: absolute;
+     padding-bottom: 50px;*/
+	    width: 100%;
+   
+}
+/*解决请选择文件后*的问题*/
+.mustin_file{
+    width: 20px;
+    font-size: 20px;
+    color: #ff0000;
+    padding-left: 5px;
+}
+.dayg .uploadify{
+float:left;
+}
+
+/*
+.dayg .no_xing{
+width:100%;
+}*/
+/*  解决select 被保存按钮掩盖的问题*/
+.multiselect-container.dropdown-menu
+{
+margin-bottom:60px;
+ /*padding-bottom: 60px; 
+    box-sizing: content-box;
+	height:400px;
+	overflow:auto;*/
+}
+
+.stj_input .no_xing{
+width:215px;
+word-wrap: break-word;
+}
+.stj_input .radio{
+margin-top:10px;
+margin-right:10px;
+}
+/*按钮样式调整**/
+.sousuo_btn_k_r{
+background-color:#b42f2f;
+color:#fff;
+border-radius:3px;
+border:1px solid #7e0000;
+}
+/*输入框后面的文字调整*/
+.zhushi{
+clear:both;
+color:#b42f2f;
+}
+
+.col-sm-9.stj_input .tonghang_text_input
+{
+width:177px;
+}
+.col-sm-9.stj_input .tonghang_btn_input
+{
+
+    height: 34px;
+    border-width: 0px;
+    width: 38px;
+    float: left;
+ /*  background-color: buttonface;*/
+ background-color:#b42f2f;
+ color:#fff;
+}
+.tabs-container .panel-body-noborder{
+padding:0;
+}
+
+.add_del_stj .btn-group .btn-default
+{background-color:#505050;
+}
+.stj_input .chosen-container
+{
+    float:left;
+    }
+    .print_a
+    {
+            display: block;
+    padding-top: 10px;
+    clear: both;
+        }
+.stj_input .uploadify-queue
+{
+    display:inline-block;
+    
+    }
+    
+.dayg .tonghang_btn_input{
+
+    height: 34px;
+    border-width: 0px;
+    width: 38px;
+    float: left;
+    /* background-color: buttonface; */
+    background-color: #b42f2f;
+    color: #fff;
+}
+
+.dayg .tonghang_text_input{
+    width: 526px;
+}
+
+.dayg .no_xing
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+
+
+.stj_nav_2 li .close_a{
+    display:none;
+}
+.stj_nav_2 li.active .close_a{
+    display:inline-block;
+}
+
+.dropdown-menu li a {
+    min-height : 31px;
+}
+
+.dropdown-toggle {
+    min-height: 34px;
+}
+
+.dropdown-toggle .caret {
+    position: absolute;
+    right: 10px;
+}
+.dropdown-menu .radio{
+    min-height: 31px;
+}
+
+.stj_nav_2>li.active{margin-top: -1px;}

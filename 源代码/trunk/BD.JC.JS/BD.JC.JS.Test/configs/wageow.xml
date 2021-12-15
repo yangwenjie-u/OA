@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<extraworkwage>
+	<datas>
+		<data field="wagename" desc="姓名"/>
+		<data field="wage1" desc="节假日加班费"/>
+		<data field="wage2" desc="扣款"/>
+		<data field="wage3" desc="扣税"/>
+		<data field="wage4" desc="实领金额"/>
+	</datas>
+	<excludes>
+		<data field="" desc="序号"/>
+		<data field="" desc="领印"/>
+	</excludes>
+</extraworkwage>

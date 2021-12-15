@@ -1,0 +1,158 @@
+*{
+    box-sizing: border-box;
+}
+body {
+    background-color: rgb(243, 243, 245);
+}
+
+.uploadify-button {
+    margin-left: 10px;
+    width: 100px;
+    height: 26px;
+    display: inline-block;
+    background-color: #1c96f2;
+    text-align: center;
+    border: 1px solid #1c96f2;
+    padding: 0px;
+    border-radius: 0px;
+    line-height: 26px;
+    font-size: 14px;
+    margin: 0px;
+}
+
+.uploadify-button:hover {
+    background-color: #1c96f2;
+}
+
+.base-info {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.bd-ipt {
+    line-height: 30px;
+    height: 30px;
+    padding: 0 0 0 10px;
+    margin-left: 10px;
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+}
+
+.bd-ipt:focus {
+    outline: 0;
+}
+
+.bd-line-warp {
+    /*display: flex;*/
+    display:inline-block;
+    width: 100%;
+    line-height: 30px;
+    vertical-align: middle;
+    margin-bottom: 10px;
+}
+.bd-line-warp>div{
+    display:inline-block;
+    vertical-align: top;
+}
+.bd-lab {
+    width: 22%;
+    text-align: left;
+}
+
+.bd-dtl {
+    width: 72%;
+    margin-left: 2%;
+    text-align: left;
+}
+
+.downLoad-link {
+    display: inline-block;
+    width: 86%;
+    line-height: 24px;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+    color: #1c96f2;
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.down-warp {
+    display: inline-block;
+    width: 100%;
+    padding: 0 5px 0 26px;
+    position: relative;
+    border-radius: 50px;
+    line-height: 24px;
+    font-size: 14px;
+    height: 24px;
+    box-sizing: border-box;
+}
+
+.down-warp::before {
+    content: "";
+    background: url('/static/tz/images/down-link.png') no-repeat;
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    position: absolute;
+    top: 5px;
+    left: 0px;
+}
+
+.del-upload {
+    position: absolute;
+    color: #999999;
+    line-height: 15px;
+    font-size: 16px;
+    right: 0px;
+    top: 5px;
+    cursor: pointer;
+}
+
+.uploadify-progress {
+    max-width: 100%;
+}
+
+@media only screen and (max-width: 360px) {
+    .bd-lab {
+        width: 26%;
+    }
+
+    .bd-dtl {
+        width: 68%;
+        margin-left: 2%;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .base-info {
+        width: 80%;
+        margin: 10px auto;
+    }
+
+    .bd-line-warp {
+        display: inline-flex;
+        width: 46%;
+    }
+
+    #baseInfo .down-warp {
+        width: auto;
+        margin-right: 20px;
+    }
+
+    .file-warp {
+        width: 100%;
+    }
+
+    .file-warp .bd-lab {
+        width: 10.12%;
+    }
+
+    .file-warp .bd-dtl {
+        margin-left: 1.84%;
+    }
+}

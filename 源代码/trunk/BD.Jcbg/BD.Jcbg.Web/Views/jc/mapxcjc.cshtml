@@ -1,0 +1,349 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_baidumapxcjclayout.cshtml";
+}
+@section head
+{
+<link href="@SkinManager.GetWelcomezs("css/style.css")" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        var map_xcjc_op_obj = null;
+        $(function () {
+            map_xcjc_op_obj = map_xcjc_op_class.createNew();
+            map_xcjc_op_obj.init();            
+        });
+        function showXcsp(recid) {
+            parent.layer.open({
+                type: 2,
+                title: '现场视频',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['98%', '98%'],
+                //content: "/jc/viewwtdsp?wtdwyh=" + encodeURIComponent(recid) + "&xc=1",
+                content: "/jc/mapxcjcsp?wtdwyh=" + encodeURIComponent(recid) + "&xc=1",
+                end: function () {
+
+                }
+            });
+        }
+        function showDlg(title, url) {
+            parent.layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: ['98%', '98%'],
+                content: url,
+                end: function () {
+
+                }
+            });
+        }
+        var sortBy = function (filed, rev, primer) {
+            rev = (rev) ? -1 : 1;
+            return function (a, b) {
+                a = a[filed];
+                b = b[filed];
+                if (typeof (primer) != 'undefined') {
+                    a = primer(a);
+                    b = primer(b);
+                }
+                if (a < b) { return rev * -1; }
+                if (a > b) { return rev * 1; }
+                return 1;
+            }
+        };
+
+        var map_xcjc_op_class = {
+            createNew: function () {
+                var xcjcMap = {};
+                xcjcMap.gclistAll = [];
+                xcjcMap.searchKey = "";
+                xcjcMap.uncheckItems = [];
+                xcjcMap.refreshmaptabflg1 = false;
+                xcjcMap.map = null;
+                xcjcMap.defaultCenter = {};
+                xcjcMap.init = function () {
+                    //地图相关
+                    $("#allMap").css("height", document.documentElement.clientHeight);
+
+                    xcjcMap.map = new BMap.Map("allMap", {
+                        enableMapClick: false
+                    });
+                    
+                    //地图加载控件
+                    
+                    var mapType2 = new BMap.MapTypeControl({
+                        anchor: BMAP_ANCHOR_TOP_RIGHT,
+                        offset: new BMap.Size(10, 50)
+                    });
+
+                    //添加地图类型和缩略图
+                    xcjcMap.map.addControl(mapType2); //左上角，默认地图控件
+
+                    var top_right_navigation = new BMap.NavigationControl({
+                        anchor: BMAP_ANCHOR_TOP_RIGHT,
+                        type: BMAP_NAVIGATION_CONTROL_SMALL,
+                        offset: new BMap.Size(50, 80)
+                    }); //右上角，仅包含平移和缩放按钮
+                    xcjcMap.map.addControl(top_right_navigation);
+                    
+                    //展开所有点击显示隐藏
+                    $("#allprograme").click(function () {
+                        $("#moresearch").toggle();
+                    });
+
+                    //展开所有地图显示在下方
+                    var topheight = 40;
+                    var topheightbottom = 80;
+                    $("#allprograme").css("top", topheight);
+                    $("#moresearch").css("top", topheightbottom + 5);
+                    // 地图配置
+                    this.map.enableScrollWheelZoom(true);
+                    // 加载现场试验信息
+                    this.getDefaultCenter();
+                    this.loadXcjcInfos();
+                    this.setBoundary(this.defaultCenter, this.getSearchResults());
+                    this.setGclistForMap();
+                }
+                xcjcMap.setBoundary = function (defaultPos, items) {
+                    var l , t;
+                    if (items.length == 0) {
+                        this.map.centerAndZoom(new BMap.Point(defaultPos.longitude, defaultPos.latitude), 16);
+                        return;
+                    }
+                    items.sort(sortBy("longitude", false, parseFloat));
+                    l = (parseFloat(items[0].longitude ) + parseFloat(items[items.length - 1].longitude)) * 0.5 ;
+                    items.sort(sortBy("latitude", false, parseFloat));
+                    t = (parseFloat(items[0].latitude) + parseFloat(items[items.length - 1].latitude)) * 0.5;
+                   
+                    this.map.centerAndZoom(new BMap.Point(l, t), 16);
+             
+                }
+                xcjcMap.getDefaultCenter = function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/jc/GetDefaultMap",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            try {
+                                var arrPos = data.pos.split(',');
+                                if (arrPos.length >= 2) {
+                                    xcjcMap.defaultCenter.longitude = arrPos[0];
+                                    xcjcMap.defaultCenter.latitude = arrPos[1];
+                                }
+                            } catch (e) {
+                                alert(e);
+                            }
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                        }
+                    });
+                }
+                xcjcMap.loadXcjcInfos = function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/jc/GetOnXcjcInfos",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            try {
+                                if (data.code != "0")
+                                    alert(data.msg);
+                                else {
+                                    $.each(data.result, function (i, item) {
+                                        item["id"] = i;
+                                    });
+                                    xcjcMap.gclistAll = data.result;
+                                }
+                            } catch (e) {
+                                alert(e);
+                            }
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+
+                        }
+                    });
+                }
+                xcjcMap.initPannel = function () {
+                    //清空覆盖物
+                    xcjcMap.map.clearOverlays();
+                    $(".BMap_noprint").hide();
+                    //增加地图操作按钮
+                    var mapType = new BMap.MapTypeControl({
+                        anchor: BMAP_ANCHOR_TOP_RIGHT,
+                        offset: new BMap.Size(10, 50)
+                    });
+                    xcjcMap.map.addControl(mapType);
+                    var top_right_navigation = new BMap.NavigationControl({
+                        anchor: BMAP_ANCHOR_TOP_RIGHT,
+                        type: BMAP_NAVIGATION_CONTROL_SMALL,
+                        offset: new BMap.Size(50, 80)
+                    }); //右上角，仅包含平移和缩放按钮
+                    xcjcMap.map.addControl(top_right_navigation);
+                }
+                xcjcMap.setGclistForMap = function () {
+                    var listdata = this.getSearchResults();
+                    var singledata = "";
+                    $.each(listdata, function (index, value) {
+                        var uncheckList = xcjcMap.uncheckItems.filter(function (item) {
+                            return item == "cb_" + value.id;
+                        });
+                        var ischeck = uncheckList.length == 0 ? "checked" : "";
+                        singledata += "<div class='gcsinglelist clearfix'><div class='box-left'> <label class='u-label'><input class='u-radio' type='checkbox' name='checkbox2' id='cb_" + value.id + "' " + ischeck + "><span class='u-checkbox u-radioInput'></span></label></div><div class='singlelist_left'><p>工程名称:" + value.gcmc + "</p><p>检测机构:" + value.sydwmc + "</p><p>试验项目:" + value.syxmmc + "</p><p>平台唯一号：" + value.ptbh + "</p><p>委托单编号：" + value.wtdbh + "</p><p>部位：" + value.bwmc + "</p><p>试验人：" + value.syrxm + "</p><p>开始时间：" + value.kssj + "</p></div></div>";
+                    });
+                    $("#listcontent").append(singledata);
+                    var markDatas = listdata.filter(function (item) {
+                        return xcjcMap.uncheckItems.filter(function (uncheckid) {
+                            return item.id == uncheckid;
+                        }).length == 0;
+                    });
+                    this.addMarkerGclist(markDatas);
+
+                    $("input:checkbox").change(function () {
+                        xcjcMap.checkItem(this.id);
+                    });
+
+
+                }
+                xcjcMap.addMarkerGclist = function (points) {
+                    $.each(points, function (index, item) {
+                        var jd = item.longitude;
+                        var wd = item.latitude;
+
+                        var point = new BMap.Point(jd, wd);
+                        var myIcon = new BMap.Icon("/skins/default/welcomezs/images/xcsy.gif", new BMap.Size(47.5, 47.5));
+
+                        var marker = new BMap.Marker(point, {
+                            icon: myIcon
+                        });
+                        xcjcMap.map.addOverlay(marker);
+
+                        (function () {
+                            var ptbh = item.ptbh;
+                            marker.addEventListener("onclick", function (e) {
+                                xcjcMap.showInfoGc(this, item);
+                            });
+                        })();
+
+                    });
+                }
+                xcjcMap.showInfoGc = function (thisMaker, item) {
+                    var opts = {
+                        width: 300, // 信息窗口宽度
+                        height: 200, // 信息窗口高度
+                    }
+                    var tpurl = '/jc/viewxcjctp?wtdwyh=' + item.ptbh;
+                    var spurl = '/jc/viewxcjcsp?wtdwyh=' + item.ptbh;
+                    var sjurl = 'http://wz.jzyglxt.com:20019/xcjc/viewdetail?id=';
+                    var content = '<div style="margin:0;line-height:20px;padding:2px;">' +
+                        '检测机构：' + item.sydwmc + "<br/>" +
+                        '试验项目：' + item.syxmmc + "<br/>" +
+                        '平台唯一号：' + item.ptbh + "<br/>" +
+                        '委托单编号：' + item.wtdbh + "<br/>" +
+                        '部位：' + item.bwmc + "<br/>" +
+                        '试验人：' + item.syrxm + "<br/>" +
+                        '开始时间：' + item.kssj + "<br/>";
+                    if (item.sxtbh != "")
+                        content += "<a class='cli-btn' href='javascript:showDlg(\"现场摄像头\",\"" + spurl + "\")'>查看现场摄像头</a>&nbsp;&nbsp;<a class='cli-btn' href='javascript:showDlg(\"现场图片\",\"" + tpurl + "\")'>查看现场图片</a>&nbsp;&nbsp;";
+                    if (item.cjsybh != "")
+                        content += "<a class='cli-btn' href='" + sjurl + item.cjsybh + "' target='blank'>查看现场数据</a>";
+                    if (item.sps * 1 > 0)
+                        content += "<a class='cli-btn' href='javascript:showXcsp(\"" + item.ptbh + "\")'>查看视频</a>";
+                    content += '</div>';
+
+                    var infoWindow = new BMap.InfoWindow(content, opts);
+                    /*
+                    var addnumber = point;
+                    infoWindow.addEventListener("open", function (type, target, point) {
+                        $("#pepple_button_left").bind('click', function () {
+                            //togczsformap(addnumber.gcbh, addnumber.gcmc);
+                        });
+                    })*/
+                    thisMaker.openInfoWindow(infoWindow);
+                }
+                
+                xcjcMap.search = function () {
+                    this.initPannel();
+                    $("#listcontent").empty();
+                    this.searchKey = $("#txtGcmc").val();
+                    this.uncheckItems = [];
+                    this.setGclistForMap();
+                }
+                xcjcMap.checkItem = function (id) {
+                    var findItems = xcjcMap.uncheckItems.filter(function (item) {
+                        return item == id;
+                    });
+                    var isChecked = $("#" + id).is(':checked');
+                    if (isChecked && findItems.length > 0) {
+                        xcjcMap.uncheckItems = xcjcMap.uncheckItems.filter(function (item) {
+                            return item != id;
+                        });
+                    } else if (!isChecked && findItems.length == 0)
+                        xcjcMap.uncheckItems.push(id);
+                    xcjcMap.initPannel();
+                    var listdata = this.getSearchResults();
+                    var markDatas = listdata.filter(function (item) {
+                        return xcjcMap.uncheckItems.filter(function (uncheckid) {
+                            return "cb_" + item.id == uncheckid;
+                        }).length == 0;
+                    });
+                    xcjcMap.addMarkerGclist(markDatas);
+                }
+                xcjcMap.getSearchResults = function () {
+                    return xcjcMap.gclistAll.filter(function (item) {
+                        return xcjcMap.searchKey == "" ||
+                                (
+                                    item.gcmc.indexOf(xcjcMap.searchKey) > -1 ||
+                                    item.sydwmc.indexOf(xcjcMap.searchKey) > -1 ||
+                                    item.syxmmc.indexOf(xcjcMap.searchKey) > -1 ||
+                                    item.ptbh.indexOf(xcjcMap.searchKey) > -1 ||
+                                    item.wtdbh.indexOf(xcjcMap.searchKey) > -1 ||
+                                    item.bwmc.indexOf(xcjcMap.searchKey) > -1 ||
+                                    item.syrxm.indexOf(xcjcMap.searchKey) > -1
+                                );
+                    });
+                }
+                return xcjcMap;
+            }
+        };
+    
+    </script>
+}
+
+<section class="panel" style="background:rgb(233,236,243)" data-section-name="section1">
+
+    <div id="allMap"></div>
+    <div id="allprograme">现场检测列表</div>
+    <div id="moresearch" style="display:none">
+        <div class="layui-tab layui-tab-brief" lay-filter="maptab">
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="searchbutton">
+                        <label>关键字</label>
+                        <input type="text" placeholder="关键字" id="txtGcmc">
+                        <button onclick="map_xcjc_op_obj.search();">检索</button>
+                    </div>
+                    <div class="moresearchtitle">
+                        <div id="listcontent"></div>
+                        <div style="text-align:center;display: none;" onclick="morelist(1);" class="morebutton">加载更多<input id="gcpageindex" type="hidden" value="1"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    $("#listcontent").on("click",".singlelist_left",function(){
+         var ipt = $(this).prev().find('input');
+        var flag = !ipt.prop("checked");
+        ipt.prop("checked", flag);
+        ipt.change();
+    });
+</script>

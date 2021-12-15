@@ -1,0 +1,2 @@
+1.在FORMZDZD中设置OrderNo为小数型
+alter table FORMZDZD alter column OrderNo numeric(18,2) 

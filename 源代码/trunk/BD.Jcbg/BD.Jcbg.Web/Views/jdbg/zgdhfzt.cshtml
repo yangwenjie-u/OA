@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var currenthfzt = '@ViewBag.currenthfzt';
+
+        $(function () {
+            try {
+                initcurrenthfzt();
+                sethfzt();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function initcurrenthfzt() {
+            if ($('#currenthfzt').length) {
+                $('#currenthfzt').html(currenthfzt);
+            }
+        }
+
+        function sethfzt() {
+
+            var divid = "div_yszt";
+            var hfztlist = ['不需回复', '暂不回复', '作已回复处理'];
+            $.each(hfztlist, function (i, item) {
+                $("#" + divid).append("<label class=\"btn btn-default\" style='margin:5px 5px 5px 5px;'> <input type=\"radio\" class=\"toggle\" value=\"" + item + "\"> " + item + "</label>");
+            });
+        }
+        function getValues() {
+            if ($('#div_yszt input:radio:checked').length == 0)
+                return "";
+            return $('#div_yszt input:radio:checked').val();
+
+        }
+    </script>
+}
+<div style="margin:10px 10px 10px 10px;">
+    当前整改状态： <span id="currenthfzt"></span>
+</div>
+<div class="btn-group" id="div_yszt" data-toggle="buttons" style="margin:10px 10px 10px 10px;">
+
+</div>

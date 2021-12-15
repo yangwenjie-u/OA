@@ -1,0 +1,63 @@
+CREATE TABLE [dbo].[FORMCONDITION](
+	[Recid] [int] IDENTITY(1,1) NOT NULL,
+	[FormDm] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[FormStatus] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldSy] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldName] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldType] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldOpt] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldWidth] [int] NULL,
+	[CtrlString] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[HelpLink] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[DefVal] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[TabField] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[OrderNo] [int] NULL,
+	[Reflash] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[ProcOrderNo] [int] NULL,
+ CONSTRAINT [PK_FORMCONDITION] PRIMARY KEY CLUSTERED 
+(
+	[Recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'Recid'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单代码（XXGL）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FormDm'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单状态（0）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FormStatus'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示条件中文名（用户名）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldSy'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示条件ID号（username）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'控件类型（文本T，下拉框S，日期D，复选C，单选R）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldType'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'控件长度' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldWidth'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'CtrlString' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'CtrlString'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'HelpLink' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'HelpLink'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'默认值' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'DefVal'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'对应数据库物理表字段（username）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'TabField'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'位置排序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'OrderNo'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否改变触发刷新（1表示改变值后自动刷新界面，主要用于不同表单状态的切换）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'Reflash'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'存储过程排序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'ProcOrderNo'

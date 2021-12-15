@@ -1,0 +1,24 @@
+﻿@using BD.WorkFlow.Common;
+@{
+	Layout = "~/Views/workflow/_workflowweboffice.cshtml";
+}
+
+
+@section head 
+{
+<script language="javascript" type="text/javascript">
+	
+	function Save() {
+	    document.getElementById("PageOfficeCtrl1").WebSave();
+	   return document.getElementById("PageOfficeCtrl1").CustomSaveResult.length==0;
+	}
+	function AfterDocumentOpened() {
+
+	}
+	$(function () {
+	});
+</script>		
+}
+<div style=" width:auto; height:700px;" id="divContent">
+    @Html.Raw(@ViewBag.EditorHtml)
+</div>

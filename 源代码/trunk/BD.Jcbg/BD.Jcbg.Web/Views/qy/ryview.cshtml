@@ -1,0 +1,90 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var g_gybh = "@ViewBag.rybh";
+        $(function () {
+            try {
+                showRYData();
+
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+        function showRYData()
+        {
+            var zdzdtable = encodeURIComponent("ZDZD_JC"); // zdzd名
+            var tablename = encodeURIComponent("I_M_RY"); 			// 表名
+            var tablerecid = encodeURIComponent("RYBH"); 	// 表主键
+            var jydbh = encodeURIComponent(g_gybh)   // 键值
+            var title = encodeURIComponent("人员信息"); 	// 标题
+            var buttons = ""; // 按钮
+            var rdm = Math.random();
+
+            var s_tablename = encodeURIComponent("I_S_RY_RYZZ");
+            var s_pri = encodeURIComponent("RYBH,RYBH");
+            var s_title = encodeURIComponent("人员证书");
+
+            var url = "/datainput/Index?zdzdtable=" + zdzdtable +
+                "&t1_tablename=" + tablename +
+                "&t1_pri=" + tablerecid +
+                "&t1_title=" + title +
+                "&button=" + buttons +
+                "&jydbh=" + jydbh +
+                "&rownum=2" +
+                "&LX=N" +
+                "&view=true" +
+                "&t2_tablename=" + s_tablename +
+                "&t2_pri=" + s_pri +
+                "&t2_title=" + s_title +
+                "&_=" + rdm;
+
+            var url2 = "/WebList/EasyUiIndex?FormDm=QYGL_QYRY&FormStatus=0&MenuCode=QYGL_QYRY&FormParam=PARAM--" + g_gybh + "|";
+
+
+            $("#qy_jbxx").attr("src", url);
+
+            //$("#qy_qygc").attr("src", "http://www.baidu.com");
+
+            //document.getElementById('qy_qygc').src = url2;
+            //$("#qy_qyry").attr("src", url);
+
+        }
+
+        function reloadiframe(id)
+        {
+            //var url = "/WebList/EasyUiIndex?FormDm=QYGL_QYRY&FormStatus=0&MenuCode=QYGL_QYRY&FormParam=PARAM--" + g_gybh + "|";
+            //var url = "/workflow/process"
+            $("#"+id).attr("src", document.getElementById(id).src);
+        }
+    </script>
+}
+
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 人员基本信息</a>
+    </li>
+    <li class="">
+        <a data-toggle="tab" href="#tab-2" onclick="reloadiframe('qy_qygc')" aria-expanded="false">人员工程</a>
+    </li>
+    <li class="">
+        <a data-toggle="tab" href="#tab-3" onclick="reloadiframe('qy_qyry')" aria-expanded="false">人员记分</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div id="tab-1" class="tab-pane active" style='position:absolute; height:90%; width:90%'>
+        <iframe width='100%' height='90%' name='qy_jbxx' id='qy_jbxx' frameborder='0' scrolling='auto' src=''></iframe>
+    </div>
+    <div id="tab-2" class="tab-pane " style='position:absolute; height:90%; width:90%'>
+        <iframe width='100%' height='90%' name='qy_qygc' id='qy_qygc' frameborder='0' scrolling='auto' src='/WebList/EasyUiIndex?FormDm=QYGL_RYGC&FormStatus=1&MenuCode=QYGL_QYGC&FormParam=PARAM--@ViewBag.rybh|'></iframe>
+    </div>
+    <div id="tab-3" class="tab-pane " style='position:absolute; height:90%; width:90%'>
+        <iframe width='100%' height='90%' name='qy_qyry' id='qy_qyry' frameborder='0' scrolling='auto' src='/WebList/EasyUiIndex?FormDm=GCZL_RYJF&FormStatus=3&MenuCode=GCZL_RYJF&FormParam=PARAM--@ViewBag.rybh|'></iframe>
+    </div>
+</div>
+
+

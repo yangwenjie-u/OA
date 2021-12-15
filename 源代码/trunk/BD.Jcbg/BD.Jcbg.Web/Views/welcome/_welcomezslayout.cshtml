@@ -1,0 +1,69 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@Configs.Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="@SkinManager.GetWelcomezs("common/layui/css/layui.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@SkinManager.GetWelcomezs("common/jquery-2.1.4.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/jQueryDistpicker20160621/js/distpicker.data.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/jQueryDistpicker20160621/js/distpicker.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/jQueryDistpicker20160621/js/main.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/layui/layui.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/easing.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/echarts.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/jquery.liMarquee.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/maparea.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetWelcomezs("common/scroll.js")" type="text/javascript" charset="utf-8"></script>
+
+
+    <script src="http://echarts.baidu.com/asset/map/js/china.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/AreaRestriction/1.2/src/AreaRestriction_min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+
+
+    @RenderSection("head", false)
+    <script language="javascript" type="text/javascript">
+        function IsIE() {
+            return true;
+            if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                var browser = navigator.appName
+                var b_version = navigator.appVersion
+                var version = b_version;//b_version.split(";")
+                var trim_Version = version[1].replace(/[ ]/g, "");
+                if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                    alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                    return false;
+                }
+                else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                    alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                    return false;
+                }
+                else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                    alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                    return false;
+                } else {
+                    return true;
+                }
+
+            } else {
+                alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+                return false;
+            }
+
+        }
+    </script>
+
+</head>
+<body class="wai_body font_faminly">
+
+    @RenderBody()
+
+</body>
+</html>

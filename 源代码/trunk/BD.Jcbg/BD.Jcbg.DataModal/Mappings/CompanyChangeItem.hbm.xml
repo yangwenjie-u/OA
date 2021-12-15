@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.CompanyChangeItem,BD.Jcbg.DataModal" table="CompanyChangeItem" lazy="false">
+    <id name="ChangeItemid" column="ChangeItemID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="int" name="Changeid" column="[ChangeID]" />
+    <property type="int" name="ChangeType" column="[ChangeType]" />
+    <property type="string" length="50" name="ChangeTypeName" column="[ChangeTypeName]" />
+    <property type="string" length="50" name="ChangeNo" column="[ChangeNo]" />
+    <property type="string" length="50" name="ChangeDate" column="[ChangeDate]" />
+    <property type="string" length="1073741823" name="ChangeContent" column="[ChangeContent]" />
+    <property type="string" length="1073741823" name="ChangeWork" column="[ChangeWork]" />
+    <property type="Decimal" name="ChangeMoney" column="[ChangeMoney]" />
+    <property type="string" length="1073741823" name="ChangeApprove" column="[ChangeApprove]" />
+    <property type="string" length="1073741823" name="ChangeRemark" column="[ChangeRemark]" />
+  </class>
+</hibernate-mapping>

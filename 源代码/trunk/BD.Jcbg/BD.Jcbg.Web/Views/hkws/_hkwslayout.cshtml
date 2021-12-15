@@ -1,0 +1,26 @@
+@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@Configs.Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <meta http-equiv="Refresh" content="0;url=http://www.bing.com">
+    <![endif]-->
+    <script type="text/javascript" src="@SkinManager.GetJsPath("jquery-2.0.3.min.js")"></script>
+    <script type="text/javascript" src="@SkinManager.GetHkwsPath("ckplayer.js")"></script>
+
+
+    @RenderSection("head", false)
+
+</head>
+<body style="margin:0px;">
+
+    @RenderBody()
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <title></title>
+  
+     <link href="/Contents/Css/bootstrap.css" rel="stylesheet">
+    <link href="/Contents/Css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="/Contents/Css/animate.min.css" rel="stylesheet">
+    <link href="/Contents/Css/style.min.css" rel="stylesheet">
+    <script src="/Contents/Js/jquery.js"></script>
+	<script src="/Contents/PlugIns/Layer/layer.js"></script>
+	<script src="/Contents/jquery.easyui.min.js"></script>
+</head>
+
+
+<script>
+	$(function () {
+		try {
+			loadBackLog();
+			loadNotice();
+			loadNewPost();
+		} catch (e) {
+			layer.open({title: '错误',content: e.message,icon: 5});
+		}
+	});
+
+	// 加载待办事件
+	var indexBackLog = "";
+	function loadBackLog() {
+		try{
+			$.ajax({
+				type: "POST",
+				url: "/workflow/getworktodolist",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					addBackLog(data);
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				//	$("body").unmask();
+				layer.close(indexBackLog);       
+				},
+				beforeSend: function (XMLHttpRequest) {
+				//	$("body").mask("正在加载桌面项...");
+				 indexBackLog = layer.load();
+				}
+			});
+		}
+		catch (e) {
+			layer.open({title: '错误',content: e.message,icon: 5});
+		}
+
+	}
+
+	// 加载公告
+	var indexNotice ="";
+	function loadNotice() {
+		try{
+			$.ajax({
+				type: "POST",
+				url: "/oa/getannounce",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					addNotice(data);
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				//	$("body").unmask();
+				layer.close(indexNotice);
+				},
+				beforeSend: function (XMLHttpRequest) {
+				//	$("body").mask("正在加载桌面项...");
+				indexNotice = layer.load();
+				}
+			});
+		}
+		catch (e) {
+			layer.open({title: '错误',content: e.message,icon: 5});
+		}
+
+	}
+
+
+	// 加载新邮件
+	var indexNewPoste ="";
+	function loadNewPost() {
+		try{
+			$.ajax({
+				type: "POST",
+				url: "/oa/getmails",
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					addNewPost(data);	
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				//	$("body").unmask();
+				layer.close(indexNewPoste);
+				},
+				beforeSend: function (XMLHttpRequest) {
+				//	$("body").mask("正在加载桌面项...")
+				indexNewPoste = layer.load();;
+				}
+			});
+		}
+		catch (e) {
+			layer.open({title: '错误',content: e.message,icon: 5});
+		}
+
+	}
+
+
+
+
+   function addBackLog(data){
+        $("#BackLog").empty();
+		$("#wdBackLog").empty();
+	   var items = "";
+	   var beforetime = "";
+	   $("#wdBackLog").append("<big>"+data.rows.length+"条未读</big>");
+       for(var i=0;i<data.rows.length;i++){
+	      items = data.rows[i];
+       var dt = eval("new " + items.DateAccepted.substr(1, items.DateAccepted.length - 2));
+	   beforetime = getBeforeTime(dt);
+	   var date =  dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+	   var str = "";
+	   str += "<div class='feed-element' style='display:"+(i<8?"block":"none")+"' name='secendBackLog'>";
+	   str += "<div class='media-body'>";
+	   str += "<big class='pull-right'><small>"+beforetime+"</small></big>";
+	   str += "<strong>"+items.PreUserRealName+"</strong>&nbsp;发来一个待办事件:&nbsp;";
+	   str += "<a href='/workflow/checkwork?taskid=" + items.Taskid + "&dlgid=div_detail&returnurl=%2Fuser%2Fdesktop'>" + items.TaskName + "</a>";
+	   
+	 //  str += "<a  onclick='test(\""+items.Taskid+"\")' >1111111111111111</a>";
+	   str += "<br>";
+	   str += "<small class='text-muted'>"+date+"</small>";
+	   str += "</div>";
+	   str += "</div>";
+                            
+       $("#BackLog").append(str);  
+	   }
+                              
+   
+   }
+
+
+
+
+
+
+   function addNotice(data){
+        $("#Notice").empty();
+		$("#wdNotice").empty();
+	   var items = "";
+	   var beforetime = "";
+	   $("#wdNotice").append("<big>"+data.rows.length+"条未读</big>");
+       for(var i=0;i<data.rows.length;i++){
+	      items = data.rows[i];
+	   var str = items.createdtime.replace(/-/g,"/");
+       var dt = new Date(str);
+	   beforetime = getBeforeTime(dt);
+	   var date =  dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+	   var str = "";
+	   str += "<div class='feed-element' style='display:"+(i<3?"block":"none")+"' name='secendNotice'>";
+	   str += "<div class='media-body'>";
+	   str += "<big class='pull-right'><small>"+beforetime+"</small></big>";
+	   str += "<strong>"+items.realname+"</strong>&nbsp;发来一个公告:&nbsp;";
+	   str += "<a onclick = 'openContent(\"公告\",\"/oa/announceview1?read=true&id=" + items.recid + "\")'>"+items.title+"</a>";
+	   str += "<br>";
+	   str += "<small class='text-muted'>"+date+"</small>";
+	   str += "</div>";
+	   str += "</div>";
+                            
+       $("#Notice").append(str);  
+	   }
+                              
+   
+   }
+
+
+
+   function addNewPost(data){
+        $("#NewPost").empty();
+		$("#wdNewPost").empty();
+	   var items = "";
+	   var beforetime = "";
+	   $("#wdNewPost").append("<big>"+data.rows.length+"条未读</big>");
+       for(var i=0;i<data.rows.length;i++){
+	      items = data.rows[i];
+	
+	   var str = items.sendtime.replace(/-/g,"/");
+       var dt = new Date(str );  
+		
+     //  var dt = eval("new " + items.DateAccepted.substr(1, items.DateAccepted.length - 2));
+	   beforetime = getBeforeTime(dt);
+	   var date =  dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+	   var str = "";
+	   str += "<div class='feed-element' style='display:"+(i<3?"block":"none")+"' name='secendNewPost'>";
+	   str += "<div class='media-body'>";
+	   str += "<big class='pull-right'><small>"+beforetime+"</small></big>";
+	   str += "<strong>"+items.senderrealname+"</strong>&nbsp;发来一个邮件:&nbsp;";
+	   str += "<a onclick = 'openContent(\"邮件\",\"/oa/mailview1?s=1&read=true&id=" + items.recid + "\")'>"+items.title+"</a>";
+	   str += "<br>";
+	   str += "<small class='text-muted'>"+date+"</small>";
+	   str += "</div>";
+	   str += "</div>";
+                            
+       $("#NewPost").append(str);  
+	   }
+                              
+   
+   }
+
+
+
+
+   function getBeforeTime(dt){
+        var beforetime = "";
+   	    
+		var d = new Date()  
+		var timeDiff = (d-dt)/(1000 * 60 * 60 * 24); 
+		if(timeDiff>=1){
+		    beforetime = parseInt(timeDiff)+"天前";
+		}else if(timeDiff*24>=1){
+		    beforetime = parseInt(timeDiff*24)+"小时前";
+		}else if(timeDiff*24*60>=1){
+		    beforetime = parseInt(timeDiff*24*60)+"分钟前";
+		}else if(timeDiff*24*60*60>=1){
+		    beforetime = parseInt(timeDiff*24*60*60)+"秒前";
+		}
+		
+		return beforetime;
+   }
+
+
+
+
+	/*****************************更多展示 start**************************************/
+	
+	function showWorkTodoMoreDiv() {
+		window.location = "/workflow/worktodo";
+	}
+	
+	function showAnnounceMoreDiv() {
+		window.location = "/oa/announcelist2";
+	}
+
+	function showMailMoreDiv() {
+		window.location = "/oa/maillist";
+	}
+	
+	
+		
+	/*****************************更多展示  end **************************************/
+
+function openContent(title,url){
+layer.open({
+  type: 2,
+  title: title,
+  skin: 'layui-layer-rim', //加上边框
+  area: ['1000px', '550px'], //宽高
+  content: url
+});
+}
+
+
+
+</script>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            
+            <div class="col-sm-6">
+			<!--待办工作开始-->
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>待办工作</h5>
+                        <div class="ibox-tools"  style="display:none">
+                            <span class="label label-warning-light" id="wdBackLog"></span>
+                        </div>
+                    </div>
+                    <div class="ibox-content" >
+
+                        <div >
+                            <div class="feed-activity-list"  id="BackLog">
+								
+								
+                            </div>
+                            <button class="btn btn-primary btn-block m-t" onclick="showWorkTodoMoreDiv()"><i class="fa fa-arrow-down"></i> 加载更多</button><!--onclick="toAllBackLog('secendBackLog')"-->
+
+                        </div>
+
+                    </div>
+                </div>
+           <!--待办工作结束-->
+            </div>
+            
+            
+            <div class="col-sm-6">
+			<!--公告开始-->
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>公告</h5>
+                        <div class="ibox-tools" style="display:none">
+                            <span class="label label-warning-light" id="wdNotice"></span>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div>
+                            <div class="feed-activity-list" id="Notice">
+
+
+                                
+                            </div>
+
+                            <button class="btn btn-primary btn-block m-t" onclick="showAnnounceMoreDiv()"><i class="fa fa-arrow-down"></i> 加载更多</button><!--onclick="toAllBackLog('secendNotice')"-->
+
+                        </div>
+
+                    </div>
+                </div>
+				<!--公告结束-->
+				<!--新邮件开始-->
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>新邮件</h5>
+                        <div class="ibox-tools" style="display:none">
+                            <span class="label label-warning-light" id="wdNewPost"></span>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div>
+                            <div class="feed-activity-list" id="NewPost">
+
+                              
+                                
+                            </div>
+
+                            <button class="btn btn-primary btn-block m-t" onclick="showMailMoreDiv()"><i class="fa fa-arrow-down"></i> 加载更多</button><!--onclick="toAllBackLog('secendNewPost')">-->
+
+                        </div>
+
+                    </div>
+                </div>
+				<!--新邮件结束-->
+				<!--已办结任务开始
+						    <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>已办结任务</h5>
+                        <div class="ibox-tools"  >
+                            <span class="label label-warning-light" ></span>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div>
+                            <div class="feed-activity-list" >
+
+                              
+                                
+                            </div>
+
+                            <button class="btn btn-primary btn-block m-t" ><i class="fa fa-arrow-down"></i> 加载更多</button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+	已办结任务结束-->
+            </div>
+               
+		    
+        </div>
+		
+		
+    </div>
+    
+  <div id="div_detail"></div> 
+</body>
+<script>
+function toAllBackLog(name){
+ $("div[name='"+name+"']").css("display","block"); 
+     
+}
+function test(a){
+layer.open({title: '提示',content: '我蛋疼',icon: 4});
+}
+</script>
+</html>

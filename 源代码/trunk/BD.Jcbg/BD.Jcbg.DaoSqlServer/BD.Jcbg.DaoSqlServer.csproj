@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{24255219-5A2B-401C-8205-2DD01C541BC1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BD.Jcbg.DaoSqlServer</RootNamespace>
+    <AssemblyName>BD.Jcbg.DaoSqlServer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\..\..\引用库\ssh\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\..\引用库\MySql\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\引用库\ssh\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\..\..\引用库\ssh\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data">
+      <HintPath>..\..\..\..\引用库\ssh\Spring.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data.NHibernate32">
+      <HintPath>..\..\..\..\引用库\ssh\Spring.Data.NHibernate32.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlertDao.cs" />
+    <Compile Include="BanHeZhanSectionDao.cs" />
+    <Compile Include="CommonDao.cs" />
+    <Compile Include="CompanyAnnounceDao.cs" />
+    <Compile Include="CompanyChangeDao.cs" />
+    <Compile Include="CompanyChangeItemDao.cs" />
+    <Compile Include="CompanyChangeTotalDao.cs" />
+    <Compile Include="CompanyChangeTotalItem.cs" />
+    <Compile Include="CompanyFileStorageDao.cs" />
+    <Compile Include="CompanyReaderDao.cs" />
+    <Compile Include="DcLogRedoDao.cs" />
+    <Compile Include="GclrWxyFileDao.cs" />
+    <Compile Include="HelpDesktopItemDao.cs" />
+    <Compile Include="KqUserSignDao.cs" />
+    <Compile Include="InfoGzgzDao.cs" />
+    <Compile Include="InfoScheduleDao.cs" />
+    <Compile Include="InfoWgryHistoryDao.cs" />
+    <Compile Include="KqjUserDayLogDao.cs" />
+    <Compile Include="KqjUserDayLogDetailDao.cs" />
+    <Compile Include="KqjUserLogDao.cs" />
+    <Compile Include="KqjUserMonthLogDao.cs" />
+    <Compile Include="MessageActDao.cs" />
+    <Compile Include="MessageInfoListDao.cs" />
+    <Compile Include="MessageReceiveDao.cs" />
+    <Compile Include="MySqlDao.cs" />
+    <Compile Include="NewsArtcleDao.cs" />
+    <Compile Include="NewsAttachDao.cs" />
+    <Compile Include="NewsCategoryDao.cs" />
+    <Compile Include="NewsMenuDao.cs" />
+    <Compile Include="PrmDywjDao.cs" />
+    <Compile Include="PrmWjDao.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportWWGZDao.cs" />
+    <Compile Include="ReportWWGZFileDao.cs" />
+    <Compile Include="SelfDesktopItemDao.cs" />
+    <Compile Include="SysFileImageDao.cs" />
+    <Compile Include="SysjBakDao.cs" />
+    <Compile Include="SysjsdDao.cs" />
+    <Compile Include="SysLogPicDao.cs" />
+    <Compile Include="SysSessionDao.cs" />
+    <Compile Include="SysycdyfieldDao.cs" />
+    <Compile Include="SysycdyparamDao.cs" />
+    <Compile Include="SysYcdyStationDao.cs" />
+    <Compile Include="SysycdytableDao.cs" />
+    <Compile Include="SysycdytablerelationDao.cs" />
+    <Compile Include="SysycdyurlDao.cs" />
+    <Compile Include="UserMailDao.cs" />
+    <Compile Include="UserMailFolderDao.cs" />
+    <Compile Include="UserSettingDao.cs" />
+    <Compile Include="UserShareFileDao.cs" />
+    <Compile Include="UserShareFileFolderDao.cs" />
+    <Compile Include="ViewSelfDesktopItemDao.cs" />
+    <Compile Include="XcsjDao.cs" />
+    <Compile Include="DcLogDao.cs" />
+    <Compile Include="BanHeZhanDataDao.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BD.Jcbg.Common\BD.Jcbg.Common.csproj">
+      <Project>{81254B6D-C43C-42DB-950E-93B880F53EDA}</Project>
+      <Name>BD.Jcbg.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BD.Jcbg.DataModal\BD.Jcbg.DataModal.csproj">
+      <Project>{5E620B26-8ECC-4BFC-92A6-4C43B6237ED7}</Project>
+      <Name>BD.Jcbg.DataModal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BD.Jcbg.IDao\BD.Jcbg.IDao.csproj">
+      <Project>{1CD8796F-DE8B-4075-AC63-0FA3088A31F5}</Project>
+      <Name>BD.Jcbg.IDao</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,20 @@
+﻿.menu_item a
+{
+	display:block;
+	height:24px;
+	line-height:24px;
+	text-align:left;
+	vertical-align:middle;
+	font-size:12px;
+	border-bottom:1px dotted #0af;
+	background-color:#f0ffff;
+	color:#09f;
+	text-decoration:none;
+	
+}
+.menu_item a:hover
+{
+	background-color:#0af;
+	color:#fff;
+	border-bottom:1px dotted #fff;
+}

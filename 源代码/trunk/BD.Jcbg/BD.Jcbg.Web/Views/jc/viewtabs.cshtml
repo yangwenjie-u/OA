@@ -1,0 +1,53 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+<link href="@SkinManager.GetCheckTreePath("css/zTreeStyle.css")" rel="stylesheet" type="text/css" />
+<script src=@SkinManager.GetCheckTreePath("js/jquery.ztree.core.js") type="text/javascript" charset="utf-8"></script>
+<script src=@SkinManager.GetCheckTreePath("js/jquery.ztree.excheck.min.js") type="text/javascript" charset="utf-8"></script>
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_urls = "@ViewBag.urls";
+
+    $(function () {
+        try {
+            showPages(g_urls);
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+    function showPages() {
+        try {
+            var isfirst1 = true;
+            $.each(g_jczznr, function (i, value) {
+                var zzlxmc = getFlmc(value.zzlxbh);
+                var zzxm = getZzxm(value.zznrbh);
+
+                var otaba1 = "";
+                var otaba2 = "";
+                if (isfirst1) {
+                    otaba1 = "in active";
+                    otaba2 = "active";
+                    isfirst1 = false;
+                }
+                var o_div_id = "o_tab_" + value.zznrbh;
+                var o_cur_div = "<div class=\"tab-pane fade " + otaba1 + "\" id=\"" + o_div_id + "\"></div>";
+                $("#out_tab_content").append(o_cur_div);
+                $("#out_tab_tab").append("<li class=\"" + otaba2 + "\"><a href=\"#" + o_div_id + "\" data-toggle=\"tab\">[" + zzlxmc + "]" + value.zznrmc + "</a></li>");
+                $("#" + o_div_id).append("<div id=\"main_tab_content_" + value.zznrbh + "\" ><iframe id='frame_" + value.zznrbh + "' name='frame_" + value.zznrbh + "' width='100%' height='400px' frameborder='0' scrolling='auto' src='/jc/jcxmxz?selectxmbh=" + zzxm + "&global=True'></iframe></div>");
+
+            });
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+</script>
+}
+<div class="container-fluid">
+    <ul id="out_tab_tab" class="nav nav-tabs"></ul>
+    <div id="out_tab_content" class="tab-content"></div>
+</div>

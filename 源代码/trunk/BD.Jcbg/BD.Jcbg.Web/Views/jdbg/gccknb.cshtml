@@ -1,0 +1,318 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+<link href="@SkinManager.GetCheckTreePath("css/zTreeStyle.css")" rel="stylesheet" type="text/css" />
+<script src=@SkinManager.GetCheckTreePath("js/jquery.ztree.core.js") type="text/javascript" charset="utf-8"></script>
+<script src=@SkinManager.GetCheckTreePath("js/jquery.ztree.excheck.min.js") type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+    var g_gcbh = '@ViewBag.gcbh';
+    var g_gclxbh = '@ViewBag.gclxbh';
+        $(function () {
+            var height = $(document).height()-20;
+            $("#frm_detail").css("height", height + "px");
+            try {
+                var setting = {
+                    data: {
+                        simpleData: {
+                            enable: true
+                        }
+                    },
+                    callback: {
+                        onClick: treeClick
+                    }
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/getgccknbmenu?gcbh=" + encodeURIComponent(g_gcbh),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        
+                        $.fn.zTree.init($("#ptree"), setting, data);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+                showDetail("I_JBXX");
+                
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function treeClick(event, treeId, treeNode, clickFlag) {
+            var t = treeNode.cevent;
+            showDetail(t);
+
+        }
+        function showDetail(t) {
+            try{
+                if (t == "I_JBXX")
+                    showGcxq();
+                else if (t == "I_JDFA")
+                    showJdfa();
+                else if (t == "I_JDJD")
+                    showJddj();
+                else if (t == "I_YSSQ")
+                    showYSSQJL();
+                else if (t == "I_YSAP")
+                    showYSAPJL();
+                else if (t == "I_JDJL")
+                    showJdjl();
+                else if (t == "I_ZGTZ")
+                    showZgd();
+                else if (t == "I_BHGBG")
+                    showBhgbg();
+                else if (t == "I_SYBG")
+                    showSybg();
+                else if (t == "I_JLYB")
+                    showJlyb();
+                else if (t == "I_JDBG")
+                    showJdbg();
+                else if (t == "I_RYDD")
+                    showRYLZJL();
+                else if (t == "I_DWDD")
+                    showDwddjl();
+                else if (t == "I_GCBZ")
+                    showGCBZjl();
+
+            }
+            catch (ex) {
+                alert(ex);
+            }
+        }
+        function showUrl(url) {
+            try{
+                if (url != "")
+                    $("#frm_detail").attr("src", url);
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showGcxq() {
+            try {
+
+                var LX = "";
+                if (g_gclxbh == "03")
+                    LX = "YL";
+                else if (g_gclxbh == "02")
+                    LX = "SZ";
+                else
+                    LX = "N";
+
+                var jydbh = encodeURIComponent(g_gcbh);
+                var tabledesc = "工程信息";                // 表格描述
+                var zdzdtable = encodeURIComponent("ZDZD_JC"); // zdzd名
+                var tablename = encodeURIComponent("I_M_GC"); 			// 表名
+                var tablerecid = encodeURIComponent("GCBH"); 	// 表主键
+                var title = encodeURIComponent(tabledesc); 	// 标题
+                var formdm = tablename;                             // 列表key名称
+                var buttons = ""; // 按钮;//encodeURIComponent("临时保存|ZC| | ||完成报监|TJ| | "); // 按钮
+
+                var s_tablename = encodeURIComponent("View_I_S_GC_JSDW_WITH_LZ|View_I_S_GC_KCDW_WITH_LZ|View_I_S_GC_SJDW_WITH_LZ|View_I_S_GC_JLDW_WITH_LZ|View_I_S_GC_SGDW_WITH_LZ|I_S_GC_TSDW|I_S_GC_FGC");
+                //  都是从表中的字段：  主表对应字段,自己主键|……
+                var s_pri = encodeURIComponent("GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,RECID");
+                var s_title = encodeURIComponent("建设单位|勘察单位|设计单位|监理单位|施工单位|图审单位|单位工程");
+
+                var ss_tablename = encodeURIComponent("View_I_S_GC_JSDW_WITH_LZ|VIEW_I_S_GC_JSRY_WITH_LZ||View_I_S_GC_KCDW_WITH_LZ|VIEW_I_S_GC_KCRY_WITH_LZ||View_I_S_GC_SJDW_WITH_LZ|VIEW_I_S_GC_SJRY_WITH_LZ||View_I_S_GC_JLDW_WITH_LZ|VIEW_I_S_GC_JLRY_WITH_LZ||View_I_S_GC_SGDW_WITH_LZ|VIEW_I_S_GC_SGRY_WITH_LZ||I_S_GC_TSDW|I_S_GC_TSRY");
+                //都是明细表中的字段：跟主表对应字段,跟从表对应字段,自己主键
+                var ss_pri = encodeURIComponent("GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID");
+                var ss_title = encodeURIComponent("建设人员|勘察人员|设计人员|监理人员|施工人员|图审人员");
+
+                var rdm = Math.random();
+
+                var js = "";//encodeURIComponent("jdbgService.js");
+                var callback = "";//encodeURIComponent("jdbgService.jdzcsb('$$GCBH$$')");
+
+                var rdm = Math.random();
+                var ret = "/datainput/Index?zdzdtable=" + zdzdtable +
+                    "&t1_tablename=" + tablename +
+                    "&t1_pri=" + tablerecid +
+                    "&t1_title=" + title +
+                    "&button=" + buttons +
+                    "&js=" + js +
+                    "&callback=" + callback +
+                    "&rownum=2" +
+                    "&t2_tablename=" + s_tablename +
+                    "&t2_pri=" + s_pri +
+                    "&t2_title=" + s_title +
+                    "&t3_tablename=" + ss_tablename +
+                    "&t3_pri=" + ss_pri +
+                    "&t3_title=" + ss_title +
+                    "&view=true" +
+                    "&jydbh=" + jydbh +
+                    "&LX=" + LX +
+                    "&bottomdiv=false"+
+                    "&_=" + rdm;
+                showUrl(ret);
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showJdfa() {
+            try{
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/getjdjlsum?lx=" + encodeURIComponent("jdfa")+"&gcbh="+encodeURIComponent(g_gcbh),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code != 0) {
+                            alert(data.msg);
+                        } else {
+                            var sum = data.msg * 1;
+                            if (sum <= 0) {
+                                layer.confirm('未找到监督方案，现在要录入监督方案吗？', {
+                                    btn: ['是', '以后再说'] //按钮
+                                }, function () {
+                                    layer.closeAll('dialog');
+                                    layer.open({
+                                        type: 2,
+                                        title: "",
+                                        shadeClose: true,
+                                        shade: 0.8,
+                                        area: ['95%', '95%'],
+                                        content: "/jdbg/startgcwork?processid=15&gcbh=" + g_gcbh + "&callbackjs=" + encodeURIComponent("parent.layer.closeAll();"),
+                                        end: function () {
+                                        }
+                                    });
+                                }, function () {
+                                    
+                                });
+                            } else {
+                                showUrl("/WebList/EasyUiIndex?FormDm=JdbgJdjl&FormStatus=14&FormParam=PARAM--jdfa|" + g_gcbh);
+                            }
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+
+        // 监督计划
+        function showJdjh()
+        {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=JdbgJdjl&FormStatus=14&FormParam=PARAM--jdjh|" + g_gcbh + "");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        // 监督交底
+        function showJddj() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=JdbgJdjl&FormStatus=14&FormParam=PARAM--jdjd|" + g_gcbh + "");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        // 监督记录
+        function showJdjl() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=JdbgJdjl&FormStatus=10&FormParam=PARAM--jdjl|" + g_gcbh + "");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        // 整改单
+        function showZgd(){
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=JdbgJdjl&FormStatus=11&FormParam=PARAM--zgd|" + g_gcbh + "");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        // 不合格报告
+        function showBhgbg(){
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=BGCX_BHG&FormStatus=10&FormParam=PARAM--" + g_gcbh );
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        // 所有报告
+        function showSybg(){
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=BGCX&FormStatus=10&FormParam=PARAM--" + g_gcbh);
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        // 监理月报
+        function showJlyb(){
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=JdbgJdjl&FormStatus=2&FormParam=PARAM--jlyb|" + g_gcbh);
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showKfqd(){
+
+        }
+        function showJdbg() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=JdbgJdjl&FormStatus=12&FormParam=PARAM--jdbg|" + g_gcbh);
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showRYLZJL() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=GCZL_RYLZJL&FormStatus=11&&FormParam=PARAM--" + g_gcbh);
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showYSSQJL() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=GCZL_YSSQJL&FormStatus=10&FormParam=PARAM--" + g_gcbh + "");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showYSAPJL() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=GCZL_YSAPJL&FormStatus=10&FormParam=PARAM--" + g_gcbh + "");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showDwddjl() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=GCZL_QYLZJL&FormStatus=1&FormParam=PARAM--" + g_gcbh + "");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function showGCBZjl() {
+            try {
+                showUrl("/WebList/EasyUiIndex?FormDm=I_S_GC_BZ&FormStatus=1&FormParam=PARAM--" + g_gcbh + "||Gridwrap--1");
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+    </script>
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+            <div class="">
+                <ul id="ptree" class="ztree"></ul>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-10">
+            <iframe width='98%' name='frm_detail' id='frm_detail' frameborder='0' scrolling='auto' />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,2 @@
+1.在所有ZDZD表中,添加只读属性SQL
+alter table ***ZDZD add ZDSXSQL nvarchar(MAX)

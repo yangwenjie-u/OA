@@ -1,0 +1,92 @@
+﻿.all {
+	height: 440px;
+	width: 760px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	background-image: url(../images/back2.jpg);
+	padding-top: 170px;
+}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td {padding:0;margin: 0;}
+img {border:0;}
+ol,ul {list-style:none;}
+caption,th {text-align:left;}
+h1,h2,h3,h4,h5,h6 {font-size:100%;font-weight:normal;}
+em{font-style:normal;font-weight:normal;}
+body{color:#464646;font-family: "宋体";font-size: 12px;line-height:2;background:#024a94;}
+.neirong {
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 108px;
+	height: 300px;
+	width: 547px;
+}
+.neirong .top {
+	height: 97px;
+	width: 547px;
+	margin: 0px;
+	padding: 0px;
+}
+.neirong .middle {
+	margin: 0px;
+	padding: 0px;
+	height: 140px;
+	width: 547px;
+}
+.neirong .last {
+	margin: 0px;
+	padding: 0px;
+	height: 63px;
+	width: 547px;
+}
+.neirong .middle .table {
+	height: 100px;
+	width: 260px;
+	margin-top: 20px;
+	margin-bottom: 0px;
+	margin-left: 90px;
+	font-family: "宋体";
+	color: #FFFFFF;
+	font-size: 14px;
+	padding: 0px;
+	float: left;
+}
+.table1 {
+	font-weight: bolder;
+	width: 80px;
+	text-align: right;
+}
+.table2 {
+	padding-left: 5px;
+	width: 155px;
+}
+.neirong .middle table tr .table2 #form1 #textfield {
+	height: 20px;
+	width: 150px;
+	margin: 0px;
+	padding: 0px;
+}
+.neirong .middle table tr .table2 #textfield2 {
+	margin: 0px;
+	padding: 0px;
+	width: 150px;
+	height: 20px;
+}
+.neirong .middle table tr .table2 #textfield3 {
+	height: 20px;
+	width: 150px;
+	margin: 0px;
+	padding: 0px;
+}
+.table3 {
+	color: #FF0000;
+}
+.neirong .middle .zhuce {
+	float: left;
+	margin-left: 5px;
+	height: 90px;
+	width: 90px;
+	padding: 0px;
+	margin-top: 30px;
+}

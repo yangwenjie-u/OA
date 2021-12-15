@@ -1,0 +1,108 @@
+﻿@using BD.Jcbg.Common;
+@{
+    
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+@section head
+{
+<style type="text/css">
+
+.thumbnail {
+    position: relative;
+}
+
+.radio {
+    position: absolute;
+    z-index: 999;
+    top: 20px;
+    left: 20px;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    background: white;
+        padding: 4px;
+}
+
+.thumbnail .radio .radio-type {
+    margin: 5px;
+    padding: 5px;
+}
+</style>
+<script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+
+    $(function () {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/jc/GetJzqytps",
+                dataType: "json",
+                data: "id=" + encodeURIComponent(g_wtdwyh),
+                async: false,
+                success: function (data) {
+                    if (data.code != "0") {
+                        alert(data.msg);
+                    } else {
+var str = getHtmlStr(data.result.xctp, 'xctp');
+    $("#list1").append(str);
+    var str2 = getHtmlStr(data.result.sytp, 'sytp');
+    $("#list2").append(str2);
+                     //   $.each(data.result.xctp, function (i, obj) {
+                     //       $("#list1").append("<a href=\"" + "/workflow/showimage?url=" + encodeURIComponent(obj.url) + "\" class=\"list-group-item\" style=\"text-align:center\" target='_blank'><div class=\"thumbnail\"><img src='" + obj.url + "' border='0'/><div class=\"caption\" style='text-align:center'><h3>[" + obj.scsj + "]" + obj.scrxm + "</h3></div></div></a>");
+                     //   });
+                     //   $.each(data.result.sytp, function (i, obj) {
+                     //       $("#list2").append("<a href=\"" + "/workflow/showimage?url=" + encodeURIComponent(obj.url) + "\" class=\"list-group-item\" style=\"text-align:center\" target='_blank'><div class=\"thumbnail\"><img src='" + obj.url + "' border='0'/><div class=\"caption\" style='text-align:center'><h3>[" + obj.scsj + "]" + obj.scrxm + "</h3></div></div></a>");
+                     //   });
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+
+            
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+      function getHtmlStr(val, type) {
+        var str = '';
+        var radio;
+        if (type == 'sytp') {
+            radio = "<div class='radio'><input type='radio' name='sytp'  class='radio-type' /></div>";
+        } else {
+            radio = "<div class='radio'><input type='radio' name='xctp' class='radio-type' /></div>";
+        }
+        $.each(val, function(i, obj) {
+            str += "<a href='" + "/workflow/showimage?url=" + encodeURIComponent(obj.url) + "' class='list-group-item' style='text-align:center' target='_blank'><div class='thumbnail'><img src='" + obj.url + "' border='0'/>" + radio + "<div class='caption' style='text-align:center'><h3>[" + obj.scsj + "]" + obj.scrxm + "</h3></div></div></a>";
+        });
+        return str;
+    }
+</script>
+}
+<div class="container">
+    <div class="row" style="margin-top:5px;">
+        <div class="col-sm-6">
+            <div class="list-group" id="list1">
+                <a href="#" class="list-group-item active" style="text-align:center">
+                    <h4 class="list-group-item-heading">
+                        现场图片
+                    </h4>
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="list-group" id="list2">
+                <a href="#" class="list-group-item active" style="text-align:center">
+                    <h4 class="list-group-item-heading">
+                        收样图片
+                    </h4>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

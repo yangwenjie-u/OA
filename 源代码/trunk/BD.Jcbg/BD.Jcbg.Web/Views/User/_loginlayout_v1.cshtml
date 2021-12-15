@@ -1,0 +1,64 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!--移动设备-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--高速模式,webkit内核-->
+    <meta name="renderer" content="webkit">
+    <!--不支持IE兼容模式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--禁止搜索引擎转码,并附带广告-->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <meta http-equiv="Refresh" content="0;url=http://www.bing.com">
+    <![endif]-->
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@Configs.Title</title>
+	<link href="@SkinManager.GetBootstrapPath("/css/bootstrap-combined.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetBootstrapPath("/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetCssPath("jcgl_20160610.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetBootstrapPath("/js/jquery.min.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetBootstrapPath("/js/bootstrap.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src=@SkinManager.GetBootstrapPath("/PlugIns/Layer/layer.js") type="text/javascript" charset="utf-8"></script>
+    @RenderSection("head", false)
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version;//b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            }
+            else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            }
+            else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+
+</head>
+<body>
+	@RenderBody()
+</body>
+</html>

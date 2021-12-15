@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.Xcsj,BD.Jcbg.DataModal" table="XCSJ" lazy="false">
+    <id name="Recid" column="RECID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="DepCode" column="[DepCode]" />
+    <property type="string" length="50" name="Commsylb" column="[COMMSYLB]" />
+    <property type="string" length="50" name="Sy" column="[SY]" />
+    <property type="string" length="2" name="Clysrlb" column="[CLYSRLB]" />
+    <property type="string" length="2" name="Syxz" column="[SYXZ]" />
+    <property type="string" length="1" name="Manual" column="[MANUAL]" />
+    <property type="string" length="2" name="Csxms1" column="[CSXMS1]" />
+    <property type="string" length="2" name="Csxms2" column="[CSXMS2]" />
+    <property type="string" length="2" name="Csxms3" column="[CSXMS3]" />
+    <property type="string" length="2" name="Dotpos" column="[DOTPOS]" />
+    <property type="string" length="1" name="Maxzh" column="[MAXZH]" />
+    <property type="Decimal" name="Longth" column="[LONGTH]" />
+    <property type="Decimal" name="Width" column="[WIDTH]" />
+    <property type="string" length="2" name="Printqu" column="[PRINTQU]" />
+    <property type="double" name="MinPercent" column="[MinPercent]" />
+    <property type="double" name="MaxPercent" column="[MaxPercent]" />
+    <property type="int" name="EquationTime" column="[EquationTime]" />
+    <property type="string" length="100" name="SpecField" column="[SpecField]" />
+    <property type="string" length="2000" name="Bz" column="[BZ]" />
+    <property type="string" length="1000" name="Qmtj" column="[QMTJ]" />
+    <property type="int" name="PortNum" column="[PortNum]" />
+    <property type="string" length="50" name="UnitName" column="[UnitName]" />
+    <property type="Boolean" name="Fhrqm" column="[FHRQM]" />
+    <property type="Boolean" name="Sdks" column="[SDKS]" />
+    <property type="Boolean" name="IsCsxm" column="[IsCsxm]" />
+    <property type="string" length="50" name="Csylb" column="[Csylb]" />
+    <property type="Boolean" name="Wjsbc" column="[Wjsbc]" />
+    <property type="string" length="50" name="Cameras" column="[Cameras]" />
+    <property type="short" name="Yport" column="[YPort]" />
+    <property type="short" name="Xport" column="[XPort]" />
+    <property type="short" name="ColType" column="[ColType]" />
+    <property type="short" name="ScanTool" column="[ScanTool]" />
+    <property type="Boolean" name="IsSingleCol" column="[IsSingleCol]" />
+    <property type="Boolean" name="UseConstant" column="[UseConstant]" />
+    <property type="string" length="200" name="Syzb" column="[SYZB]" />
+    <property type="short" name="Sfkl" column="[SFKL]" />
+    <property type="string" length="10" name="Lq" column="[LQ]" />
+    <property type="string" length="1" name="ScanSerialType" column="[ScanSerialType]" />
+  </class>
+</hibernate-mapping>

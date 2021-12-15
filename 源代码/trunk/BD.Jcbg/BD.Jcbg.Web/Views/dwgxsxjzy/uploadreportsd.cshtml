@@ -1,0 +1,118 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/dwgxzj/_baselayout.cshtml";
+}
+@section head
+{
+<link href="@SkinManager.GetUserRoot("huploadify/Huploadify.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetUserRoot("huploadify/jquery.Huploadify.js")" type="text/javascript" charset="utf-8"></script>
+<script language="javascript" type="text/javascript">
+    
+    var g_guid = "";
+    $(function () {
+        try {
+            
+            g_guid = uuid();
+            $('#reportfile').Huploadify({
+                auto:true,
+                fileTypeExts:'*.doc;*.docx',
+                multi:true,
+                formData:{id:g_guid},
+                fileSizeLimit:1024*100,
+                showUploadedPercent:true,//是否实时显示上传的百分比，如20%
+                showUploadedSize:true,
+                removeTimeout:9999999,
+                uploader: '/dwgxzj/DoUploadReportSD',
+                onUploadStart:function(){                    
+                },
+                onInit:function(){
+                },
+                onUploadComplete:function(file,data){
+                    
+                    var jdata = JSON.parse(data);
+                    if (jdata.code != "0" && jdata.msg != "") {
+                        layer.alert(jdata.msg);
+                    }
+
+                },
+                onCancel: function (file) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/jc/DoDeleteReport?id=" + g_guid+"&filename="+encodeURIComponent(file.name),
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                        }
+                    });
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+
+    });
+    function doSubmit() {
+        var ret = "";
+        try {
+            var params = "wtdwyh=" + encodeURIComponent(g_wtdwyh) + "&id=" + encodeURIComponent(g_guid) + "&bgbh=" + encodeURIComponent($("#bgbh").val()) + "&jcjg=" + $("#jcjg").val() + "&jcjgms=" + $("#jcjg option:selected").text();
+            
+            $.ajax({
+                type: "POST",
+                url: "/jc/DoSaveReportInfo",
+                dataType: "json",
+                async: false,
+                data: params,
+                success: function (data) {
+                    if (data.code == "0") {
+                        parent.layer.closeAll();
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "未知错误";
+                        layer.alert(data.msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll('loading');
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.load();
+                }
+            });
+        }
+        catch (e) {
+            alert(e);
+        }
+        return ret;
+    }
+
+    function uuid() {
+        var s = [];
+        var hexDigits = "0123456789abcdef";
+        for (var i = 0; i < 36; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+        s[8] = s[13] = s[18] = s[23] = "-";
+ 
+        var uuid = s.join("");
+        return uuid;
+    }
+</script>
+} 
+
+<div class="container" style="margin-top:20px;">
+    <form role="form" class="form-horizontal">
+        <div class="form-group">
+            <label for="jcjg" class="col-sm-3 control-label">报告文件(支持doc,docx格式)</label>
+            <div class="col-sm-9">
+                <div id="reportfile"></div>
+            </div>
+        </div>        
+    </form>
+</div>
+

@@ -1,0 +1,162 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var rybhlist = '@ViewBag.rybhlist';
+
+        $(function () {
+            try {
+                InitRYList();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function InitRYList() {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/GetReservedRYList?", 
+                dataType: "json",
+                async: false,
+                data: {rybhlist: rybhlist},
+                success: function (data) {
+                    if (data.code == "0") {
+                        setRYList(data);
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "获取数据失败！";
+                        alert(data.msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+
+        function setRYList(data) {
+            if (data.total > 0) {
+                $('#rytbody').empty();
+                var contents = ""
+                $.each(data.rows, function (index, row) {
+                    contents += "<tr>";
+                    contents += "   <td><input type=\"checkbox\" name=\"rybh\" /></td>";
+                    contents += "   <td class=\"rybh\" id=\"" + row["rybh"] + "\">" + row["rybh"] + "</td>";
+                    contents += "   <td>" + row["ryxm"] + "</td>";
+                    contents += "   <td>" + row["sfzhm"] + "</td>";
+                    contents += "   <td>" + row["gcgw"] + "</td>";
+                    contents += "</tr>";
+                });
+                $(contents).appendTo($('#rytbody'));
+            }
+        }
+
+        function doSubmit() {
+            var selectedrybhlist = [];
+            var unselectedrybhlist = [];
+            $('[name=rybh]:checkbox').each(function (index, row) {
+                var td = $(this).parent().parent().find('.rybh');
+                if (td.length > 0) {
+                    if ($(this).is(':checked')) {
+                        selectedrybhlist.push(td.attr('id'));
+                    }
+                    else {
+                        unselectedrybhlist.push(td.attr('id'));
+                    }
+                }
+
+            });
+            if (selectedrybhlist.length == 0) {
+                layer.open({
+                    type: 0,
+                    title: '提示',
+                    content: '请选择一个人员！'
+                });
+                return;
+            }
+            else if (selectedrybhlist.length > 1) {
+                layer.open({
+                    type: 0,
+                    title: '提示',
+                    content: '所选人员不能多于1个！'
+                });
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/domergegc",
+                    dataType: "json",
+                    async: false,
+                    data: { reservedrybh: selectedrybhlist.join(','), removingrybhlist: unselectedrybhlist.join(',')},
+                    success: function (data) {
+                        if (data.code == "0") {
+                            layer.open({
+                                type: 0,
+                                title: '提示',
+                                content: '合并成功！',
+                                yes: function (index, layero) {
+                                    parent.layer.closeAll();
+                                }
+                            });
+                        } else {
+                            if (data.msg == "")
+                                data.msg = "获取数据失败！";
+                            layer.open({
+                                type: 0,
+                                title: '提示',
+                                content: data.msg
+                            });
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+            
+        }
+
+        
+        
+        
+    </script>
+}
+
+<table class="table table-striped" style="margin-bottom:30px;">
+    <thead>
+        <tr>
+            <th>选择</th>
+            <th>人员编号</th>
+            <th>姓名</th>
+            <th>身份证号码</th>
+            <th>工程岗位</th>
+        </tr>
+    </thead>
+    <tbody id="rytbody">
+        <tr>
+            <td><input  type="checkbox" name="xxx" id="xxx"/></td>
+            <td>Tanmay</td>
+            <td>Bangalore</td>
+            <td>Tanmay</td>
+            <td>Bangalore</td>
+        </tr>
+        <tr>
+            <td><input type="checkbox" name="xxx" id="xxx" /></td>
+            <td>Tanmay</td>
+            <td>Bangalore</td>
+            <td>Tanmay</td>
+            <td>Bangalore</td>
+        </tr>
+    </tbody>
+</table>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="保存" />
+        &nbsp;&nbsp;
+    </form>
+</div>

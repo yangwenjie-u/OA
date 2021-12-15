@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <script src="/Contents/js/jquery.min.js"></script>
+    <link href="/Contents/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="/Contents/js/bootstrap.min.js"></script>
+    <script src="/Contents/plugins/echarts.min.js"></script>
+    <link href="/Contents/css/admin.css" rel="stylesheet" />
+    <!-- 加载百度地图样式信息窗口 -->
+    <script src="/Contents/plugins/BaiduMap/TextIconOverlay_min.js"></script>
+    <script src="/Contents/plugins/BaiduMap/MarkerClusterer_min.js"></script>
+    <script src="/Contents/plugins/BaiduMap/SearchInfoWindow_min.js"></script>
+    <link href="/Contents/plugins/BaiduMap/SearchInfoWindow_min.css" rel="stylesheet" />
+    <link href="/Contents/css/style-20170505.css" rel="stylesheet" />
+    <script src="/Contents/js/Map/Index.js"></script>
+</head>
+<body>
+    <input id="wdqy" type="hidden" value="@ViewData["wdqy"]" />
+    <div class="show_box">
+        <div class="zhu_show_box">
+            <ul class="zhu_show_box_ul">
+                <li class="zhu_fenlei_li active" id="title_zanshi">
+                    <div class="all_zhu_show_neirong">
+                        <div>
+                            <img class="zhu_show_pic" src="/Contents/Image/Home/project_show.png" />
+                        </div>
+                        <div class="zhu_show_word">
+                            <a href="javascript:void(0)">工程展示</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="fen_show_box">
+            <ul class="fen_show_top_ul">
+                <li class="fen_show_top_li active">
+                    <div class="fen_show_all_top">
+                        <ul class="fen_show_all_top_ul">
+                            <li class="fen_show_all_top_li xm">
+                                <div class="dropdown">
+                                    <a class="dropdown-toggle" id="DropProject"
+                                       data-toggle="dropdown">
+                                        工程状态<span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('所有工程', '')">所有工程</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('在建工程', '')">在建工程</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('竣工工程', '')">竣工工程</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('停工工程', '')">停工工程</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="fen_show_all_top_li xm">
+                                <div class="dropdown">
+                                    <a class="dropdown-toggle" id="DropArea"
+                                       data-toggle="dropdown">
+                                        区域状态<span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '所有区域')">所有区域</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '经济技术开发区')">经济技术开发区</a>
+                                        </li>
+                                        @*<li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '秀洲区')">秀洲区</a>
+                                        </li>*@
+                                        @*<li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '柯桥区')">柯桥区</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '上虞区')">上虞区</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '诸暨市')">诸暨市</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '嵊州市')">嵊州市</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_project" class="tiaozhuan_li" onclick="SetLocation('', '新昌县')">新昌县</a>
+                                        </li>*@
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="fen_show_all_top_li">
+                                <a id="qy" href="#swqy" class="tiaozhuan_li" onclick="GetSwqyInfos('企业状态')">企业状态</a>
+                            </li>
+                            <li class="fen_show_all_top_li">
+                                <div class="dropdown">
+                                    <a class="dropdown-toggle" id="DropKqj"
+                                       data-toggle="dropdown">
+                                        考勤机<span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#all_kqj" class="tiaozhuan_li" onclick="GetKqjInfos('', '所有考勤机')">所有考勤机</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#zxkqj" class="tiaozhuan_li" onclick="GetKqjInfos('在线', '在线考勤机')">在线考勤机</a>
+                                        </li>
+                                        <li role="presentation">
+                                            <a role="menuitem" tabindex="-1" href="#lxkqj" class="tiaozhuan_li" onclick="GetKqjInfos('离线', '离线考勤机')">离线考勤机</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="fen_show_all_top_li">
+                                <a href="#ry" class="tiaozhuan_li" onclick="GetRyInfos('人员状态')">人员状态</a>
+                            </li>
+                        </ul>
+                        <div id="CurLocation" style="margin-top: 10px; height: 28px;">
+                            <div class="temp_1" style="float: left; padding: 2px; line-height: 20px; font-size: 14px; line-height: 20px;">当前选择:</div>
+                            <div class="xuanze_div div" id="gczt" onclick="CloseDiv(this)"></div>
+                            <div class="xuanze_div div" id="gcqy" onclick="CloseDiv(this)"></div>
+                            <div class="othersdiv div" id="qtzt"></div>
+                        </div>
+                    </div>
+                    <div class="fen_show_last">
+                        <ul class="fen_show_add_ul">
+                            <!--所有工程-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li active" id="all_project">
+                            </li>
+                            @*<!--在建工程-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="building">
+                            </li>
+                            <!--竣工工程-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="build_ok">
+                            </li>
+                            <!--停工工程-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="build_borken">
+                            </li>
+                            <!--所有区域-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="all_area">
+                            </li>
+                            <!--越城区-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="ycq">
+                            </li>
+                            <!--柯桥区-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="kqq">
+                            </li>
+                            <!--上虞区-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="syq">
+                            </li>
+                            <!--诸暨市-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="zjs">
+                            </li>
+                            <!--嵊州市-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="szs">
+                            </li>
+                            <!--新昌县-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="xcx">
+                            </li>*@
+                            <!--涉外企业-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="swqy">
+                            </li>
+                            <!--所有考勤机-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="all_kqj">
+                            </li>
+                            <!--在线考勤机-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="zxkqj">
+                            </li>
+                            <!--离线考勤机-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="lxkqj">
+                            </li>
+                            <!--人员状态-->
+                            <li class="fen_show_add_li tiaozhuan_mubiao_li" id="ry">
+                                <div class="wrap">
+                                    <ul class="doc-set">
+                                        <li>
+                                            <div class="doc-dt">
+                                                单位类型:
+                                            </div>
+                                            <div class="doc-dd">
+                                                <select id="Dwlx" style="width: 90%;" onchange="LoadDwmc(this.value)"></select>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="wrap">
+                                    <ul class="doc-set">
+                                        <li>
+                                            <div class="doc-dt">
+                                                单位名称:
+                                            </div>
+                                            <div class="doc-dd">
+                                                <select id="Dwmc" style="width: 90%;"></select>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="wrap">
+                                    <ul class="doc-set">
+                                        <li>
+                                            <div class="doc-dt">
+                                                用户姓名:
+                                            </div>
+                                            <div class="doc-dd">
+                                                <input id="UserName" value="" style="height: 30px; width: 90%;" />
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="wrap" style="text-align: center;">
+                                    <button type="button" class="btn btn-primary" style="margin-top: 10px; width: 100px;" onclick="Search()">
+                                        查询
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="shouqi">收起</div>
+    </div>
+    <!--工程类别图标-->
+    <div class="shili" id="project">
+        <ul class="shili_ul">
+            <li>
+                <img src="/Contents/Image/Home/building.png" /><span>在建工程</span>
+            </li>
+            <li>
+                <img src="/Contents/Image/Home/build_ok.png" /><span>竣工工程</span>
+            </li>
+            <li>
+                <img src="/Contents/Image/Home/build_boken.png" /><span>停工工程</span>
+            </li>
+        </ul>
+    </div>
+    <!--地图-->
+    <div class="all_ditu" id="allmap"></div>
+</body>
+</html>

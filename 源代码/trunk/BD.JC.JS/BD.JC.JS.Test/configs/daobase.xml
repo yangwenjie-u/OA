@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+         xmlns:db="http://www.springframework.net/database"
+         xmlns:tx="http://www.springframework.net/tx">
+  <description>
+    Hibernate对象定义
+  </description>
+  <!-- 数据库的配置 Database and NHibernate Configuration这下面是配置使用Nhibernate connectionString="server=localhost\BOX;database=UMS;uid=sa;pwd=888888;"-->
+  <db:provider id="DbProvider"
+               provider="SqlServer-2.0"
+               connectionString="server=www.jzyglxt.com;database=fhf_jcxt;uid=bdsoft;pwd=bdwryi!@#$"/>
+  <!-- SessionFactory -->
+  <object id="SessionFactory" type="Spring.Data.NHibernate.LocalSessionFactoryObject, Spring.Data.NHibernate32">
+    <!-- 关于数据库连接的配置，直接使用 DbProvider 中的设置，这样，不需要为 Hibernate 再提供连接串和驱动 -->
+    <property name="DbProvider" ref="DbProvider" />
+    <!-- 包含有映射文件的程序集，需要分析的hbm程序集名称 -->
+    <property name="MappingAssemblies">
+      <list>
+        <!--这是配置嵌入资源的xx类对应的xx.hbm.xml文件所在的项目名称-->
+				<value>BD.Log.DataModal</value>
+				<value>BD.Jcbg.DataModal</value>
+				<value>BD.WorkFlow.DataModal</value>
+        <value>BD.WebListDataModel</value>
+        <value>BD.DataInputModel</value>
+      </list>
+    </property>
+    <!-- 其他的参数 -->
+		<property name="HibernateProperties">
+			<dictionary>
+				<entry key="hibernate.connection.provider" value="NHibernate.Connection.DriverConnectionProvider"/>
+				<entry key="dialect" value="NHibernate.Dialect.MsSql2005Dialect"/>
+				<entry key="connection.driver_class" value="NHibernate.Driver.SqlClientDriver"/>
+				<entry key="show_sql" value="true"/>
+				<entry key="use_outer_join" value="true"/>
+				<entry key="command_timeout" value="60"/>
+				<entry key="adonet.batch_size" value="10"/>
+				<entry key="cache.use_query_cache" value="true"/>
+				<entry key="cache.use_second_level_cache" value="true"/>
+				<entry key="hibernate.current_session_context_class" value="Spring.Data.NHibernate.SpringSessionContext, Spring.Data.NHibernate32"/>
+			</dictionary>
+		</property>
+		<property name="ExposeTransactionAwareSessionFactory" value="true" />
+  </object>
+
+	<object id="HibernateTransactionManager" type="Spring.Data.NHibernate.HibernateTransactionManager, Spring.Data.NHibernate32">
+		<property name="DbProvider" ref="DbProvider" />
+		<property name="sessionFactory" ref="SessionFactory" />
+	</object>
+	<!--支持事务的特性-->
+	<!---->
+	<tx:attribute-driven transaction-manager="HibernateTransactionManager"/>
+	<!-- 持久化异常转换处理 -->
+	<object type="Spring.Dao.Attributes.PersistenceExceptionTranslationPostProcessor, Spring.Data"/>
+
+</objects>

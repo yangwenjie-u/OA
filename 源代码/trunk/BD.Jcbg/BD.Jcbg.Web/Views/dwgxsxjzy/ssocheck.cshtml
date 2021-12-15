@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/dwgxzj/_contentlayout2.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var error = '@ViewBag.error'
+        $(function () {
+            try {
+                setError(error);
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function setError(error) {
+            $('#err').html(error)
+        }
+    </script>
+}
+<div style="margin-left:20px; margin-top:20px;">
+    <span id="err"></span>
+    <br/><br />
+    <a href="http://220.191.224.245:22002/">点此跳转到注册登录页面</a>
+</div>

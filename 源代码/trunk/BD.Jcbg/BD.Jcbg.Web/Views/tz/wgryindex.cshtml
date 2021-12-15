@@ -1,0 +1,1115 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/jquery.scrollify.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+    <script language="javascript" type="text/javascript">
+        function IsIE() {
+            return true;
+            if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                var browser = navigator.appName
+                var b_version = navigator.appVersion
+                var version = b_version; //b_version.split(";")
+                var trim_Version = version[1].replace(/[ ]/g, "");
+                if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                    alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                    return false;
+                } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                    alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                    return false;
+                } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                    alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                    return false;
+                } else {
+                    return true;
+                }
+
+            } else {
+                alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+                return false;
+            }
+
+        }
+    </script>
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/wgry/css/style.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        * {
+            color: #545b6d;
+        }
+
+        #enginner_chart {
+            display: table;
+            width: 90%;
+            margin: 30px 5%;
+        }
+
+            #enginner_chart > div {
+                display: table-cell;
+                width: 30%;
+                margin-left: 2%;
+            }
+
+        .tab-title {
+            border-top: 1px solid #e7e4ed;
+            border-left: 1px solid #e7e4ed;
+            border-bottom: 0px;
+            border-top-left-radius: 10px;
+            display: inline-block;
+        }
+
+            .tab-title li {
+                border-right: 1px solid #e7e4ed;
+                border-top-right-radius: 10px;
+                background: #f0f3fa;
+                color: #a6a8b4;
+                vertical-align: top;
+                display: inline-block;
+                width: 100px;
+                text-align: center;
+                line-height: 30px;
+                margin-left: -4px;
+                vertical-align: bottom;
+            }
+
+            .tab-title .active {
+                color: #555b69;
+                position: relative;
+                padding-bottom: 2px;
+                font-weight: 600;
+                top: 2px;
+            }
+
+        .line-delimiter {
+            display: inline-block;
+            width: 1px;
+            text-align: center;
+            border-left: 1px solid #d7d7e3;
+            margin: 0 20px;
+            height: 29px;
+            vertical-align: middle;
+        }
+
+        .searchbutton {
+            background: #f0f3fa;
+            width: auto;
+            border-bottom: 0px;
+            padding: 6px 0 6px 40px;
+        }
+
+            .searchbutton input {
+                width: 200px;
+                display: inline-block;
+            }
+
+            .searchbutton label {
+                font-weight: 600;
+                margin-right: 30px;
+            }
+
+            .searchbutton button {
+                background: #577cca;
+                border-radius: 40px;
+                text-align: center;
+                color: white;
+                border: 0px;
+                width: 80px;
+            }
+
+        .search {
+            background: #577cca;
+            border-radius: 40px;
+            text-align: center;
+            color: white;
+            border: 0px;
+            width: 80px;
+        }
+
+        .layui-tab-content {
+            padding: 0;
+            background: white;
+        }
+
+        .tab-content {
+            border: 1px solid #e7e4ef;
+            border-radius: 10px;
+            border-top-left-radius: 0px;
+            background: white;
+        }
+
+        #enginner_title {
+            display: -webkit-flex;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .enginner_title_content {
+            background: white;
+            border-bottom: 10px solid black;
+            height: 50px;
+            margin: 0 3px;
+            padding: 0 4px;
+            display: -webkit-flex;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .enginner_title_content .all_title {
+                display: inline-block;
+                width: 26%;
+                margin: 0;
+                height: 40px;
+                /* line-height: 40px;*/
+                color: #545b6d;
+                font-size: 14px;
+                background: white;
+                padding: 0px;
+                vertical-align: top;
+            }
+
+            .enginner_title_content .all_num {
+                display: inline-block;
+                width: 74%;
+                color: #545b6d;
+                font-size: 16px;
+                text-align: right;
+                margin: 0;
+                background: white;
+                vertical-align: middle;
+                max-height: 40px;
+            }
+
+        .page {
+            position: absolute;
+            bottom: 10px;
+            right: 0;
+        }
+
+        .tab-content .page .size {
+            display: none;
+        }
+
+        .tab-title {
+            cursor: pointer;
+            margin-bottom: 0px;
+        }
+
+        .item {
+            border: 1px solid #e7e4ed;
+        }
+
+        .item-content iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .item-content {
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+        .enginner_chart div {
+            background: white;
+        }
+
+        #formData .bootstrap-select {
+            width: 180px;
+        }
+
+        .moresearchtitle {
+            width: 100%;
+        }
+
+        .margin {
+            margin-left: 30px;
+            margin-right: 30px;
+        }
+
+        #formData .form-control {
+            padding: 0;
+        }
+
+        #allprograme {
+            top: 50px;
+        }
+
+        #allMap {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .enginner_title_content {
+            height: 80%;
+        }
+
+        #enginner_1,
+        #enginner_2,
+        #enginner_3 {
+            height: 100%;
+            width: 32%;
+            margin: 0;
+        }
+
+        #enginner_4 {
+            margin-top: 2%;
+        }
+
+        #enginner_chart {
+            height: 38%;
+        }
+
+        #enginner_4 {
+            height: 36%;
+        }
+
+        .enginner_title_content .all_num {
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+
+        #enginner_title {
+            display: table;
+        }
+
+            #enginner_title .enginner_title_content {
+                display: table-cell;
+                width: 11.8%;
+                background: white;
+                border-bottom: 10px solid black;
+                padding: 5px 8px 0 8px;
+            }
+
+                #enginner_title .enginner_title_content .all_title {
+                    margin: 0;
+                    height: 50%;
+                    color: #333333;
+                    font-size: 16px;
+                    background: white;
+                    padding: 0px;
+                    vertical-align: top;
+                    text-align: left;
+                    width: 100%;
+                }
+
+                #enginner_title .enginner_title_content .all_num {
+                    height: 50%;
+                    color: #888888;
+                    font-size: 16px;
+                    text-align: left;
+                    margin: 0;
+                    background: white;
+                    vertical-align: middle;
+                }
+
+
+        #tabTitle {
+            display: table;
+        }
+
+            #tabTitle li {
+                display: table-cell;
+            }
+    </style>
+</head>
+
+<body class="wai_body font_faminly">
+    <section class="panel" id="panel2" style="background:rgb(233,236,243);margin-bottom: 0;" data-section-name="section1">
+        <div id="enginner_title">
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_qyzs">0个</p>
+                <p class="all_title">企业总数</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_zgcs">0个</p>
+                <p class="all_title">总工程数</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5474d7">
+                <p class="all_num" id="enginner_jzmj">0人</p>
+                <p class="all_title">建筑面积</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_gczj">0人</p>
+                <p class="all_title">造价总计</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_zcry">0人</p>
+                <p class="all_title">在册人员</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#1ecdc0">
+                <p class="all_num" id="enginner_yfje">0亿元</p>
+                <p class="all_title">应付金额</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#73c8ef">
+                <p class="all_num" id="enginner_sfje">0亿元</p>
+                <p class="all_title">实付金额</p>
+            </div>
+            <div class="enginner_title_content" style="border-color:#5673d7">
+                <p class="all_num" id="enginner_ljffje">0亿元</p>
+                <p class="all_title">累计发放</p>
+            </div>
+        </div>
+        <div id="enginner_chart" class="clearfix margin">
+            <div id="enginner_1"></div>
+            <div id="enginner_2"></div>
+            <div id="enginner_3"></div>
+        </div>
+        <div id="enginner_4" style="margin:10px 40px;"></div>
+    </section>
+
+    
+    <section class="panel" id="panel1" style="position: relative;background:rgb(233,236,243);padding:40px;" data-section-name="section2">
+        <div id="placeselect">
+            <div id="mapselect">
+            </div>
+        </div>
+        <div id="allMap"></div>
+        <div id="allprograme" style="top: 70px;left: 40px;">展开所有</div>
+        <div id="moresearch" style="display:none;overflow: hidden;">
+            <ul class="tab-title" id="tabData">
+                <li class="active" id="GcList">工程</li>
+                <li id="QyList">企业</li>
+                <li id="Rylist">人员</li>
+            </ul>
+            <div class="item">
+                <div class="item-content" style="display: block;">
+                    <div class="searchbutton">
+                        <label>工程名称</label>
+                        <input type="text" placeholder="工程名称" class="form-control" id="txtGcmc">
+                        <button onclick="btnSearch(1);">检索</button>
+                    </div>
+                    <div class="moresearchtitle">
+                        <div id="listcontent"></div>
+                        <div style="text-align:center" onclick="morelist(1);" class="morebutton">加载更多
+                            <input id="gcpageindex" type="hidden" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <div class="searchbutton">
+                        <label>企业名称</label>
+                        <input type="text" placeholder="企业名称" class="form-control" id="txtQymc">
+                        <button onclick="btnSearch(2);">检索</button>
+                    </div>
+                    <div class="moresearchtitle">
+                        <div id="qycontent"></div>
+                        <div style="text-align:center" onclick="morelist(2);" class="morebutton">加载更多
+                            <input id="qypageindex" type="hidden" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <div class="searchbutton">
+                        <div><label>所属工程</label>
+                        <input type="text" placeholder="所属工程" class="form-control" id="txtGcmcForRy">
+                        </div>
+                        <label style="width: 56px;display: inline-block;">人员</label>
+                        <input type="text" class="form-control" placeholder="姓名或者身份证号" id="txtRymc">
+                        <button onclick="btnSearch(3);">检索</button>
+                    </div>
+                    <div class="moresearchtitle">
+                        <div id="rycontent"></div>
+                        <div style="text-align:center" onclick="morelist(3);" class="morebutton">加载更多
+                            <input id="rypageindex" type="hidden" value="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <!-- <script src="/static/wgry/js/map-zf.js" type="text/javascript" charset="utf-8"></script> -->
+    <script type="text/javascript">
+        function ajaxTpl(url, params, handle) {
+            var index = layer.load(2, { time: 10000 });
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: params,
+                dataType: 'json',
+                success: function (data) {
+                    layer.close(index);
+                    handle(data);
+                },
+                fail: function (err) {
+                    layer.close(index);
+                    console.log(err);
+                }
+            });
+        }
+
+        function ajaxGet(url, params, handle) {
+            // var index = layer.load(2, { time: 10000 });
+            $.ajax({
+                url: url,
+                type: 'get',
+                data: params,
+                dataType: 'json',
+                success: function (data) {
+                    // layer.close(index);
+                    handle(data);
+                },
+                fail: function (err) {
+                    // layer.close(index);
+                    console.log(err);
+                }
+            });
+        }
+
+        function statistics4() {
+
+            ajaxTpl("/tz/GetStatisticsGz", "", function (result) {
+                var listdata = result.rows;
+                var xAxisdata = [];
+                var seriesdata = [];
+
+                $.each(listdata, function (index, value) {
+                    xAxisdata.push(value.name);
+                    seriesdata.push(value.value);
+                });
+
+                var enginner_4 = document.getElementById("enginner_4");
+                var myChart4 = echarts.init(enginner_4);
+                var option4 = null;
+                option4 = {
+                    backgroundColor: '#fff',
+                    title: {
+                        text: '务工人员工种分布',
+                        // subtext: '共' + listdata.length + "类工种",
+                        x: 'left',
+                        top: '3%',
+                        left: '4%',
+                    },
+                    color: ['#6f89dd'],
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        data: xAxisdata,
+                        splitLine: {
+                            show: false
+                        },
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }],
+                    yAxis: [{
+                        type: 'value',
+                        splitLine: {
+                            show: false
+                        },
+                    }],
+                    series: [{
+                        name: '',
+                        type: 'bar',
+                        // barWidth: '60%',
+                        barWidth: '30',
+                        data: seriesdata
+                    }]
+                };;
+
+                if (option4 && typeof option4 === "object") {
+                    myChart4.setOption(option4, true);
+                }
+
+                //点击图表跳转
+                myChart4.on('click', function (param) {
+                    var name = param.name;
+                    // alert(name);
+                });
+            });
+        }
+
+
+
+
+
+        function fullscreen() {
+
+            //每个图表的宽度
+            var w = ($(".panel").width() + 270).toString() + "px";
+            //每个图表的高度
+            var h = ($(".panel").height() + 50).toString() + "px";
+
+
+            var index = parent.layer.open({
+                type: 2,
+                content: '/WzWgry/index',
+                area: [w, h],
+                closeBtn: 0
+            });
+
+            parent.layer.full(index);
+
+            parent.$(".layui-layer-title").css("height", "0");
+        }
+
+        function unfullscreen() {
+            parent.layer.closeAll();
+        }
+    </script>
+    <script type="text/javascript">
+        var page = 1; //页面page，1，2，3
+        var refreshflg1 = true; //页面1刷新flg
+        var refreshflg2 = true; //页面2刷新flg
+        var refreshflg3 = true; //页面3刷新flg
+
+        //第一页所需参数
+
+
+        //第二页所需参数
+        var loop;
+        var millisec = 60000;
+        var firstflg = true;
+
+        //第三页所需参数
+        var listtabId = "gctab"; //tab区分
+        var refreshlisttabflg1 = true; //tab1刷新flg
+        var refreshlisttabflg2 = true; //tab2刷新flg
+        var refreshlisttabflg3 = true; //tab3刷新flg
+
+        $(function () {
+
+            //全局初始化
+            init();
+            statistics1();
+            statistics4();
+            statistics2();
+
+            //各选项changes事件绑定
+            // bindChange();
+
+
+
+            // $("#tabTitle").children().eq(0).click();
+            $(".all_num").css("line-height", $('.all_num').height() + "px");
+            $(".all_title").css("line-height", $('.all_title').height() + "px");
+
+
+
+
+        });
+
+        //全局初始化
+        function init() {
+            //政府端
+            if (type == 1) {
+                // $("#province10").prop('disabled', true);
+                // $("#city10").prop('disabled', true);
+            } else {
+                $("#selectQylx").prop('disabled', true);
+                $("#selectQy").prop('disabled', true);
+            }
+
+            //鼠标滚动全屏
+            $('.panel').css({
+                'height': $(window).height()
+            });
+            $.scrollify({
+                section: 'section',
+                scrollbars: false,
+                before: function() {
+                    var sectionName = $.scrollify.current()[0].dataset.sectionName;
+                    if (sectionName == "section1") {
+                        page = 1;
+                    }
+                    if (sectionName == "section2") {
+                        page = 2;
+                    }
+                    // if (sectionName == "section3") {
+                    //     page = 3;
+                    // }
+                    Refresh();
+                }
+            });
+
+        }
+
+
+        //全局变量初始化
+        function initvariable() {
+
+            clearInterval(loop);
+
+
+
+            refreshflg1 = true; //页面1刷新flg
+            refreshflg2 = true; //页面2刷新flg
+            refreshflg3 = true; //页面3刷新flg
+
+            //第一页所需参数
+            gclistAll = new Array();
+            qylistAll = new Array();
+            rylistAll = new Array();
+            refreshmaptabflg1 = true; //tab1刷新flg
+            refreshmaptabflg2 = true; //tab2刷新flg
+            refreshmaptabflg3 = true; //tab3刷新flg
+
+            //第二页所需参数
+            firstflg = true;
+
+
+        }
+        //刷新
+        function Refresh() {
+
+            //统计页
+            if (page == 1 && refreshflg1) {
+                refresh2();
+            }
+
+            //地图页面
+            if (page == 2 && refreshflg2) {
+
+
+                clearInterval(loop);
+                refresh1();
+            }
+        }
+        //地图面板初始化
+        function mapInit() {
+
+            //清空覆盖物
+            map.clearOverlays();
+            $(".BMap_noprint").hide();
+            //增加地图操作按钮
+            var mapType = new BMap.MapTypeControl({
+                anchor: BMAP_ANCHOR_TOP_RIGHT,
+                offset: new BMap.Size(10, 50)
+            });
+            map.addControl(mapType);
+            var top_right_navigation = new BMap.NavigationControl({
+                anchor: BMAP_ANCHOR_TOP_RIGHT,
+                type: BMAP_NAVIGATION_CONTROL_SMALL,
+                offset: new BMap.Size(50, 80)
+            }); //右上角，仅包含平移和缩放按钮
+            map.addControl(top_right_navigation);
+
+            formChange();
+
+            if (tabId == "GcList") {
+                gc_mapstyle();
+            }
+            if (tabId == "QyList") {
+                qy_mapstyle();
+            }
+            if (tabId == "RyList") {
+                ry_mapstyle();
+            }
+        }
+            function refresh1() {
+            //地图面板初始化
+            mapInit();
+
+            //工程刷新
+            if (tabId == "GcList") {
+                if (refreshmaptabflg1) {
+                    // 工程一览获取,地图标注
+                    getGcListForMap();
+                } else {
+                    // 地图标注
+                    addMarkerGclist(gclistAll);
+                }
+                $(".moresearchtitle").css("height", $("#moresearch").height() - 120);
+            }
+
+            //企业刷新
+            if (tabId == "QyList") {
+                if (refreshmaptabflg2) {
+                    // 工程一览获取,地图标注
+                    getQyListForMap();
+                } else {
+                    // 地图标注
+                    addMarkerQylist(qylistAll);
+                }
+                $(".moresearchtitle").css("height", $("#moresearch").height() - 120);
+            }
+
+            //人员刷新
+            if (tabId == "RyList") {
+                if (refreshmaptabflg3) {
+                    // 工程一览获取,地图标注
+                    getRyListForMap();
+                } else {
+                    // 地图标注
+                    addMarkerRylist(rylistAll);
+                }
+                $(".moresearchtitle").css("height", $("#moresearch").height() - 170);
+            }
+        }
+
+        //第二图刷新
+        function refresh2() {
+
+
+
+            statistics1();
+            statistics2();
+            statistics4();
+
+            loop = setInterval(function () {
+
+
+                statistics1();
+                statistics2();
+                statistics4();
+
+            }, millisec);
+        }
+
+
+        var type = 1; //政府段：1  企业端：2
+
+        //第一图
+        function statistics1() {
+
+            ajaxTpl("/tz/GetGC_QYFBTJ", '', function (data) {
+                var name = [];
+                var value = [];
+                var legendName = [];
+                var maxVal = 0;
+                for (var i = 0, len = data.Datas.length; i < len; i++) {
+                    data.Datas[i].value = parseFloat(data.Datas[i].value);
+                    maxVal += data.Datas[i].value;
+                }
+
+                for (var i = 0, len = data.Datas.length; i < len; i++) {
+                    data.Datas[i].name = data.Datas[i].name == "" ? "其他" : data.Datas[i].name;
+                    name.push(data.Datas[i].name);
+                    legendName.push(name[i] + "  " + (data.Datas[i].value * 100 / maxVal).toFixed(2) + '%');
+
+                    value.push(data.Datas[i].value);
+                }
+
+                var option = {
+                    title: {
+                        text: '工程区域分布统计',
+                        top: '3%',
+                        left: '4%',
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{b}: {c} ({d}%)"
+                    },
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        top: '10%',
+                        right: '10%',
+                        bottom: 20,
+                        selectedMode: false,
+
+                        itemWidth: 10,
+                        data: data.Datas,
+                        formatter: function (val) {
+                            for (var i = 0, len = name.length; i < len; i++) {
+                                if (val == name[i]) {
+                                    return legendName[i];
+                                }
+                            }
+                            return val;
+                        }
+                    },
+                    series: [{
+                        type: 'pie',
+                        radius: ['20%', '60%'], //内环 外环宽度
+                        center: ['36%', '56%'], //中点位置
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        labelLine: {
+
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data: data.Datas
+
+                    }],
+                    color: ['#5674d6', '#1ecdbf', '#ea5d67', '#f7b96b', '#91c3f2', '#40c484', '#ff9570', '#84eac0', '#75a7ec']
+                };
+                var doc = document.getElementById('enginner_1');
+                echarts.init(doc).setOption(option);
+                doc.style.background = "white";
+            });
+        }
+
+        //第二图
+        function statistics2() {
+            var paramsData = "";
+            ajaxTpl("/tz/GetTjlist", paramsData, function (data) {
+
+                if (data.Datas && data.Datas[0]) {
+                    statistics0Data(data); //八块内容
+                    statistics2Data(data); //第二图
+                    statistics3Data(data); //第三图
+                }
+            });
+        }
+
+        function statistics0Data(data) {
+            var tmp = data.Datas[0];
+            var jzmj = (tmp.jzmj / 10000).toFixed(2) + '万方';
+            var gczj = (tmp.gczj / 10000).toFixed(2) + '亿元';
+
+            $("#enginner_qyzs").html(tmp.sgdwnum + "个"); //施工单位数
+            $("#enginner_zgcs").html(tmp.zgcs + "个"); //总工程数
+            $("#enginner_jzmj").html(jzmj); //建筑面积
+            $("#enginner_gczj").html(gczj); //工程造价
+            $("#enginner_zcry").html(tmp.zcry + "个"); //在册人员
+            $("#enginner_yfje").html(tmp.yfje + "元"); //应发金额
+            $("#enginner_sfje").html(tmp.sfje + "元"); //实发金额
+            $("#enginner_ljffje").html(tmp.ljffje + "元"); //累计发放金额
+        }
+
+
+        function statistics2Data(data) {
+            var name = [];
+            var value = [];
+            var legendName = [];
+
+            var ary = [];
+            var tmp = data.Datas[0];
+
+
+            name.push("实名制总人数");
+            ary.push({
+                name: "实名制总人数", //在册人员
+                value: 0
+            });
+            legendName.push("实名制总人数  " + tmp.zcry);
+
+            name.push("在职人员");
+            ary.push({
+                name: "在职人员", //在册人员
+                value: 0
+            });
+            legendName.push("在职人员  " + tmp.zzry);
+
+            if (tmp.zzry) { //在职人员
+                name.push('不在岗人员');
+                value.push(tmp.zzry);
+                var tmpVal = parseFloat(tmp.zzry) - parseFloat(tmp.dqry)
+                ary.push({
+                    name: "不在岗人员", //在职减去在岗
+                    value: tmpVal
+                });
+                legendName.push("不在岗人员  " + tmpVal);
+            }
+
+            if (tmp.dqry) { //在岗人员
+                name.push('在岗人员');
+                value.push(tmp.dqry);
+                ary.push({
+                    name: "在岗人员",
+                    value: tmp.dqry
+                });
+                legendName.push("在岗人员  " + tmp.dqry);
+            }
+
+
+            var option = {
+                title: {
+                    text: '在册人员统计',
+                    top: '3%',
+                    left: '4%'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    top: '10%',
+                    right: '10%',
+                    itemWidth: 10,
+                    selectedMode: false,
+                    data: [{ name: '实名制总人数' }, {
+                        name: '在职人员',
+                        icon: 'image://../static/wgry/images/icon.jpg'
+                    }, {
+                        name: '在岗人员'
+                    }, {
+                        name: '不在岗人员'
+                    }],
+                    formatter: function (val) {
+
+                        for (var i = 0, len = name.length; i < len; i++) {
+
+                            if (val == name[i]) {
+                                return legendName[i];
+                            }
+                        }
+                        return val;
+                    }
+                },
+                series: [{
+
+                    type: 'pie',
+                    radius: ['20%', '60%'], //内环 外环宽度
+                    center: ['36%', '56%'], //中点位置
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: ary
+
+                }],
+                color: ['#fff', '#fff', '#ea5d67', '#5674d6']
+            };
+            var doc = document.getElementById('enginner_2');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+        }
+
+        function statistics3Data(data) {
+            var name = [];
+            var value = [];
+            var legendName = [];
+
+            var ary = [];
+            var tmp = data.Datas[0];
+            if (tmp.yfje) {
+                name.push("应发金额");
+                value.push(tmp.yfje);
+                ary.push({
+                    name: "应发金额",
+                    value: tmp.yfje
+                });
+                legendName.push("应发金额 " + tmp.yfje);
+            }
+            if (tmp.sfje) {
+                name.push("实发金额");
+                value.push(tmp.sfje);
+                ary.push({
+                    name: "实发金额",
+                    value: tmp.sfje
+                });
+                legendName.push("实发金额 " + tmp.sfje);
+            }
+
+            var option = {
+                title: {
+                    text: '工资发放统计',
+                    top: '3%',
+                    left: '4%',
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    top: '10%',
+                    right: '10%',
+                    itemWidth: 10,
+                    data: ary,
+                    selectedMode: false,
+                    formatter: function (val) {
+                        for (var i = 0, len = name.length; i < len; i++) {
+                            if (val == name[i]) {
+                                return legendName[i];
+                            }
+                        }
+                        return val;
+
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    radius: ['20%', '60%'], //内环 外环宽度
+                    center: ['36%', '56%'], //中点位置
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data: ary
+
+                }],
+                color: ['#5674d6', '#ea5d67']
+            };
+            var doc = document.getElementById('enginner_3');
+            echarts.init(doc).setOption(option);
+            doc.style.background = "white";
+
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            var src = window.location.href;
+            var frames = window.parent.frames;
+            var height = $("#enginner_chart").height()
+            $("#enginner_1").height(height);
+            $("#enginner_2").height(height);
+            $("#enginner_3").height(height);
+
+            var j = 0,
+                href;
+            for (var i = 0, len = frames.length; i < len; i++) {
+                href = frames[i].location.href.split("#");
+                if (href[0] == src) {
+                    j++;
+                }
+            }
+            if (j > 1) {
+                $("#fullscreen").click(function () {
+                    unfullscreen();
+                }).html("关闭全屏");
+            } else {
+                $("#fullscreen").click(function () {
+                    fullscreen();
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_pageoffice.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+
+        function Save() {
+            
+        }
+        function AfterDocumentOpened() {
+            document.getElementById("PageOfficeCtrl1").Document.Application.ActiveWindow.DisplayHeadings = false; //隐藏行号列标 
+            document.getElementById("PageOfficeCtrl1").PrintOut();            
+
+            setTimeout("closeThis()", 1000);
+        }
+        $(function () {
+            
+        });
+        function closeThis() {
+            try{
+                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                parent.layer.close(index);
+            } catch (ex) {
+
+            }
+        }
+    </script>
+}
+<div style=" width:auto; height:700px;" id="divContent">
+    @Html.Raw(@ViewBag.EditorHtml)
+</div>

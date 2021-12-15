@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.HelpDesktopItem,BD.Jcbg.DataModal" table="HelpDesktopItem" lazy="false">
+    <id name="Recid" column="Recid" type="string">
+      <generator class="assigned" />
+    </id>
+    <property type="string" length="50" name="ItemKey" column="[ItemKey]" />
+    <property type="string" length="200" name="ItemName" column="[ItemName]" />
+    <property type="string" length="50" name="ItemPower" column="[ItemPower]" />
+    <property type="string" length="50" name="ItemIcon" column="[ItemIcon]" />
+    <property type="int" name="ItemHeight" column="[ItemHeight]" />
+    <property type="int" name="DisplayOrder" column="[DisplayOrder]" />
+  </class>
+</hibernate-mapping>

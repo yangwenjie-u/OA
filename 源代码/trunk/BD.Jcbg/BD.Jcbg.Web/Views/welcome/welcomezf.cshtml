@@ -1,0 +1,193 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/welcome/_welcomezslayout.cshtml";
+}
+@section head
+{
+
+}
+<link href="@SkinManager.GetWelcomezs("css/style.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetWelcomezs("js/index.js")" type="text/javascript" charset="utf-8"></script>
+
+
+<div class="panel" style="overflow:auto;background:rgb(233,236,243)">
+    <div id="placeselect">
+        <div id="mapselect">
+            <form class="form-inline">
+                <div id="distpicker5">
+                    <div class="form-group" style="margin-left: 10px;">
+                        <select class="form-control" id="province10" data-province="@ViewBag.provinceName"></select>
+                        <label class="sr-only" for="province10">省</label>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="city10" data-city="@ViewBag.cityName"></select>
+                        <label class="sr-only" for="city10">市</label>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="district10" data-district="@ViewBag.districtName"></select>
+                        <label class="sr-only" for="district10">区</label>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="form-group">
+                        <select class="form-control" id="selectQylx">
+                            <option value="">所有企业</option>
+                            <option value="11">施工企业</option>
+                            <option value="12">监理企业</option>
+                            <option value="13">建设企业</option>
+                            <option value="14">设计企业</option>
+                            <option value="15">勘察企业</option>
+                        </select>
+                        <select class="form-control" id="selectQy" style="width: 200px;"></select>
+                        <label class="sr-only">企业</label>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="form-group">
+                        <select class="form-control" id="selectGczt">
+                            <option value="">所有工程</option>
+                            <option value="1">在建工程</option>
+                            <option value="2">竣工工程</option>
+                            <option value="3">停工工程</option>
+                        </select>
+                        <label class="sr-only">状态</label>
+                    </div>
+                    <div style="float:right;margin-right: 10px;">
+                        <select class="form-control" style="width: 0px;"></select>
+                        <!--<span id="username" style="font-size: 18px;">您好 @ViewBag.userName</span> &nbsp;&nbsp;-->
+                        <span class="custombutton" onclick="fullscreen();">开启全屏</span>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="allMap"></div>
+    <div id="allprograme">展开所有</div>
+    <div id="moresearch">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this" id="GcList">工程</li>
+                <li id="QyList">企业</li>
+                <li id="Rylist">人员</li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="searchbutton">
+                        <br />
+                        <label>工程名称</label>
+                        <input type="text" placeholder="工程名称" id="txtGcmc">
+                        <button onclick="btnSearch(1);">检索</button>
+                    </div>
+                    <div id="listcontent"></div>
+                    <div style="text-align:center" onclick="morelist(1);" class="morebutton">加载更多<input id="gcpageindex" type="hidden" value="1"></div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="searchbutton">
+                        <br />
+                        <label>企业名称</label>
+                        <input type="text" placeholder="企业名称" id="txtQymc">
+                        <button onclick="btnSearch(2);">检索</button>
+                    </div>
+                    <div id="qycontent"></div>
+                    <div style="text-align:center" onclick="morelist(2);" class="morebutton">加载更多<input id="qypageindex" type="hidden" value="1"></div>
+                </div>
+                <div class="layui-tab-item">
+                    <div class="searchbutton">
+                        <br />
+                        <label>所属工程</label>
+                        <input type="text" placeholder="所属工程" id="txtGcmcForRy">
+                        <br />
+                        <br />
+                        <label>人员&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <input type="text" placeholder="姓名或者身份证号" id="txtRymc">
+                        <button onclick="btnSearch(3);">检索</button>
+                    </div>
+                    <div id="rycontent"></div>
+                    <div style="text-align:center" onclick="morelist(3);" class="morebutton">加载更多<input id="rypageindex" type="hidden" value="1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel" style="background:rgb(233,236,243)">
+
+    <div id="enginner_title">
+        <div class="enginner_title_content">
+            <p class="all_title">总工程数</p>
+            <p class="all_num" id="enginner_zgcs"></p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">在建工程</p>
+            <p class="all_num" id="enginner_zjgcs">0个</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">在册人员</p>
+            <p class="all_num" id="enginner_zcry">0人</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">在职人员</p>
+            <p class="all_num" id="enginner_zgry">0人</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">在岗人员</p>
+            <p class="all_num" id="enginner_dqry">0人</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">计划金额</p>
+            <p class="all_num" id="enginner_jhje">0亿元</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">到位金额</p>
+            <p class="all_num" id="enginner_dwje">0亿元</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">累计发放</p>
+            <p class="all_num" id="enginner_ffje">0亿元</p>
+        </div>
+    </div>
+    <div id="enginner_chart" class="clearfix">
+        <div id="enginner_1"></div>
+        <div id="enginner_2"></div>
+        <div id="enginner_3"></div>
+    </div>
+    <div id="enginner_4"></div>
+</div>
+
+<div class="panel" style="background:rgb(233,236,243)">
+    <div style="margin-left: 10px; margin-right: 10px;margin-top: 40px;height:800px">
+
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">工程一览</li>
+                <li>企业一览</li>
+                <li>人员一览</li>
+            </ul>
+            <div class="layui-tab-content" style="height: 100px;">
+                <div class="layui-tab-item layui-show">
+                    <table class="layui-hide" id="gcTable"></table>
+                    <script type="text/html" id="gcmcTpl">
+                        <lable onclick="togczs('{{ d.gcbh }}','{{ d.gcmc }}');" class="layui-table-link" target="_blank">{{ d.gcmc }}</lable>
+                    </script>
+                    <script type="text/html" id="cqlTpl">
+                        {{#  if((parseInt(d.kqrs) * 100 / parseInt(d.zzrs)) < 60){ }}
+                        <span style="color: #F581B1;">在册： {{ d.zcrs }}  &nbsp;&nbsp;&nbsp;&nbsp;在职： {{ d.zzrs }}  &nbsp;&nbsp;&nbsp;&nbsp;在岗： {{ d.kqrs }}</span>
+                        {{#  } else { }}
+                        在册： {{ d.zcrs }}  &nbsp;&nbsp;&nbsp;&nbsp;在职： {{ d.zzrs }}  &nbsp;&nbsp;&nbsp;&nbsp;在岗： {{ d.kqrs }}
+                        {{#  } }}
+                    </script>
+                    <script type="text/html" id="fflTpl">
+                        计划： {{ d.gczj }}  &nbsp;&nbsp;&nbsp;&nbsp;到位： 0 &nbsp;&nbsp;&nbsp;&nbsp;发放率：0
+                    </script>
+                </div>
+                <div class="layui-tab-item">
+                    <table class="layui-hide" id="qyTable"></table>
+                </div>
+                <div class="layui-tab-item">
+                    <table class="layui-hide" id="ryTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title>扬尘设备统计图</title>
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/lib/layui/css/layui.css" rel="stylesheet" type="text/css" />
+    <link href="/static/lib/layer/theme/default/layer.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+    .top-filter {
+        background: rgb(245, 248, 253);
+        width: 100%;
+        display: inline-block;
+        position: fixed;
+        height: 60px;
+        top: 0px;
+    }
+
+    #startTime,
+    #endTime {
+        display: inline-block;
+        width: 120px;
+        margin: 10px;
+    }
+
+
+    #sensorList {
+        -webkit-appearance: menulist;
+        width: 160px;
+        margin: 10px 30px 10px 15%;
+    }
+
+    .btn {
+        display: inline-block;
+        width: 120px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 18px;
+        color: white;
+        background: #5180D8;
+        border-radius: 20px;
+        margin-right: 20px;
+        text-align: center;
+        cursor: pointer;
+        margin-left: 20px;
+    }
+
+    #wct {
+        margin-top: 100px;
+        width: 90%;
+        margin: 100px 10% 0 10%;
+    }
+    </style>
+</head>
+
+<body>
+    <input type="hidden" value='@ViewData["DeviceCode"]' id="DeviceCode" />
+    <div class="top-filter">
+        <select id="sensorList" class="layui-select">
+            <option selected="selected" disabled="disabled" value="0">请选择设备</option>
+        </select>
+        <input type="text" class="layui-input" id="startTime"> -
+        <input type="text" class="layui-input" id="endTime">
+        <span class="btn" id="sure" style="margin-top: 10px;">确认</span>
+    </div>
+    <div id="wct"></div>
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    $(function() {
+        SetBodyWidth();
+        layui.use('laydate', function() {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#startTime' //指定元素
+                    ,
+                value: new Date(new Date().getTime() - 3600 * 24 * 7 * 1000)
+            });
+            laydate.render({
+                elem: '#endTime' //指定元素
+                    ,
+                value: new Date()
+            });
+        });
+    });
+
+    $(window).resize(function() {
+        SetBodyWidth();
+    });
+
+    //设置宽高
+    function SetBodyWidth() {
+
+        var height = $(window).height() - 100;
+        $("#wct").height(height);
+    };
+
+    $.ajax({
+        url: "/dwgxzj/GetSensorList",
+        type: "post",
+        dataType: "json",
+        async: false,
+        success: function(json) {
+            if (json && json.length) {
+                var str = "";
+                for (var i = 0, len = json.length; i < len; i++) {
+                    str += "<option value='" + json[i].sensorcode + "'>" + json[i].sensorname + "</option>";
+                }
+                $("#sensorList").append(str);
+            }
+        }
+    });
+    var maxLimit, minLimit;
+
+    function compare(start, end) {
+        var a, b;
+        a = parseInt(start.replace(/-/g, ''));
+        b = parseInt(end.replace(/-/g, ''));
+        if (b - a > 600) {
+            layer.msg("间隔时间在半年之内", {
+                icon: 2,
+                time: 2000
+            });
+            return false;
+        } else if (b < a) {
+            layer.msg("开始时间小于结束时间", {
+                icon: 2,
+                time: 2000
+            });
+            return false;
+        }
+        return true;
+    }
+    // $("#sensorList").change(function() {
+    //     Search();
+    // });
+
+    $("#sure").click(function() {
+        Search();
+    });
+
+    //查询操作
+    function Search() {
+        var dustType = $("#sensorList").val();
+        if (dustType == null) {
+            layer.msg("请选择设备", {
+                icon: 2,
+                time: 2000
+            });
+            return;
+        }
+        var start = $("#startTime").val();
+        var end = $("#endTime").val();
+        if (!start || !end) {
+            layer.msg("请选择时间间隔", {
+                icon: 2,
+                time: 2000
+            });
+            return;
+
+        } else if (!compare(start, end)) {
+            return;
+        }
+        $.ajax({
+            url: "/dwgxzj/GetDustInfo",
+            type: "post",
+            data: {
+                deviceCode: encodeURIComponent($("#DeviceCode").val()),
+                dustType: dustType,
+                startTime: start,
+                endTime: end
+            },
+            dataType: "json",
+            async: false,
+            success: function(json) {
+                if (json.Code === "success") {
+                    LoadCharts(json);
+                } else {
+                    layer.msg(json.Msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            }
+        });
+    };
+
+    //加载wct
+    function LoadCharts(json) {
+        var series = [];
+        /*
+                {"Code":"success","Msg":"","Datas":{"title":"扬尘设备实时数据","legend":["温度0","温度1"],"xAxis":["2018/9/18 11:06:00"],"sensors":[["35.70"],["61.10"]],"minLimit":2.00,"maxLimit":30.00}}
+        */
+        var tmp, name, data, xAxisData;
+        if (json.Datas && json.Datas.legend) {
+            try {
+                xAxisData = json.Datas.xAxis;
+                for (var i = 0, len = json.Datas.legend.length; i < len; i++) {
+                    name = json.Datas.legend[i];
+                    data = json.Datas.sensors[i];
+                    series.push({
+                        name: name,
+                        type: 'line',
+                        data: data,
+                        smooth: true,
+                        lineStyle: {
+                            normal: { opacity: 0.5 }
+                        }
+                    });
+                }
+            } catch (e) {
+                alert("数据加载错误");
+                return;
+            }
+            maxLimit = json.Datas.maxLimit;
+            minLimit = json.Datas.minLimit;
+
+
+            var interval = function(index, value) {
+                if (maxLimit == index || index == minLimit) {
+                    return true;
+                }
+                return false;
+            }
+            var splitLine;
+            if (maxLimit != 0 && minLimit != 0) {
+
+                var max = {
+                    name: '最大值',
+                    type: 'line',
+                    data: [],
+                    lineStyle: {
+                        type: 'dotted'
+                    }
+
+                }
+                var min = {
+                    name: '最小值',
+                    type: 'line',
+                    data: [],
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                };
+                for (var i = 0, len = series[0].data.length; i < len; i++) {
+                    min.data.push(minLimit);
+                    max.data.push(maxLimit);
+                }
+                series.push(min);
+                series.push(max);
+
+            }
+
+
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('wct'));
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: json.Datas.title,
+                    // left: 0
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'line'
+                    }
+                },
+                legend: {
+                    data: json.Datas.legend
+                },
+                grid: {
+                    left: '5%',
+                    right: '5%',
+                    bottom: '20%'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: xAxisData,
+                    scale: true,
+                    boundaryGap: false,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 40
+                    },
+                    axisLine: { onZero: false },
+                    splitLine: { show: false },
+                    splitNumber: 1,
+                    min: 'dataMin',
+                    max: 'dataMax'
+                },
+                yAxis: {
+                    scale: true,
+                    // min: 0,
+                    // max: 100,
+                    splitArea: {
+                        show: false
+                    },
+                    splitLine: {
+                        show: false,
+                    }
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    startValue: json.Datas.xAxis.length - 40,
+                    endtValue: json.Datas.xAxis.length - 1,
+                }, {
+                    show: true,
+                    type: 'slider',
+                    y: '95%',
+                    start: 90,
+                    end: 100,
+                    zoomLock: true,
+                }],
+                series: series
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+        }
+    };
+    </script>
+</body>
+
+</html>

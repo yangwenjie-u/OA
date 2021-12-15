@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "~/Views/User/_dialoglayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+	$(function () {
+		try {
+			dispUpFiles('divfile', '@ViewBag.FileIds');
+			$("#td_content").html($.base64.decode('@ViewBag.Content'));
+		}
+		catch (e) {
+			alert(e.message);
+		}
+	});
+	</script>
+	
+		<table class="form2" width="800" align="center" cellspacing="1" border="0" style="margin-top:10px">
+			<tr>
+				<th width="100">标题：</th>
+				<td width="300">@ViewBag.Title</td>
+				<th width="100">发件人：</th>
+				<td width="300">@ViewBag.Sender</td>
+			</tr>
+			<tr>
+				<th>收件人：</th>
+				<td colspan="3">
+					@ViewBag.Receiver
+				</td>
+			</tr>
+			<tr>
+				<th>附件：</th>
+				<td colspan="3">
+					<div id="divfile"></div>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="4" id="td_content">
+				</td>
+			</tr>
+		</table>

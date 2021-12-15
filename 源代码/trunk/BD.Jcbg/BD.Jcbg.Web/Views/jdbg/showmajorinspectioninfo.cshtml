@@ -1,0 +1,173 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!--移动设备-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--高速模式,webkit内核-->
+    <meta name="renderer" content="webkit">
+    <!--不支持IE兼容模式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--禁止搜索引擎转码,并附带广告-->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <meta http-equiv="Refresh" content="0;url=http://www.bing.com">
+    <![endif]-->
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="@SkinManager.GetCssPath("font-awesome.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetBootstrapPath("/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetBootstrapPath("js/jquery.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetBootstrapPath("/js/bootstrap.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src=@SkinManager.GetBootstrapPath("/PlugIns/Layer/layer.js") type="text/javascript" charset="utf-8"></script>
+
+    <link href="@SkinManager.GetCssPath("jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetCssPath("easyui/themes/gray/easyui.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetCssPath("easyui/themes/icon.css")" rel="stylesheet" type="text/css" />
+    @*<script src="@SkinManager.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript"></script>*@
+    <script src="@SkinManager.GetJsPath("jquery.easyui.min.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetJsPath("jquery.loadmask.min.js")" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        var g_djcfqbh = '@ViewBag.DJCFQBH';
+        
+        
+        $(function () {
+            try {
+                InitDetailInfo();
+            } catch (e) {
+                alert(e);
+            }
+        });
+
+        function InitDetailInfo() {
+            if (g_djcfqbh == '')
+                return;
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/GetDJCDetailInfo?djcfqbh=" + encodeURIComponent(g_djcfqbh),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    setDJCDetailInfo(data);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+
+        function setDJCDetailInfo(data) {
+            var gclist = data.gclist;
+            var rylist = data.rylist;
+            $('#gcinfo').empty();
+            $('#extractedZZdiv').empty();
+            $('#extractedAZRYdiv').empty();
+            $('#extractedTJRYdiv').empty();
+
+            if (gclist && gclist.length ) {
+                $('#NoGCInfo').css('display', 'none');
+                
+                $.each(gclist, function (index, gc) {
+                    var gcinfo = $('#gcinfo');
+                    var tr = "<tr>" +
+                                "<td>" + gc["gcbh"] + "</td>" +
+                                "<td>" + gc["gcmc"] + "</td>" +
+                                "<td>" + gc["zjdjh"] + "</td>" +
+                                "<td>" + gc["jsdwmc"] + "</td>" +
+                                "<td>" + gc["sgdwmc"] + "</td>" +
+                                "<td>" + gc["jldwmc"] + "</td>" +
+                            "</tr>";
+                    $(tr).appendTo(gcinfo);
+                });
+            }
+            else
+                $('#NoGCInfo').css('display', 'block');
+
+
+            if (rylist && rylist.length > 0) {
+                var zz = [];
+                var azry = [];
+                var tjry = [];
+                $.each(rylist, function (index, ry) {
+                    switch (ry["cjrygw"]) {
+                        case "组长" :
+                            zz.push(ry["cjryxm"]);
+                            break;
+                        case "安装监督员":
+                            azry.push(ry["cjryxm"]);
+                            break;
+                        case "土建监督员":
+                            tjry.push(ry["cjryxm"]);
+                            break;
+                        default: break;
+                    }
+                })
+                $('#extractedZZdiv').html(zz.join(','));
+                $('#extractedAZRYdiv').html(azry.join(','));
+                $('#extractedTJRYdiv').html(tjry.join(','));
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container" style="margin-top:20px;">
+        <div class="row">
+            <div id="extractedinfo">
+                <div class="panel panel-info" style="padding:5px;width:800px;" id="extractedgcinfo">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">当前已抽取工程</h3>
+                    </div>
+                    <div class="panel-body" style="max-height:150px;">
+                        <div id="NoGCInfo" style="text-align:center;">
+                            没有工程
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>工程编号</th>
+                                    <th>工程名称</th>
+                                    <th>监督注册号</th>
+                                    <th>建设单位</th>
+                                    <th>施工单位</th>
+                                    <th>监理单位</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gcinfo">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel panel-info" style="padding:5px;width:800px;" id="extractedryinfo">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">当前已抽取人员</h3>
+                    </div>
+                    <div class="panel-body" >
+                        <ul class="list-group" id="">
+                            <li class="list-group-item">
+                                <div><strong>组长</strong></div>
+                                <div id="extractedZZdiv"></div>
+                            </li>
+                            <li class="list-group-item">
+                                <div><strong>安装监督员</strong></div>
+                                <div id="extractedAZRYdiv"></div>
+                            </li>
+                            <li class="list-group-item">
+                                <div><strong>土建监督员</strong></div>
+                                <div id="extractedTJRYdiv"></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

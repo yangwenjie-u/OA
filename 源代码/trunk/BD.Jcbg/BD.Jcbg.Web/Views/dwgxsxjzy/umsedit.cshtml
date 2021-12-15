@@ -1,0 +1,263 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@section head
+{
+
+<link href="@SkinManager.GetCssPath("users.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetEasyuiPath("/themes/icon.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetEasyuiPath("/themes/default/easyui.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetCssPath("jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("jquery.easyui.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("jquery.loadmask.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("jquery-base64.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("fileupload.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetJsPath("user.js")" type="text/javascript" charset="utf-8"></script>
+<script language="javascript" type="text/javascript">
+    var workflow_process_g_search_companys = null;
+    var workflow_process_g_search_role = null;
+    var ums_user_role = "@ViewBag.Userroles";
+    $(function () {
+        try {
+            intRoles();
+            if ("@ViewBag.UserName" != "") {
+                document.getElementById("txt_zh").disabled = true;
+                document.getElementById("txt_xm").disabled = true;
+                document.getElementById("txt_mm").disabled = true;
+                //$('#txt_sx').combobox({ disabled: true });
+            }
+
+        } catch (err) {
+            alert(err);
+        }
+    });
+
+
+    function intRoles()
+    {
+        $.ajax({
+            type: "POST",
+            url: "/dwgxzj/getcompanys",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                workflow_process_g_edit_companys = new Array();
+
+                workflow_process_g_search_companys = [{ "CompanyId": "", "CompanyName": "请选择单位" }];
+                if (data == null || data.length == 0)
+                    workflow_process_g_search_companys = [{ "CompanyId": "", "CompanyName": "请选择单位" }];
+                else {
+                    for (var i = 0; i < data.length; i++) {
+                        workflow_process_g_search_companys[workflow_process_g_search_companys.length] = data[i];
+                    }
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+
+
+        $("#txt_sx").combobox({
+            valueField: "CompanyId",
+            textField: "CompanyName",
+            mode: "local",
+            editable: false,
+            panelHeight: 'auto',
+            data: workflow_process_g_search_companys
+        });
+        if ("@ViewBag.UserName" != "") {
+            //document.getElementById("txt_zh").disabled = true;
+            $('#txt_sx').combobox({ disabled: true });
+        }
+
+        $('#txt_sx').combobox('setValue', '@ViewBag.Companyid');
+
+
+        
+
+        $.ajax({
+            type: "POST",
+            url: "/dwgxzj/getcompanyroles",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                workflow_process_g_search_role = new Array();
+
+                //workflow_process_g_search_role = [{ "qxbh": "", "qxmc": "请选择权限" }];
+                if (data == null || data.length == 0)
+                    workflow_process_g_search_role = [{ "qxbh": "", "qxmc": "请选择权限" }];
+                else {
+                    for (var i = 0; i < data.length; i++) {
+                        workflow_process_g_search_role[workflow_process_g_search_role.length] = data[i];
+                    }
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+
+        $("#txt_qx").combobox({
+            valueField: "qxbh",
+            textField: "qxmc",
+            mode: "local",
+            multiple: true,
+            editable: false,
+            panelHeight: 'auto',
+            data: workflow_process_g_search_role
+        });
+        var rolse = ums_user_role.split(",");
+        $("#txt_qx").combobox("setValues", rolse);
+
+
+    }
+
+
+    function doSave()
+    {
+        
+
+       
+        try {
+
+            var username = document.getElementById("txt_zh").value;
+            if (username == "") {
+                alert("请输入账户！");
+                return;
+            }
+            var name = document.getElementById("txt_xm").value;
+            if (name == "") {
+                alert("请输入姓名！");
+                return;
+            }
+            var pw = document.getElementById("txt_mm").value;
+            var cpcode = $("#txt_sx").combobox("getValue");
+            if (cpcode == "") {
+                alert("请选择所属区县！");
+                return;
+            }
+            var rcode = $("#txt_qx").combobox("getValues");
+            if (rcode == "") {
+                alert("请选择用户权限！");
+                return;
+            }
+            var url = "";
+            if ("@ViewBag.UserName" != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "/dwgxzj/DoUpdateUser?username=" + encodeURIComponent(username) + "&name=" + encodeURIComponent(name) + "&pw=" + encodeURIComponent(pw) + "&cpcode=" + encodeURIComponent(cpcode) + "&rcode=" + encodeURIComponent(rcode),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == "0") {
+                            ret = true;
+                            alert("成功保存！");
+                        } else {
+                            if (data.msg == "")
+                                data.msg = "保存失败";
+                            alert(data.msg);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        window.location.href = "/dwgxzj/ums";
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+            else
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "/dwgxzj/DoAddUser?username=" + encodeURIComponent(username) + "&name=" + encodeURIComponent(name) + "&pw=" + encodeURIComponent(pw) + "&cpcode=" + encodeURIComponent(cpcode) + "&rcode=" + encodeURIComponent(rcode),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code == "0") {
+                            ret = true;
+                            alert("成功保存！");
+                        } else {
+                            if (data.msg == "")
+                                data.msg = "保存失败";
+                            alert(data.msg);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        window.location.href = "/user/ums";
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+            
+        } catch (e) {
+            alert(e);
+        }
+        
+
+        
+    }
+</script>
+    }
+<div style="width:60%">
+    <div class="container">
+        <div class="row" style="margin-top:50px;">
+            <div class="col-xs-12 col-xs-offset-4 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+                <ul class="list-group">
+                    <li class='list-group-item' id='li_zh'>
+                        <div class="input-group">
+                            <span class="input-group-addon">账号</span>
+                            <input type="text" id="txt_zh" class="form-control" value="@ViewBag.UserName" />
+                        </div>
+                    </li>
+                    <li class='list-group-item' id='li_xm'>
+                        <div class="input-group">
+                            <span class="input-group-addon">姓名</span>
+                            <input type="text" id="txt_xm" class="form-control" value="@ViewBag.RealName" />
+                        </div>
+                    </li>
+
+                    <li class='list-group-item' id='li_xm'>
+                        <div class="input-group">
+                            <span class="input-group-addon">密码(如果空则不修改)</span>
+                            <input type="password" id="txt_mm" class="form-control" />
+                        </div>
+                    </li>
+                    <li class='list-group-item' id='li_dw'>
+                        <div class="input-group">
+                            <span class="input-group-addon">所在市县</span>
+                            <div class="form-control">
+                                <input type="text" id="txt_sx" />
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class='list-group-item' id='li_dw'>
+                        <div class="input-group">
+                            <span class="input-group-addon">用户权限</span>
+                            <div class="form-control">
+                                <input type="text" id="txt_qx" />
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class='list-group-item' id='li_dw'>
+                        <div class="input-group">
+                           
+                            <span class="input-group-addon" id="sp_leave">
+                                <input type="button" class="easyui-linkbutton" iconcls="icon-save" value="保存" onclick="doSave();" />
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>

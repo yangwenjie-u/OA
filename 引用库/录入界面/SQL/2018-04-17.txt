@@ -1,0 +1,2 @@
+1.在单位个性化表中,添加单位项目字段
+alter table DATAZDZD_INDIVIDUAL***** add SYXMBH nvarchar(50)

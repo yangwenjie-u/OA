@@ -1,0 +1,2 @@
+1.在FORM中添加按钮检验存储过程
+alter table FORM add HideButton bit

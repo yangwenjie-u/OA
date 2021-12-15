@@ -1,0 +1,32 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var jdzch = '@ViewData["jdzch"]';
+        var dt = '@ViewData["dt"]';
+        $(function () {
+            try {
+                var rdm = Math.random();
+                var url = "/WebList/EasyUiIndex?FormDm=GCGL_RYGZKQ&FormStatus=0&FormParam=PARAM--" + jdzch + "|" + dt;
+                parent.layer.open({
+                    type: 2,
+                    title: '当前人员',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['90%', '90%'],
+                    content: url,
+                    end: function () { 
+                        var existsIndex = window.parent.TabControlGetIndex('GCGL_DQRY'); //关闭一级菜单
+                        window.parent.TabControlRemove(existsIndex);
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+
+        });
+    </script>
+}

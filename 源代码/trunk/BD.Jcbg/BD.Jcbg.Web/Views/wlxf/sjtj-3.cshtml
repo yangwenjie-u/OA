@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+    <style type="text/css">
+        body {
+            text-align: center;
+            /*background: #f5f5f5;*/
+            background: #F0F1F8;
+        }
+
+        .menu_sec {
+            display: inline-flex;
+            width: 80%;
+            margin: 40px auto;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            color: #545b6d;
+            letter-spacing: 2px;
+        }
+
+        .menu_sec .item_info {
+            flex: 0 0 31%;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 1px solid lightgray;
+            padding: 10px;
+            box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
+            background: rgba(245, 245, 245, 0.3);
+            border-radius: 6px;
+        }
+
+        .menu_sec .item_info .data,
+        .menu_sec .item_info .info {
+            line-height: 30px;
+            height: 30px;
+        }
+
+        .menu_sec .item_info .data {
+            color: rgb(61, 168, 239);
+        }
+
+        .menu_sec .item_info .info,
+        .layui-form-label {
+            font-weight: 600;
+
+        }
+
+        .search-warp {
+            display: inline-flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            justify-content: space-around;
+            border-radius: 5px;
+        }
+
+        .search-warp>div {
+            flex: 0 0 1000px;
+            display: inline-flex;
+            /*max-width: 900px;*/
+        }
+
+        .search-warp .layui-form-item {
+            flex: 0 0 45%;
+            display: inline-flex;
+            justify-content: space-around;
+        }
+
+        .search-warp2 .layui-form-item {
+            flex: 0 0 300px;
+        }
+
+        .layui-form-label {
+            flex: 0 0 130px;
+        }
+
+        .search-warp .layui-btn {
+            flex: 0 0 64px;
+            margin-left: 20px;
+        }
+
+        .layui-this,
+        .layui-tab-content {
+            background: white;
+        }
+
+        .layui-tab {
+            width: 96%;
+            margin: 20px auto
+        }
+
+        .layui-tab-item {
+            text-align: center;
+        }
+
+        .item_info {
+            cursor: pointer;
+        }
+    </style>
+    <style type="text/css">
+        .flex-wrap {
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 100px);
+        }
+
+        #allmap {
+            flex: 0 0 100%;
+        }
+
+        .right {
+            flex: 0 0 270px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            right: 280px;
+            margin-top: 10px;
+            /*box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);*/
+        }
+
+        .detail-wrap div {
+            display: flex;
+            line-height: 26px;
+        }
+
+        .detail-wrap div .key {
+            flex: 0 0 160px;
+            text-align: right;
+        }
+
+        .tree-wrap .detail-wrap div .key {
+            flex: 0 0 auto;
+        }
+
+
+
+        .detail-wrap div .val {
+            flex: 1 0 100px;
+            padding-left: 10px;
+            text-align: left;
+        }
+
+        .head {
+            /*font-weight: 600;*/
+            color: #545b6d;
+            font-size: 18px;
+            padding: 0;
+            border-bottom: 1px solid #e5e5e5;
+            background: white;
+            margin-top: 10px;
+        }
+
+        .main {
+            /*margin-top: 20px;*/
+            padding: 0 5px 20px 10%;
+            overflow: auto;
+            background: white;
+            margin-bottom: 10px;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+            /*box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);*/
+        }
+
+        .anchorBL {
+            display: none;
+        }
+
+        #rightArea .search-warp {
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            background: white;
+            box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.6);
+            flex: 0 0 200px;
+            padding-right: 20px;
+            flex: 0 0 275px;
+        }
+
+        #rightArea .layui-form-item {
+            flex: 1 0 100%;
+        }
+
+        .tree-wrap .detail-wrap {
+            /*padding-left: 30px;*/
+            color: #8A8A8A;
+            line-height: 24px;
+            margin-top: 10px;
+            padding-left: 18px;
+        }
+
+        .tree-wrap {
+            margin-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid lightgray;
+        }
+
+        .jd-name {
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .head.detail-wrap {
+            display: flex;
+            justify-content: space-around;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            flex: 0 0 70px;
+        }
+
+        .head.detail-wrap>div {
+            padding: 10px 0;
+            border-radius: 5px;
+            flex: 0 0 30%;
+            display: flex;
+            flex-direction: column;
+            /*border: 1px solid lightgray;
+        box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);*/
+        }
+
+        .head.detail-wrap div .key {
+            flex: 0 0 30px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .head.detail-wrap div .val {
+            flex: 0 0 30px;
+            text-align: center;
+            padding-left: 0;
+            font-weight: 600;
+            color: #FF5722;
+        }
+
+        #rightArea .layui-form-label {
+            flex: 0 0 100px;
+            padding: 0 10px 0 0;
+        }
+
+        #rightArea .layui-form-label,
+        #rightArea .layui-input {
+            font-weight: 400;
+            height: 30px;
+
+            line-height: 30px;
+        }
+
+        .layui-unselect.layui-form-select {
+            flex: 1;
+        }
+
+        #clearBtn3,
+        #searchBtn3 {
+            height: 30px;
+            line-height: 30px;
+            padding: 0;
+            text-align: center;
+            justify-content: center;
+        }
+
+        #clearBtn3 {
+            color: #FF5722;
+            background: white;
+            border: 1px solid #FF5722
+        }
+
+        #searchBtn3 {
+            background: #FF5722;
+        }
+
+        #rightArea .layui-input::-webkit-input-placeholder {
+            line-height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-tab layui-form" lay-filter="lay-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">数据统计</li>
+            <li>装修工程</li>
+            <li>工程地址</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-table search-warp">
+                    <div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">申请开始时间:</label>
+                            <input type="text" class="layui-input inline" id="sqsj1">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">申请结束时间:</label>
+                            <input type="text" class="layui-input inline" id="sqsj2">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">受理开始时间:</label>
+                            <input type="text" class="layui-input inline" id="slsj1">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">受理结束时间:</label>
+                            <input type="text" class="layui-input inline" id="slsj2">
+                        </div>
+
+                    </div>
+                    <div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">签发开始时间:</label>
+                            <input type="text" class="layui-input inline" id="qfsj1">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">签发结束时间:</label>
+                            <input type="text" class="layui-input inline" id="qfsj2">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">办结开始时间:</label>
+                            <input type="text" class="layui-input inline" id="bjsj11">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">办结结束时间:</label>
+                            <input type="text" class="layui-input inline" id="bjsj12">
+                        </div>
+
+                    </div>
+                    <div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">使用性质:</label>
+                            <select name="syxz" class="syxz" id="syxz" lay-filter="syxz"></select>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-btn layui-btn-danger" id="clearBtn">清空</div>
+                            <div class="layui-btn" id="searchBtn">搜索</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu_sec" id="menuSec"></div>
+            </div>
+            <div class="layui-tab-item">
+                <div class="layui-table search-warp search-warp2">
+                    <div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">最小装修面积:</label>
+                            <input type="text" class="layui-input inline" id="zxmj1">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">最大装修面积:</label>
+                            <input type="text" class="layui-input inline" id="zxmj2">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">类型:</label>
+                            <select name="l_typename" id="typename">
+                                <option>全部</option>
+                                <option>消防验收</option>
+                                <option>消防备案</option>
+                            </select>
+                            <div class="layui-btn layui-btn-danger" id="clearBtn2">清空</div>
+                            <!-- <input type="text" class="layui-input inline" id="zxmj2"> -->
+                        </div>
+                    </div>
+                    <div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">办结开始时间:</label>
+                            <input type="text" class="layui-input inline" id="qfsj11">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">办结结束时间:</label>
+                            <input type="text" class="layui-input inline" id="qfsj12">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">使用性质:</label>
+                            <select name="syxz" class="syxz" id="syxz2"></select>
+                        </div>
+
+                        <div class="layui-btn " id="searchBtn2">搜索</div>
+                    </div>
+                </div>
+                <div id="tableWarp" class="table-warp">
+                    <div style="overflow: auto;height: 100%;">
+                        <table class="table layui-table table-border table-bordered table-hover" lay-size='lg'>
+                            <thead>
+                                <tr>
+                                    <!-- <th style="width: 50px;"></th> -->
+                                    <th style="width: 60px;">序号</th>
+                                    <th>工程名称</th>
+                                    <th>建设单位</th>
+                                    <th style="width: 120px;">法人</th>
+                                    <th>地点</th>
+                                    <th style="width: 120px;">类型</th>
+                                    <th style="width: 120px;">抽签结果</th>
+                                    <th style="width: 100px;">状态</th>
+                                    <th style="width: 120px;">录入时间</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody-list" id="tabList"></tbody>
+                        </table>
+                    </div>
+                    <div id="test" class="page">
+                        <span class="count"></span>
+                        <div class="layer-page" id="page"></div>
+                        <input type="text" class="page-val" value="1" />
+                        <span class="sure">确定</span>
+                    </div>
+                    <!-- <div id="zxgcList" class="menu_sec"></div> -->
+                </div>
+            </div>
+            <div class="layui-tab-item" id="fullScreenPage">
+                <div class="flex-wrap">
+                    <div id="allmap"></div>
+                    <div id="rightArea" class="right">
+                        <div class="search-warp">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">工程名称:</label>
+                                <input type="text" class="layui-input inline" id="gcmc">
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">办结开始时间:</label>
+                                <input type="text" class="layui-input inline" id="bjsj1">
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">办结结束时间:</label>
+                                <input type="text" class="layui-input inline" id="bjsj2">
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">类型:</label>
+                                <select name="l_typename" id="typebh">
+                                    <option value="">--请选择--</option>
+                                    <option value="01">设计审查</option>
+                                    <option value="02">消防验收</option>
+                                    <option value="03">消防备案</option>
+                                    <option value="04">补办证验收
+                                    <option value="06">消防验收（复验）</option>
+                                    <option value="05">消防备案复查</option>
+                                </select>
+                                <!-- <input type="text" class="layui-input inline" id="zxmj2"> -->
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">使用性质:</label>
+                                <select name="syxz" class="syxz" id="syxz3"></select>
+                            </div>
+                            <div class="layui-btn layui-btn-danger" id="clearBtn3">清空</div>
+                            <div class="layui-btn " id="searchBtn3">搜索</div>
+                            <i id="fullscreen" class="layui-icon layui-icon-screen-full" style="line-height: 30px;"></i>
+                        </div>
+                        <div class="head detail-wrap"></div>
+                        <div class="main"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/pub/table.js"></script>
+    <script src="http://api.map.baidu.com/api?v=3.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB" type="text/javascript"
+        charset="utf-8"></script>
+    <script type="text/javascript"
+        src="//api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript"
+        src="//api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
+    <script type="text/javascript" src="/static/lib/jquery.fullscreen-min.js"></script>
+    <script type="text/javascript">
+        var layer, gcxxList = [{
+            name: '工程数量',
+            key: 'zgcsl',
+            value: "0",
+            lab: "个"
+        }, {
+            name: '总建筑面积',
+            key: 'zjzmj',
+            value: "0",
+            lab: "万平方米"
+        }, {
+            name: '总金额',
+            key: 'zgctze',
+            value: "0",
+            lab: "亿元"
+        }, {
+            name: '消防验收',
+            key: 'xfyssl',
+            value: "0"
+        }, {
+            name: '消防验收(合格)',
+            key: 'xfyshg',
+            value: "0"
+        }, {
+            name: '消防验收(不合格)',
+            key: 'xfysbhg',
+            value: "0"
+        }, {
+            name: '消防备案',
+            key: 'xfbasl',
+            value: "0"
+        }, {
+            name: '消防备案(合格)',
+            key: 'xfbahg',
+            value: "0"
+        }, {
+            name: '消防备案(不合格)',
+            key: 'xfbabhg',
+            value: "0"
+        }, {
+            name: '消防备案复查',
+            key: 'xfbafcsl',
+            value: "0"
+        }, {
+            name: '消防验收（复验）',
+            key: 'xfysfcsl',
+            value: "0"
+        }, {
+            name: '设计审查',
+            key: 'sjscsl',
+            value: "0"
+        }, {
+            name: '补办证验收',
+            key: 'gsqysl',
+            value: "0"
+        }, {
+            name: '抽中次数',
+            key: 'czcs',
+            value: "0"
+        }, {
+            name: '未抽中次数',
+            key: 'wczcs',
+            value: "0"
+        }, {
+            name: '申报事项',
+            key: 'sbsxsl',
+            value: "0"
+        }];
+        var markerClusterer;
+        $("#clearBtn").click(function () {
+            $("#sqsj1,#sqsj2,#slsj1,#slsj2,#qfsj1,#qfsj2,#bjsj11,#bjsj12,#syxz").val("")
+            layui.form.render()
+            setTimeout(function () {
+                setSelectCanEdit($("#syxz"))
+            }, 100);
+        })
+        function setSelectCanEdit(doc) {
+            doc.next().find(".layui-input").removeAttr("readonly");
+        }
+        function getSelectData(doc) {
+            return doc.next().find(".layui-input").val();
+        }
+        $("#clearBtn2").click(function () {
+            $("#typename").val("全部");
+            $("#zxmj1,#zxmj2,#qfsj11,#qfsj12,#syxz2").val("");
+            layui.form.render()
+            setTimeout(function () {
+                setSelectCanEdit($("#syxz2"))
+            }, 100);
+        })
+        $("#clearBtn3").click(function () {
+            $("#gcmc,#bjsj1,#bjsj2,#syxz3,#typebh").val("")
+            layui.form.render()
+            setTimeout(function () {
+                setSelectCanEdit($("#syxz3"))
+            }, 100);
+        })
+        $("#searchBtn2").click(function () {
+            var typename = $("#typename").val();
+            typename = typename == "全部" ? "" : typename;
+            loadData2({
+                l_typename: typename,
+                zxmj1: $("#zxmj1").val(),
+                zxmj2: $("#zxmj2").val(),
+                qfsj1: $("#qfsj11").val(),
+                qfsj2: $("#qfsj12").val(),
+                bjsj1: $("#bjsj11").val(),
+                bjsj2: $("#bjsj12").val(),
+                syxz: getSelectData($("#syxz2")),
+                page: 1,
+                rows: 10
+            })
+        })
+        $("#searchBtn").click(function () {
+            // var  = $("#sqsj1,#sqsj2,#slsj1,#slsj2").val("")
+
+            loadData({
+                sqsj1: $("#sqsj1").val(),
+                sqsj2: $("#sqsj2").val(),
+                slsj1: $("#slsj1").val(),
+                slsj2: $("#slsj2").val(),
+                qfsj1: $("#qfsj1").val(),
+                qfsj2: $("#qfsj2").val(),
+                bjsj1: $("#bjsj11").val(),
+                bjsj2: $("#bjsj12").val(),
+                syxz: getSelectData($("#syxz"))
+            })
+        })
+
+        $("#searchBtn3").click(function () {
+            load({
+                gcmc: $("#gcmc").val(),
+                bjsj1: $("#bjsj1").val(),
+                bjsj2: $("#bjsj2").val(),
+                typebh: $("#typebh").val(),
+                syxz: getSelectData($("#syxz3"))
+            });
+        })
+        var syxzOptions = ["厂房", "仓库", "学校", "文化类培训机构", "艺术类培训机构", "商场和市场", "健身和休闲场所", "电影院", "娱乐场所", "社会福利机构", "宾馆和饭店", "医疗用房", "托育", "大型公共场所", "交通运输场站", "房产开发项目", "宗教场所", "行事单位用房", "村集体用房", "金融机构", "摄影场所", "汽车4S店"];
+        $(function () {
+            var str = "<option value=''>请选中类型</option>";
+            for (var i = 0; i < syxzOptions.length; i++) {
+                str += "<option>" + syxzOptions[i] + "</option>";
+            }
+            $(".syxz").append(str)
+            layui.use(['layer', "laydate", "element", "form"], function () {
+                layer = layui.layer;
+                var laydate = layui.laydate;
+                var element = layui.element;
+                var form = layui.form;
+
+                laydate.render({
+                    elem: '#sqsj1'
+                });
+                laydate.render({
+                    elem: '#sqsj2'
+                });
+                laydate.render({
+                    elem: '#slsj1'
+                });
+                laydate.render({
+                    elem: '#slsj2'
+                });
+                laydate.render({
+                    elem: '#qfsj1'
+                });
+                laydate.render({
+                    elem: '#qfsj2'
+                });
+                laydate.render({
+                    elem: '#bjsj11'
+                });
+                laydate.render({
+                    elem: '#bjsj12'
+                });
+
+                laydate.render({
+                    elem: '#qfsj11'
+                });
+                laydate.render({
+                    elem: '#qfsj12'
+                });
+                laydate.render({
+                    elem: '#bjsj1'
+                });
+                laydate.render({
+                    elem: '#bjsj2'
+                });
+                loadData({})
+                loadData2({
+                    page: 1,
+                    rows: 10
+                })
+                var notLoad = true;
+                element.on('tab(lay-tab)', function (data) {
+                    if (notLoad && data.index == 2) {
+                        initMap();
+                        notLoad = false
+                    }
+                });
+                // form.on('select(syxz)', function (data) {
+                //     console.log(data.value);
+                // })
+                setTimeout(function () {
+                    setSelectCanEdit($("#syxz"))
+                    setSelectCanEdit($("#syxz2"))
+                    setSelectCanEdit($("#syxz3"))
+                }, 100);
+
+            });
+        })
+        // $(".syxz").change(function(){
+        //     console.log(".syxz ..change.....")
+        // })
+        function loadData(params) {
+            ajaxTpl("/wlxf/getGCXXList", params, function (res) {
+                if (res.rows && res.rows.length) {
+                    var obj = res.rows[0];
+                    var str = '';
+                    for (var i = 0; i < gcxxList.length; i++) {
+                        str += getData(obj, gcxxList[i])
+                    }
+                    $("#menuSec").html(str)
+                }
+            })
+        }
+        $("#menuSec").on("click", ".item_info", function () {
+            var that = $(this);
+            var type = that.attr("type")
+            var name = "",
+                typebh = "",
+                link = "";
+
+            var type1 = ["xfyshg", "xfysbhg", "xfbahg", "xfbabhg"];
+
+            var type2 = ["xfyssl", "xfbasl", "xfbafcsl", "xfysfcsl"];
+            var type2bh = ["02", "03", "05", "06"];
+            if (type1.indexOf(type) > -1) {
+                link = "/WebList/EasyUiIndex?FormDm=xfystjjl&FormStatus=0&FormParam=PARAM--"
+            } else if (type2.indexOf(type) > -1) {
+                link = "/WebList/EasyUiIndex?FormDm=xfystjjl&FormStatus=1&FormParam=PARAM--"
+                typebh = type2bh[type2.indexOf(type)]
+            } else if (type == "gsqysl") {
+                link = "/WebList/EasyUiIndex?FormDm=xfystjjl&FormStatus=2&FormParam=PARAM--";
+                typebh = "04";
+            } else if (type == "czcs") {
+                link = "/WebList/EasyUiIndex?FormDm=xfystjjl&FormStatus=3&FormParam=PARAM--"
+                typebh = "03";
+            } else if (type == "wczcs") {
+                link = "/WebList/EasyUiIndex?FormDm=xfystjjl&FormStatus=5&FormParam=PARAM--"
+                typebh = "03";
+            } else if (type == "sjscsl") {
+                link = "/WebList/EasyUiIndex?FormDm=xfystjjl&FormStatus=4&FormParam=PARAM--"
+                typebh = "01";
+            } switch (type) {
+                case "xfyshg":
+                    name = "该工程消防验收合格";
+                    typebh = "02";
+                    break;
+                case "xfysbhg":
+                    name = "该工程消防验收不合格";
+                    typebh = "02";
+                    break;
+                case "xfbahg":
+                    name = "该工程符合建设工程消防验收有关规定";
+                    typebh = "03";
+                    break;
+                case "xfbabhg":
+                    name = "该工程不符合建设工程消防验收有关规定";
+                    typebh = "03";
+                    break;
+            }
+            var ary
+            if (link && name) {
+                ary = getPageTime(typebh);
+                // link += name + "|" + ary.join("|") + "|" + typebh;
+                link += name + "|" + ary.join("|")
+
+            } else if (link) {
+                ary = getPageTime(typebh);
+                // link += ary.join("|") + "|" + typebh;
+                link += ary.join("|");
+            }
+
+            if (link) {
+                parent.layer.open({
+                    type: 2,
+                    title: '查看申报工程信息',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['80%', '80%'],
+                    content: link,
+                    end: function () { }
+                });
+            }
+        })
+
+        function getPageTime(typebh) {
+            var ary = [];
+            var sqsj1 = $("#sqsj1").val();
+            var sqsj2 = $("#sqsj2").val();
+            var slsj1 = $("#slsj1").val();
+            var slsj2 = $("#slsj2").val();
+            var qfsj1 = $("#qfsj1").val();
+            var qfsj2 = $("#qfsj2").val();
+            var bjsj1 = $("#bjsj11").val();
+            var bjsj2 = $("#bjsj12").val();
+            // bjsj11
+            if (sqsj1 == '') {
+                ary.push('1990-01-01')
+            } else {
+                ary.push(sqsj1)
+            }
+            if (sqsj2 == '') {
+                ary.push('2099-01-01')
+            } else {
+                ary.push(sqsj2)
+            }
+            if (slsj1 == '') {
+                ary.push('1990-01-01')
+            } else {
+                ary.push(slsj1)
+            }
+            if (slsj2 == '') {
+                ary.push('2099-01-01')
+            } else {
+                ary.push(slsj2)
+            }
+            if (qfsj1 == '') {
+                ary.push('1990-01-01')
+            } else {
+                ary.push(qfsj1)
+            }
+            if (qfsj2 == '') {
+                ary.push('2099-01-01')
+            } else {
+                ary.push(qfsj2)
+            }
+
+            ary.push(typebh)
+            ary.push(getSelectData($("#syxz")) || 1);
+            if (bjsj1 == '') {
+                ary.push('1990-01-01')
+            } else {
+                ary.push(bjsj1)
+            }
+            if (bjsj2 == '') {
+                ary.push('2099-01-01')
+            } else {
+                ary.push(bjsj2)
+            }
+
+
+            return ary;
+        }
+
+
+        function loadData2(params) {
+            getTable("/wlxf/getZxgcList", params, function (res, reqData) {
+                var str = ""
+                if (res.rows && res.rows.gcxx && res.rows.gcxx.length) {
+
+                    var tmp;
+                    for (var i = 0; i < res.rows.gcxx.length; i++) {
+                        tmp = res.rows.gcxx[i];
+                        str += "<tr value='" + tmp.fxbaid + "'><td>" + ((reqData.page - 1) * reqData.rows + i + 1) + "</td><td title='" + tmp.gcmc + "'>" + tmp.gcmc + "</td><td title='" + tmp.jsdwmc + "'>" + tmp.jsdwmc + "</td><td>" + tmp.jsdwfr + "</td><td title='" + tmp.gcdd + "'>" + tmp.gcdd + "</td><td title='" + tmp.l_typename + "'>" + tmp.l_typename + "</td><td title='" + tmp.iscz + "'>" + tmp.iscz + "</td><td title='" + tmp.ztname + "'>" + tmp.ztname + "</td><td title='" + tmp.lrsj + "'>" + tmp.lrsj + "</td></tr>";
+                    }
+                } else {
+                    str += "<tr><td colspan='8' style='text-align:center;'>暂无数据</td></tr>";
+                }
+                $("#tabList").html(str);
+
+                // if (res.rows && res.rows.length) {
+                //     var obj = res.rows[0];
+                //     var str = '<div class="item_info"><div class="data">'
+                //     str += obj.zxsl || 0;
+                //     str += '</div><div class="info">内部装修工程数量</div></div></div>';
+                //     $("#zxgcList").html(str)
+                // }
+            }, {
+                doc: $('#tableWarp'),
+                pageSize: 'rows',
+                count: 'total'
+            })
+        }
+        $("#tabList").on("dblclick", "td", function () {
+            var fxbaid = $(this).parents("tr").attr("value");
+            layer.open({
+                title: "申报事项",
+                type: 2,
+                area: ["90%", "90%"],
+                content: "/WebList/EasyUiIndex?FormDm=xfysjl&FormStatus=16&FormParam=PARAM--" + fxbaid
+            })
+        })
+
+        function getData(data, obj) {
+            var str = '<div class="item_info" type="' + obj.key + '"><div class="data">'
+            str += data[obj.key] + (obj.lab || "");
+            str += '</div><div class="info">';
+            str += obj.name;
+            str += '</div></div></div>';
+            return str;
+        }
+        // bjsj1
+        // syxz//
+        // ajaxTpl("/wlxf/GetHelpSyxz?dl=&zl=", "", function () { })
+        // function (){}
+    </script>
+    <script type="text/javascript">
+        var opts = {
+            width: 100, // 信息窗口宽度
+            height: 50, // 信息窗口高度
+            title: "" // 信息窗口标题
+        }
+        var g_map = undefined;
+
+        function initMap() {
+            g_map = new BMap.Map("allmap"); // 创建Map实例
+            g_map.centerAndZoom('台州市温岭市', 12)
+            g_map.addControl(new BMap.NavigationControl()); //缩放控件
+            // g_map.addControl(new BMap.MapTypeControl({ mapTypes: [BMAP_NORMAL_MAP, BMAP_HYBRID_MAP] })); //地图类型控件
+            g_map.addControl(new BMap.ScaleControl({ anchor: BMAP_ANCHOR_TOP_LEFT })); // 左上 //比例尺控件
+            g_map.enableScrollWheelZoom(); //启用滚轮放大缩小
+            g_map.disableDoubleClickZoom();
+            g_map.setMapStyle(["road", "water", "land"])
+            // markerClusterer = new BMapLib.MarkerClusterer(g_map, { markers: [] })
+            setTimeout(function () {
+                load({});
+            }, 1000)
+
+        }
+
+        function load(obj) {
+
+            ajaxTpl("/wlxf/GetGczbXq", obj, function (res) {
+                if (res.rows) {
+                    if (res.rows[0]) {
+                        setHeadTj(res.rows[0])
+                    }
+                    if (res.rows[1]) { //&& res.rows[1].gcjdsl && res.rows[1].gcjdsl[0]
+                        setMainTj(res.rows[1])
+                        // setMainTj(res.rows[1].gcjdsl[0])
+                    }
+
+
+
+                    if (res.rows[2] && res.rows[2].gcxq) {
+                        setMapPoint(res.rows[2].gcxq)
+                    }
+                }
+            });
+        }
+
+        function setHeadTj(obj) {
+            var str = "<div><span class='key'>工程总数</span><span class='val'>" + obj.gcsl + "个</span></div><div><span class='key'>无坐标工程</span><span class='val'>" + obj.gcwbzsl + "个</span></div><div><span class='key'>有坐标工程</span><span class='val'>" + obj.gczbsl +
+                "个</span></div>"
+            $(".head").html(str);
+        }
+        var tmpObj = { "tpjdsl": "太平街道", "cdjdsl": "城东街道", "cxjdsl": "城西街道", "cbjdsl": "城北街道", "hfjdsl": "横峰街道", "zgzsl": "泽国镇", "dxzsl": "大溪镇", "smzsl": "松门镇", "rhzsl": "箬横镇", "xhzsl": "新河镇", "stzsl": "石塘镇", "bhzsl": "滨海镇", "wqzsl": "温峤镇", "cnzsl": "城南镇", "sqtzsl": "石桥头镇", "wgzsl": "坞根镇", "dbxcsl": "东部新区" }
+
+        var details = { "sjsc": "设计审查", "xfys": "消防验收", "xfba": "消防备案", "gsys": "补办证验收", "xfysfy": "消防验收(复验)", "xfbafc": "消防备案复查" }
+
+        // gsys: "0"
+        // sjsc: "0"
+        // xfba: "0"
+        // xfbafc: "0"
+        // xfys: "0"
+        // xfysfy: "0"
+
+        function setMainTj(obj) {
+            var str = "",
+                tmp;
+            for (var key in tmpObj) {
+                str += "<div class='tree-wrap'><div class='jd-name'>" + tmpObj[key] + ":";
+                if (obj.jdxq && obj.jdxq[0]) {
+                    str += (obj.jdxq[0][key] || 0) + "个";
+                } else {
+                    str += "0个"
+                }
+
+                // var sum = 0,
+                //     tmpStr = '';
+                // if (obj[key] && obj[key].length) {
+                //     tmp = obj[key][0]
+                //     tmpStr += "<div class='detail-wrap'>"
+                //     for (var d in details) {
+                //         // if (parseInt(tmp[d]) > 0) {
+                //         tmpStr += "<div><span class='key'>" + details[d] + ":</span><span class='val'>" + (tmp[d] || "") + "个</span></div>"
+                //         sum += parseInt(tmp[d]) || 0
+                //         // }
+                //     }
+                //     str += sum + "个</div>" + tmpStr + "</div>"
+                // }
+                str += "</div></div>"
+            }
+            $(".main").html(str)
+        }
+
+        function setMapPoint(ary) {
+            var tmp, point, markers = [];
+            for (var i = 0; i < ary.length; i++) {
+                tmp = ary[i];
+                point = getPoint(tmp.gczb);
+                if (point) {
+                    var marker = new BMap.Marker(point);
+                    // g_map.addOverlay(marker);
+                    markers.push(marker);
+                    (function (tmp) {
+                        marker.addEventListener("click", function () {
+                            var info = new BMap.InfoWindow("<div onclick=openPage('" + tmp.fxbaid + "')>" + tmp.gcmc + "</div>", opts)
+                            this.openInfoWindow(info);
+                        });
+                    })(tmp)
+
+                }
+            }
+
+            try {
+                if (markerClusterer) {
+                    markerClusterer.clearMarkers()
+                }
+                markerClusterer = new BMapLib.MarkerClusterer(g_map, { markers: markers });
+            } catch (e) {
+                alert(e)
+                // console.log(e)
+            }
+
+        }
+
+        function openPage(fxbaid) {
+            console.log(fxbaid)
+            layer.open({
+                type: 2,
+                title: "工程详情",
+                area: ["80%", "80%"],
+                content: "/wlxf/gclr?readonly=1&fxbaid=" + fxbaid
+            })
+        }
+
+        function getPoint(str) {
+            var arrPos = str.split(',');
+            if (arrPos.length < 2)
+                return null;
+            if (arrPos[0] != "0" && arrPos[1] != "0") {
+                return new BMap.Point(arrPos[0], arrPos[1])
+            }
+        }
+
+
+        $("#fullscreen").click(function () {
+
+            $("#fullScreenPage").toggleFullScreen()
+        })
+        $(document).bind("fullscreenchange", function () {
+            if ($("#fullScreenPage").fullScreen()) {
+                console.log("on")
+                $("#fullscreen").addClass("layui-icon-screen-restore").removeClass("layui-icon-screen-full");
+            } else {
+                console.log("not")
+                $("#fullscreen").addClass("layui-icon-screen-full").removeClass("layui-icon-screen-restore");
+            }
+        });
+    </script>
+</body>
+
+</html>

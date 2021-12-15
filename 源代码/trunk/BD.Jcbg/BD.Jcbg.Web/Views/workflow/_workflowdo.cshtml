@@ -1,0 +1,35 @@
+﻿@using BD.WorkFlow.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>@ViewBag.Title</title>
+    <link href="@WorkFlowSkins.GetCssPath("/bootstrap/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@WorkFlowSkins.GetCssPath("workflow.css")" rel="stylesheet" type="text/css" />
+	<link href="@WorkFlowSkins.GetCssPath("jqueryloadmask/jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+	<link href="@WorkFlowSkins.GetCssPath("easyui/themes/metro/easyui.css")" rel="stylesheet" type="text/css" />	
+	<link href="@WorkFlowSkins.GetCssPath("easyui/themes/icon.css")" rel="stylesheet" type="text/css" />
+	<link href="@WorkFlowSkins.GetCssPath("uploadify.css")" rel="stylesheet" type="text/css" />
+	<link href="@WorkFlowSkins.GetCssPath("workflowattach.css")" rel="stylesheet" type="text/css" />
+	<script src="@WorkFlowSkins.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("jquery.easyui.min.js")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("jquery.loadmask.min.js")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("easyui-exend.js")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("jquery.uploadify.min.js")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("workflow.js?v=2017072602")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("formbase.js")" type="text/javascript"></script>
+	<script src="@WorkFlowSkins.GetJsPath("jquery-base64.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetCssPath("/bootstrap/js/bootstrap.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@WorkFlowSkins.GetJsPath("/layer/layer.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetJsPath("jquery-base64.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetCkeditorPath("ckeditor.js")" type="text/javascript"></script>
+    <script src="@WorkFlowSkins.GetJsPath("jquery.lazyload.min.js")" type="text/javascript"></script>
+	@RenderSection("head", false) 
+</head>
+<body>
+	@RenderBody()
+</body>
+</html>

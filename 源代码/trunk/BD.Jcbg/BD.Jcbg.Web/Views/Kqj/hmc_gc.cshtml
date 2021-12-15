@@ -1,0 +1,290 @@
+﻿@{
+    Layout = "~/Views/_easyuilayout.cshtml";
+
+}
+
+<script language="javascript" type="text/javascript">
+    function Open_Dialog() {
+        $('#maindlg').show();
+        $('#maindlg').dialog({
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            resizable: false,
+            shadow: true,
+            modal: false,
+            closable: false,
+            buttons: [{
+                text: '确定',
+                iconCls: 'icon-ok',
+                handler: function () {              
+                    var jdzch = '@ViewData["jdzch"]';
+                    var bzzsfz = $("#bzfzr").combobox("getValue");
+                    var gzname = $("#gz").combobox("getValue");
+                    var gw = $("#gw").combobox("getValue");
+                    selectGc(jdzch, gzname, gw, bzzsfz);
+                }
+            }]
+        });
+    }
+    function selectGc(jdzch, gzname, gw, bzzsfz) {
+        try {
+            var tabledesc = "人员花名册";
+            var table = encodeURIComponent("View_InfoWgryHistory");
+            var bcode = new Base64();
+            var tablename = bcode.encode(table);
+            var reportname = encodeURIComponent("人员花名册v1");
+            var s_where="jdzch='" + jdzch + "'"
+            if (gzname != "")
+                s_where += " and gz='" + gzname + "'";
+            if (gw != "")
+                s_where += " and gw='" + gw + "'";
+            if (bzzsfz != "")
+            {
+                s_where += " and bzfzr='" + bzzsfz + "'";
+                reportname = encodeURIComponent("人员花名册v1_BZ");
+            }
+            s_where += " order by gz desc,lrsj asc";
+            where = encodeURIComponent(s_where);
+            // var workurl = "/ReportPrint/Index?type=word&opentype=pdf&table="+tablename+"&where=jdzch%3d%27"+jdzch+"%27&filename="+reportname;
+            //var workurl = "/ReportPrint/Index?type=word&opentype=pdf&table="+tablename+"&where="+where+"&filename="+reportname;
+            var workurl = "/jdbg/WGRYReportDown?reportfile=" + reportname + "&tablename=" + table + "&where=" + where
+            //window.location.replace("/jdbg/WGRYReportDown?reportfile="+reportname+"&tablename="+table+"&type=1&where="+where);
+            gotoStarkWork(workurl, tabledesc);
+
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    //function selectGc(jdzch, year, month, gzname, gw, bzzsfz) {
+    //    try {
+    //        if (gzname == "")
+    //            gzname = " ";
+    //        if (gw == "")
+    //            gw = " ";
+    //        if (bzzsfz == "")
+    //            bzzsfz = " ";
+    //        var url = "/WebList/EasyUiIndex?FormDm=RYGL_KQYBB&FormStatus=0&FormParam=PARAM--" + jdzch + "|" + year + "|" + month + "|" + gzname + "|" + bzzsfz + "|" + gw;
+    //        parent.layer.open({
+    //            type: 2,
+    //            title: "月考勤详情",
+    //            shadeClose: true,
+    //            shade: 0.8,
+    //            area: ['95%', '95%'],
+    //            content: url,
+    //            end: function () {
+    //            }
+    //        });
+
+
+    //    } catch (e) {
+    //        alert(e);
+    //    }
+    //}
+    function gotoStarkWork(workurl, title) {
+        try {
+            var rdm = Math.random();
+            var url = workurl;
+
+            parent.layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '95%'],
+                content: url,
+                end: function () {
+                }
+            });
+        }
+        catch (ex) {
+            alert(ex);
+        }
+    }
+    function Base64() {
+
+        // private property
+        _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+        // public method for encoding
+        this.encode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = _utf8_encode(input);
+            while (i < input.length) {
+                chr1 = input.charCodeAt(i++);
+                chr2 = input.charCodeAt(i++);
+                chr3 = input.charCodeAt(i++);
+                enc1 = chr1 >> 2;
+                enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                enc4 = chr3 & 63;
+                if (isNaN(chr2)) {
+                    enc3 = enc4 = 64;
+                } else if (isNaN(chr3)) {
+                    enc4 = 64;
+                }
+                output = output +
+                _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+            }
+            return output;
+        }
+
+        // public method for decoding
+        this.decode = function (input) {
+            var output = "";
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+            while (i < input.length) {
+                enc1 = _keyStr.indexOf(input.charAt(i++));
+                enc2 = _keyStr.indexOf(input.charAt(i++));
+                enc3 = _keyStr.indexOf(input.charAt(i++));
+                enc4 = _keyStr.indexOf(input.charAt(i++));
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
+                output = output + String.fromCharCode(chr1);
+                if (enc3 != 64) {
+                    output = output + String.fromCharCode(chr2);
+                }
+                if (enc4 != 64) {
+                    output = output + String.fromCharCode(chr3);
+                }
+            }
+            output = _utf8_decode(output);
+            return output;
+        }
+
+        // private method for UTF-8 encoding
+        _utf8_encode = function (string) {
+            string = string.replace(/\r\n/g, "\n");
+            var utftext = "";
+            for (var n = 0; n < string.length; n++) {
+                var c = string.charCodeAt(n);
+                if (c < 128) {
+                    utftext += String.fromCharCode(c);
+                } else if ((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                } else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+
+            }
+            return utftext;
+        }
+
+        // private method for UTF-8 decoding
+        _utf8_decode = function (utftext) {
+            var string = "";
+            var i = 0;
+            var c = c1 = c2 = 0;
+            while (i < utftext.length) {
+                c = utftext.charCodeAt(i);
+                if (c < 128) {
+                    string += String.fromCharCode(c);
+                    i++;
+                } else if ((c > 191) && (c < 224)) {
+                    c2 = utftext.charCodeAt(i + 1);
+                    string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                    i += 2;
+                } else {
+                    c2 = utftext.charCodeAt(i + 1);
+                    c3 = utftext.charCodeAt(i + 2);
+                    string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                    i += 3;
+                }
+            }
+            return string;
+        }
+    }
+    $(function () {
+        var arrYear = new Array();
+        var arrMonth = new Array();
+        var dt = new Date();
+        for (i = 2014; i <= dt.getFullYear() ; i++) {
+            var arr = new Array();
+            arr[0] = i;
+            arr[1] = i;
+            arrYear[arrYear.length] = arr;
+        }
+        for (i = 1; i <= 12; i++) {
+            var arr = new Array();
+            arr[0] = i;
+            arr[1] = i;
+            arrMonth[arrMonth.length] = arr;
+        }
+        $('#year').combobox({
+            data: arrYear,
+            panelHeight: 'auto',
+            editable: false,
+            textField: 1,
+            valueField: 0
+
+        });
+        $('#month').combobox({
+            data: arrMonth,
+            panelHeight: 'auto',
+            editable: false,
+            textField: 1,
+            valueField: 0
+        });
+        $('#gz').combobox({
+            url: '/zj_info/getgz',
+            valueField: 'gzname',
+            textField: 'gzname',
+            panelHeight: 'auto',
+            onChange: function (n, o) {
+                $('#gw').combobox({
+                    url: '/zj_info/getgzgw?gz=' + encodeURIComponent(n),
+                    valueField: 'gwname',
+                    textField: 'gwname',
+                    panelHeight: 'auto'
+
+                });
+            }
+
+        });
+        $('#gw').combobox({
+            url: '/zj_info/getgzgw',
+            valueField: 'gwname',
+            textField: 'gwname',
+            panelHeight: 'auto'
+        });
+        $('#bzfzr').combobox({
+            url: '/zj_info/getbzfzr',
+            valueField: 'sfzhm',
+            textField: 'ryxm',
+            panelHeight: 'auto',
+            editable: false
+        });
+
+
+        Open_Dialog();
+
+        dt.setMonth(dt.getMonth() - 1);
+        var year = dt.getFullYear();
+        var month = dt.getMonth() + 2;
+        $('#year').combobox('setValue', year);
+        $('#month').combobox('setValue', month);
+    });
+</script>
+<div id="maindlg" style="display:none;padding:20px;width:400px;height:300px;" title="人员花名册">
+    工种：
+    <input id="gz" style="width:300px" />
+    <br /><br />
+    岗位：
+    <input id="gw" style="width:300px" />
+    <br /><br />
+    组长：
+    <input id="bzfzr" style="width:300px" />
+</div>
+

@@ -1,0 +1,123 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+
+@section head 
+{
+<script language="javascript" type="text/javascript">
+    var g_isglobal = "@ViewBag.IsGlobal";
+    var g_groups = [];
+    var g_settings = [];
+    $(function () {
+        try {
+            initData();
+            showData();
+
+        } catch (err) {
+            alert(e);
+        }
+    });
+    function initData() {
+        try {
+
+            $.ajax({
+                type: "POST",
+                url: "/sys/getsyssettings?isglobal=" + g_isglobal,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_groups = data.groups;
+                    g_settings = data.settings;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function showData() {
+        try{
+            for (var i = 0; i < g_groups.length; i++) {
+
+                var active = "";
+                var active2 = "";
+                if (i == 0) {
+                    active = "in active";
+                    active2 = "active";
+                }
+                var group = g_groups[i];
+                var divId = "tab_" + group.groupid;
+                var ulId = "ul_" + group.groupid;
+
+                var curDiv = "<div class=\"tab-pane fade " + active + "\" id=\"" + divId + "\" style='padding:10px 100px 10px 100px'><ul class=\"list-group\" id='" + ulId + "'></ul></div>";
+                $("#main_tab_content").append(curDiv);
+                $("#main_tab_tab").append("<li class=\"" + active2 + "\"><a href=\"#" + divId + "\" data-toggle=\"tab\">" + group.groupname + "</a></li>");
+                for (var j = 0; j < g_settings.length; j++) {
+                    var setting = g_settings[j];
+                    if (setting.groupid != group.groupid)
+                        continue;
+
+                    var settingdivid = "settingdiv_" + setting.settingcode;
+                    var uploadButton = "";
+                    //if (setting.isupload == "True")
+                    //    uploadButton = "<span class=\"input-group-addon\"><a href='#'>上传</a></span>";
+                    var settingdiv_content = "<li class='list-group-item' id='" + settingdivid + "' ><div class=\"input-group\"><span class=\"input-group-addon\">" + setting.settingname + "</span>" + "<input type=\"text\" class=\"form-control\" value='" + setting.settingvalue + "' id='" + setting.settingcode + "'>" + uploadButton + "</div></li>";
+                    $("#" + ulId).append(settingdiv_content);
+
+                }
+
+            }
+        }catch(e){
+            alert(e);
+        }
+    }
+    function saveSetting() {
+        try{
+            var postStr = "";
+            $(':text').each(function () {
+                if (postStr != "")
+                    postStr += "&";
+                postStr += $(this).attr('id')+"="+encodeURIComponent($(this).val());
+            });
+            if (postStr == "")
+                return;
+            $.ajax({
+                type: "POST",
+                url: "/sys/savesyssetting",
+                dataType: "json",
+                data:"isglobal="+g_isglobal+"&"+postStr,
+                async: false,
+                success: function (data) {
+                    if (data.code == "0")
+                        alert("保存成功");
+                    else
+                        alert(data.msg);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在保存……', { icon: 16 });
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+    }
+</script>
+}
+
+
+<ul id="main_tab_tab" class="nav nav-tabs"></ul>
+<div id="main_tab_content" class="tab-content"></div>
+<nav class="navbar navbar-default navbar-fixed-bottom text-right" role="navigation">
+
+    <button type="button" class="btn btn-default btn-lg btn-block" onclick="saveSetting()">保存</button>
+</nav>

@@ -1,0 +1,143 @@
+﻿@{
+	Layout = "~/Views/User/_easyuieditlayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+    var bhz_g_pageSize = 20;
+    var bhz_g_page=1;
+    $(function () {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/syjg/getbhzsection",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.length > 0) {
+                        $("#bhz_search_section").combobox({
+                            valueField: "ID",
+                            textField: "SectionName",
+                            mode: "local",
+                            editable: false,
+                            panelHeight: 'auto',
+                            data: data
+                        });
+                        $('#bhz_search_section').combobox('select', data[0].ID);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    $("body").unmask();
+                    bhz_search();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    $("body").mask("正在加载模块数据...");
+                }
+            });
+        } catch (e) {
+            $.messager.alert('提示', e.message, 'warning');
+        }
+
+    });
+    function bhz_search()
+    {
+        bhz_g_page=1;
+        bhz_reload();
+    }
+    function bhz_pre()
+    {
+        if(bhz_g_page>1)
+        {
+            bhz_g_page=bhz_g_page-1;
+        }
+        bhz_reload();
+    }
+    function bhz_next()
+    {
+        bhz_g_page=bhz_g_page+1;
+        bhz_reload();
+    }
+    function bhz_reload() {
+        try {
+            $('#bhz_maintable').datagrid({
+                title: '',
+                loadMsg: "正在加载……",
+                border: false,
+                url: '/syjg/getbhz?section=' + $("#bhz_search_section").combobox("getValue") + '&page='+bhz_g_page+'&rows=' + bhz_g_pageSize + '&_=' + Math.random(),
+                rownumbers: true,
+                nowrap: true,
+                idField: 'ID',
+                striped: false,
+                fit: true,
+                singleSelect: true,
+                pagination: false,
+                onSelect: function (rowIndex, rowData) {
+                    bhz_show_detail(rowData)
+                    /*
+                    if (rowData.PreUserId == workflow_workrelate_g_username && rec.DoState == 0) {
+                        workflow_workrelate_showundo(1);
+                        workflow_workrelate_g_rollid = rowData.PreTaskid;
+
+
+                    }
+                    else {
+                        workflow_workrelate_showundo(0);
+                    }*/
+                },
+
+                columns: [[
+                { field: 'KeHuDuanBianhao', title: '唯一码', width: 100, sortable: false, align: "center" },
+				{ field: 'SheBeiBianHao', title: '拌和机编号', width: 100, sortable: false, align: "center" },
+                { field: 'GongDanHao', title: '工单号', width: 100, sortable: false, align: "center" },
+                { field: 'ChaoZuoZhe', title: '操作者', width: 70, sortable: false, align: "center" },
+				{ field: 'GongChengMingMheng', title: '工程名称', width: 200, sortable: false, align: "center" },
+				{ field: 'JiaoZuoBuWei', title: '浇注部位', width: 200, sortable: false, align: "center",},
+                { field: 'ChuLiaoShiJian', title: '出料时间', width: 200, sortable: false, align: "center",},
+                { field: 'GetTime', title: '采集时间', width: 200, sortable: false, align: "center",}
+				]],
+                toolbar: "#bhz_tb",
+				onLoadSuccess: function (data) {
+                    if(data.total<bhz_g_pageSize)
+                        $("#bhz_search_next").linkbutton('disable');
+                    else
+                        $("#bhz_search_next").linkbutton('enable');
+                    if(bhz_g_page<2)
+                        $("#bhz_search_pre").linkbutton('disable');
+                    else
+                        $("#bhz_search_pre").linkbutton('enable');
+                /*
+                    if (data.total == 0)
+                        $('#workflow_workrelate_viewtab').tabs('select', 1);
+                    else
+                        $('#workflow_workrelate_viewtab').tabs('select', 0);*/
+
+                }
+            });
+         }
+        catch (e) {
+            $.messager.alert('提示', e.message, 'warning');
+        }
+     }
+     function bhz_show_detail(data)
+     {
+        $("#bhz_viewdiv").dialog({
+			title: "操作详情",
+			collapsible: false,
+			minimizable: false,
+			maximizable: false,
+			resizable: true,
+			modal: true,
+			width: 400,
+			height: 300,
+			content: "<table class='form2' cellpadding='2' cellspacing='1'><tr><th width='150'>拌和机编号：</th><td width='400'>"+data.SheBeiBianHao+"</td></tr><tr><th width='150'>工单号：</th><td width='400'>"+data.GongDanHao+"</td></tr><tr><th width='150'>操作者：</th><td width='400'>"+data.ChaoZuoZhe+"</td></tr><tr><th width='150'>设计方量：</th><td width='400'>"+data.SheJiFangLiang+"</td></tr><tr><th width='150'>实际方量：</th><td width='400'>"+data.GuJiFangShu+"</td></tr><tr><th width='150'>细骨料1：</th><td width='400'>"+data.XiGuLiao1_ShiJiZhi+"</td></tr><tr><th width='150'>细骨料1配比：</th><td width='400'>"+data.XiGuLiao1_LiLunZhi+"</td></tr><tr><th width='150'>细骨料2：</th><td width='400'>"+data.XiGuLiao2_ShiJiZhi+"</td></tr><tr><th width='150'>细骨料2配比：</th><td width='400'>"+data.XiGuLiao2_LiLnZhi+"</td></tr><tr><th width='150'>粗骨料1：</th><td width='400'>"+data.CuGuLiao1_ShiJiZhi+"</td></tr><tr><th width='150'>粗骨料1配比：</th><td width='400'>"+data.CuGuLiao1_LiLunZhi+"</td></tr><tr><th width='150'>粗骨料2：</th><td width='400'>"+data.CuGuLiao2_ShiJiZhi+"</td></tr><tr><th width='150'>粗骨料2配比：</th><td width='400'>"+data.CuGuLiao2_LiLunZhi+"</td></tr><tr><th width='150'>粗骨料3：</th><td width='400'>"+data.CuGuLiao3_ShiJiZhi+"</td></tr><tr><th width='150'>粗骨料3配比：</th><td width='400'>"+data.CuGuLiao3_LiLunZhi+"</td></tr><tr><th width='150'>水泥1：</th><td width='400'>"+data.ShuiNi1_ShiJiZhi+"</td></tr><tr><th width='150'>水泥1配比：</th><td width='400'>"+data.ShuiNi1_LiLunZhi+"</td></tr><tr><th width='150'>水泥2：</th><td width='400'>"+data.ShuiNi2_ShiJiZhi+"</td></tr><tr><th width='150'>水泥2配比：</th><td width='400'>"+data.ShuiNi2_LiLunZhi+"</td></tr><tr><th width='150'>矿粉：</th><td width='400'>"+data.KuangFen3_ShiJiZhi+"</td></tr><tr><th width='150'>矿粉配比：</th><td width='400'>"+data.KuangFen3_LiLunZhi+"</td></tr><tr><th width='150'>粉煤灰：</th><td width='400'>"+data.FenMeiHui4_ShiJiZhi+"</td></tr><tr><th width='150'>粉煤灰配比：</th><td width='400'>"+data.FenMeiHui4_LiLunZhi+"</td></tr><tr><th width='150'>粉料5：</th><td width='400'>"+data.FenLiao5_ShiJiZhi+"</td></tr><tr><th width='150'>粉料5配比：</th><td width='400'>"+data.FenLiao5_LiLunZhi+"</td></tr><tr><th width='150'>粉料6：</th><td width='400'>"+data.FenLiao6_ShiJiZhi+"</td></tr><tr><th width='150'>粉料6配比：</th><td width='400'>"+data.FenLiao6_LiLunZhi+"</td></tr><tr><th width='150'>水1：</th><td width='400'>"+data.Shui1_ShiJiZhi+"</td></tr><tr><th width='150'>水1配比：</th><td width='400'>"+data.Shui1_LiLunZhi+"</td></tr><tr><th width='150'>水2：</th><td width='400'>"+data.Shui2_ShijiZhi+"</td></tr><tr><th width='150'>水2配比：</th><td width='400'>"+data.Shui2_LiLunZhi+"</td></tr><tr><th width='150'>外加剂1：</th><td width='400'>"+data.WaiJiaJi1_ShiJiZhi+"</td></tr><tr><th width='150'>外加剂1配比：</th><td width='400'>"+data.WaiJiaJi1_LiLunZhi+"</td></tr><tr><th width='150'>外加剂2：</th><td width='400'>"+data.WaiJiaJi2_ShiJiZhi+"</td></tr><tr><th width='150'>外加剂2配比：</th><td width='400'>"+data.WaiJiaJi2_LiLunZhi+"</td></tr><tr><th width='150'>外加剂3：</th><td width='400'>"+data.WaiJiaJi3_ShiJiZhi+"</td></tr><tr><th width='150'>外加剂3配比：</th><td width='400'>"+data.WaiJiaJi3_LiLunZhi+"</td></tr><tr><th width='150'>外加剂4：</th><td width='400'>"+data.WaiJiaJi4_ShiJiZhi+"</td></tr><tr><th width='150'>外加剂4配比：</th><td width='400'>"+data.WaiJiaJi4_LiLunZhi+"</td></tr><tr><th width='150'>出料时间：</th><td width='400'>"+data.ChuLiaoShiJian+"</td></tr><tr><th width='150'>工程名称：</th><td width='400'>"+data.GongChengMingMheng+"</td></tr><tr><th width='150'>施工地点：</th><td width='400'>"+data.SiGongDiDian+"</td></tr><tr><th width='150'>浇注部位：</th><td width='400'>"+data.JiaoZuoBuWei+"</td></tr><tr><th width='150'>水泥品种：</th><td width='400'>"+data.ShuiNiPingZhong+"</td></tr><tr><th width='150'>配方号：</th><td width='400'>"+data.PeiFangHao+"</td></tr><tr><th width='150'>强度等级：</th><td width='400'>"+data.QiangDuDengJi+"</td></tr><tr><th width='150'>搅拌时长：</th><td width='400'>"+data.JiaoBanShiJian+"</td></tr><tr><th width='150'>保存时间：</th><td width='400'>"+data.BaoCunShiJian+"</td></tr><tr><th width='150'>唯一码(本拌合机数据唯一编号)：</th><td width='400'>"+data.KeHuDuanBianhao+"</td></tr><tr><th width='150'>采集时间：</th><td width='400'>"+data.GetTime+"</td></tr></table>"
+		});
+     }
+</script>
+<div id="bhz_tb" style="padding:5px;height:auto;">  
+	<div>
+		选择标段：<input id="bhz_search_section"/>
+		<a href="#" onclick="bhz_search()" class="easyui-linkbutton" iconCls="icon-search" >查找</a>
+        <a href="#" id="bhz_search_pre" onclick="bhz_pre()" class="easyui-linkbutton" iconCls="icon-remove" >前一页</a>  
+        <a href="#" id="bhz_search_next" onclick="bhz_next()" class="easyui-linkbutton" iconCls="icon-add" >后一页</a>  
+	</div>
+</div>
+<table id="bhz_maintable"></table>  
+<div id="bhz_viewdiv"></div>

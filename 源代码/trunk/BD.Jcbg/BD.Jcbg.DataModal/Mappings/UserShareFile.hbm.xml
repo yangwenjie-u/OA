@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.UserShareFile,BD.Jcbg.DataModal" table="UserShareFile" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="int" name="FolderId" column="[FolderId]" />
+    <property type="int" name="FileId" column="[FileId]" />
+  </class>
+</hibernate-mapping>

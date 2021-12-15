@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.MessageReceive,BD.Jcbg.DataModal" table="MessageReceive" lazy="false">
+    <id name="Recid" column="RECID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string"  name="ProjId" column="[PROJID]" />
+    <property type="string"  name="HanderDeptName" column="[HanderDeptname]" />
+    <property type="string"  name="HanderDeptId" column="[HanderDeptid]" />
+    <property type="string"  name="AreaCode" column="[AREACODE]" />
+    <property type="string"  name="AreaName" column="[AREANAME]" />
+    <property type="string"  name="AcceptMan" column="[ACCEPTMAN]" />
+    <property type="string"  name="AcceptTime" column="[ACCEPTTIME]" />
+    <property type="string"  name="PromiseValue" column="[PROMISEVALUE]" />
+    <property type="string"  name="PromiseType" column="[PROMISETYPE]" />
+    <property type="string"  name="PromiseEtime" column="[PROMISEETIME]" />
+    <property type="string"  name="TransactUser" column="[TRANSACTUSER]" />
+    <property type="string"  name="TransactTime" column="[TRANSACTTIME]" />
+    <property type="string"  name="TransactResult" column="[TRANSACTRESULT]" />
+    <property type="string"  name="ServiceCode" column="[SERVICECODE]" />
+    <property type="string"  name="ServiceName" column="[SERVICENAME]" />
+    <property type="string"  name="InfoType" column="[INFOTYPE]" />
+    <property type="string"  name="ApplyName" column="[APPLYNAME]" />
+    <property type="string"  name="ApplyCardType" column="[APPLYCARDTYPE]" />
+    <property type="string"  name="ApplyCardNumber" column="[APPLYCARDNUMBER]" />
+    <property type="string"  name="ContactMan" column="[CONTACTMAN]" />
+    <property type="string"  name="ContactManCardType" column="[CONTACTMANCARDTYPE]" />
+    <property type="string"  name="ContactManCardNumber" column="[CONTACTMANCARDNUMBER]" />
+    <property type="string"  name="TelPhone" column="[TELPHONE]" />
+    <property type="string"  name="PostCode" column="[POSTCODE]" />
+    <property type="string"  name="Address" column="[ADDRESS]" />
+    <property type="string"  name="LegalMan" column="[LEGALMAN]" />
+    <property type="string"  name="DataState" column="[DATASTATE]" />
+    <property type="string"  name="BelongSystem" column="[BELONGSYSTEM]" />
+    <property type="string"  name="PoliceTypeCode" column="[POLICETYPECODE]" />
+    <property type="string"  name="PoliceType" column="[POLICETYPE]" />
+    <property type="string"  name="Extend" column="[EXTEND]" />
+    <property type="string"  name="Lsh" column="[LSH]" />
+    <property type="string"  name="CreateDate" column="[CREATEDATE]" />
+    <property type="string"  name="IsSatisfied" column="[IsSatisfied]" />
+    <property type="string"  name="SatisfiedCode" column="[SatisfiedCode]" />
+    <property type="string"  name="Context" column="[CONTEXT]" />
+    <property type="string"  name="ReplyContext" column="[REPLYCONTEXT]" />
+    <property type="string"  name="Code" column="[CODE]" />
+    <property type="string"  name="Uuid" column="[UUID]" />
+    <property type="string"  name="UpdateTime" column="[UPDATETIME]" />
+  </class>
+</hibernate-mapping>

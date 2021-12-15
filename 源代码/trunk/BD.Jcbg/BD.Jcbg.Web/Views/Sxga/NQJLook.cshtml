@@ -1,0 +1,56 @@
+﻿@using BD.DataInputCommon;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>数据录入</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="@Skins.GetPubPath("My97DatePicker/WdatePicker.js")"></script>
+    <link href="@Skins.GetPubPath("hplus/css/bootstrap.min.css?v=3.3.5")" rel="stylesheet" />
+    <link href="@Skins.GetPubPath("hplus/css/font-awesome.min.css?v=4.4.0")" rel="stylesheet" />
+    <link href="@Skins.GetPubPath("hplus/css/animate.min.css")" rel="stylesheet" />
+    <link href="@Skins.GetPubPath("hplus/css/style.min.css?v=4.0.0")" rel="stylesheet" />
+    <link href="@Skins.GetPubPath("hplus/css/plugins/chosen/chosen.css")" rel="stylesheet" />
+    <link href="@Skins.GetPubPath("hplus/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css")" rel="stylesheet" type="text/css" />
+    <!-- 下拉过滤控件 -->
+    <link href="@Skins.GetPubPath("bootstrap/plugins/bootstrap-multiselect/css/bootstrap-multiselect.css")" rel="stylesheet" />
+
+
+    <link href="@Skins.GetPubPath("layer/skin/layer.css")" rel="stylesheet" />
+    <link href="@Skins.GetPubPath("uploadify/uploadify.css")" rel="stylesheet" />
+
+    <link href="@Skins.GetCssPath("datainput.css?v=20170321402")" rel="stylesheet" />
+    <link href="@Skins.GetCssPath("stj.css?v=2016031502")" rel="stylesheet" />
+    <script language="javascript" type="text/javascript" for="irisreader" event="BioIDEnrollBothIrisBEvent(irisleft,irisright,imgleft,imgright,EnrollResult)">
+
+
+    </script>
+</head>
+<body class="gray-bg" style="font-size:13px;">
+    <div class="wrapper wrapper-content animated fadeInRight">
+
+
+        <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/jquery.min.js?v=2.1.4")"></script>
+        <script type="text/javascript" src="@Skins.GetPubPath("layer/layer.js")"></script>
+        <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/bootstrap.min.js?v=3.3.5")"></script>
+        <!-- 多选下拉框 -->
+        <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/plugins/chosen/chosen.jquery.js")"></script>
+        <!-- 多选下拉框过滤 -->
+        <script type="text/javascript" src="@Skins.GetPubPath("bootstrap/plugins/bootstrap-multiselect/js/bootstrap-multiselect.js")"></script>
+
+        <script type="text/javascript" src="@Skins.GetJsPath("common.js?v=2016040502")"></script>
+        <script type="text/javascript" src="@Skins.GetJsPath("myControl.js?v=2017010503")"></script>
+        <script type="text/javascript" src="@Skins.GetJsPath("myContent.js?v=2017010602")"></script>
+        <script type="text/javascript" src="@Skins.GetJsPath("mybootstrap.js?v=2016012602")"></script>
+
+        <script type="text/javascript" src="@Skins.GetPubPath("uploadify/jquery.uploadify.min.js")"></script>
+   
+
+
+
+    </div>
+        @ViewData["ptc"]
+            @ViewData["ac"]
+            @ViewData["ny"]
+
+</body>
+</html>

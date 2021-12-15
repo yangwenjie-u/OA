@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/table.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/lib/layui/css/layui.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/tz/css/load.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/tree.css" />
+    <style type="text/css">
+    .role .role-power {
+        margin-top: 110px;
+    }
+
+    .role .role-person {
+        margin-top: 10px;
+    }
+
+    .role p {
+        color: #999999;
+        text-align: center;
+        width: 160px;
+        margin-left:30px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="role-list" id="roleList">
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script>
+    $(function() {
+        var params = getParams();
+        var usercode = params.usercode;
+        var menucode = params.menucode;
+        var obj;
+        if (usercode) {
+            obj = {
+                method: 'Role',
+                // opt: 'GetOwnerRoleListByUsercode',
+                opt:'GetRoleListByUsercode',
+                usercode: decodeURI(usercode),
+                rows: 10000
+            };
+        } else {
+            obj = {
+                method: 'Role',
+                opt: 'GetRoleListByMenucode',
+                menucode: menucode,
+                rows: 10000
+            };
+        }
+        GetRoleList(obj);
+    });
+
+
+
+    function GetRoleList(obj) {
+        ajaxTpl('/dwgxzj/UmsApiService', obj, function(data) {
+            if (data.data && data.data.rows && data.data.rows.length) {
+                var str = '',
+                    tmp;
+                rowData = data.data.rows;
+                for (var i = 0, len = rowData.length; i < len; i++) {
+                    tmp = rowData[i];
+                    str += '<div class="role" value="' + i + '"><p class="role-power" num="' + tmp.powernum + '">拥有权限:' + tmp.powernum + '</p><p class="role-person" num="' + tmp.usernum + '">所含人员:' + tmp.usernum + '</p><span>' + tmp.rolename + '</span></div>';
+                }
+                $("#roleList").html(str);
+                var li = $("#roleList").find('.role span');
+                for (var i = 0, len = li.length; i < len; i++) {
+                    tmp = li.eq(i);
+                    if (tmp.height() > 35) {
+                        tmp.parents('.role').addClass('role-2');
+                    }
+                }
+            }
+        });
+    }
+    $("#roleList").on('click', '.role-power', function(events) {
+        if ($(this).attr('num') == 0) {
+            layer.msg('暂无权限', {
+                icon: 2,
+                time: 2000
+            });
+            return;
+        }
+        var idx = $(this).parents('.role').attr('value');
+        var rolecode = rowData[idx].rolecode;
+        var url = '/dwgxzj/powerlist?edit=0&rolecode=' + rolecode;
+        layer.open({
+            type: 2,
+            title: '查看权限',
+            content: url,
+            area: (function(){
+                if(window.innerWidth < top.innerWidth * 0.7){
+                    return ['100%', '100%'];
+                }
+                return ['80%', '80%']; 
+            })()
+        });
+
+    });
+    $("#roleList").on('click', '.role-person', function(events) {
+        if ($(this).attr('num') == 0) {
+            layer.msg('暂无人员', {
+                icon: 2,
+                time: 2000
+            });
+            return;
+        }
+        var idx = $(this).parents('.role').attr('value');
+        var rolecode = rowData[idx].rolecode;
+        var url = '/dwgxzj/userlist?rolecode=' + rolecode;
+        layer.open({
+            type: 2,
+            title: '查看人员',
+            content: url,
+            area: (function(){
+                if(window.innerWidth < top.innerWidth * 0.7){
+                    return ['100%', '100%'];
+                }
+                return ['80%', '80%']; 
+            })()
+        });
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<html>
+
+<head>
+<style type="text/css">
+    .bootstrap-select{
+        overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
+		width:100px;
+    }
+</style>
+</head>
+
+<body>
+    <div id="test" class="page">
+        <span class="count"></span>
+        <div class="layer-page" id="page"></div>
+        <input type="text" class="page-val" value="1" />
+        <span class="sure">确定</span>
+        <div class="size">每页显示
+            <input type="text" class="page-size" value="10" />条</div>
+    </div>
+
+    <script>
+        getTable("/process", "", function (data) {
+        }, $("#test"));
+    </script>
+
+
+
+    <!-- //第一步：编写模版。你可以使用一个script标签存放模板，如： -->
+    <script id="demo" type="text/html">
+  <h3>{{ d.title }}</h3>
+  <ul>
+  {{#  layui.each(d.list, function(index, item){ }}
+    <li>
+      <span>{{ item.modname }}</span>
+      <span>{{ item.alias }}：</span>
+      <span>{{ item.site || '' }}</span>
+    </li>
+  {{#  }); }}
+  {{#  if(d.list.length === 0){ }}
+    无数据
+  {{#  } }} 
+  </ul>
+</script>
+
+    <!-- //第二步：建立视图。用于呈现渲染结果。 -->
+    <div id="view"></div>
+
+    <!-- //第三步：渲染模版 -->
+    <script>
+        var data = { //数据
+            "title": "Layui常用模块"
+            , "list": [{ "modname": "弹层", "alias": "layer", "site": "layer.layui.com" }, { "modname": "表单", "alias": "form" }]
+        }
+       
+        layui.use('laytpl', function () {
+            var getTpl = demo.innerHTML
+            , view = document.getElementById('view');
+            layui.laytpl(getTpl).render(data, function (html) {
+                view.innerHTML = html;
+            });
+        });
+
+    </script>
+</body>
+</html>

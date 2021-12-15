@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.MessageAct,BD.Jcbg.DataModal" table="MessageAct" lazy="false">
+    <id name="Lsh" column="lsh" type="string">
+      <generator class="assigned" />
+    </id>
+    <property type="string"  name="PhoneNumber" column="[phonenumber]" />
+    <property type="string"  name="Context" column="[context]" />
+    <property type="string"  name="Status" column="[status]" />
+    <property type="string"  name="ReplyContext" column="[replycontext]" />
+    <property type="string"  name="Uuid" column="[uuid]" />
+    <property type="string"  name="CreateDate" column="[CreateDate]" />
+    <property type="string"  name="ServiceCode" column="[SERVICECODE]" />
+  </class>
+</hibernate-mapping>

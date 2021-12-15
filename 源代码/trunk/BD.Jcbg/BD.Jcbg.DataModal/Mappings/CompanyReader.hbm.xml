@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.CompanyReader,BD.Jcbg.DataModal" table="CompanyReader" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="100" name="ParentEntity" column="[ParentEntity]" />
+    <property type="string" length="50" name="ParentId" column="[ParentId]" />
+    <property type="string" length="50" name="UserName" column="[UserName]" />
+    <property type="string" length="50" name="RealName" column="[RealName]" />
+    <property type="Boolean" name="HasReader" column="[HasReader]" />
+    <property type="DateTime" name="ReaderTime" column="[ReaderTime]" />
+    <property type="Boolean" name="HasDelete" column="[HasDelete]" />
+  </class>
+</hibernate-mapping>

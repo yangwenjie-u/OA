@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configs>
+  <!--用户系统WebService描述文件-->
+  <umswsfile>UserSystem.xml</umswsfile>
+  <!--用户系统WebService类名-->
+  <umswsclass>Services</umswsclass>
+  <!-- 应用ID -->
+  <appid>JCXT</appid>
+</configs>

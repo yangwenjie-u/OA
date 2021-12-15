@@ -1,0 +1,76 @@
+﻿@{
+	Layout = "~/Views/User/_easyuieditlayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+	function setsign_OpenDialog() {
+		$('#setsign_maindlg').dialog({
+			collapsible: false,
+			minimizable: false,
+			maximizable: false,
+			resizable: false,
+			shadow: true,
+			modal: false,
+			closable: false
+		});
+	}
+	$(function () {
+		setsign_initFileCtrl();
+		setsign_OpenDialog();
+
+		setsign_shImage();
+	});
+	function setsign_initFileCtrl() {
+		try {
+			var width = 120;
+			$('#setsign_fj').uploadify({
+				'swf': '/skins/default/images/uploadify.swf',
+				'uploader': '/user/savesetsign',
+				'fileTypeDesc': '图像文件',
+				'fileTypeExts': '*.jpg;*.png;*.bmp;*.gif;*.tiff',
+				'onUploadSuccess': function (file, data, response) {
+					var jdata = eval('(' + data + ')');
+
+					if (jdata.code == 0) {
+						$("#setsign_imgsign").attr("src", "/user/showsign?t=" + Math.random());
+						setsign_shImage();
+					}
+					else
+						$.messager.alert('提示', '上传文件' + file.name + '失败，错误信息：' + jdata.msg, 'info');
+				},
+				'onFallback': function () {
+					$.messager.alert('提示', '当前未安装flash控件，请从百度搜索flash player下载安装', 'info');
+				},
+
+				'onUploadError': function (file, errorCode, errorMsg, errorString) {
+					$.messager.alert('提示', file.name + '上传失败，' + errorString + '，请稍后再试', 'info');
+				},
+
+				'buttonText': '请选择签名图片',
+				'width': width,
+				'height': '25'
+			});
+		}
+		catch (err) {
+			$.messager.alert('提示', err, 'info');
+		}
+	}
+	function setsign_shImage() {
+		$("img").each(function (i, e) {
+			var imgsrc = $(e).attr("src");
+			$(e).load(function () {
+				$(e).show();
+			}).error(function () {
+				$(e).hide();
+			});
+
+		});
+	}
+</script>
+
+<div id="setsign_maindlg" style="padding:20px;width:600px;height:300px;" title="上传签名"> 
+	<input type='file' id='setsign_fj' name='setsign_fj'/>
+	<br /><br />
+	已上传签名：　　
+	<img src="/user/showsign" id="setsign_imgsign" alt=""/>
+</div> 

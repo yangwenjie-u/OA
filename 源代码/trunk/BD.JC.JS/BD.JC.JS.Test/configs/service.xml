@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects xmlns="http://www.springframework.net"
+         xmlns:db="http://www.springframework.net/database">
+  
+	<!--日志-->
+	<object id="LogService" type="BD.Log.Bll.LogService,BD.Log.Bll">
+		<property name="SysLogDao" ref="SysLogDao" />
+	</object>
+	<!--流程模块-->
+	<object id="WorkFlowService" type="BD.WorkFlow.Bll.WorkFlowService,BD.WorkFlow.Bll">
+		<property name="StActivityDao" ref="StActivityDao" />
+		<property name="StAssignRuleDao" ref="StAssignRuleDao" />
+		<property name="StDoneTasksDao" ref="StDoneTasksDao" />
+		<property name="StFileDao" ref="StFileDao"/>
+		<property name="StFormDao" ref="StFormDao"/>
+		<property name="StFormItemDao" ref="StFormItemDao"/>
+		<property name="StFormTemplateDao" ref="StFormTemplateDao"/>
+		<property name="StProcessDao" ref="StProcessDao"/>
+		<property name="StProcessGroupDao" ref="StProcessGroupDao"/>
+		<property name="StProcessMonitorDao" ref="StProcessMonitorDao"/>
+		<property name="StRoutingRuleDao" ref="StRoutingRuleDao"/>
+		<property name="StStartActivityDao" ref="StStartActivityDao"/>
+		<property name="StToDoTasksDao" ref="StToDoTasksDao"/>
+		<property name="ViewStProcessDao" ref="ViewStProcessDao"/>
+		<property name="StReportDao" ref="StReportDao"/>
+		<property name="CommonDao" ref="CommonDao"/>
+		<property name="StSerialDao" ref="StSerialDao"/>
+		<property name="ViewTodoTaskDao" ref="ViewTodoTaskDao"/>
+    <property name="STAssistUserDao" ref="STAssistUserDao"/>
+    <property name="StHostDao" ref="StHostDao"/>
+    <property name="StDeadlineDao" ref="StDeadlineDao"/>
+	</object>
+	<object id="RemoteUserService" type="BD.WorkFlow.Bll.RemoteUserService,BD.WorkFlow.Bll">
+	</object>
+	<!--办公系统-->
+	<object id="CommonService" type="BD.Jcbg.Bll.CommonService, BD.Jcbg.Bll">
+		<property name="CommonDao" ref="OaCommonDao"/>
+	</object>
+	<object id="SystemService" type="BD.Jcbg.Bll.SystemService, BD.Jcbg.Bll">
+		<property name="CommonDao" ref="OaCommonDao"/>
+		<property name="SelfDesktopItemDao" ref="SelfDesktopItemDao"/>
+		<property name="HelpDesktopItemDao" ref="HelpDesktopItemDao"/>
+		<property name="ViewSelfDesktopItemDao" ref="ViewSelfDesktopItemDao"/>
+	</object>
+	<object id="ExcelService" type="BD.Jcbg.Bll.ExcelService, BD.Jcbg.Bll">
+		<property name="CommonDao" ref="OaCommonDao"/>
+	</object>
+	<object id="OaService" type="BD.Jcbg.Bll.OaService, BD.Jcbg.Bll">
+		<property name="CommonDao" ref="OaCommonDao"/>
+		<property name="CompanyAnnounceDao" ref="CompanyAnnounceDao"/>
+		<property name="CompanyFileStorageDao" ref="CompanyFileStorageDao"/>
+		<property name="CompanyReaderDao" ref="CompanyReaderDao"/>
+		<property name="UserMailDao" ref="UserMailDao"/>
+		<property name="UserMailFolderDao" ref="UserMailFolderDao"/>
+		<property name="UserShareFileDao" ref="UserShareFileDao"/>
+		<property name="UserShareFileFolderDao" ref="UserShareFileFolderDao"/>
+    <property name="SysFileImageDao" ref="SysFileImageDao"/>
+		<property name="CompanyChangeDao" ref="CompanyChangeDao"/>
+    <property name="CompanyChangeItemDao" ref="CompanyChangeItemDao"/>
+    <property name="CompanyChangeTotalDao" ref="CompanyChangeTotalDao"/>
+    <property name="CompanyChangeTotalItemDao" ref="CompanyChangeTotalItemDao"/>
+    
+	</object>
+  <object id="SysjService" type="BD.Jcbg.Bll.SysjService, BD.Jcbg.Bll">
+    <property name="DcLogRedoDao" ref="DcLogRedoDao" />
+    <property name="SysjBakDao" ref="SysjBakDao" />
+    <property name="SysjsdDao" ref="SysjsdDao" />
+    <property name="XcsjDao" ref="XcsjDao" />
+    <property name="DcLogDao" ref="DcLogDao" />
+    <property name="BanHeZhanDataDao" ref="BanHeZhanDataDao" />
+    <property name="BanHeZhanSectionDao" ref="BanHeZhanSectionDao" />
+  </object>
+  <object id="JcService" type="BD.Jcbg.Bll.JcService, BD.Jcbg.Bll">
+    <property name="PrmDywjDao" ref="PrmDywjDao" />
+    <property name="PrmWjDao" ref="PrmWjDao" />
+    <property name="CommonDao" ref="OaCommonDao"/>
+  </object>
+  <!--列表-->
+  <object id="WebListService" type="BD.WebListBll.WebListService, BD.WebListBll">
+    <property name="listDao" ref="ListDao" />
+  </object>
+  <!-- 数据录入 -->
+  <object id="DataInputService" type="BD.DataInputBll.DataInputService, BD.DataInputBll">
+    <property name="webDataInputDao" ref="WebDataInputDao" />
+    <property name="dataFileDao" ref="DataFileDao" />
+  </object>
+  <!--excel打印-->
+  <object id="ExcelPrintService" type="BD.Jcbg.Bll.ExcelPrintService, BD.Jcbg.Bll">
+    <property name="CommonDao" ref="OaCommonDao" />
+  </object>
+</objects>

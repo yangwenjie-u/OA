@@ -1,0 +1,94 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_lastwtdw = "";
+    var g_gcbh = "@ViewBag.gcbh";
+	$(function () {
+		try {
+		    initDs();
+		} catch (e) {
+		    alert(e);
+		}
+
+	});
+	function initDs() {
+	    try {
+			$.ajax({
+				type: "POST",
+				url: "/machine/GetJcjg",
+				dataType: "json",
+				async: false,
+				data: "filtergc=" + encodeURIComponent(g_gcbh),
+				success: function (data) {
+				    try{
+				        $("#ctrlJcjgs").empty();
+				        if (data.length > 0) {
+				        $.each(data, function (i, value) {
+				            $("#ctrlJcjgs").append("<option value='" + value.qybh + "'>" + value.qymc + "</option>");
+
+				        });
+				        if (g_lastwtdw != "")
+				            $("#ctrlJcjgs").val(g_lastwtdw);
+				        } else {
+				            $("#ctrlJcjgs").append("<option value=''>!!!请先在检测机构备案内部合同!!!</option>");
+				        }
+				    } catch (e) {
+				        alert(e);
+				    }
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+				},
+				beforeSend: function (XMLHttpRequest) {
+				}
+			});
+		} catch (e) {
+		    alert(e);
+		}
+	}
+	function doSubmit() {
+	    var ret = "";
+	    try{
+	        ret = $("#ctrlJcjgs").val();
+	        if (ret == null || ret == "") {
+	            alert("请选择预填单位");
+	            return ret;
+	        }
+            /*
+	        $.ajax({
+	            type: "POST",
+	            url: "/jc/setwtdytjg?qybh=" + encodeURIComponent(ret),
+	            dataType: "json",
+	            async: false,
+	            success: function (data) {
+	                if (data.code == "0") {
+	                    ret = true;
+	                } else {
+	                    if (data.msg == "")
+	                        data.msg = "未知错误";
+	                    alert(data.msg);
+	                    ret = "";
+	                }
+	            },
+	            complete: function (XMLHttpRequest, textStatus) {
+	                layer.closeAll('loading');
+	            },
+	            beforeSend: function (XMLHttpRequest) {
+	                layer.load();
+	            }
+	        });*/
+	    }
+	    catch (e) {
+	        alert(e);
+	    }
+	    return ret;
+	}
+</script>
+} 
+<br />
+<center>
+    委托单预填检测机构：<select id="ctrlJcjgs"></select>
+</center>

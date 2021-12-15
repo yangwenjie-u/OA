@@ -1,0 +1,342 @@
+﻿@using BD.WebListCommon; @using BD.WebListDataModel.Entities;
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="/skins/newWebList/pub/reset.css" />
+	<link rel="stylesheet" type="text/css" href="/skins/newWebList/pub/table.css" />
+	<style type="text/css">
+/*		.slide-type {
+			display: inline-block;
+			width: 50px;
+			height: 4px;
+			background: gray;
+			vertical-align: middle;
+			margin: 0 10px;
+			position: relative;
+		}
+
+		.slide-type span {
+			display: inline-block;
+			width: 16px;
+			height: 16px;
+			background: red;
+			border-radius: 50px;
+			top: -6px;
+			position: absolute;
+		}
+
+		.slide-type .right {
+			right: 0px;
+		}*/
+
+
+		.top-btn {
+			background: #d3dced;
+			background: -webkit-linear-gradient(bottom, #d3dced, #e9edf8);
+			background: -o-linear-gradient(bottom, #d3dced, #e9edf8);
+			background: -moz-linear-gradient(bottom, #d3dced, #e9edf8);
+			background: linear-gradient(to bottom, #d3dced, #e9edf8);
+		}
+
+		
+		.buttonList .btn {
+			
+			display: inline-block;
+			margin-top: 10px;
+			text-align: center;
+		}
+
+		.table {
+			display: table;
+		}
+
+
+
+		.dis-rows {
+			display: table-row;
+		}
+
+		.dis-cell {
+			display: table-cell;
+			vertical-align: top;
+		}
+
+		.gd-talbe-warp {
+			display: inline-block;
+		}
+
+		.list-talbe-warp {
+			display: inline-block;
+		}
+
+		.table-warp {
+			overflow: auto;
+		}
+
+		.table-warp .layui-table-view {
+			margin: 0px;
+		}
+
+
+		.table-filter input,
+		.layui-table .table-filter select {
+			display: inline-block;
+			width: 100%;
+			height: 26px;
+			border: 1px solid #A9A9A9;
+		}
+
+		.table-filter .layui-form-select {
+			display: none;
+		}
+
+
+		.table-filter {
+			vertical-align: top;
+			height: 26px;
+			line-height: 26px;
+			text-align: center;
+		}
+
+		.layui-table-patch .layui-table-cell {
+			height: 1px;
+		}
+
+		.layui-table-body.layui-table-main td {
+			height: 38px;
+		}
+
+
+		.table-warp .layui-table-body td {
+			height: 35px;
+			padding: 0px;
+			box-sizing: border-box;
+		}
+
+
+		.table-warp .layui-table-view .layui-table td {
+			padding: 0px;
+			height: 35px;
+		}
+
+		.layui-table-body .layui-table-cell {
+			height: 35px;
+			line-height: 35px;
+			position: static;
+			display: inline-block;
+			vertical-align: middle;
+		}
+
+		body {
+			background: white;
+		}
+
+		.top-filter {
+			background: -webkit-linear-gradient(bottom, #e9edf8, #E9EDF6);
+			/* Safari 5.1 - 6.0 */
+			background: -o-linear-gradient(bottom, #e9edf8, #E9EDF6);
+			/* Opera 11.1 - 12.0 */
+			background: -moz-linear-gradient(bottom, #e9edf8, #E9EDF6);
+			/* Firefox 3.6 - 15 */
+			background: linear-gradient(to bottom, #e9edf8, #E9EDF6);
+			/* 标准的语法 */
+			width: 100%;
+			padding: 0 10% 10px 10%;
+			display: table;
+			border-spacing: 0 3px;
+			box-sizing: border-box;
+		}
+
+		.filter-ipt label {
+			display: inline-block;
+			width: 200px;
+			text-align: center;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
+		.filter-ipt .layui-input,
+		.filter-ipt select {
+			display: inline-block;
+			width: 140px;
+		}
+
+		.filter-ipt label,
+		.filter-ipt .layui-input,
+		.filter-ipt select {
+			height: 30px;
+			line-height: 30px;
+			vertical-align: top;
+		}
+
+		.top-btn {
+			cursor: pointer;
+		}
+
+		.filter-ipt label {
+			color: #707789;
+		}
+
+		.filter-ipt select {
+			border: 1px solid #e6e6e6;
+			background-color: #fff;
+			border-radius: 2px;
+		}
+
+		.filter-space {
+			display: inline-block;
+			line-height: 30px;
+			width: 10px;
+			text-align: center;
+		}
+
+		.btn span {
+			padding-left: 30px;
+			height: 26px;
+			line-height: 26px;
+			display: inline-block;
+			vertical-align: top;
+			font-size: 16px;
+			color: #707789;
+		}
+
+		.table-warp .layui-table-cell {
+			padding: 0px;
+		}
+		.switch{
+			display: inline-block;
+			margin:0 10px;
+		}
+
+		.switch span{
+			font-size: 16px;
+		    color: #707789;
+		    line-height: 24px;
+		    vertical-align: middle;
+		    margin: 0px 10px;
+		    position: relative;
+		    top: 6px;
+		}
+	</style>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<!-- CSS -->
+	@{ IList<string> cssList = ViewData["css"] as IList<string>; } 
+	@foreach (var item in cssList)
+    {
+        <link rel="stylesheet" href="@Skins.GetCustomCssPath(item)"/>
+    }
+</head>
+
+<body>
+	<input type="text" name="param" id="param" value='@ViewData["param"]' style="display: none;" />
+	<div id="tableList" lay-filter="test">
+	</div>
+
+	<form id="dataExportForm" action="" method="post">
+		<input type="hidden" id="exportparam" name="exportparam" value='@ViewData["param"]' />
+		<input type="hidden" id="exportfilter" name="exportfilter" value="" />
+		<input type="hidden" id="exportsort" name="exportsort" value="" />
+		<input type="hidden" id="exportorder" name="exportorder" value="" />
+		<input type="hidden" id="exportcustomzdzd" name="exportcustomzdzd" value="" />
+	</form>
+
+	<script type="text/javascript" src="/skins/newWebList/lib/jquery-2.0.3.min.js"></script>
+	<script type="text/javascript" src="/skins/newWebList/lib/jq.resizableColumns.js"></script>
+	<script type="text/javascript" src="/skins/newWebList/lib/layui/layui.js"></script>
+	<link rel="stylesheet" type="text/css" href="/skins/newWebList/lib/layui/css/layui.css">
+	<script type="text/javascript" src="/skins/WebList/pub/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="/skins/newWebList/pub/common.js"></script>
+	<script type="text/javascript" src="/skins/newWebList/js/webList.js"></script>
+	<script type="text/javascript">
+		function init() {
+			ajaxTpl('/WebList/InitEasyUIFormData', {
+				param: $("#param").val()
+			}, function (data) {
+				$("#tableList").setWebList({}, data);
+			});
+		}
+
+		function pubselect() {
+			return $("#tableList").pubselect();
+		}
+
+		function pubselects() {
+			return $("#tableList").pubselects();
+		}
+
+		$(function () {
+			document.body.style.height = window.innerHeight + 'px';
+
+			init();
+		})
+
+		// $("#tableList").on('click', '.slide-type', function(event) {
+		//     var child = $(this).children('span')
+		//     var wid = $(this).width() - 10;
+		//     var left = parseFloat(child.css('left'));
+		//     child.animate({
+		//         left: left > 0 ? 0 : wid
+		//     }, "normal");
+		// });
+
+		function switchRecord(that) {
+			console.log(that);
+		}
+
+		//**** 查询 ****
+
+		function searchRecord() {
+			$("#tableList").searchRecord();
+			// var filter = $('.top-filter').find(".filter-ipt");
+		}
+
+		//**** 导出 ****
+		function exportRecord() {
+			$("#exportfilter").val($("#tableList").tableFilter().join());
+
+			//有排序
+			var sort = $('.layui-table-sort[lay-sort]');
+			if(sort.length){
+				$("#exportsort").val(sort.parents('th').attr('data-field'));//排序名称
+				$("#exportorder").val(sort.attr('lay-sort'));//排序方向
+			}
+
+			var frm = $("#dataExportForm");
+			frm.attr("action", "/WebList/ExportExcelData");
+			frm.submit();
+		}
+		//**** 加密导出 ****
+		function exportEncRecord() {
+
+		    $("#exportfilter").val($("#tableList").tableFilter().join());
+
+			//有排序
+			var sort = $('.layui-table-sort[lay-sort]');
+			if(sort.length){
+				$("#exportsort").val(sort.parents('th').attr('data-field'));//排序名称
+				$("#exportorder").val(sort.attr('lay-sort'));//排序方向
+			}
+
+			var frm = $("#dataExportForm");
+			frm.attr("action", "/WebList/ExportEncData");
+			frm.submit();
+
+		}
+
+		function FormatEventTest() {}
+		function pubselects2(){
+			var ary = $("#tableList").pubselects();
+			return ary.length > 0 ? ary : undefined;
+		}
+		function layuiFormSwitch(that){
+			that.checked =  that.checked == undefined ? true : !that.checked ;
+			$(that).toggleClass('layui-form-onswitch');
+		}
+
+	</script>
+</body>
+
+</html>

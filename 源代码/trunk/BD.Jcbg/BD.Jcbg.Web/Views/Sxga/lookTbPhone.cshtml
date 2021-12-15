@@ -1,0 +1,483 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+<html style="width: 650px;margin:auto;">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title id="ititle">@ViewData["title"]</title>
+
+    <link href="@SkinManager.GetSxgaPath("css/layer.css?v=2.1.4")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetSxgaPath("css/bootstrap.min.css?v=2.1.4")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetSxgaPath("css/style.min.css?v=2.1.4")" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="@SkinManager.GetSxgaPath("js/echarts.min.js?v=2.1.4")"></script>
+    <script type="text/javascript" src="@SkinManager.GetSxgaPath("js/jquery-1.8.0.min.js?v=2.1.4")"></script>
+    <script type="text/javascript" src="@SkinManager.GetSxgaPath("js/dateact.js?v=2.1.4")"></script>
+    <script type="text/javascript" src="@SkinManager.GetSxgaPath("js/layer.js?v=2.1.4")"></script>
+</head>
+<body style="margin:auto; text-align:center;">
+
+    <input id="date1" type="hidden" />
+    <div id="btnDiv" style="width: 650px;height:40px;margin: 20px auto auto auto;">
+
+        <button id="prey" type="button" class="btn btn-primary btn-lg pull-right" style="margin: 0 35px">上月</button>
+        <button id="dy" type="button" class="btn btn-primary btn-lg pull-right" style="margin: 0 35px">当月</button>
+        <button id="nexty" type="button" class="btn btn-primary btn-lg pull-right" style="margin: 0 35px">下月</button>
+        <button id="prez" type="button" class="btn btn-primary btn-lg pull-right" style="margin: 0 35px">上周</button>
+        <button id="dz" type="button" class="btn btn-primary btn-lg pull-right" style="margin: 0 35px">当周</button>
+        <button id="nextz" type="button" class="btn btn-primary btn-lg pull-right" style="margin: 0 35px">下周</button>
+    </div>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom <div id="main" style="width: 600px;height:400px;"></div>-->
+    <div id="main" style="width: 650px;height:400px;margin:auto;"></div>
+
+    <script type="text/javascript">
+
+        var myChart;
+        $(function () {
+            $("#date1").val('@ViewData["date1"]');
+            var bs = '@ViewData["BS"]';
+            if (bs != "Y") {
+                bs = 'Z'
+            }
+            var date1 = $("#date1").val();
+            var mydate = new Date();
+            if (date1.length <= 1) {
+                date1 = bs + mydate.Format("yyyy-MM-dd");
+            }
+            if (bs == 'Y') {
+                $("#prez").remove();
+                $("#nextz").remove();
+                $("#dz").remove();
+                $("#prey").click(function () {
+                    changeData('prey');
+                });
+                $("#nexty").click(function () {
+                    changeData('nexty');
+                });
+                $("#dy").click(function () {
+                    changeData('dy');
+                });
+            } else {
+                $("#prey").remove();
+                $("#nexty").remove();
+                $("#dy").remove();
+                $("#prez").click(function () {
+                    changeData('prez');
+                });
+                $("#nextz").click(function () {
+                    changeData('nextz');
+                });
+                $("#dz").click(function () {
+                    changeData('dz');
+                });
+            }
+            $("#date1").val(date1);
+            getData(date1);
+        })
+
+
+        function changeData(param) {
+            var datevalue = $("#date1").val();
+            var BS = datevalue.substring(0, 1);
+            var datetmp = datevalue.substring(1, datevalue.length);
+            var newdate = new Date();
+            newdate = datetmp.StringToDate();
+
+            switch (param) {
+                case "prey"://上月
+                    newdate.setMonth(newdate.getMonth() - 1);
+                    datevalue = 'Y' + newdate.Format("yyyy-MM-dd");
+                    $("title").html("满意度月统计");
+                    break;
+                case "nexty"://下月
+                    newdate.setMonth(newdate.getMonth() + 1);
+                    datevalue = 'Y' + newdate.Format("yyyy-MM-dd");
+                    $("title").html("满意度月统计");
+                    break;
+                case "dy"://当月
+
+                    datevalue = "Y" + (new Date()).Format("yyyy-MM-dd");
+                    $("title").html("满意度月统计");
+                    break;
+                case "prez"://上周
+                    newdate.setDate(newdate.getDate() - 7);
+                    datevalue = 'Z' + newdate.Format("yyyy-MM-dd");
+                    $("title").html("满意度周统计");
+                    break;
+                case "nextz"://下周
+                    newdate.setDate(newdate.getDate() + 7);
+                    datevalue = 'Z' + newdate.Format("yyyy-MM-dd");
+                    $("title").html("满意度周统计");
+                    break;
+                case "dz"://当周
+
+                    datevalue = "Z" + (new Date()).Format("yyyy-MM-dd");
+                    $("title").html("满意度周统计");
+                    break;
+                default:
+                    //信息框
+                    layer.open({
+                        content: '指令错误!'
+                      , btn: '确定'
+                    });
+                    return;
+            }
+            getData(datevalue);
+            $("#date1").val(datevalue)
+        }
+
+
+        function getData(date1) {
+
+            $.ajax({
+                url: "/Sxga/getTbData",
+                async: true,
+                dataType: "json",
+                type: "POST",
+                data: {
+                    date1: date1,
+                    pro: 'true'
+                },
+                success: function (result) {
+
+                    $('#main').empty();
+
+                    if (result.success == true) {
+
+                        if (result.data.length == 0) {
+                            $('#main').append("<div id='child' style='width: 650px;height:100px;'><br/><br/>无统计数据!</div>");
+                            return;
+                        }
+
+                        $('#main').append("<div id='child0' style='width: 650px;height:30px;text-align:center;font-size:20px;font-weight:bold;'></div>");
+                        $('#main').append("<div id='child1' style='width: 650px;height:40px;text-align:center;font-size:28px;font-weight:bold;'>全市公安机关“最多跑一次”改革群众满意度" + result.data[0].bstext + "报表</div>");
+                        $('#main').append("<div id='child2' style='width: 650px;height:30px;text-align:center;font-size:20px;'>(" + result.data[0].istartdate + " - " + result.data[0].ienddate.substring(5, 11) + ")</div>");
+                        $('#main').append("<div id='child11' style='width: 650px;height:30px;text-align:center;font-size:20px;font-weight:bold;'></div>");
+
+                        $('#main').append("<div id='child1' style='width: 650px;height:30px;text-align:center;font-size:20px;font-weight:bold;'>一、总体情况</div>");
+
+
+                        var flag = true;
+
+
+                        for (i = 0; i < result.data.length; i++) {
+
+                            var title = "";
+                            var grid_top = '25%';
+                            var legend_top = '15%';
+
+                            if (flag && result.data[i].orderno != 0) {
+                                flag = false;
+                                $('#main').append("<div id='child4' style='width: 650px;height:40px;'><hr style='height:5px;border:none;border-top:5px ridge green;'  /></div>");
+                                $('#main').append("<div id='child5' style='width: 650px;height:50px;text-align:center;font-size:19px;font-weight:bold;'>二、各警种详细情况</div>");
+
+                            }
+
+                            if (result.data[i].orderno == 0) {
+                                if (i == 0) {
+                                    title = '(一)按' + result.data[i].ititle;
+                                } else if (i == 1) {
+                                    title = '(二)按' + result.data[i].ititle;
+                                }
+
+                            } else {
+                                /*
+                                if (i == 2) {
+                                    title = '(一)' + result.data[i].ititle;
+                                } else if (i == 3) {
+                                    title = '(二)' + result.data[i].ititle;
+                                } else if (i == 4) {
+                                    title = '(三)' + result.data[i].ititle;
+                                } else if (i == 5) {
+                                    title = '(四)' + result.data[i].ititle;
+                                } else if (i == 6) {
+                                    title = '(五)' + result.data[i].ititle;
+                                } else if (i == 7) {
+                                    title = '(六)' + result.data[i].ititle;
+                                } else if (i == 8) {
+                                    title = '(七)' + result.data[i].ititle;
+                                } else if (i == 9) {
+                                    title = '(八)' + result.data[i].ititle;
+                                } else if (i == 10) {
+                                    title = '(九)' + result.data[i].ititle;
+                                } else if (i == 11) {
+                                    title = '(十)' + result.data[i].ititle;
+                                } else if (i == 12) {
+                                    title = '(十一)' + result.data[i].ititle;
+                                }
+                                */
+                                switch (i) {
+                                    case 2:
+                                        title = '(一)' + result.data[i].ititle;
+                                        break;
+                                    case 3:
+                                        title = '(二)' + result.data[i].ititle;
+                                        break;
+                                    case 4:
+                                        title = '(三)' + result.data[i].ititle;
+                                        break;
+                                    case 5:
+                                        title = '(四)' + result.data[i].ititle;
+                                        break;
+                                    case 6:
+                                        title = '(五)' + result.data[i].ititle;
+                                        break;
+                                    case 7:
+                                        title = '(六)' + result.data[i].ititle;
+                                        break;
+                                    case 8:
+                                        title = '(七)' + result.data[i].ititle;
+                                        break;
+                                    case 9:
+                                        title = '(八)' + result.data[i].ititle;
+                                        break;
+                                    case 10:
+                                        title = '(九)' + result.data[i].ititle;
+                                        break;
+                                    case 11:
+                                        title = '(十)' + result.data[i].ititle;
+                                        break;
+                                    case 12:
+                                        title = '(十一)' + result.data[i].ititle;
+                                        break;
+                                    case 13:
+                                        title = '(十二)' + result.data[i].ititle;
+                                        break;
+
+                                }
+
+                            }
+
+                            var itemcolor = '#c23531';
+                            if (i % 4 == 1) {
+                                itemcolor = '#61a0a8';
+                            } else if (i % 4 == 2) {
+                                itemcolor = '#bda29a';
+                            } else if (i % 4 == 3) {
+                                itemcolor = '#749f83';
+                            }
+
+
+                            var total = 0;
+                            var bmytotal = 0;
+                            var mytotal = 0;
+                            var ybtotal = 0;
+                            var hftotal = 0;
+                            var bmy = result.data[i].bmy.split(",");
+                            var my = result.data[i].my.split(",");
+                            var yb = result.data[i].yb.split(",");
+                            var hf = result.data[i].hf.split(",");
+                            var clum = result.data[i].clum.split(",");
+                            var clumvalue = result.data[i].clumvalue.split(",");
+                            var valuearray = new Array();
+                            for (j = 0; j < clumvalue.length; j++) {
+                                var array = new Array();
+                                array.push(j);
+                                array.push(parseFloat(clumvalue[j]));
+                                array.push(bmy[j]);
+                                array.push(my[j]);
+                                array.push(yb[j]);
+                                array.push(hf[j]);
+                                valuearray.push(array);
+                                total = total + parseInt(bmy[j]) + parseInt(my[j]) + parseInt(yb[j]);
+                                bmytotal = bmytotal + parseInt(bmy[j]);
+                                hftotal = hftotal + parseInt(hf[j]);
+                                mytotal = mytotal + parseInt(my[j]);
+                                ybtotal = ybtotal + parseInt(yb[j]);
+                            }
+
+                            if (i == 0) {
+
+                                $('#main').append("<div id='child3' style='width: 650px;height:30px;text-align:center;font-size:19px;'>总共:发送短信<font style='color:red;'>" + total + "</font>条,回复<font style='color:red;'>" + hftotal + "</font>条(其中不满意<font style='color:red;'>" + bmytotal + "</font>条,一般满意<font style='color:red;'>" + ybtotal + "</font>条),满意率<font style='color:red;'>" + (mytotal * 100 / total).toFixed(1) + "%</font></div>");
+                                $('#main').append("<div id='child31' style='width: 650px;height:20px;text-align:center;font-size:20px;font-weight:bold;'></div>");
+
+                            }
+                            $('#main').append("<div id='main" + result.data[i].recid + "' style='width: 650px;height:400px;'></div>");
+
+                            myChart = echarts.init(document.getElementById("main" + result.data[i].recid + ""));
+
+                            // 指定图表的配置项和数据
+                            var option = {
+                                title: {
+                                    textStyle: {
+
+                                        fontSize: 18
+                                    },
+                                    text: title,
+                                    left: '7%',
+                                    // subtext: '短信发送总数' + total + '条,其中不满意' + bmytotal + '条',
+                                    subtextStyle: {
+                                        fontSize: 16
+                                    },
+                                },
+                                /* 显示下载按钮
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {
+
+                                        }
+                                    }
+
+                                },*/
+                                grid: {
+                                    left: '7%',
+                                    right: '7%',
+                                    top: grid_top,
+                                    containLabel: true
+                                },
+                                tooltip: {
+                                    textStyle: {
+                                        fontSize: 20
+                                    },
+                                    trigger: 'axis',
+                                    formatter: function (a) {
+                                        return a[0].axisValueLabel + '<br/>' + '发送' + (parseInt(a[0].data[2]) + parseInt(a[0].data[3]) + parseInt(a[0].data[4])) + '条<br/>' + '回复' + a[0].data[5] + '条<br/>' + '其中一般' + a[0].data[3] + '条<br/>不满意' + a[0].data[2] + '条'
+                                    }
+
+                                },
+                                legend: {
+                                    top: legend_top,
+                                    data: ['满意率'],
+                                    textStyle: {
+                                        fontSize: 20
+                                    }
+                                },
+                                xAxis: {
+
+                                    data: clum,
+                                    axisLabel: {
+                                        show: true,
+                                        textStyle: {
+                                            fontSize: 16
+                                        }
+                                    }
+                                },
+                                yAxis: {
+                                    name: "单位(%)",
+                                    nameTextStyle: {
+                                        fontSize: 16
+                                    },
+                                    axisLabel: {
+                                        show: true,
+                                        textStyle: {
+                                            fontSize: 16
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: '满意率',
+                                    type: 'bar',
+                                    data: valuearray,//[[0, 23, 11], [1, 44, 22]],//clumvalue,
+                                    label: {
+                                        normal: {
+                                            show: true,
+                                            position: 'inside',
+                                            fontSize: 16,
+                                            formatter: function (a) {
+                                                return a.value[1] + '%'
+                                            }
+                                        }
+                                    },
+                                    itemStyle: {
+                                        normal: {
+                                            color: itemcolor
+                                        }
+                                    }
+                                }]
+                            };
+
+                            // 使用刚指定的配置项和数据显示图表。
+                            myChart.setOption(option);
+                        }
+
+
+                    } else {
+                        $('#main').append("<div id='child' style='width: 600px;height:100px;'><br/><br/>" + result.msg + "</div>");
+
+                    }
+
+                }
+            });
+
+        }
+
+        /*
+            // 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('main'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    textStyle: {
+
+                        fontSize: 20
+                    },
+                    text: '月统计',
+                    left: 'center'
+                },
+                grid: {
+                    left: '7%',
+                    right: '7%',
+                    top: '20%',
+                    containLabel: true
+                },
+                tooltip: {
+                    textStyle: {
+                        fontSize: 20
+                    }
+                },
+                legend: {
+                    top: '10%',
+                    data: ['满意率'],
+                    textStyle: {
+                        fontSize: 20
+                    }
+                },
+                xAxis: {
+
+                    data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            fontSize: 16
+                        }
+                    }
+                },
+                yAxis: {
+                    name: "单位(%)",
+                    nameTextStyle: {
+                        fontSize: 16
+                    },
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            fontSize: 16
+                        }
+                    }
+                },
+                series: [{
+                    name: '满意率',
+                    type: 'bar',
+                    data: [5, 20, 36, 10, 10.5, 20],
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside',
+                            fontSize: 16,
+                            formatter: '{c}%'
+                        }
+                    },
+                }]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            */
+    </script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5FFEB199-02EB-4077-8BE5-E2A4DA3AA9C4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BD.Jcbg.Bll</RootNamespace>
+    <AssemblyName>BD.Jcbg.Bll</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Aliyun.OSS, Version=2.4.0.0, Culture=neutral, PublicKeyToken=0ad4175f0dac0b9b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\引用库\Oss_CDN_SDK\Aliyun.OSS.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputModel">
+      <HintPath>..\..\..\..\引用库\录入界面\DLL\BD.DataInputModel.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IDataInputDao">
+      <HintPath>..\..\..\..\引用库\录入界面\DLL\BD.IDataInputDao.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\引用库\MySql\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\引用库\电子签章\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\..\..\引用库\ssh\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\..\..\..\引用库\npoi\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\..\..\..\引用库\npoi\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\..\..\..\引用库\npoi\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Oss_CDN_SDK">
+      <HintPath>..\..\..\..\引用库\Oss_CDN_SDK\Oss_CDN_SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Oss_CDN_SDK.XmlSerializers">
+      <HintPath>..\..\..\..\引用库\Oss_CDN_SDK\Oss_CDN_SDK.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="ReportPrint">
+      <HintPath>..\..\..\..\引用库\pageoffice打印\ReportPrint.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\..\..\..\引用库\ssh\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data">
+      <HintPath>..\..\..\..\引用库\ssh\Spring.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlertService.cs" />
+    <Compile Include="BasicDataService.cs" />
+    <Compile Include="CommonService.cs" />
+    <Compile Include="DwgxSxjzyService.cs" />
+    <Compile Include="DwgxWzOhService.cs" />
+    <Compile Include="DwgxwzService.cs" />
+    <Compile Include="DwgxZJService.cs" />
+    <Compile Include="ExcelPrintService.cs" />
+    <Compile Include="ExcelService.cs" />
+    <Compile Include="FormAPIService.cs" />
+    <Compile Include="GclrWxyFileService.cs" />
+    <Compile Include="JcjgBgService.cs" />
+    <Compile Include="MySqlService.cs" />
+    <Compile Include="JcjtService.cs" />
+    <Compile Include="NewsArtcleService.cs" />
+    <Compile Include="NewsAttachService.cs" />
+    <Compile Include="NewsCategoryService.cs" />
+    <Compile Include="NewsMenuService.cs" />
+    <Compile Include="ReportWWGZFileService.cs" />
+    <Compile Include="ReportWWGZService.cs" />
+    <Compile Include="DataFileService.cs" />
+    <Compile Include="SelfService.cs" />
+    <Compile Include="SmsServiceWgry.cs" />
+    <Compile Include="SXJTService.cs" />
+    <Compile Include="SxtptService.cs" />
+    <Compile Include="ApiSessionService.cs" />
+    <Compile Include="UpBgsdscService.cs" />
+    <Compile Include="WdyKqjService.cs" />
+    <Compile Include="YcbaService.cs" />
+    <Compile Include="JcService.cs" />
+    <Compile Include="JdbgService.cs" />
+    <Compile Include="KqjService.cs" />
+    <Compile Include="MessageActService.cs" />
+    <Compile Include="MessageInfoListService.cs" />
+    <Compile Include="MessageReceiveService.cs" />
+    <Compile Include="OaService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmsService.cs" />
+    <Compile Include="SmsServiceLczjz.cs" />
+    <Compile Include="SmsServiceWzzjz.cs" />
+    <Compile Include="SxgaService.cs" />
+    <Compile Include="SysjService.cs" />
+    <Compile Include="SystemService.cs" />
+    <Compile Include="WgryKqjService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BD.Jcbg.Common\BD.Jcbg.Common.csproj">
+      <Project>{81254B6D-C43C-42DB-950E-93B880F53EDA}</Project>
+      <Name>BD.Jcbg.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BD.Jcbg.DataModal\BD.Jcbg.DataModal.csproj">
+      <Project>{5E620B26-8ECC-4BFC-92A6-4C43B6237ED7}</Project>
+      <Name>BD.Jcbg.DataModal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BD.Jcbg.IBll\BD.Jcbg.IBll.csproj">
+      <Project>{6F190D1A-E81F-4E32-B494-788EB2ED5A7E}</Project>
+      <Name>BD.Jcbg.IBll</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BD.Jcbg.IDao\BD.Jcbg.IDao.csproj">
+      <Project>{1CD8796F-DE8B-4075-AC63-0FA3088A31F5}</Project>
+      <Name>BD.Jcbg.IDao</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BD.Jcbg.Service\BD.Jcbg.Service.csproj">
+      <Project>{cbb60b71-d584-42ba-8a0a-b9e566e83230}</Project>
+      <Name>BD.Jcbg.Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

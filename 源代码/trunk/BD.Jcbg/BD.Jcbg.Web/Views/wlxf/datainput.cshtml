@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 上下三层结构 -->
+    <title>数据录入</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+    <script type="text/javascript" src="/skins/DataInput/pub/My97DatePicker/WdatePicker.js"></script>
+    <link href="/skins/DataInput/pub/hplus/css/bootstrap.min.css?v=3.3.5" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/hplus/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/hplus/css/animate.min.css" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/hplus/css/style.min.css?v=4.0.0" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/hplus/css/plugins/chosen/chosen.css" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/hplus/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" type="text/css" />
+    <!-- 下拉过滤控件 -->
+    <link href="/skins/DataInput/pub/bootstrap/plugins/bootstrap-multiselect/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/layer/skin/layer.css" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/uploadify/uploadify.css" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/H5uploadify/Huploadify.css" rel="stylesheet" />
+    <link href="/skins/DataInput/css/datainput.css?v=20170321402" rel="stylesheet" />
+    <link href="/skins/DataInput/css/stj.css?v=2016031503" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/viewer/dist/viewer.min.css" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/colorPicker/index.css" rel="stylesheet" />
+    <link href="/skins/DataInput/pub/colorPicker/jqColor.css" rel="stylesheet" />
+    <script language="javascript" type="text/javascript" for="irisreader" event="BioIDEnrollBothIrisBEvent(irisleft,irisright,imgleft,imgright,EnrollResult)">
+    if (EnrollResult == 1) {
+        g_irisreader.setIrisInfo(irisleft + irisright);
+    } else if (EnrollResult = 0) {
+        alert("超时失败");
+    } else if (EnrollResult = -1) {
+        alert("注册失败");
+    }
+    </script>
+    <style type="text/css">
+    .stj_lr_td {
+        display: flex;
+    }
+
+    .stj_label {
+        flex-shrink: 0;
+    }
+
+    .dayg {
+        flex-grow: 1;
+        display: inline-flex;
+        flex-wrap: wrap;
+    }
+
+    .dayg .form-control {
+        flex-grow: 1;
+    }
+
+    .cu-custom {
+        position: relative;
+        z-index: 999;
+        box-sizing: border-box;
+    }
+
+    .cu-bar.fixed {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        color: white;
+        display: flex;
+        background-color: #3da8ef;
+        height: 45px;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+    }
+
+    .action {
+        margin-left: 15px;
+        font-size: 15px;
+    }
+
+    .cu-custom .content {
+        position: absolute;
+        text-align: center;
+        width: calc(100% - 170px);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        margin: auto;
+        height: 30px;
+        font-size: 16px;
+        line-height: 30px;
+        cursor: none;
+        pointer-events: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .hiddentd {
+        display: none !important;
+    }
+
+    .wrapper.wrapper-content {
+        padding: 20px 0;
+    }
+    </style>
+</head>
+
+<body class="gray-bg" style="font-size:13px;">
+    <div class="cu-custom" id="headView">
+        <div class="cu-bar fixed">
+            <div class="action">
+                <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+            </div>
+            <div class="content">资质申报</div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <form id="form1" name="form1" style="padding: 0 10px 0 0" action="" enctype="multipart/form-data">
+            <input type="hidden" id="param" name="param" value="" />
+            <input type="hidden" id="ignoreNumberField" name="ignoreNumberField" value="" />
+            <input type="hidden" id="btnContent" name="btnContent" />
+            <div id="contentDiv"></div>
+            <br /><br />
+        </form>
+        <script type="text/javascript" src="/skins/DataInput/pub/hplus/js/jquery.min.js?v=2.1.4"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/layer/layer.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/hplus/js/bootstrap.min.js?v=3.3.5"></script>
+        <!-- 多选下拉框 -->
+        <script type="text/javascript" src="/skins/DataInput/pub/hplus/js/plugins/chosen/chosen.jquery.js"></script>
+        <!-- 多选下拉框过滤 -->
+        <script type="text/javascript" src="/skins/DataInput/pub/bootstrap/plugins/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/js/common.js?v=2016040502"></script>
+        <script type="text/javascript" src="/skins/DataInput/js/base64.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/js/myControl.js?v=2019013101"></script>
+        <script type="text/javascript" src="/skins/DataInput/js/myContent.js?v=2017010626"></script>
+        <script type="text/javascript" src="/skins/DataInput/js/mybootstrap.js?v=2016012602"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/uploadify/jquery.uploadify.min.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/H5uploadify/jquery.Huploadify.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/lazyload/jquery.lazyload.min.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/viewer/dist/viewer.min.js"></script>
+        <!--         <script type="text/javascript" src="/skins/DataInput/pub/colorPicker/colors.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/colorPicker/colorPicker.data.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/colorPicker/colorPicker.js"></script>
+        <script type="text/javascript" src="/skins/DataInput/pub/colorPicker/jqColor.js"></script> -->
+        <script type="text/javascript" language="javascript">
+        function addScript(url) {
+            var head = document.getElementsByTagName('head')[0];
+            //创建script标签
+            var script = document.createElement('script');
+            //属性赋值
+            script.type = 'text/javascript';
+            //下面为必要操作 否则将不能使用script标签中的内容
+            script.onload = script.onreadystatechange = function() {
+                if (!this.readyState || this.readyState === "loaded" || this.readyState === "complete") {
+                    script.onload = script.onreadystatechange = null;
+                }
+            };
+            //添加src属性值
+            script.src = url;
+            head.appendChild(script);
+        }
+
+        //是不是Helplink新建或修改
+        var helplinkOpt = "";
+        //OSS存储对象
+        var storagetype = "";
+        //定义是否为只读
+        var dataReadonly = false;
+        //定义兼容列表函数
+        function DGSetSaveData() {}
+        //初始化字段组
+        var fieldArray = new Array();
+        //去除数据库复制字段组
+        var nodbfieldArray = new Array();
+        //读取数据
+        function readData() {
+            $.ajax({
+                type: "POST",
+                url: "/DataInput/SearchData",
+                dataType: "json",
+                data: { param: $("#param").val() },
+                async: true,
+                success: function(val) {
+                    if (!val.success) {
+                        alert(val.msg);
+                        return;
+                    }
+                    //定义只读
+                    dataReadonly = val.data.dataReadonly;
+                    //定义每行几列
+                    if (val.data.rownum > 0)
+                        conditionNum = val.data.rownum;
+                    //是否显示底部栏
+                    if (val.data.bottomdiv || (val.data.btndata.length == 0 && val.data.custombutton.length == 0))
+                        document.getElementById("div_bottom").style.display = 'block';
+                    //跳转
+                    if (val.data.jumpdata.length > 0) {
+                        document.getElementById("div_jump").style.display = 'block';
+                    }
+                    //循环加载标题
+                    $(val.data.jumpdata).each(function(index) {
+                        $("#jumpCtrl").append("<option value='" + val.data.jumpdata[index].jump + "'>" + val.data.jumpdata[index].title + "</option>");
+                    });
+                    //按钮
+                    $(val.data.btndata).each(function(index) {
+                        //$("#btnDiv").append("<input type='button' class='btn btn-primary btn-sm'   name='" + val.data.btndata[index].name + "' value='" + val.data.btndata[index].title + "' onclick='" + val.data.btndata[index].event + "(\"" + val.data.btndata[index].url + "\");' />");
+                        $("#btnDiv").append("<button class=\"btn btn-primary stj_ti\" type=\"button\"    name='" + val.data.btndata[index].name + "' value='" + val.data.btndata[index].title + "' onclick='" + val.data.btndata[index].event + "(\"" + val.data.btndata[index].url + "\");' ><i class=\"" + val.data.btndata[index].css + "\" ></i>" + val.data.btndata[index].title + "</button>");
+                    });
+                    //自定义按钮
+                    $(val.data.custombutton).each(function(index) {
+                        //$("#btnDiv").append("<input type='button' class='btn btn-primary btn-sm'   name='" + val.data.custombutton[index].name + "' value='" + val.data.custombutton[index].title + "' onclick=\"" + ParamRep(val.data.custombutton[index].event) + "\" />");
+                        $("#btnDiv").append("<button class=\"btn btn-primary stj_ti\" type=\"button\"    name='" + val.data.custombutton[index].name + "' value='" + val.data.custombutton[index].title + "' onclick=\"" + ParamRep(val.data.custombutton[index].event) + "\" ><i class=\"" + val.data.custombutton[index].css + "\" ></i>" + val.data.custombutton[index].title + "</button>");
+                    });
+                    //判断是否要显示主表
+                    var t1fieldcontent = "";
+                    if (val.data.t1visible) {
+                        //添加锚点
+                        t1fieldcontent += "<a id=\"" + val.data.t1table + "Anchor\" name=\"" + val.data.t1table + "Anchor\"></a>";
+                        t1fieldcontent += CreateField(val.data.t1table, val.data.t1hidden, val.data.t1copyhidden, val.data.t1field, "", "");
+                    }
+                    //替换数据属性
+                    var t1dataField = new RegExp("&&datain&&", "g");
+                    t1fieldcontent = t1fieldcontent.replace(t1dataField, "datain");
+                    $("#contentDiv").append(t1fieldcontent);
+                    //判断是否要显示从表
+                    $(val.data.t2fields).each(function(index) {
+                        //判断是否有从表t2
+                        if (val.data.t2fields[index].t2visible) {
+                            //获取字段列
+                            fieldArray[val.data.t2fields[index].t2table] = JSON.stringify(val.data.t2fields[index].t2field);
+                            //添加从表隐藏层
+                            $("#hiddenDiv").append(CreateDiv(val.data.t2fields[index].t2table, val.data.t2fields[index].t2hidden, val.data.t2fields[index].t2copyhidden, val.data.t2fields[index].t2field, "_", "&&record&&"));
+                            //添加从表隐藏层JS
+                            $("#hiddenJsDiv").append(CreateJs(val.data.t2fields[index].t2table, val.data.t2fields[index].t2triggerfield, val.data.t2fields[index].t2field, "_"));
+                            //显示内容
+                            $("#contentDiv").append(GetT2Tab(val.data.t2fields[index].t2table, val.data.t2fields[index].t2sy, val.data.t2fields[index].t2syfield, val.data.t2fields[index].t3visible, val.data.t2fields[index].t3table, val.data.t2fields[index].t3sy, val.data.t2fields[index].t3syfield, val.data.t2fields[index]));
+                        }
+                        //判断是否有明细表
+                        if (val.data.t2fields[index].t3visible) {
+                            //获取字段列
+                            fieldArray[val.data.t2fields[index].t2table + "_" + val.data.t2fields[index].t3table] = JSON.stringify(val.data.t2fields[index].t3field);
+                            //添加明细表隐藏层
+                            $("#hiddenDiv").append(CreateDiv(val.data.t2fields[index].t3table, val.data.t2fields[index].t3hidden, val.data.t2fields[index].t3copyhidden, val.data.t2fields[index].t3field, "_", "&&record&&"));
+                            //添加明细表隐藏层JS
+                            $("#hiddenJsDiv").append(CreateJs(val.data.t2fields[index].t3table, val.data.t2fields[index].t3triggerfield, val.data.t2fields[index].t3field, "_"));
+                        }
+                    });
+
+                    //**** 触发按钮事件 ****
+                    //**** 主表触发 ****
+                    $(val.data.t1triggerfield).each(function(index) {
+                        //按顺序触发改变值
+                        InitCtrlEvent(val.data.t1triggerfield[index].fieldname);
+                    });
+                    //**** 主表还原默认值 ****
+                    $(val.data.t1field).each(function(index) {
+                        //初始化特殊控件
+                        InitSpecialCtrl(val.data.t1field[index].fieldname);
+                        //还原默认值
+                        RecoveryDefValue(val.data.t1field[index].fieldname);
+                        //触发改变事件
+                        InitCtrlEvent(val.data.t1field[index].fieldname);
+                    });
+
+                    //判断不是修改时,自动创建一组从表隐藏的TAB,专用于是否显示为true,而辅助隐藏为false的从表表单
+                    if (!val.data.datacheck) {
+                        $(val.data.t2fields).each(function(index) {
+                            //判断是否有从表t2
+                            if (val.data.t2fields[index].t2visible && val.data.t2fields[index].t2TabHidden) {
+                                //触发新建按钮
+                                $("#" + val.data.t2fields[index].t2table + "AddBtn").click();
+                            }
+                        });
+                    }
+
+                    //判断是否是修改信息
+                    if (val.data.datacheck) {
+                        //赋值不需要赋数据库字段的内容
+                        $(val.data.nodbfield).each(function(index) {
+                            nodbfieldArray[index] = val.data.nodbfield[index];
+                        });
+                        var isnodbfield = false;
+                        //赋值主表数据
+                        $(val.data.t1datas.t1data).each(function(index) {
+                            isnodbfield = false;
+                            //去除指定数据库字段修改赋值
+                            if (nodbfieldArray.length > 0) {
+                                for (var i = 0; i < nodbfieldArray.length; i++) {
+                                    if (nodbfieldArray[i].zdmc == val.data.t1datas.t1data[index].zdmc.toLowerCase()) {
+                                        isnodbfield = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isnodbfield) {
+                                SetCtrlValue(val.data.t1datas.t1data[index].zdmc, val.data.t1datas.t1data[index].zdval);
+                                //触发改变事件
+                                InitCtrlEvent(val.data.t1datas.t1data[index].zdmc);
+                            }
+                        });
+                        //赋值从表数据
+                        var t2customtitle = "";
+                        $(val.data.t2datas).each(function(index) {
+                            t2customtitle = "";
+                            //************** 从表 *************
+                            //触发新建按钮
+                            $("#" + val.data.t2datas[index].t2table + "AddBtn").click();
+                            //获取从表当前记录
+                            var t2Rec = parseInt($("#" + val.data.t2datas[index].t2table + "Record").val());
+                            //设置此记录主键
+                            $("#" + val.data.t2datas[index].t2table + "PRIDATA_" + t2Rec).val(val.data.t2datas[index].t2pri);
+                            //赋值从表记录每个字段
+                            $(val.data.t2datas[index].t2data).each(function(zdzdIndex) {
+                                if (val.data.t2datas[index].t2syfield != "" && val.data.t2datas[index].t2syfield == val.data.t2datas[index].t2data[zdzdIndex].zdmc)
+                                    t2customtitle = val.data.t2datas[index].t2data[zdzdIndex].zdval;
+                                SetCtrlValue(val.data.t2datas[index].t2data[zdzdIndex].zdmc + "_" + t2Rec, val.data.t2datas[index].t2data[zdzdIndex].zdval);
+                                //触发改变事件
+                                InitCtrlEvent(val.data.t2datas[index].t2data[zdzdIndex].zdmc + "_" + t2Rec);
+                            });
+                            //设置标题
+                            if (val.data.t2datas[index].t2syfield != "") {
+                                $("#" + val.data.t2datas[index].t2table + "Label" + t2Rec).html(t2customtitle);
+                            }
+                            //************** 从表 *************
+
+                            //************** 明细表 *************
+                            var t3customtitle = "";
+                            $(val.data.t2datas[index].t3datas).each(function(t3index) {
+                                t3customtitle = "";
+                                //触发新建按钮
+                                $("#" + val.data.t2datas[index].t3datas[t3index].t3table + "_" + (t2Rec) + "btn").click();
+                                //获取明细表当前记录
+                                var t3Rec = parseInt($("#" + val.data.t2datas[index].t2table + "_" + t2Rec + "Record").val());
+                                //设置此记录主键
+                                $("#" + val.data.t2datas[index].t3datas[t3index].t3table + "PRIDATA_" + t2Rec + "_" + t3Rec).val(val.data.t2datas[index].t3datas[t3index].t3pri);
+                                //赋值从表记录每个字段
+                                $(val.data.t2datas[index].t3datas[t3index].t3data).each(function(zdzdt3Index) {
+                                    if (val.data.t2datas[index].t3datas[t3index].t3syfield != "" && val.data.t2datas[index].t3datas[t3index].t3syfield == val.data.t2datas[index].t3datas[t3index].t3data[zdzdt3Index].zdmc)
+                                        t3customtitle = val.data.t2datas[index].t3datas[t3index].t3data[zdzdt3Index].zdval;
+                                    SetCtrlValue(val.data.t2datas[index].t3datas[t3index].t3data[zdzdt3Index].zdmc + "_" + t2Rec + "_" + t3Rec, val.data.t2datas[index].t3datas[t3index].t3data[zdzdt3Index].zdval);
+                                    //触发改变事件
+                                    InitCtrlEvent(val.data.t2datas[index].t3datas[t3index].t3data[zdzdt3Index].zdmc + "_" + t2Rec + "_" + t3Rec);
+                                });
+
+                                //设置标题
+                                if (val.data.t2datas[index].t3datas[t3index].t3syfield != "") {
+                                    $("#" + val.data.t2datas[index].t2table + "_" + t2Rec + "Label" + (t3index + 1)).html(t3customtitle);
+                                }
+                            });
+                            //************** 明细表 *************
+
+                            //切换首Tab
+                            FirstT2Page(val.data.t2datas[index].t2table);
+                            if (val.data.t2datas[index].t3datas.length > 0)
+                                FirstT2Page(val.data.t2datas[index].t3datas[0].t3table + "_1");
+                        });
+                    }
+                    //判断是否为只读
+                    if (dataReadonly && isReadonlyLabel) {
+                        SetReadOnlyData();
+                    }
+                    //数据加载完调用自定义JS
+                    CheckLoadDataAfterFun();
+                    //重新渲染
+                    iniBootstrap();
+                    //遮罩
+                    layer.closeAll("loading");
+                    setTimeout(function() {
+                        $(".dayg").css("width", "auto");
+                        $(".dayg .form-control").css("width", "auto");
+                        $(".stj_lr_tab").css({
+                            "width": "100%",
+                            "min-width": "auto"
+                        })
+                    }, 100)
+                },
+                complete: function(XMLHttpRequest, textStatus) {},
+                beforeSend: function(XMLHttpRequest) {
+                    //遮罩
+                    layer.load();
+                }
+            });
+        }
+
+
+        //初始化数据
+        $(function() {
+            var base64Encode = new Base64();
+            var paramsData = getParams();
+            var value = JSON.stringify(paramsData);
+            $("#param").val(base64Encode.encode(value))
+            if (paramsData.js && paramsData.js.length) { //
+                var temp = paramsData.js.split(",");
+                var jsName;
+                for (var i = 0; i < temp.length; i++) {
+                    addScript("/skins/DataInput/custom/" + temp[i] + "?_=" + (new Date()).getTime())
+                }
+            }
+
+
+            if (paramsData.CustomBar) {
+                $("#headView,.cu-bar.fixed").css({
+                    height: paramsData.CustomBar + "px",
+                    paddingTop: (paramsData.StatusBar || 0) + "px",
+                })
+                $("#headView").find(".content").text(paramsData.headTitleName || "资质申报");
+            } else {
+                $("#headView").hide();
+            }
+            readData();
+        });
+
+        //function btn_opt_bc() {
+        //    alert($('#MBGTEST_A\\.LXDH4').val());
+        //}
+        </script>
+        <!-- 用于创建单层的隐藏从表或明细表信息 -->
+        <div id="hiddenDiv" style="display:none"></div>
+        <!-- 用于创建单层的隐藏从表或明细表的JS信息 -->
+        <div id="hiddenJsDiv" style="display:none"></div>
+    </div>
+    <div id="div_bottom" class="stj_lr_but" style="display:none">
+        <div class="st_lr_but_n">
+            <div id="div_jump" class="st_lr_but_n_1" style="display:none">
+                <label class="but_tz"><strong>跳转</strong></label>
+                <select id="jumpCtrl" class="form-control" title="yeey" onchange="JumpHref(this.value);">
+                </select>
+            </div>
+            <div id="btnDiv" class="" style="width:auto">
+            </div>
+        </div>
+    </div>
+    <div id="imgcontent" style="width:0;height:0">
+    </div>
+    <script type="text/javascript" src="/static/lib/uni.webview.1.5.2.js"></script>
+    <script type="text/javascript">
+    document.addEventListener('UniAppJSBridgeReady', function() {
+        try {
+            $('.action')[0].onclick = function() {
+                uni.navigateBack({
+                    delta: 1
+                });
+            }
+        } catch (e) {}
+    });
+
+    function getParams() {
+        var url = decodeURIComponent(location.search); //获取url中"?"符后的字串
+
+        var obj = {};
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            var strS = str.split("&");
+            for (var i = 0; i < strS.length; i++) {
+                obj[strS[i].split("=")[0]] = strS[i].split("=")[1];
+            }
+        }
+        return obj;
+    }
+    </script>
+</body>
+
+</html>

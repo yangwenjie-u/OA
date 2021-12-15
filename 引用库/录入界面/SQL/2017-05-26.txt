@@ -1,0 +1,5 @@
+1.附件表
+1)把DATAFILE表中的FILEID字段类型从nchar(20)改成nvarchar(50)
+
+2)去原来nchar(20)字段中的空格去空
+UPDATE    DATAFILE SET FILEID = RTRIM(FILEID)

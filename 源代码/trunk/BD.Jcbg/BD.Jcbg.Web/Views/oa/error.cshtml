@@ -1,0 +1,19 @@
+﻿<div class="box">
+    @{
+
+        var exception = ViewData.Model;
+        var statusCode = exception == null ? 404 : 500;
+        Response.StatusCode = statusCode;
+        if (statusCode == 404)
+        {
+            <h3>404 Page not found!</h3>
+            <p>没有找到该网页!</p>
+        }
+        else if (statusCode == 500)
+        {
+            <h3>500 程序异常</h3>
+            <p>@exception.Message</p>
+        }
+    }
+    <p style="font-size: 12px; color: Gray">请使用浏览器的后退功能已保证您填写的数据没有丢失！</p>
+</div>

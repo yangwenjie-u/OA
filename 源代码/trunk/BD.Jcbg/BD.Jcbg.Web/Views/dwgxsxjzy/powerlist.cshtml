@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/table.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/lib/layui/css/layui.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/tz/css/load.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/tree.css" />
+    <style type="text/css">
+    #tree {
+        width: 90%;
+        margin-left: 10%;
+        display: inline-block;
+        box-sizing: border-box;
+        height: 98%;
+        padding-bottom: 60px;
+    }
+
+    #tree .left {
+        width: 100%;
+    }
+
+    .fir.active ul {
+        display: block;
+    }
+
+
+    #tree .third {
+        margin: 10px 0 0 30px;
+    }
+
+
+    .third span {
+        color: gray;
+        font-size: 14px;
+        height: 20px;
+        line-height: 20px;
+        vertical-align: middle;
+    }
+
+    #tree .user-list,
+    #tree .power-list {
+        display: inline-block;
+        margin-top: 2px;
+        width: 16px;
+        height: 16px;
+        margin: 0 10px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+
+    #tree .power-list {
+        background-image: url(/static/tz/images/role2.png);
+    }
+
+    #tree .user-list {
+        background-image: url(/static/tz/images/user.png);
+    }
+
+    .sed {
+        position: relative;
+    }
+
+    #tree .sed .third {
+        display: none;
+    }
+
+    #tree .sed .slide,
+    #tree .sed.active .open {
+        display: none;
+    }
+
+    #tree .sed.active .slide,
+    #tree .sed .open {
+        display: inline-block;
+    }
+
+    #tree .sed.active .third {
+        display: block;
+    }
+
+    .sed .open,
+    .sed .slide {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+    }
+
+    .bottom .close {
+        display: inline-block;
+        width: 162px;
+        text-align: center;
+        color: white;
+        background: #D85151;
+        height: 36px;
+        margin-top: 13px;
+        border-radius: 20px;
+        line-height: 36px;
+        font-size: 18px;
+        margin-left: 20px;
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="tree" class="tree"></div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script src="/static/lib/layui/layui.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/common/table.js"></script>
+    <script src="/static/tz/js/treeforpowerlist.js"></script>
+    <script>
+    var powerData = [];
+    var h = window.innerHeight;
+    $('body').height(h + 'px');
+    var rolecode = getParams().rolecode;
+    // var usercode = getParams().usercode;
+    $(function() {
+        var obj;
+
+        if (rolecode) {
+            // obj = {
+            //     method: 'Power',
+            //     opt: 'GetPowerListByRolecode',
+            //     rolecode: rolecode,
+            //     rows:10000
+            // };
+
+            // 权限页面只有通过角色访问
+            obj = {
+                method: 'Power',
+                opt: 'GetOwnerPowerListByRolecode',
+                rolecode: rolecode
+            }
+
+        }
+        // else {
+        //     obj = {
+        //         method: 'Power',
+        //         opt: 'GetPowerListByUsercode',
+        //         usercode: usercode,
+        //         rows: 10000
+        //     };
+        // }
+
+        load(obj)
+    });
+
+    function load(obj) {
+        //回调函数
+        var handle = function(data) {
+            if (data.data && data.data.rows && data.data.rows.length) {
+                var ary = setTreeData(data);
+                var save = function(ary) {
+                    ajaxTpl('/dwgxzj/UmsApiService', {
+                        method: 'Power',
+                        opt: 'SavePowerByRolecode',
+                        rolecode: rolecode,
+                        menulist: "[" + ary.join(",") + ']'
+                    }, function(data) {
+
+                        if (data.success == true) {
+
+                            layer.msg("保存成功！", {
+                                icon: 1,
+                                time: 1500
+                            });
+                            try {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
+                                parent.GetRoleList();
+                            } catch (e) {}
+                        } else {
+                            layer.msg(data.msg, {
+                                icon: 2,
+                                time: 2000
+                            });
+                        }
+
+                    });
+                }
+                var edit = getParams().edit == '0' ? 0 : 1;
+                $("#tree").setTree({
+                    data: ary,
+                    save: save,
+                    edit: edit
+                });
+                $('#tree .close').click(function() {
+                    try {
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index);
+                    } catch (e) {}
+                });
+
+            }
+        }
+        ajaxTpl('/dwgxzj/UmsApiService', obj, handle);
+    }
+
+
+    $('#tree').on('click', '.user-list', function(event) {
+        if ($(this).attr('num') == 0) {
+            layer.msg('暂无人员', {
+                icon: 2,
+                time: 2000
+            });
+            return;
+        }
+        var menucode = $(this).parent().attr('value');
+        var url = '/dwgxzj/userlist?menucode=' + menucode;
+        layer.open({
+            type: 2,
+            title: '拥有人员',
+            content: url,
+            area: (function() {
+                if (window.innerWidth < top.innerWidth * 0.7) {
+                    return ['100%', '100%'];
+                }
+                return ['80%', '80%'];
+            })()
+        });
+        event.stopPropagation();
+    })
+    $('#tree').on('click', '.power-list', function(event) {
+        if ($(this).attr('num') == 0) {
+            layer.msg('暂无角色', {
+                icon: 2,
+                time: 2000
+            });
+            return;
+        }
+        var menucode = $(this).parent().attr('value');
+        var url = '/dwgxzj/rolelist?menucode=' + menucode;
+        layer.open({
+            type: 2,
+            title: '所属角色',
+            content: url,
+            area: (function() {
+                if (window.innerWidth < top.innerWidth * 0.7) {
+                    return ['100%', '100%'];
+                }
+                return ['80%', '80%'];
+            })()
+        });
+        event.stopPropagation();
+    })
+
+    function setTreeData(data) {
+        var ary = [],
+            tmp;
+        tmp = data.data.rows;
+        for (var i = 0, len = data.data.rows.length; i < len; i++) {
+
+            if (!tmp[i].pmenucode) {
+                ary.push(tmp.splice(i, 1)[0]);
+                i--;
+                len--;
+            }
+        }
+        for (var i = 0, len = tmp.length; i < len; i++) {
+            for (var j = 0, len2 = ary.length; j < len2; j++) {
+                if (ary[j].menucode == tmp[i].pmenucode) {
+                    if (ary[j].child) {
+                        ary[j].child.push(tmp.splice(i, 1)[0]);
+                    } else {
+                        ary[j].child = [tmp.splice(i, 1)[0]];
+                    }
+                    i--;
+                    len--;
+                    break;
+                }
+            }
+        }
+        var flag = 0;
+        for (var i = 0, len = tmp.length; i < len; i++) {
+            for (var j = 0, len2 = ary.length; j < len2; j++) {
+                if (ary[j].child) {
+                    for (var k = 0, len3 = ary[j].child.length; k < len3; k++) {
+                        if (ary[j].child[k].menucode == tmp[i].pmenucode) {
+                            if (ary[j].child[k].child) {
+                                ary[j].child[k].child.push(tmp.splice(i, 1)[0]);
+                            } else {
+                                ary[j].child[k].child = [tmp.splice(i, 1)[0]];
+                            }
+                            i--;
+                            len--;
+                            flag = 1;
+                            break;
+                        }
+                    }
+                }
+                if (flag == 1) {
+                    flag = 0;
+                    break;
+                }
+            }
+        }
+        return ary;
+    }
+    </script>
+</body>
+
+</html>

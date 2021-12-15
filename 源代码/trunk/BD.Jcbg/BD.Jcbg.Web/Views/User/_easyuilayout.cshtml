@@ -1,0 +1,24 @@
+@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" /> 
+	<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>@Configs.Title</title>
+	<link href="@SkinManager.GetCssPath("users.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetEasyuiPath("/themes/icon.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetEasyuiPath("/themes/default/easyui.css")" rel="stylesheet" type="text/css" />
+	<link href="@SkinManager.GetCssPath("jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("jquery.easyui.min.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("jquery.loadmask.min.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("jquery-base64.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("fileupload.js")" type="text/javascript" charset="utf-8"></script>
+	<script src="@SkinManager.GetJsPath("user.js")" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="background:white;">
+    @RenderBody()
+</body>
+</html>

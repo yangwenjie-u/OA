@@ -1,0 +1,599 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="/static/lib/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nqv7EOZ2k8lYjVVh8n5E8aFB"></script>
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version; //b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            } else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+    <link href="/static/common/reset.css" rel="stylesheet" type="text/css" />
+    <link href="/static/tz/css/show.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+    .key-search {
+        position: relative;
+        left: -10px;
+        background: white;
+        display: inline-block;
+        height: 34px;
+        line-height: 34px;
+        vertical-align: middle;
+        width: 40px;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    #distpicker5 .bs-placeholder {
+        height: 34px;
+    }
+
+    #distpicker5 .filter-option {
+        line-height: 20px;
+    }
+
+    .dltabs dt:first-child,
+    .dltabs dt:nth-child(3) {
+        z-index: 9;
+    }
+
+    .dltabs dt:nth-child(5) {
+        z-index: 5;
+    }
+
+    .form-msg {
+        display: inline-block;
+        width: 40px;
+        height: 25px;
+        background: #549BDD;
+        color: white;
+        text-align: center;
+        line-height: 25px;
+        border-radius: 5px;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+    #formData {
+        background: rgb(245, 248, 253);
+        ;
+        width: 100%;
+        display: inline-block;
+        position: fixed;
+        /* padding-left: 5%; */
+    }
+
+    #formData .dropdown-toggle {
+        height: 34px;
+        padding: 0 25px 0 12px;
+    }
+
+    #keyVal {
+        background: #EBEFF8;
+        padding: 0 10px;
+    }
+
+    .bigscreen {
+        display: inline-block;
+        width: 40px;
+        height: 25px;
+        background: #549BDD;
+        color: white;
+        text-align: center;
+        line-height: 25px;
+        border-radius: 5px;
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+    .dltabs dt:nth-child(7) {
+        z-index: 4;
+    }
+
+    #mapInfo3 {
+        display: none;
+        width: 20%;
+        height: 100%;
+        background-color: #ffffff;
+        box-sizing: border-box;
+        padding: 40px 0 0 40px;
+        position: absolute;
+        z-index: 9;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+    }
+
+    #mapInfo3 ul {
+        cursor: pointer;
+    }
+
+
+    #mapInfo3 li p {
+        display: inline-block;
+        margin: 0 20% 10px 0;
+        width: 80px;
+        text-align: center;
+    }
+
+    #mapInfo3 li span {
+        display: inline-block;
+    }
+
+    #mapInfo3 .active p,
+    #mapInfo3 .active span {
+        font-size: 18px;
+    }
+
+    .openInfoGc {
+        cursor: pointer;
+    }
+
+    .openInfoGc span:first-child {
+        display: inline-block;
+         margin-right: 10px;
+        width: 80px;
+        text-align: center;
+    }
+    </style>
+</head>
+
+<body class="wai_body font_faminly">
+    <form class="form-inline" id="formData">
+        <div class="form-group" style="margin-left: 10px;">
+            <div class="form-msg">省</div>
+            <select class="form-control" id="province10">
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="form-msg">市</div>
+            <select class="form-control" id="city10">
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="form-msg">区</div>
+            <select class="form-control" id="district10">
+                <option value=''>请选择</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="form-msg">街道</div>
+            <select class="form-control" id="street10">
+                <option value=''>请选择</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select class="form-control" id="selectQylx" style="display: none;">
+                <option value="">所有企业</option>
+                <option value="11">施工企业</option>
+                <option value="12">监理企业</option>
+                <option value="13">建设企业</option>
+                <option value="14">设计企业</option>
+                <option value="15">勘察企业</option>
+            </select>
+            <div class="form-msg">企业</div>
+            <select class="form-control selectpicker" data-live-search="true" id="selectQy" style="width: 120px;"></select>
+            <div class="form-msg">状态</div>
+            <select class="form-control" id="selectGczt" style="width: 180px;">
+                <option value="">所有工程</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="form-msg">类型</div>
+            <select class="form-control" id="gcxz" style="width: 120px;">
+                <option selected='selected' value=''>全部类型</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="form-msg" style="width: 60px;">关键字</div>
+            <input type="text" name="" id="keyVal" class="form-control" style="width: 180px;" placeholder="公司名称/工程名称" />
+            <span id='keySearch' class="key-search">搜索</span>
+        </div>
+        <div class="form-group" style="float: right;margin: 6px 20px 0 0;cursor: pointer;">
+            <span class="bigscreen" id="bigscreen" onclick="window.open('/bigscreen/8.html');">大屏</span>
+        </div>
+    </form>
+    <section class="panel" id="panel1" data-section-name="section3" style="background: rgb(233, 236, 243);">
+        <dl class="dltabs" id="tabs" style="position: relative;">
+            <dt class="active"><span>传感器</span></dt>
+            <dd class="active" id="gczzt">
+                <div id="mapwrap">
+                    <div id="map"></div>
+                    <div id="mapInfo3">
+                    </div>
+                </div>
+            </dd>
+        </dl>
+    </section>
+    <script src="/static/common/common.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/static/lib/layer/layer.js" type="text/javascript" charset="utf-8"></script>
+    <link href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <link href="/static/lib/bootstrap-select-1.12.4/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+    <script src="/static/lib/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" type="text/javascript" charset="utf-8" src="/static/tz/js/pub.js"></script>
+    <script type="text/javascript" type="text/javascript" charset="utf-8" src="/static/tz/js/initMap.js"></script>
+    <script type="text/javascript" type="text/javascript" charset="utf-8" src="/static/wgry/js/head-select.js"></script>
+    <script type="text/javascript">
+    var tempCity = "浙江省温州市";
+
+    var page = 1; //页面page，1，2，3
+
+    $(function() {
+
+        //全局初始化
+        init();
+        GetProvince(1);
+
+        var height = $("#panel1").height()
+       
+
+        var wid = $(window).width();
+        if (wid < 1400) {
+            $(".form-msg").hide();
+        }
+        setHeight();
+    });
+    function Refresh(){
+
+    }
+
+
+    function setHeight() {
+        var height = $("#panel1").height();
+        $("#gczzt").height(height - 110);
+        $("#tabTitle").find("dd").height(height - 110);
+    }
+
+
+    //全局初始化
+    function init() {
+
+        //鼠标滚动全屏
+        $('.panel').css({
+            'height': $(window).height()
+        });
+
+
+        //加载固定块(回到顶部按钮)
+        // layui.use('util', function () {
+        //     var util = layui.util;
+        //     util.fixbar({
+        //         // bar1: true,
+        //         click: function (type) {
+        //             console.log(type);
+        //             if (type === 'bar1') {
+        //                 alert('点击了bar1')
+        //             }
+        //         }
+        //     });
+        // });
+    }
+    var paramsData = {};
+
+    $(function() {
+        initMap();
+        addCgq();
+    })
+    </script>
+    <script type="text/javascript">
+    var ary;
+
+    function addCgq() {
+        //传感器
+        try {
+            map.clearOverlays();
+        } catch (e) {}
+        ajaxTpl('/dwgxzj/GetCGProjectMap', paramsData, function(data) {
+            cqgObj.data = changeDataCgq(data);
+            cqgObj.init();
+            cqgObj.sumData();
+            cqgObj.addMaker();
+            cqgObj.setPage();
+        });
+    }
+
+
+    function changeDataCgq(data) {
+        var ary = [];
+        var tmp, tmp2;
+        for (var i = 0, len = data.Datas.length; i < len; i++) {
+            tmp = data.Datas[i];
+            tmp.data = [{
+                sensorcode: tmp.dusttype,
+                sensorname: tmp.sensorname,
+                status: tmp.status
+            }];
+            ary.push(tmp);
+
+            for (var j = i + 1; j < len; j++) {
+                tmp2 = data.Datas[j];
+                if (tmp.gcbh == tmp2.gcbh) {
+                    ary[ary.length - 1].data.push({
+                        sensorcode: tmp2.dusttype,
+                        sensorname: tmp2.sensorname,
+                        status: tmp2.status
+                    });
+                    data.Datas.splice(j, 1);
+                    j--;
+                    len--;
+                }
+            }
+        }
+        return ary;
+    }
+
+    var cqgObj = {
+        data: [],
+        keys: ['风速', '风向', '噪声', 'pm2.5', 'pm10', '温度值', '湿度值', '气压'],
+        // remember: [
+        // {key: '风速'}, { key: '风向' }, { key: '噪声' }, { key: 'pm2.5' }, { key: 'pm10' }, { key: '温度值' }, { key: '湿度值' }, { key: '气压值' }
+        // ],
+        remember: [],
+        len: [],
+        marker: [],
+        filterData: '', //信息条筛选数据
+        init: function() {
+            this.len = [];
+            this.remember = [];
+            this.marker = [];
+            for (var i = 0, len = this.keys.length; i < len; i++) {
+                this.len.push(0);
+                this.remember.push([]);
+            }
+        },
+        sumData: function() {
+
+            var tmp, key, flag;
+            for (var k = 0, len3 = this.keys.length; k < len3; k++) {
+                for (var i = 0, len = this.data.length; i < len; i++) {
+                    tmp = this.data[i];
+                    flag = 1;
+                    for (var j = 0, len2 = tmp.data.length; j < len2; j++) {
+                        var key = tmp.data[j].sensorname;
+                        if (this.keys[k] == key) {
+                            if (flag) { //记录有8种类型的数组//只记录一次
+                                this.remember[k].push(i);
+                                flag = 0;
+                            }
+                            //统计8种类型的异常
+                            this.len[k] += tmp.data[j].status;
+                        }
+                    }
+                }
+            }
+        },
+
+        setPage: function() {
+            var str = "<ul>";
+            for (var i = 0, len = this.keys.length; i < len; i++) {
+                // mapInfo3
+                str += "<li value='" + this.len[i] + "'><p>" + this.keys[i] + "</p><span>共" + this.len[i] + "个</span></li>";
+            }
+            str += "</ul>";
+            $("#mapInfo3").html(str).show();
+        },
+         addMaker: function() {
+            var data = this.data;
+
+            for (var i = 0; i < data.length; i++) {
+                var pt = new BMap.Point(data[i].position[0], data[i].position[1]);
+                var marker = new BMap.Marker(pt, {
+                    icon: new BMap.Icon("/static/image/show/icon-2.png", new BMap.Size(22, 22), {
+                        imageSize: new BMap.Size(22, 22)
+                    })
+                });
+                this.marker.push(marker);
+                map.addOverlay(marker);
+
+
+                (function() {
+                    var point = data[i];
+                    point.num = i;
+                    marker.addEventListener("onclick", function(e) {
+                        // showInfoGc(this, infopoint);
+
+                        // function showInfoGc(thisMaker, point) {
+
+                        var opts = {
+                            width: 300, // 信息窗口宽度
+                            height: 200, // 信息窗口高度
+                        }
+
+                        var enginnersingle = "<div class='openInfoGc' value='" + point.num + "'><h4 class='gcmc' onclick=loadView('" + point.gcbh + "','" + point.name + "')>"+point.name+"</h4><div style='overflow: auto;height: 160px;'>";
+                        var tmp;
+                        for (var j = 0, length = point.data.length; j < length; j++) {
+                            tmp = point.data[j];
+                            if (cqgObj.filterData.length && tmp.sensorname != cqgObj.filterData) {
+                                continue;
+                            }
+
+                            enginnersingle += "<div onclick=openView('" + point.gcbh + "','" + tmp.sensorcode + "')><span>" + tmp.sensorname + "</span><span>异常传感器共" + tmp.status + "个</span></div>";
+                        }
+                        enginnersingle+="</div></div>";
+
+                        var infoWindow = new BMap.InfoWindow(enginnersingle, opts);
+                        var addnumber = point;
+                        
+                        this.openInfoWindow(infoWindow);
+                    });
+                })();
+            }
+        },
+
+        filter: function(num) {
+            if (num == -1) { //全部显示
+                for (var i = 0, len = this.marker.length; i < len; i++) {
+                    this.marker[i].show();
+                    this.filterData = '';
+                }
+
+            } else { //筛选
+                var ary = this.remember[num];
+                this.filterData = this.keys[num];
+                var idx;
+                for (var i = 0, len = this.marker.length; i < len; i++) {
+                    this.marker[i].hide();
+                }
+                for (var i = 0, len = ary.length; i < len; i++) {
+                    idx = ary[i];
+                    this.marker[idx].show();
+                }
+
+            }
+        }
+    }
+    $("#mapInfo3").on('click', 'li', function() {
+        var that = $(this);
+        var idx;
+        if (that.attr('value') == 0) {
+            layer.msg('暂无异常',{
+                icon:1,
+                time:2000
+            });
+            return;
+        }
+        if (that.hasClass('active')) {
+            that.removeClass('active');
+            idx = -1;
+            try {
+                map.closeInfoWindow();
+            } catch (e) {}
+
+        } else {
+            that.addClass('active').siblings().removeClass('active');
+            idx = that.index();
+        }
+        cqgObj.filter(idx);
+    });
+
+    function openView(gcbh, sensorcode) {
+        //每个图表的宽度
+        var w = ($(".panel").width() * 0.95).toString() + "px";
+        //每个图表的高度
+        var h = ($(".panel").height() * 0.95).toString() + "px";
+
+        var index = layer.open({
+            type: 2,
+            content: '/WebList/EasyUiIndex?FormDm=I_Dust_Notice_List&FormStatus=2&FormParam=PARAM--' + gcbh + '|' + sensorcode + '|',
+            area: [w, h]
+        });
+    }
+        function loadView(gcbh, GCMC) {
+        try {
+            var tabledesc = "工程信息";
+
+            // var rowindex = dataGrid.jqxGrid('getselectedrowindex');
+
+            // if (rowindex == -1) {
+            // alert("请选择要修改的预填信息");
+            // return;
+            // }
+            // var selected = pubselect();
+            // if (selected == undefined)
+            //     return;
+            // var LX = "N";
+            // var gclxbh=selected.GCLXBH;
+            if (gcbh == "01")
+                LX = "N";
+            else
+                LX = "S";
+
+            var jydbh = encodeURIComponent(gcbh);
+            var tabledesc = "工程信息"; // 表格描述
+            var zdzdtable = encodeURIComponent("ZDZD_TZ"); // zdzd名
+            var tablename = encodeURIComponent("I_M_GC"); // 表名
+            var tablerecid = encodeURIComponent("GCBH"); // 表主键
+            var title = encodeURIComponent(tabledesc); // 标题
+            var formdm = tablename; // 列表key名称
+            var buttons = ""; // 按钮;//encodeURIComponent("临时保存|ZC| | ||完成报监|TJ| | "); // 按钮
+
+            var s_tablename = encodeURIComponent("I_S_GC_SGDW|I_S_GC_JSDW|I_S_GC_JLDW|I_S_GC_KCDW|I_S_GC_SJDW|I_S_GC_TSDW|I_S_GC_FGC");
+            //  都是从表中的字段：  主表对应字段,自己主键|……
+            var s_pri = encodeURIComponent("GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,GCQYBH|GCBH,RECID");
+            var s_title = encodeURIComponent("施工单位|建设单位|监理单位|勘察单位|设计单位|图审单位|单位工程");
+
+            var ss_tablename = encodeURIComponent("I_S_GC_SGDW|I_S_GC_SGRY||I_S_GC_JSDW|I_S_GC_JSRY||I_S_GC_JLDW|I_S_GC_JLRY||I_S_GC_KCDW|I_S_GC_KCRY||I_S_GC_SJDW|I_S_GC_SJRY");
+            //都是明细表中的字段：跟主表对应字段,跟从表对应字段,自己主键
+            var ss_pri = encodeURIComponent("GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID|GCBH,QYBH,RECID");
+            var ss_title = encodeURIComponent("施工人员|建设人员|监理人员|勘察人员|设计人员");
+
+            var rdm = Math.random();
+
+
+            var js = encodeURIComponent("searchRYZS.js"); //encodeURIComponent("jdbgService.js");
+            var callback = ""; //encodeURIComponent("jdbgService.jdzcsb('$$GCBH$$')");
+
+            var rdm = Math.random();
+            var url = "/datainput/Index?zdzdtable=" + zdzdtable +
+                "&t1_tablename=" + tablename +
+                "&t1_pri=" + tablerecid +
+                "&t1_title=" + title +
+                "&button=" + buttons +
+                "&js=" + js +
+                "&callback=" + callback +
+                "&rownum=2" +
+                "&t2_tablename=" + s_tablename +
+                "&t2_pri=" + s_pri +
+                "&t2_title=" + s_title +
+                "&t3_tablename=" + ss_tablename +
+                "&t3_pri=" + ss_pri +
+                "&t3_title=" + ss_title +
+                "&view=true" +
+                "&jydbh=" + jydbh +
+                "&LX=" + LX +
+                "&_=" + rdm;
+
+            url = "/tz/gcview?gcbh=" + jydbh;
+
+
+            parent.layer.open({
+                type: 2,
+                title: GCMC,
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '95%'],
+                content: url,
+                end: function() {
+                    
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+    }
+
+    </script>
+</body>
+
+</html>

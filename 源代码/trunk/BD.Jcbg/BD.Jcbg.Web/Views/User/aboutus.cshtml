@@ -1,0 +1,86 @@
+﻿@using BD.Jcbg.Web.Func;
+@using BD.Jcbg.Common;
+@{
+    ViewBag.Title = "关于我们";
+    Layout = "~/Views/User/_loginlayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        $(function () {
+        });
+    </script>
+}
+<div class="s_container font_size_normal font_faminly font_color_black">
+
+    <div class="s_container_top sj_dark_red">
+        <div class="width_1000">
+            <div class="width_1000_left">
+                <div class="img"> <img src="@SkinManager.GetImagePath("logo.png")" /> </div>
+                <div class="word">
+                    <p class="font_faminly_yishu font_size_xxl sj_dark_red logo_left_name">绍兴标点</p>
+                    <p class="font_color_white font_size_m">好技术 好软件 好服务</p>
+                </div>
+
+
+            </div>
+            <div class="shu">
+                <img src="@SkinManager.GetImagePath("shu.png")" />
+            </div>
+            <div class="width_1000_right">
+                <ul class="font_color_white font_size_l font_color_black top_tab_tiaozhuan">
+
+
+                    <li class="" onclick="top_tiaozhun(1)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">首页</li>
+                    <li class=" " onclick="top_tiaozhun(2)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">软件超市</li>
+                    <li class="active" onclick="top_tiaozhun(3)">关于我们</li>
+                    <li class=" hezuohuoban " onclick="top_tiaozhun(4)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">合作伙伴</li>
+
+                    <li class="" onclick="top_tiaozhun(5)" onmouseover="    this.style.background = '#888888'" onmouseout="    this.style.background = 'transparent'">下载</li>
+
+
+                </ul>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+    <div class="S_container_middle_about">
+        <div class="top">
+            <div class="width_1000"><img src="@SkinManager.GetImagePath("about_fore.png")" /></div>
+        </div>
+        <div class="middle width_1000">
+            <div>  <img src="@SkinManager.GetImagePath("aboutvs.png")" />      </div>
+            <p>
+                绍兴市标点电子技术有限公司，成立于2004年。是一家专门从事软件开发、工业自动化改造于一体的IT高科技企业。
+                公司成立以来一直专注于自由知识产权软硬件产品的研究和开发。以建设行业电脑应用管理为主导产品，辅以工业自动化改造、办公自动化、智能卡应用等系列软硬件的开发。几年来，公司采用国际先进的软件开发管理平台，融合领先电子产品和先进的管理思想，使产品不断丰富完善。于2005年10月，推出Web版《建筑材料质量检测管理系统》、《建筑工程质量监督办公系统》等多套系统，并成功应用于建筑行业单位。为建筑行业的各个部门提供了全面可靠的解决方案。
+                公司拥有一批高素质的技术人才有十几年的工程质量检测系统开发精验，具有很强软件研发能力、技术支持能力和完善的售后服务机制。公司充分发挥各行业之间协同工作精神和高校的先进技术力量的优势。公司长期与建筑业各级部门密切配合，及时了解行业的动态，不断更新软件版本。公司还长期与浙江大学合作，结合高校前沿技术优势，不断引进新技术。公司坚持"以人为本"的原则，不断吸收优秀人才加盟企业发展。
+                公司宗旨:好技术、好产品、好服务
+            </p>
+            <h3>    咨询热线：0575-88660818</h3>
+            <h3>     维护热线：0575-88622455</h3>
+            <h3>  地址：浙江绍兴越城区舜江路683号科创大厦701&705室 </h3>
+
+
+
+
+            <div> <img src="@SkinManager.GetImagePath("about_middle.png")" /> </div>
+            <h2>我们的优势</h2>
+            <p>①通过流程化、平台化的管理、精细化的运营、全方位的监控，建立了自己独特的竞争优势。;</p>
+            <p>②最全面、最详细的建筑业资源，针对不同建筑业企事业单位需求，为企事业单位提供最佳的软件应用方案</p>
+            <p>③我们与全国各地的建筑业企事业单位合作，保证软件的稳定性；通过增加手机phone端等多种终端方式，提升员工的效率，让企事业用最短的时间完成尽量多的事情</p>
+
+
+
+
+
+
+        </div>
+    </div>
+</div>

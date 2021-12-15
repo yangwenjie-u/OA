@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@section head{
+<script language="javascript" type="text/javascript">
+    $(function () {
+        try{
+            $.ajax({
+                type: "POST",
+                url: "/ry/getryselfinfo",
+                data: "",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+                        var obj = data.data;
+                        $("#txt_zh").val(obj.zh);
+                        $("#txt_xm").val(obj.ryxm);
+                        $("#txt_dw").val(obj.qymc);
+                        $("#txt_xb").val(obj.xb);
+                        $("#txt_sfzhm").val(obj.sfzhm);
+                        $("#txt_sjhm").val(obj.sjhm);
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "获取信息失败";
+                        alert(data.msg);
+                    }
+                    layer.closeAll();
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (err) {
+            alert(err);
+        }
+
+    });
+</script>
+}
+
+<div class="container">
+    <div class="row" style="margin-top:50px;">
+        <div class="col-xs-12 col-xs-offset-4 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+            <ul class="list-group">
+                <li class='list-group-item' id='li_zh'>
+                    <div class="input-group">
+                        <span class="input-group-addon">登录用户名</span>
+                        <input type="text" id="txt_zh" class="form-control" readonly="readonly" />
+                    </div>
+                </li>
+                <li class='list-group-item' id='li_xm'>
+                    <div class="input-group">
+                        <span class="input-group-addon">姓名</span>
+                        <input type="text" id="txt_xm" class="form-control" readonly="readonly" />
+                    </div>
+                </li>
+                <li class='list-group-item' id='li_dw'>
+                    <div class="input-group">
+                        <span class="input-group-addon">任职单位</span>
+
+                        <input type="text" id="txt_dw" class="form-control" readonly="readonly" />
+
+                    </div>
+                </li>
+                <li class='list-group-item' id='li_xb'>
+                    <div class="input-group">
+                        <span class="input-group-addon">性别</span>
+
+                        <input type="text" id="txt_xb" class="form-control" readonly="readonly" />
+
+                    </div>
+                </li>
+                <li class='list-group-item' id='li_sfzhm'>
+                    <div class="input-group">
+                        <span class="input-group-addon">身份证号码</span>
+
+                        <input type="text" id="txt_sfzhm" class="form-control" readonly="readonly" />
+
+                    </div>
+                </li>
+                <li class='list-group-item' id='li_sjhm'>
+                    <div class="input-group">
+                        <span class="input-group-addon">手机号码</span>
+
+                        <input type="text" id="txt_sjhm" class="form-control" readonly="readonly" />
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

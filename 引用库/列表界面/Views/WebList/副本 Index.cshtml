@@ -1,0 +1,173 @@
+﻿@using BD.WebListCommon;
+@using BD.WebListDataModel.Entities;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>列表界面</title>
+    <script type="text/javascript" src="@Skins.GetHPath("js/jquery.min.js?v=2.1.4")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/plugins/bootstrap-table/bootstrap-table.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js")"></script>
+    <script type="text/javascript" src="@Skins.GetHPath("js/plugins/layer/layer.js")"></script>
+    <script type="text/javascript" src="@Skins.GetMy97Path("WdatePicker.js")"></script>
+
+    <script type="text/javascript" src="@Skins.GetJsPath("weblist.js?v=2016062201")"></script>
+    
+    <link rel="shortcut icon" href="favicon.ico"/> 
+    <link rel="stylesheet" href="@Skins.GetHPath("css/bootstrap.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/font-awesome.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/plugins/bootstrap-table/bootstrap-table.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/animate.min.css")"/>
+    <link rel="stylesheet" href="@Skins.GetHPath("css/style.min.css")"/>
+
+    <link rel="stylesheet" href="@Skins.GetHPath("css/plugins/layer/skin/layer.css")"/>
+    <link rel="stylesheet" href="@Skins.GetCssPath("stj.css")"/>
+
+    <!-- CSS -->
+    @{ IList<string> cssList = ViewData["css"] as IList<string>; }
+    @foreach (var item in cssList)
+    {
+        <link rel="stylesheet" href="@Skins.GetCustomCssPath(item)"/>
+    }
+
+    <!-- JS -->
+    @{ IList<string> jsList = ViewData["js"] as IList<string>; }
+    @foreach (var item in jsList)
+    {
+        <script type="text/javascript" src="@Skins.GetCustomJsPath(item)"></script>
+    }
+</head>
+<body class="gray-bg" style="font-size:20px;">
+    <div class="wrapper wrapper-content animated fadeInRight" >
+        <form id="form1" name="form1" style="padding: 0 10px 0 0">
+        <input type="hidden" id="param" name="param" value="@ViewData["param"]" />
+        <input type="hidden" id="searchTxt" name="searchTxt" />
+        <input type="hidden" id="page" name="page" />
+        <input type="hidden" id="rows" name="rows" />
+        <input type="hidden" id="sort" name="sort" />
+        <input type="hidden" id="order" name="order" />
+        <!-- 按钮 -->
+        <div id="buttonDiv"></div>
+        <!-- 查询条件 -->
+        <div id="conditionDiv" style="overflow:auto"></div>
+        <!-- 工具栏 -->
+        <div id="toolbarDiv" class="btn-group"></div>
+        <!-- 列表 -->
+        <div id="dataDiv">
+             <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">   </div>
+            @{ Form form = ViewData["form"] as Form; }
+            @{ IList<FormZdzd> zdzdList = ViewData["zdzd"] as IList<FormZdzd>; }
+            <table  id="table" 
+                    data-click-to-select="true"
+                    data-single-select="@form.SingleSelect.ToString().ToLower()"
+                    data-show-footer="true"
+                    data-pagination="true"
+                    data-side-pagination="server"
+                    data-page-number = "1"
+                    data-page-size = "@form.PageSize"
+                    data-height="500"
+                    data-page-list="@form.LimitSize"
+                    data-striped = "true"
+                    data-search = "false"
+                    data-search-on-enter-key = "true"
+                    @*data-show-refresh="true"*@
+                    data-show-toggle="false"
+                    data-show-columns="true"
+                    data-toolbar="#toolbarDiv"
+                   @*data-select-item-name="GCBH"*@
+                    >
+                    <thead>
+                        <tr>
+                            @if (form.CheckBox)
+                            {
+                                <th data-field="state" data-checkbox="true"></th>
+                            }
+                            else
+                            { 
+                                <th data-field="state" data-radio="true"></th>                        
+                            }
+                            <th 
+                                data-field="num" 
+                          @*      data-width="10px" *@
+                                data-switchable="false" 
+                                data-halign="center"
+                                data-align="center"
+                                >序号</th>
+                            @foreach (var item in zdzdList)
+                            {
+                                <th 
+                                    data-field="@item.ZdName" 
+                                    data-sortable="@item.Sfpx.GetString().ToLower()" 
+                                    data-visible="@item.SfShow.GetString().ToLower()" 
+                                    data-switchable="@item.SfSwitch.GetString().ToLower()"
+                                    data-halign="center"
+                                    data-align="@item.Align"
+                            @*        data-width="@item.ZdWidth.GetInt()px"*@
+                                    @Html.Raw(item.FormatEvent.GetString() != "" ? String.Format("data-formatter=\"{0}\"", item.FormatEvent.GetString()) : "")
+                                    data-title-tooltip="@item.ZdTip"
+                                    data-footer-formatter= "<div id='@(item.ZdName)Footer' align='left'></div>"
+                                >@item.ZdSy</th>
+                            }
+                        </tr>
+                    </thead>
+              </table>          
+        </div>
+    
+        </form>
+    </div>
+    <script type="text/javascript" language="javascript">
+        var dataGrid;
+        var dataGridFooter = [];
+        //初始化显示Table界面
+        function iniTableForm() {
+            dataGrid = $("#table").bootstrapTable({
+                //分页事件
+                onPageChange: function (number, size) {
+                    searchFormData();
+                },
+                //排序事件
+                onSort: function (name, order) {
+                    searchFormData();
+                },
+                //查询事件
+                onSearch: function (text) {
+                    $("#searchTxt").val(text);
+                    searchFormData();
+                },
+                //双击事件
+                onDblClickCell: function (field, value, row, $element) {
+                    @form.DbClickFunName
+                }
+            });
+        }
+
+        //初始化内容
+        function initContentData() {
+            //初始化显示Table界面
+            iniTableForm();
+            //绑定事件
+            bindEvent();
+            //查询数据
+            searchRecord();
+            //刷新
+            //timerTable();
+            $(window).resize(function () {
+                dataGrid.bootstrapTable("refreshOptions", {
+                    height: 500
+                });
+//                table.ResizeTable({
+//                    id: "inspect",
+//                    height: publicfunc.GetTableHeight()
+//                });
+            });
+        }
+
+        //初始化数据
+        $(function () {
+            //初始化界面数据包
+            iniFormData();
+        });
+    </script>
+</body>
+</html>

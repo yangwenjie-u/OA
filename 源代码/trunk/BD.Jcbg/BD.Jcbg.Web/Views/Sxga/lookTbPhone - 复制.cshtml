@@ -1,0 +1,238 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["title"]</title>
+    <!-- 引入 echarts.js -->
+     
+    <script type="text/javascript" src="@SkinManager.GetSxgaPath("js/echarts.min.js?v=2.1.4")"></script>
+    <script type="text/javascript" src="@SkinManager.GetSxgaPath("js/jquery-1.8.0.min.js?v=2.1.4")"></script>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom <div id="main" style="width: 600px;height:400px;"></div>-->
+    <div id="main" style="width: 600px;height:400px;"></div>
+
+    <script type="text/javascript">
+
+        var myChart;
+        $(function () {
+            $.ajax({
+                url: "/Sxga/getTbData",
+                async: true,
+                dataType: "json",
+                type: "POST",
+                data: {
+                    date1: '@ViewData["date1"]',
+                    //pro:'true'
+                },
+                success: function (result) {
+                    if (result.success == true) {
+                        if (result.data.length==0) {
+                             $('#main').append("<div id='child' style='width: 650px;height:400px;'>无统计数据!</div>");
+                        }
+                        
+                        for (i = 0; i < result.data.length; i++) {
+                            $('#main').append("<div id='main" + result.data[i].recid + "' style='width: 650px;height:400px;'></div>");
+                            var total = 0;
+                            var bmytotal = 0;
+                            var bmy = result.data[i].bmy.split(",");
+                            var my = result.data[i].my.split(",");
+                            var yb = result.data[i].yb.split(",");
+                            var clum = result.data[i].clum.split(",");
+                            var clumvalue = result.data[i].clumvalue.split(",");
+                            var valuearray = new Array();
+                            for (j = 0; j < clumvalue.length; j++) {
+                                var array = new Array();
+                                array.push(j);
+                                array.push(parseFloat(clumvalue[j]));
+                                array.push(bmy[j]);
+                                array.push(my[j]);
+                                array.push(yb[j]);
+                                valuearray.push(array);
+                                total = total + parseInt(bmy[j]) + parseInt(my[j]) + parseInt(yb[j]);
+                                bmytotal = bmytotal + parseInt(bmy[j]);
+                            }
+                            
+
+                            myChart = echarts.init(document.getElementById("main" + result.data[i].recid + ""));
+
+                            // 指定图表的配置项和数据
+                            var option = {
+                                title: {
+                                    textStyle: {
+
+                                        fontSize: 20
+                                    },
+                                    text: result.data[i].title,
+                                    left: 'center',
+                                    subtext: '短信发送总数' + total + '条,其中不满意' + bmytotal + '条',
+                                    subtextStyle: {
+                                        fontSize: 16
+                                    },
+                                },
+                                /* 显示下载按钮
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {
+
+                                        }
+                                    }
+
+                                },*/
+                                grid: {
+                                    left: '7%',
+                                    right: '7%',
+                                    top: '25%',
+                                    containLabel: true
+                                },
+                                tooltip: {
+                                    textStyle: {
+                                        fontSize: 20
+                                    },
+                                    trigger: 'axis',
+                                    formatter: function (a) {
+                                            return a[0].axisValueLabel + '<br/>' + '不满意数量:' + a[0].data[2] + '条<br/>' + '满意数量:' + a[0].data[3] + '条<br/>' + '一般数量:' + a[0].data[4] + '条'
+                                        }
+                                    
+                                },
+                                legend: {
+                                    top: '15%',
+                                    data: ['满意率'],
+                                    textStyle: {
+                                        fontSize: 20
+                                    }
+                                },
+                                xAxis: {
+
+                                    data: clum,
+                                    axisLabel: {
+                                        show: true,
+                                        textStyle: {
+                                            fontSize: 16
+                                        }
+                                    }
+                                },
+                                yAxis: {
+                                    name: "单位(%)",
+                                    nameTextStyle: {
+                                        fontSize: 16
+                                    },
+                                    axisLabel: {
+                                        show: true,
+                                        textStyle: {
+                                            fontSize: 16
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: '满意率',
+                                    type: 'bar',
+                                    data: valuearray,//[[0, 23, 11], [1, 44, 22]],//clumvalue,
+                                    label: {
+                                        normal: {
+                                            show: true,
+                                            position: 'inside',
+                                            fontSize: 16,
+                                            formatter: function (a) {
+                                                return a.value[1]+'%'
+                                            }
+                                        }
+                                    },
+                                }]
+                            };
+
+                            // 使用刚指定的配置项和数据显示图表。
+                            myChart.setOption(option);
+                        }
+
+
+                    } else {
+                        $('#main').append("<div id='child' style='width: 600px;height:400px;'>" + result.msg+ "</div>");
+
+                    }
+
+                }
+            });
+        })
+/*
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            textStyle: {
+
+                fontSize: 20
+            },
+            text: '月统计',
+            left: 'center'
+        },
+        grid: {
+            left: '7%',
+            right: '7%',
+            top: '20%',
+            containLabel: true
+        },
+        tooltip: {
+            textStyle: {
+                fontSize: 20
+            }
+        },
+        legend: {
+            top: '10%',
+            data: ['满意率'],
+            textStyle: {
+                fontSize: 20
+            }
+        },
+        xAxis: {
+
+            data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"],
+            axisLabel: {
+                show: true,
+                textStyle: {
+                    fontSize: 16
+                }
+            }
+        },
+        yAxis: {
+            name: "单位(%)",
+            nameTextStyle: {
+                fontSize: 16
+            },
+            axisLabel: {
+                show: true,
+                textStyle: {
+                    fontSize: 16
+                }
+            }
+        },
+        series: [{
+            name: '满意率',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10.5, 20],
+            label: {
+                normal: {
+                    show: true,
+                    position: 'inside',
+                    fontSize: 16,
+                    formatter: '{c}%'
+                }
+            },
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    */
+    </script>
+
+
+    
+   
+</body>
+</html>

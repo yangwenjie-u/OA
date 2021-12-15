@@ -1,0 +1,611 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/table.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/lib/layui/css/layui.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/tz/css/load.css" />
+    <style>
+    .layui-layer-page .layui-layer-content {
+        overflow: hidden!important;
+    }
+
+    .table-warp {
+        padding: 0px;
+        margin-bottom: 20px;
+        width: 90%;
+        margin-left: 5%;
+        display: inline-block;
+        padding-bottom: 60px;
+    }
+
+    .page {
+        bottom: 0px;
+        margin-right: 0px;
+    }
+
+    .role p {
+        color: #999999;
+        text-align: center;
+        width: 160px;
+        margin-left: 30px;
+    }
+
+    .filter .f-ipt {
+        width: 40%;
+    }
+
+    #table {
+        display: table;
+        border-bottom: 1px solid #E9E9E9;
+        width: 100%;
+    }
+
+    #table>div {
+        display: table-cell;
+        width: 50%;
+        vertical-align: top;
+    }
+
+    .save-btn {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        height: 50px;
+        text-align: center;
+    }
+
+    .layui-laypage-prev,
+    .layui-laypage-next {
+        display: none!important;
+    }
+
+
+    .filter {
+        width: 100%;
+        margin-left: 0;
+        background: #F8F8F8;
+        height: 46px;
+        box-sizing: border-box;
+        padding-top: 5px;
+    }
+
+    .btn {
+        width: 12%;
+        margin: 0 10px;
+    }
+
+    .count {
+        display: none;
+    }
+
+    #personRight {
+        border-left: 1px solid #E9E9E9;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="table">
+        <div>
+            <div class="filter" style="white-space: nowrap;"></div>
+            <div>
+                <p style="margin: 10px 0 0 10%;height: 46px;line-height: 46px;font-size: 20px;display: inline-block;">拥有人员</p>
+                <div class="btn" id="del" style="background:#D85151;border-radius:20px;float: right;margin: 10px 15% 0 0;">删除</div>
+            </div>
+            <div id="personLeft" class="table-warp" style="padding-bottom:10px; margin-bottom:0px;overflow: auto;">
+                <table id="tabLeft" class="add-person table table-border table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">
+                                <input type="checkbox" class="check-all" />
+                            </th>
+                            <th>序号</th>
+                            <th>部门</th>
+                            <th>姓名</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personBodyLeft"></tbody>
+                    <script id="demoLeft" type="text/html">
+                        {{# layui.each(d.data.rows, function(index, item){ }}
+                        <tr>
+                            <td>
+                                <input type="checkbox" class="check hasRole" val="{{item.usercode}}" />
+                            </td>
+                            <td>{{item.itemIndex}}</td>
+                            <td>{{ item.depname }}</td>
+                            <td>{{ item.username}}</td>
+                        </tr>
+                        {{# }); }} {{# if(d.data.rows.length === 0){ }} 无数据 {{# } }}
+                    </script>
+                </table>
+            </div>
+        </div>
+        <div id="personRight" style="display: none;overflow: hidden;">
+            <div class="filter" style="white-space: nowrap;">
+                <div class="f-ipt">
+                    <label><span>单位代码</span>
+                        <select id="cpcode">
+                            <option value="0">请选择单位</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="f-ipt">
+                    <label><span>用户名称</span>
+                        <input type="text" name="username" id="username">
+                    </label>
+                </div>
+                <div class="btn search" style="float:right;margin-right: 20px;border-radius: 20px;">搜索</div>
+            </div>
+            <div>
+                <p style="margin: 10px 0 0 10%;height: 46px;line-height: 46px;font-size: 20px;display: inline-block;">可选人员</p>
+                <div id="sureSelect" class="btn" style="margin-left: 20px;border-radius: 20px;background: #D85151;float: right;margin: 10px 15% 0 0;">添加</div>
+            </div>
+            <div class="table-warp">
+                <table id="tab" class="add-person table table-border table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">
+                                <input type="checkbox" class="check-all" />
+                            </th>
+                            <th>部门</th>
+                            <th>姓名</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="personBody"></tbody>
+                    <script id="demo" type="text/html">
+                        {{# layui.each(d.data.rows, function(index, item){ }}
+                        <tr>
+                            {{# if(item.hasRole === true){ }}
+                            <td>
+                                <input type="checkbox" class="check hasRole" checked="checked" val="{{item.usercode}}" />
+                            </td>
+                            {{# } else { }}
+                            <td>
+                                <input type="checkbox" class="check" val="{{item.usercode}}" />
+                            </td>
+                            {{# } }}
+                            <td>{{ item.depname }}</td>
+                            <td>{{ item.username}}</td>
+                            <td><span value="{{item.usercode}}" onclick="openPageUserCode('{{item.usercode}}')">查看角色</span></td>
+                        </tr>
+                        {{# }); }} {{# if(d.data.rows.length === 0){ }} 无数据 {{# } }}
+                    </script>
+                </table>
+                <div id="test" class="page">
+                    <span class="count"></span>
+                    <div class="layer-page" id="page"></div>
+                    <input type="text" class="page-val" value="1" />
+                    <span class="sure" style="">确定</span>
+                    <!-- <div class="size">每页显示
+                <input type="text" class="page-size" value="10" /> 条
+            </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="save-btn">
+        <span class="btn" id="saveBtn">保存</span>
+    </div>
+    <!-- <p class="role-powernum" style="margin-top: 10px;">拥有权限:{{item.powernum}}</p> -->
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script src="/static/lib/layui/layui.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/common/table.js"></script>
+    <script type="text/javascript">
+    var params = getParams();
+
+    var defCpcode = [];
+    $(function() {
+        var h = window.innerHeight;
+
+        $("#personLeft").height(h - 170);
+        $("#personRight").find('.table-warp').height(h - 250);
+        if (params.edit == 1) {
+            $("#personRight").show();
+
+            // $("#personLeft").height(h - 170);
+            ajaxTpl('/dwgxzj/getcompanys', '', function(data) {
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].CompanyId + "'>" + data[i].CompanyName + "</option>";
+                        defCpcode.push(data[i].CompanyId);
+                    }
+                    if (data.length == 1) {
+                        $("#cpcode").html(str);
+                    } else {
+                        $("#cpcode").append(str);
+                    }
+                    loadRight();
+                }
+            });
+        } else {
+            $("#saveBtn").hide();
+            $("#del").hide();
+        }
+        var rolecode = params.rolecode;
+        var obj;
+        if (rolecode) {
+            obj = {
+                page: 1,
+                rows: 20,
+                method: 'User',
+                opt: 'GetUserListByRolecode',
+                rolecode: rolecode
+            };
+        } else {
+            var menucode = params.menucode;
+            obj = {
+                page: 1,
+                rows: 20,
+                method: 'User',
+                opt: 'GetUserListByMenucode',
+                menucode: menucode
+            };
+        }
+
+        load(obj);
+    })
+
+    $("#username").blur(function() {
+
+    });
+
+    function load(obj) {
+        ajaxTpl('/dwgxzj/UmsApiService', obj, function(data) {
+            if (data.data && data.data.rows && data.data.rows.length) {
+
+                var userData = data.data.rows;
+                selectData.leftData = userData;
+                data.total = data.data.total;
+                // itemIndex
+                for (var i = 0, len = userData.length; i < len; i++) {
+                    userData[i].itemIndex = i + 1;
+                }
+                layui.use('laytpl', function() {
+                    var getTpl = demoLeft.innerHTML,
+
+                        view = document.getElementById('personBodyLeft'); //personBodyLeft
+                    layui.laytpl(getTpl).render(data, function(html) {
+                        view.innerHTML = html;
+                    });
+                });
+            }
+        });
+    }
+
+
+    function loadRight(key) {
+        var rolecode = params.rolecode;
+        var obj = {
+            method: 'User',
+            opt: 'GetOwnerUserListByRolecode',
+            page: 1,
+            rows: 10,
+            rolecode: rolecode,
+            cpcode: defCpcode.join(',')
+        }
+        if (params) {
+            obj = $.extend(obj, key);
+        }
+        var handle = function(data, that) {
+            if (data.data) {
+
+                selectData.rightData = data.data.rows;
+                data.count = data.data.total || 10;
+
+                layui.use('laytpl', function() {
+                    var getTpl = demo.innerHTML,
+                        view = document.getElementById('personBody');
+                    layui.laytpl(getTpl).render(data, function(html) {
+                        view.innerHTML = html;
+                        selectData.setData();
+                        $("#test").find('.counts').html("共 " + data.length + " 条数据");
+                    });
+                });
+            }
+        }
+        getTable('/dwgxzj/UmsApiService', obj, handle, {
+            doc: $('#personRight'),
+            pageSize: 'rows',
+
+        });
+    }
+
+
+    $('#personRight .search').click(function() {
+        var cpcode = $("#cpcode").val();
+        var username = $("#username").val();
+        var obj = {}
+        if (cpcode != 0) {
+            obj.cpcode = cpcode;
+        }
+        if (username.length) {
+            obj.username = username;
+        }
+        loadRight(obj);
+    });
+
+
+
+    var selectData = {
+        leftData: [],
+        rightData: [],
+        add: [],
+        del: [],
+        leftHandle: function(data) {
+            for (var i = 0, len = data.length; i < len; i++) {
+                data[i].itemIndex = i + 1;
+            }
+            data = {
+                data: {
+                    rows: data
+                }
+            }
+            layui.use('laytpl', function() {
+                var getTpl = demoLeft.innerHTML,
+
+                    view = document.getElementById('personBodyLeft'); //personBodyLeft
+                layui.laytpl(getTpl).render(data, function(html) {
+                    view.innerHTML = html;
+                });
+            });
+        },
+        addData: function() {
+            //之前未选择 手动选择
+            var chk = $("#personBody").find(":checked").not('.hasRole');
+            var ipt, idx, addData = [];
+            for (var i = 0, len = chk.length; i < len; i++) {
+                ipt = chk.eq(i);
+                ipt.addClass("hasRole");
+                idx = ipt.parents('tr').index();
+                selectData.leftData.push(selectData.rightData[idx]);
+                addData.push(ipt.attr("val"));
+                //selectData.add.push(ipt.attr("val"));
+            }
+            selectData.clearDoubleObj(selectData.leftData, 'usercode');
+            //所有添加和当前添加
+            selectData.add = selectData.add.concat(addData);
+            selectData.clearDoubleString(selectData.add);
+            //之前选择 手动取消
+            var delData = [];
+            var del = $("#personBody").find(".hasRole").not(':checked');
+            for (var i = 0, len = del.length; i < len; i++) {
+                ipt = del.eq(i);
+                ipt.removeClass("hasRole");
+                idx = ipt.parents('tr').index();
+                delData.push(ipt.attr("val"));
+
+            }
+            //所有删除和当前删除
+            selectData.del = selectData.del.concat(delData);
+
+            selectData.clearDoubleString(selectData.del);
+
+            selectData.clearDoubleObjByString(selectData.leftData, delData, 'usercode');
+            // 删除的数据
+            // for (var i = 0, len = data.length; i < len; i++) {
+            //     selectData.del.push(data[i].usercode);
+            // }
+            selectData.clearDoubleString2(selectData.add, selectData.del);
+            //重新加载左侧的数据
+            selectData.leftHandle(selectData.leftData);
+
+        },
+        getData: function() {
+            var ary = [];
+            for (var i = 0, len = selectData.add.length; i < len; i++) {
+                ary.push(JSON.stringify({
+                    usercode: selectData.add[i],
+                    hasRole: true
+                }));
+            }
+            for (var i = 0, len = selectData.del.length; i < len; i++) {
+                ary.push(JSON.stringify({
+                    usercode: selectData.del[i],
+                    hasRole: false
+                }));
+            }
+            return ary;
+        },
+        setData: function() {
+
+            $("#personRight").find(".check-all")[0].checked = false;
+
+            var body = $('#personBody').find(".check");
+            var ipt;
+            for (var i = 0, len = selectData.add.length; i < len; i++) {
+                ipt = body.filter("[val='" + selectData.add[i] + "']").addClass("hasRole");
+                try {
+                    ipt[0].checked = true;
+                } catch (e) {}
+            }
+
+            for (var i = 0, len = selectData.del.length; i < len; i++) {
+                ipt = body.filter("[val='" + selectData.del[i] + "']").removeClass("hasRole");
+                try {
+                    ipt[0].checked = false;
+                } catch (e) {}
+            }
+
+        },
+        delData: function() {
+            var chk = $("#personBodyLeft").find(":checked");
+            if (chk.length) {
+                var tmp, ary = [];
+                for (var i = 0, len = chk.length; i < len; i++) {
+                    tmp = chk.eq(i).attr('val');
+                    ary.push(tmp);
+                    selectData.del.push(tmp);
+                }
+                selectData.clearDoubleObjByString(selectData.leftData, ary, 'usercode');
+                selectData.setData();
+                selectData.clearDoubleString2(selectData.add, selectData.del);
+                selectData.leftHandle(selectData.leftData);
+            } else {
+                layer.msg("请选择人员!", {
+                    icon: 2,
+                    time: 2000
+                });
+            }
+        },
+        clearDoubleObjByString: function(ary1, ary2, key) {
+            var data = [],
+                tmp;
+            for (var i = 0, len = ary1.length; i < len; i++) {
+                for (var j = 0, len2 = ary2.length; j < len2; j++) {
+                    if (ary1[i][key] == ary2[j]) {
+                        tmp = ary1.splice(i, 1);
+                        data.push(tmp[0]);
+
+                        i--;
+                        len--;
+                        break;
+                    }
+                }
+            }
+            return data;
+        },
+        clearDoubleObj: function(ary, key) {
+            for (var i = 0, len = ary.length; i < len; i++) {
+                for (var j = i + 1, len2 = ary.length; j < len2; j++) {
+                    if (ary[i][key] == ary[j][key]) {
+                        ary.splice(j, 1);
+                        j--;
+                        len2--;
+                        break;
+                    }
+                }
+            }
+        },
+        clearDoubleString2: function(ary1, ary2) {
+            for (var i = 0, len = ary1.length; i < len; i++) {
+                for (var j = 0, len2 = ary2.length; j < len2; j++) {
+                    if (ary1[i] == ary2[j]) {
+                        ary1.splice(i, 1);
+                        ary2.splice(j, 1);
+                        j--;
+                        len2--;
+                        i--;
+                        len--;
+                        break;
+                    }
+                }
+            }
+        },
+
+        clearDoubleString: function(ary) {
+
+            for (var i = 0, len = ary.length; i < len; i++) {
+                for (var j = i + 1, len2 = ary.length; j < len2; j++) {
+                    if (ary[i] == ary[j]) {
+                        ary.splice(j, 1);
+                        j--;
+                        len2--;
+                        break;
+                    }
+                }
+            }
+
+        },
+        clearSelect: function() {
+            selectData.add = [];
+            selectData.del = [];
+        }
+    };
+    $("#del").click(function() {
+        selectData.delData();
+    });
+    // 左侧添加
+    $('#sureSelect').click(function() {
+        selectData.addData();
+    });
+
+    $('#saveBtn').click(function() {
+        var ary = selectData.getData();
+        var rolecode = params.rolecode;
+        if (ary.length) {
+            ajaxTpl('/dwgxzj/UmsApiService', {
+                method: 'UserRole',
+                opt: 'ModifyUserRoleByRolecodeAndUsercodeList',
+                rolecode: rolecode,
+                usercodelist: "[" + ary.join(",") + ']'
+            }, function(data) {
+                layer.closeAll();
+                if (data.success == true) {
+                    layer.msg('保存成功！', {
+                        icon: 1,
+                        time: 1500
+                    });
+                    selectData.clearSelect();
+                    try {
+                        parent.GetRoleList();
+                    } catch (e) {
+
+                    }
+                } else {
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+        } else {
+            layer.msg("请选择人员", {
+                icon: 2,
+                time: 2000
+            })
+        }
+    });
+
+
+
+    $('.check-all').click(function() {
+        var checked = $(this).is(":checked");
+        var tab = $(this).parents('table').find(".check");
+        for (var i = 0, len = tab.length; i < len; i++) {
+            tab[i].checked = checked;
+        }
+    });
+
+    $('body').on('click', '.check', function() {
+        var checked = $(this).is(':checked');
+        var tab = $(this).parents('table');
+        var checked2 = tab.find('.check-all').is(":checked");
+        if (checked && !checked2) { //选中状态
+            var cAll = tab.find("tbody .check:checked").length;
+            var all = tab.find("tbody .check").length;
+            if (cAll == all) {
+                tab.find('.check-all')[0].checked = true;
+            }
+        } else if (!checked && checked2) { //未选中状态
+            tab.find('.check-all')[0].checked = false;
+        }
+    });
+
+    // $("#powerlist").on('click', '.role-usernum', function() {
+    function openPageUserCode(usercode) {
+        var url = '/dwgxzj/rolelist?usercode=' + usercode;
+        layer.open({
+            type: 2,
+            title: '所属角色',
+            content: url,
+            area: (function() {
+                if (window.innerWidth < top.innerWidth * 0.7) {
+                    return ['100%', '100%'];
+                }
+                return ['80%', '80%'];
+            })()
+        });
+    }
+    </script>
+</body>
+
+</html>

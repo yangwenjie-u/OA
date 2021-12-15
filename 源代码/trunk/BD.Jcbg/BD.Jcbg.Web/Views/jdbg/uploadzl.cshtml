@@ -1,0 +1,272 @@
+﻿@using BD.WorkFlow.Common;
+@{
+    Layout = "~/Views/workflow/_workflowdo.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var gcbh = '@ViewBag.GCBH';
+        var zllx = '@ViewBag.ZLLX';
+        var gclxbh = '@ViewBag.GCLXBH';
+        var isedit = '@ViewBag.ISEDIT';
+        var gcmc = '@ViewBag.GCMC';
+        var data = {
+            gcbh: gcbh,
+            zllx: zllx,
+            gclxbh: gclxbh,
+            isedit: isedit
+        };
+        $(function () {
+            try {
+                LoadZL();
+                initFileCtrl();
+                $('#gcmc').html(gcmc);
+                if (isedit=='0') {
+                    $('#btndiv').css('display', 'none');
+                }
+
+            } catch (e) {
+                alert(e);
+            }
+
+        });
+
+        function LoadZL() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/GetGCZLList",
+                    data: data,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.total > 0) {
+                            var contents = "";
+                            $.each(data.rows, function (index, row) {
+                                var tr = "";
+                                tr += "<tr>";
+                                tr += "   <td>" + (index + 1) + "</td>";
+                                tr += "   <td colspan=\"2\" id=\"lxbh_" + row["lxbh"] + "\">" + row["lxmc"] + "</td>";
+                                tr += "   <td>" + getFileCtrl(isedit, index, row) + "</td>";
+                                tr += "</tr>";
+                                contents += tr;
+                            });
+
+                            $(contents).appendTo($('#zltable'));
+                        }
+
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+
+        function getFileCtrl(isedit,index,row) {
+            var ret = ""
+            var prefix = "gczl";
+            var lxbh = row["lxbh"];
+            var ctrlid = prefix + lxbh;
+            var files = row["files"] || '';
+            if (isedit=="1") {
+                ret += "<div id='FILEFIELD_MUSTIN_" + ctrlid + "' style='display:none'>0</div>";
+                ret += "<input type='hidden' id='"+ ctrlid + "' name='" + ctrlid +  "' value='" + files + "'/>";
+                ret += "<input type='file' id='FILEFIELD_" + ctrlid + "' name='FILEFIELD_" + ctrlid + "' size='" + 60 + "' displaytype='file'/>";
+                ret +="<br/>";
+            }
+            ret += "<div id='FILEFIELD_DIV_" + ctrlid + "' class='wfa_all_div'>";
+            if (files.length ) {
+                var filelist = files.split('||');
+                $.each(filelist, function (i, file) {
+                    var arrfile = file.split('|');
+                    if (arrfile.length >= 2) {
+                        var orgname = arrfile[0];
+                        var fileid = arrfile[1];
+                        ret += "<div class='" + (isedit == "1" ? "wfa_frame_div" : "wfa_frame_div2") + "' id='file_div_" + fileid + "'>";
+                        ret += "    <span class='wfa_text'><a href='/workflow/fileview?id=" + fileid + "' target='_blank' id='FILEFIELD_FILE_" + ctrlid + "_" + i + "' title='" + orgname + "'>" + orgname + "</a></span>";
+                        if (isedit == "1") {
+                            ret += "<div class='wfa_image'><a title='删除文件' id='FILEFIELD_FILE_DEL_" + ctrlid + "_" + i + "' href='javascript:delFile(\"" + ctrlid + "\", \"" + i + "\",\"" + fileid + "\",\"" + orgname + "\")'><img src='/skins/default/workflow/images/wfa_close1.png' name='" + fileid + "_pic' border='0' onmouseover='wfa_swapImage(\"" + fileid + "_pic\",\"\",\"/skins/default/workflow/images/wfa_close2.png\",1)' onmouseout='wfa_swapImgRestore()'  /></a></div>";
+                        }
+                        ret += "</div>";
+                    }
+
+                });
+            }
+            ret += "</div>";
+            
+            return ret;
+        }
+
+
+        function doSubmit() {
+            try {
+                var params = $.extend({}, data, getdata());
+                layer.load();
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/douploadzl",
+                    data: params,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        layer.closeAll('loading');
+                        if (data.code == "0") {
+                            layer.open({
+                                type: 0,
+                                title: '提示',
+                                content: '上传成功',
+                                yes: function (index, layero) {
+                                    layer.close(index);
+                                    parent.layer.closeAll();
+                                },
+                                cancel: function (index, layero) {
+                                    layer.close(index);
+                                    parent.layer.closeAll();
+                                }
+                            });
+                        }
+                        else {
+                            if (data.msg=='') {
+                                data.msg = '上传失败';
+                            }
+                            layer.open({
+                                type: 0,
+                                title: '提示',
+                                content: data.msg,
+                                yes: function (index, layero) {
+                                    layer.close(index);
+                                }
+                            });
+                        }
+
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+            
+        }
+
+        function getdata() {
+            var ret = {};
+            var bhlist = [];
+            var filelist = [];
+            $('td[id^=lxbh_]').each(function (index, obj) {
+                var td = $(this);
+                var id = td.attr('id').replace('lxbh_', '');
+                bhlist.push(id);
+                var input = td.next().find("input[type=hidden][id=gczl" + id + "]");
+                if (input.length) {
+                    $.each(input, function (index, ele) {
+                        filelist.push($(this).val());
+                        return true;
+                    });
+                }
+                else {
+                    filelist.push('');
+                }
+            });
+
+            ret = { bhlist: bhlist.join(','), filelist: filelist.join(',') };
+            return ret;
+        }
+
+    </script>
+}
+
+
+<style type="text/css">
+    .table_1 {
+    }
+
+        .table_1 td {
+            height: 50px;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bolder;
+        }
+
+    .table_2 {
+    }
+
+        .table_2 td {
+            height: 40px;
+            vertical-align: middle;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+    .table_3 {
+        border-right: solid 1px #888888;
+        border-top: solid 1px #888888;
+    }
+
+        .table_3 th {
+            border-left: solid 1px #888888;
+            border-bottom: solid 1px #888888;
+            background-image: none;
+            background-color: #f0f0f0;
+            color: #000;
+            font-size: 14px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .table_3 td {
+            border-left: solid 1px #888888;
+            border-bottom: solid 1px #888888;
+            font-size: 14px;
+            text-align: left;
+            height: 40px;
+            vertical-align: middle;
+            padding: 5px;
+        }
+</style>
+
+<div id="divformmain" style="margin-bottom:200px;">
+    <table cellspacing="1" width="100%">
+        <tbody>
+            <tr>
+                <td align="center">
+                    <table cellspacing="1" width="800">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <table cellspacing="0" width="100%" class="table_3" id="zltable">
+                                            <tr>
+                                                <td colspan="4" style="text-align:center;">工程名称：<span id="gcmc"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="100">序号</td>
+                                                <td width="400" colspan="2">资料说明</td>
+                                                <td width="300">附件</td>
+                                            </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="navbar navbar-default navbar-fixed-bottom" id="btndiv">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="上传" />
+        &nbsp;&nbsp;
+    </form>
+</div>
+
+
+
+

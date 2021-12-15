@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/lib/element_ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/lib/layui/css/layui.css">
+    <script src="/static/lib/vue.min.js"></script>
+    <script src="/static/lib/jquery.js"></script>
+    <script src="/static/lib/element_ui/index.js"></script>
+    <style>
+        .tools{
+            border:1px solid #ccc;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+        }
+        .label{
+            margin-left: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="tools">
+            <div class="label">
+                企业名称：
+            </div>
+            <div class="inp">
+                <el-input size="mini" v-model="qymc"></el-input>
+            </div>
+            <div class="label">
+                施工许可证号：
+            </div>
+            <div class="inp">
+                <el-input size="mini" v-model="sgxkzh"></el-input>
+            </div>
+            <div class="label">
+                <el-button type="primary" plain size="mini" v-on:click="getList">搜索</el-button>
+            </div>
+        </div>
+        <el-table :data="tableData" style="width: 100%" border
+            :header-cell-style="{background:'linear-gradient(to bottom, #fff 0, #f2f2f2 100%)',color:'#606266'}">
+            <el-table-column prop="gcmc" label="工程名称">
+            </el-table-column>
+            <el-table-column prop="gcdd" label="工程地点">
+            </el-table-column>
+            <el-table-column prop="lxmc" label="类型名称">
+            </el-table-column>
+            <el-table-column prop="sgxkzh" label="施工许可证号">
+            </el-table-column>
+            <el-table-column prop="jzxz" label="建筑性质">
+            </el-table-column>
+            <el-table-column  label="操作" width="100">
+                <template slot-scope="scope">
+                    <el-button type="primary" plain size="mini" v-on:click="downLoad(scope.row)">下载</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+    <script>
+        var that
+        new Vue({
+            el: "#app",
+            data: {
+                list: [],
+                tableData: [],
+
+                qymc:"",
+                sgxkzh:"",
+            },
+            methods: {
+                downLoad:function(row){
+                    console.log(row);
+                    $.ajax({
+                        url: "/wlxf/saveTzProject",
+                        type: 'post',
+                        data: row,
+                        dataType: "json",
+                        success: function (res) {
+                            console.log(res);
+                        }
+                    })
+                },
+                getList: function () {
+                    $.ajax({
+                        url: "/wlxf/getAllProject",
+                        type: 'post',
+                        data: {
+                            qymc: this.qymc,
+                            sgxkzh: this.sgxkzh,
+                        },
+                        dataType: "json",
+                        success: function (res) {
+                            var d = res.rows
+                            var list = []
+                            d.forEach(function (e) {
+                                var obj = {
+                                    gcmc: e['工程信息']['gcmc'],
+                                    gcdd: e['工程信息']['gcdd'],
+                                    lxmc: e['工程信息']['lxmc'],
+                                    sgxkzh: e['工程信息']['sgxkzh'],
+                                    jzxz: e['工程信息']['jzxz'],
+                                }
+                                list.push(obj)
+                            })
+                            console.log(list);
+                            that.tableData = list
+                            // console.log(res.rows);
+                        }
+                    })
+                }
+            },
+            mounted() {
+                that = this
+                this.getList()
+            },
+        })
+    </script>
+</body>
+
+</html>

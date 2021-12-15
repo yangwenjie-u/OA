@@ -1,0 +1,110 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+<script type="text/javascript" src="/skins/WebList/pub/layer/layer.js"></script>
+
+<link href="@SkinManager.GetCssPath("form_checkbox_big.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetCssPath("form_checkbox_small.css")" rel="stylesheet" type="text/css" />
+<script language="javascript" type="text/javascript" charset="utf-8" >
+
+
+    function Open_Dialog() {
+        var savedisable = false;
+
+
+
+
+        $('#maindlg').dialog({
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            resizable: false,
+            shadow: true,
+            modal: false,
+            closable: false,
+            buttons: [{
+                text: '审核',
+                disabled: savedisable,
+                iconCls: 'icon-ok',
+                handler: function () {
+                    var checkvalue = $('input[name="check_option"]:checked ').val();
+                    var reason = $('input[name="reason"]').val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/wlxf/checkryzz?rybhs='" + encodeURIComponent("@ViewBag.rybh") + "'&checkoption=" + checkvalue + "&reason=" + encodeURIComponent(reason),
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data.msg != "")
+                                alert(data.msg);
+                            else
+                                alert("审核成功");
+                            parent.layer.closeAll();
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                        }
+                    });
+                }
+            },
+            {
+                text: '查看详情',
+                disabled: savedisable,
+                iconCls: 'icon-view',
+                handler: function () {
+                    var url = "/datainput/Index?zdzdtable=ZDZD_YH" +
+                   "&t1_tablename=I_M_RY" +
+                   "&t1_pri=RYBH" +
+                   "&t1_title=" + encodeURIComponent("人员信息") +
+                   "&t2_tablename=I_S_RY_RYZZ" +
+                   "&t2_pri=RYBH,RECID" +
+                   "&t2_title=" + encodeURIComponent("证书信息") +
+                   "&button=" +
+                   "&rownum=1" +
+                   "&view=true" +
+                   "&jydbh=@ViewBag.rybh" +
+                   "&LX=A";
+                    layer.open({
+                        type: 2,
+                        title: "人员详情",
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['95%', '95%'],
+                        content: url,
+                        end: function () {
+                        }
+                    });
+                }
+            }
+            ]
+        });
+    }
+    $(function () {
+
+
+        Open_Dialog();
+    });
+
+
+
+</script>
+
+
+
+<div id="maindlg" style="padding:20px;width:350px;height:320px;" title="审核">
+    <form id="formmain" method="post" action="">
+        <div class="switch switch-blue">
+            <input type="radio" class="switch-input" name="check_option" value="1" id="check_agree" checked>
+            <label for="check_agree" class="switch-label switch-label-off">同意</label>
+            <input type="radio" class="switch-input" name="check_option" value="0" id="check_disagree">
+            <label for="check_disagree" class="switch-label switch-label-on">拒绝</label>
+            拒绝理由:<input id="reason" name="reason" />
+            <span class="switch-selection"></span>
+        </div>
+
+    </form>
+</div>
+
+

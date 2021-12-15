@@ -1,0 +1,253 @@
+﻿@{
+    Layout = "~/Views/workflow/_workflow.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+    var workflow_host_activity_id = 0;
+    $(function () {
+        try {
+            $("#workflow_host_edit_div").dialog({
+                title: "工作托管",
+                collapsible: false,
+                minimizable: false,
+                maximizable: false,
+                resizable: true,
+                draggable: true,
+                closable: true,
+                modal: true,
+                fit: false,
+                width: 650,
+                closed: true
+            });
+            workflow_host_getUsers();
+            workflow_host_inittreedata();            
+        } catch (e) {
+            $.messager.alert('初始化页面异常', e.message, 'warning');
+        }
+
+    });
+
+    function workflow_host_inittreedata() {
+    /*
+        $('#workflow_host_processlist_ul').tree({
+            url: '/workflow/getuseractivity',
+            checkbox: false,
+            onClick: function (node) {
+                var isLeaf = $('#workflow_host_processlist_ul').tree('isLeaf', node.target);
+                if (isLeaf) {
+                    workflow_host_activity_id = node.id;
+                    workflow_host_hosting();
+                }
+            }
+        });
+        */
+        $('#workflow_host_processlist_table').treegrid({
+            title: '工作托管',
+            loadMsg: "正在加载……",
+            border: false,
+            rownumbers: true,
+            nowrap: true,
+            url: '/workflow/getuseractivity',
+            idField: 'id',
+            treeField: 'text',
+            columns: [[
+        { title: '任务列表', field: 'text', width: 280 }
+    ]],
+            onClickRow: function (row) {
+                if (row.leaf=="true") {
+                    workflow_host_activity_id = row.id;
+                    workflow_host_hosting();
+                 }
+            }
+        });  
+
+    }
+
+    function workflow_host_hosting() {
+    try {
+        $.ajax({
+            type: "POST",
+            url: "/workflow/checkhost?activityid="+workflow_host_activity_id,
+            dataType: "json",
+            success: function (data) {
+                workflow_host_init_div(data.date1, data.date2, data.person, data.type)
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                $("body").unmask();
+            },
+            beforeSend: function (XMLHttpRequest) {
+                $("body").mask("加载中...");
+            }
+        });
+        
+    }
+    catch (e) {
+        $.messager.alert('初始化页面异常', e.message, 'warning');
+     }
+}
+
+function workflow_host_init_div(date1,date2,person,type) {
+    try {
+        var btntext = "";
+        if(type == 1)
+        {
+            $("#workflow_host_state").text("未托管");
+            btntext = "工作托管";
+        }
+        else {
+            $("#workflow_host_state").text("已托管："+date1+"到"+date2);
+            btntext = "取消托管";
+        }
+        $('#workflow_host_starttime').datetimebox({
+            value: "",
+            required: true,
+            editable: false,
+            showSeconds: false
+        });
+        $('#workflow_host_endtime').datetimebox({
+            value: "",
+            required: true,
+            editable:false,
+            showSeconds: false
+        });
+        if (person != "") {
+            $('#workflow_host_loginusers').combotree('setValue', person);
+        }
+
+        $("#workflow_host_edit_div").dialog({
+            title: "工作托管",
+            collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: true,
+				draggable: true,
+				closable: true,
+				modal: true,
+				fit: false,
+				width:650,
+				closed:false,
+				buttons: [{
+				    text: btntext,
+					iconCls: "icon-save",
+                    id: "workflow_host_edit_btn_save",
+                    handler: function () {
+                        workflow_host_saveRecord(type);
+                    }
+                },
+				{
+				    text: "关闭",
+				    iconCls: "icon-cancel",
+				    id: "workflow_host_edit_btn_cancel",
+				    handler: function () {
+				        $("#workflow_host_edit_div").dialog("close");
+				    }
+				}]
+        });
+    }
+    catch (e) {
+        $.messager.alert('初始化页面异常', e.message, 'warning');
+    }
+ }
+
+function workflow_host_getUsers() {
+    $('#workflow_host_loginusers').combotree({
+        valueField: "id",
+        textField: "text",
+        mode: "remote",
+        dataType: "json",
+        method: "post",
+        url: '/workflow/getusertree',
+        onLoadSuccess: function (node, data) {
+            var tree = $('#workflow_host_loginusers').combotree('tree');
+            var cp = tree.tree('getRoot');
+            var dep = tree.tree('getChildren', cp.target);
+            var user = tree.tree('getChildren', dep[0].target);
+            $('#workflow_host_loginusers').combotree('setValue', user[0].id);
+        },
+        onSelect: function (node) {
+            var tree = $('#workflow_host_loginusers').combotree('tree');
+            var isLeaf = tree.tree('isLeaf', node.target);
+            if (!isLeaf) {
+                var dep = tree.tree('getChildren', node.target);
+                $('#workflow_host_loginusers').combotree('setValue', dep[0].id);
+            }
+        }
+    });
+
+}
+function workflow_host_saveRecord(type) {
+    //type=1托管，type=2取消托管
+    var url = "";
+    if (type == 1) {
+
+        if ($("#workflow_host_starttime").combobox("getValue") == "" || $("#workflow_host_endtime").combobox("getValue")=="")
+        {
+            $.messager.alert('提示', "请选择托管时间", 'warning');
+            return;
+        }
+        url = "/workflow/sethost?activityid=" + workflow_host_activity_id + "&date1=" + $("#workflow_host_starttime").combobox("getValue") + "&date2=" + $("#workflow_host_endtime").combobox("getValue") + "&hosted=" + $('#workflow_host_loginusers').combotree("getValue");
+    }
+    else {
+        url = "/workflow/cancelhost?activityid=" + workflow_host_activity_id;
+    }
+    try {
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function (data) {
+                try {
+                    if (data.code == 0) {
+                        $("#workflow_host_edit_div").dialog("close");
+                        $.messager.alert('提示', '保存成功', 'info');
+                    }
+                    else
+                        $.messager.alert('提示', data.msg, 'info');
+                } catch (e) {
+                    $.messager.alert('提示', e.message, 'warning');
+                }
+                
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                $("body").unmask();
+            },
+            beforeSend: function (XMLHttpRequest) {
+                $("body").mask("加载中...");
+            }
+        });
+    }
+    catch (e) {
+     }
+    
+ }
+
+</script>
+
+<table id="workflow_host_processlist_table" ></table>  
+
+
+<div id="workflow_host_edit_div" style="margin:5px 5px 5px 5px; text-align:center;">
+    <table class="table_form" cellpadding="2" cellspacing="1">
+		<tr>
+            <td>状态：</td>
+            <td><span id="workflow_host_state"></span></td>        
+        </tr>
+        <tr>
+            <td>托管人：</td>
+            <td><input id="workflow_host_loginusers" name="workflow_host_loginusers" style="width:400px" /></td>        
+        </tr>
+        <tr>
+            <td>开始时间：</td>
+            <td><input class="easyui-datetimebox" id="workflow_host_starttime" name="workflow_host_starttime" data-options="required:true,showSeconds:false" style="width:150px"/>
+            <span id="workflow_host_starttime_spn"></span>
+</td>        
+        </tr>
+        <tr>
+            <td>结束时间：</td>
+            <td><input class="easyui-datetimebox" id="workflow_host_endtime" name="workflow_host_endtime" data-options="required:true,showSeconds:false" style="width:150px"/>
+            <span id="workflow_host_endtime_spn"></span>
+            </td>        
+        </tr>
+    </table>
+</div>
+

@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://ws.web.wxg.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" name="QrpwsImpService" targetNamespace="http://ws.web.wxg.com/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="http://211.155.231.169:80/qrp/qrpws?xsd=1" namespace="http://ws.web.wxg.com/" />
+    </xsd:schema>
+  </types>
+  <message name="getOrgIdByJcdwOrgCode">
+    <part name="parameters" element="tns:getOrgIdByJcdwOrgCode" />
+  </message>
+  <message name="getOrgIdByJcdwOrgCodeResponse">
+    <part name="parameters" element="tns:getOrgIdByJcdwOrgCodeResponse" />
+  </message>
+  <message name="getOrgIdByJcdwName">
+    <part name="parameters" element="tns:getOrgIdByJcdwName" />
+  </message>
+  <message name="getOrgIdByJcdwNameResponse">
+    <part name="parameters" element="tns:getOrgIdByJcdwNameResponse" />
+  </message>
+  <message name="uploadJcDataForLklc">
+    <part name="parameters" element="tns:uploadJcDataForLklc" />
+  </message>
+  <message name="uploadJcDataForLklcResponse">
+    <part name="parameters" element="tns:uploadJcDataForLklcResponse" />
+  </message>
+  <message name="afterUploadJcDataForLklc">
+    <part name="parameters" element="tns:afterUploadJcDataForLklc" />
+  </message>
+  <message name="afterUploadJcDataForLklcResponse">
+    <part name="parameters" element="tns:afterUploadJcDataForLklcResponse" />
+  </message>
+  <message name="requestDefaultQrCodeStr">
+    <part name="parameters" element="tns:requestDefaultQrCodeStr" />
+  </message>
+  <message name="requestDefaultQrCodeStrResponse">
+    <part name="parameters" element="tns:requestDefaultQrCodeStrResponse" />
+  </message>
+  <message name="requestDefaultQrCodeImg">
+    <part name="parameters" element="tns:requestDefaultQrCodeImg" />
+  </message>
+  <message name="requestDefaultQrCodeImgResponse">
+    <part name="parameters" element="tns:requestDefaultQrCodeImgResponse" />
+  </message>
+  <message name="defaultQrCodeImgWithBase64">
+    <part name="parameters" element="tns:defaultQrCodeImgWithBase64" />
+  </message>
+  <message name="defaultQrCodeImgWithBase64Response">
+    <part name="parameters" element="tns:defaultQrCodeImgWithBase64Response" />
+  </message>
+  <message name="preGetQrCodeString">
+    <part name="parameters" element="tns:preGetQrCodeString" />
+  </message>
+  <message name="preGetQrCodeStringResponse">
+    <part name="parameters" element="tns:preGetQrCodeStringResponse" />
+  </message>
+  <message name="afterUpNotLklcData">
+    <part name="parameters" element="tns:afterUpNotLklcData" />
+  </message>
+  <message name="afterUpNotLklcDataResponse">
+    <part name="parameters" element="tns:afterUpNotLklcDataResponse" />
+  </message>
+  <message name="preGetNotLklcQRCodeStr">
+    <part name="parameters" element="tns:preGetNotLklcQRCodeStr" />
+  </message>
+  <message name="preGetNotLklcQRCodeStrResponse">
+    <part name="parameters" element="tns:preGetNotLklcQRCodeStrResponse" />
+  </message>
+  <message name="getNotLklcQRCodeStr">
+    <part name="parameters" element="tns:getNotLklcQRCodeStr" />
+  </message>
+  <message name="getNotLklcQRCodeStrResponse">
+    <part name="parameters" element="tns:getNotLklcQRCodeStrResponse" />
+  </message>
+  <message name="upLoadCurve">
+    <part name="parameters" element="tns:upLoadCurve" />
+  </message>
+  <message name="upLoadCurveResponse">
+    <part name="parameters" element="tns:upLoadCurveResponse" />
+  </message>
+  <message name="requestQrCodeImg">
+    <part name="parameters" element="tns:requestQrCodeImg" />
+  </message>
+  <message name="requestQrCodeImgResponse">
+    <part name="parameters" element="tns:requestQrCodeImgResponse" />
+  </message>
+  <message name="registerJcJgAll">
+    <part name="parameters" element="tns:registerJcJgAll" />
+  </message>
+  <message name="registerJcJgAllResponse">
+    <part name="parameters" element="tns:registerJcJgAllResponse" />
+  </message>
+  <message name="getLastErr">
+    <part name="parameters" element="tns:getLastErr" />
+  </message>
+  <message name="getLastErrResponse">
+    <part name="parameters" element="tns:getLastErrResponse" />
+  </message>
+  <message name="editJcOrganAllEx">
+    <part name="parameters" element="tns:editJcOrganAllEx" />
+  </message>
+  <message name="editJcOrganAllExResponse">
+    <part name="parameters" element="tns:editJcOrganAllExResponse" />
+  </message>
+  <message name="registerJcJg">
+    <part name="parameters" element="tns:registerJcJg" />
+  </message>
+  <message name="registerJcJgResponse">
+    <part name="parameters" element="tns:registerJcJgResponse" />
+  </message>
+  <message name="editJcOrganName">
+    <part name="parameters" element="tns:editJcOrganName" />
+  </message>
+  <message name="editJcOrganNameResponse">
+    <part name="parameters" element="tns:editJcOrganNameResponse" />
+  </message>
+  <message name="editJcOrganAll">
+    <part name="parameters" element="tns:editJcOrganAll" />
+  </message>
+  <message name="editJcOrganAllResponse">
+    <part name="parameters" element="tns:editJcOrganAllResponse" />
+  </message>
+  <message name="upLoadVideo">
+    <part name="parameters" element="tns:upLoadVideo" />
+  </message>
+  <message name="upLoadVideoResponse">
+    <part name="parameters" element="tns:upLoadVideoResponse" />
+  </message>
+  <message name="upReport">
+    <part name="parameters" element="tns:upReport" />
+  </message>
+  <message name="upReportResponse">
+    <part name="parameters" element="tns:upReportResponse" />
+  </message>
+  <message name="upNotLklcData">
+    <part name="parameters" element="tns:upNotLklcData" />
+  </message>
+  <message name="upNotLklcDataResponse">
+    <part name="parameters" element="tns:upNotLklcDataResponse" />
+  </message>
+  <message name="upNotLklcReport">
+    <part name="parameters" element="tns:upNotLklcReport" />
+  </message>
+  <message name="upNotLklcReportResponse">
+    <part name="parameters" element="tns:upNotLklcReportResponse" />
+  </message>
+  <message name="getNotLklcQRCode">
+    <part name="parameters" element="tns:getNotLklcQRCode" />
+  </message>
+  <message name="getNotLklcQRCodeResponse">
+    <part name="parameters" element="tns:getNotLklcQRCodeResponse" />
+  </message>
+  <message name="ypNumberPerPage">
+    <part name="parameters" element="tns:ypNumberPerPage" />
+  </message>
+  <message name="ypNumberPerPageResponse">
+    <part name="parameters" element="tns:ypNumberPerPageResponse" />
+  </message>
+  <portType name="Qrpws">
+    <operation name="getOrgIdByJcdwOrgCode">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/getOrgIdByJcdwOrgCodeRequest" message="tns:getOrgIdByJcdwOrgCode" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/getOrgIdByJcdwOrgCodeResponse" message="tns:getOrgIdByJcdwOrgCodeResponse" />
+    </operation>
+    <operation name="getOrgIdByJcdwName">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/getOrgIdByJcdwNameRequest" message="tns:getOrgIdByJcdwName" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/getOrgIdByJcdwNameResponse" message="tns:getOrgIdByJcdwNameResponse" />
+    </operation>
+    <operation name="uploadJcDataForLklc">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/uploadJcDataForLklcRequest" message="tns:uploadJcDataForLklc" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/uploadJcDataForLklcResponse" message="tns:uploadJcDataForLklcResponse" />
+    </operation>
+    <operation name="afterUploadJcDataForLklc">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/afterUploadJcDataForLklcRequest" message="tns:afterUploadJcDataForLklc" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/afterUploadJcDataForLklcResponse" message="tns:afterUploadJcDataForLklcResponse" />
+    </operation>
+    <operation name="requestDefaultQrCodeStr">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/requestDefaultQrCodeStrRequest" message="tns:requestDefaultQrCodeStr" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/requestDefaultQrCodeStrResponse" message="tns:requestDefaultQrCodeStrResponse" />
+    </operation>
+    <operation name="requestDefaultQrCodeImg">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/requestDefaultQrCodeImgRequest" message="tns:requestDefaultQrCodeImg" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/requestDefaultQrCodeImgResponse" message="tns:requestDefaultQrCodeImgResponse" />
+    </operation>
+    <operation name="defaultQrCodeImgWithBase64">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/defaultQrCodeImgWithBase64Request" message="tns:defaultQrCodeImgWithBase64" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/defaultQrCodeImgWithBase64Response" message="tns:defaultQrCodeImgWithBase64Response" />
+    </operation>
+    <operation name="preGetQrCodeString">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/preGetQrCodeStringRequest" message="tns:preGetQrCodeString" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/preGetQrCodeStringResponse" message="tns:preGetQrCodeStringResponse" />
+    </operation>
+    <operation name="afterUpNotLklcData">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/afterUpNotLklcDataRequest" message="tns:afterUpNotLklcData" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/afterUpNotLklcDataResponse" message="tns:afterUpNotLklcDataResponse" />
+    </operation>
+    <operation name="preGetNotLklcQRCodeStr">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/preGetNotLklcQRCodeStrRequest" message="tns:preGetNotLklcQRCodeStr" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/preGetNotLklcQRCodeStrResponse" message="tns:preGetNotLklcQRCodeStrResponse" />
+    </operation>
+    <operation name="getNotLklcQRCodeStr">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/getNotLklcQRCodeStrRequest" message="tns:getNotLklcQRCodeStr" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/getNotLklcQRCodeStrResponse" message="tns:getNotLklcQRCodeStrResponse" />
+    </operation>
+    <operation name="upLoadCurve">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/upLoadCurveRequest" message="tns:upLoadCurve" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/upLoadCurveResponse" message="tns:upLoadCurveResponse" />
+    </operation>
+    <operation name="requestQrCodeImg">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/requestQrCodeImgRequest" message="tns:requestQrCodeImg" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/requestQrCodeImgResponse" message="tns:requestQrCodeImgResponse" />
+    </operation>
+    <operation name="registerJcJgAll">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/registerJcJgAllRequest" message="tns:registerJcJgAll" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/registerJcJgAllResponse" message="tns:registerJcJgAllResponse" />
+    </operation>
+    <operation name="getLastErr">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/getLastErrRequest" message="tns:getLastErr" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/getLastErrResponse" message="tns:getLastErrResponse" />
+    </operation>
+    <operation name="editJcOrganAllEx">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/editJcOrganAllExRequest" message="tns:editJcOrganAllEx" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/editJcOrganAllExResponse" message="tns:editJcOrganAllExResponse" />
+    </operation>
+    <operation name="registerJcJg">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/registerJcJgRequest" message="tns:registerJcJg" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/registerJcJgResponse" message="tns:registerJcJgResponse" />
+    </operation>
+    <operation name="editJcOrganName">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/editJcOrganNameRequest" message="tns:editJcOrganName" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/editJcOrganNameResponse" message="tns:editJcOrganNameResponse" />
+    </operation>
+    <operation name="editJcOrganAll">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/editJcOrganAllRequest" message="tns:editJcOrganAll" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/editJcOrganAllResponse" message="tns:editJcOrganAllResponse" />
+    </operation>
+    <operation name="upLoadVideo">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/upLoadVideoRequest" message="tns:upLoadVideo" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/upLoadVideoResponse" message="tns:upLoadVideoResponse" />
+    </operation>
+    <operation name="upReport">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/upReportRequest" message="tns:upReport" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/upReportResponse" message="tns:upReportResponse" />
+    </operation>
+    <operation name="upNotLklcData">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/upNotLklcDataRequest" message="tns:upNotLklcData" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/upNotLklcDataResponse" message="tns:upNotLklcDataResponse" />
+    </operation>
+    <operation name="upNotLklcReport">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/upNotLklcReportRequest" message="tns:upNotLklcReport" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/upNotLklcReportResponse" message="tns:upNotLklcReportResponse" />
+    </operation>
+    <operation name="getNotLklcQRCode">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/getNotLklcQRCodeRequest" message="tns:getNotLklcQRCode" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/getNotLklcQRCodeResponse" message="tns:getNotLklcQRCodeResponse" />
+    </operation>
+    <operation name="ypNumberPerPage">
+      <input wsam:Action="http://ws.web.wxg.com/Qrpws/ypNumberPerPageRequest" message="tns:ypNumberPerPage" />
+      <output wsam:Action="http://ws.web.wxg.com/Qrpws/ypNumberPerPageResponse" message="tns:ypNumberPerPageResponse" />
+    </operation>
+  </portType>
+  <binding name="QrpwsImpPortBinding" type="tns:Qrpws">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="getOrgIdByJcdwOrgCode">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getOrgIdByJcdwName">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="uploadJcDataForLklc">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="afterUploadJcDataForLklc">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="requestDefaultQrCodeStr">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="requestDefaultQrCodeImg">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="defaultQrCodeImgWithBase64">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="preGetQrCodeString">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="afterUpNotLklcData">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="preGetNotLklcQRCodeStr">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getNotLklcQRCodeStr">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="upLoadCurve">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="requestQrCodeImg">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="registerJcJgAll">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getLastErr">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="editJcOrganAllEx">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="registerJcJg">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="editJcOrganName">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="editJcOrganAll">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="upLoadVideo">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="upReport">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="upNotLklcData">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="upNotLklcReport">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getNotLklcQRCode">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="ypNumberPerPage">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="QrpwsImpService">
+    <port name="QrpwsImpPort" binding="tns:QrpwsImpPortBinding">
+      <soap:address location="http://211.155.231.169:80/qrp/qrpws" />
+    </port>
+  </service>
+</definitions>

@@ -1,0 +1,155 @@
+﻿更新时间：2016-10-26
+更 新 人：冯海夫
+更新内容：
+	1.流程定义中增加前置列表url，用来在流程流转前，选择某个工程或其他主体。定义前置列表url时，打开列表界面url会有参数workurl，表示发起流程的url
+	2.表单定义增加displaystep类型，表单可以绑定节点id或者节点顺序
+	3.STForm中增加附加字段，ExtraInfo4,ExtraInfo5
+数据库脚本：
+	alter table stformtemplate add DisplayStepType char(1)
+	go
+	update stformtemplate set DisplayStepType='1'
+	go
+	alter table stform add ExtraInfo4 varchar(500)
+	go
+	alter table stform add ExtraInfo5 varchar(500)
+	go
+	alter table stform add ExtraInfo6 varchar(500)
+	go
+	update stform set ExtraInfo4=''
+	go
+	update stform set ExtraInfo5=''
+	go
+	update stform set ExtraInfo6=''
+	go
+	ALTER view [dbo].[ViewTodoTask]
+	as
+	select a.*,b.ActivityName,c.FormName,c.CompanyId,c.CompanyName,c.ExtraInfo2,c.ExtraInfo3,c.ExtraInfo4,c.ExtraInfo5,c.ExtraInfo6
+	from StTodoTasks a left outer join StActivity b on a.CurActivityId=b.ActivityId
+	left outer join StForm c on a.SerialNo=c.SerialNo
+	where a.TaskStatus not in (1,7)
+	GO
+*********************************************************************************************
+更新时间：2017-03-20
+更 新 人：金成龙
+更新内容：
+	1.流程定义中增加字段：撤销任务前执行的存储过程 BeforeCancelProc
+	在撤销任务前会先执行该存储过程，存储过程有固定参数【#serial#】,表示当前任务的流水号
+	示例: my_proc('#serial')
+	my_proc 返回 ret, msg (参数含义与流程定义中的提交前验证相同)
+数据库脚本：
+ALTER TABLE dbo.STProcess ADD
+	BeforeCancelProc nvarchar(2000) NULL
+GO
+*********************************************************************************************
+更新时间：2017-03-23
+更 新 人：金成龙
+更新内容：
+	1.企业表 I_M_QY 中添加字段TYYHXY， 表示：是否同意用户协议
+	2.人员表 I_M_RY 中添加字段TYYHXY， 表示：是否同意用户协议
+	注意：字段添加完成之后，需要重新编译相关的视图
+
+数据库脚本：
+ALTER TABLE dbo.I_M_QY ADD
+	TYYHXY bit NULL
+GO
+
+ALTER TABLE dbo.I_M_RY ADD
+	TYYHXY bit NULL
+GO
+
+
+*********************************************************************************************
+更新时间：2017-03-23
+更 新 人：金成龙
+更新内容：
+	1.添加存储过程RefreshAllView，用于在修改表之后，刷新所有视图
+
+数据库脚本：
+CREATE PROCEDURE [dbo].[RefreshAllView]
+AS
+BEGIN 
+	DECLARE MyCursor CURSOR 
+	FOR select Name from dbo.sysobjects where OBJECTPROPERTY(id, N'IsView') = 1 
+	and (not name in ('sysconstraints','syssegments'))
+
+	DECLARE @name varchar(400)
+	declare @i int
+	set @i=0  
+	OPEN MyCursor   
+	FETCH NEXT FROM MyCursor INTO @name  
+	WHILE (@@fetch_status <> -1)  
+	BEGIN   
+		IF (@@fetch_status <> -2)   
+		begin    
+			exec sp_refreshview @name  
+			set @i=@i+1 
+		end    
+		FETCH NEXT FROM MyCursor INTO @name  
+	END  
+	CLOSE MyCursor  
+	DEALLOCATE MyCursor
+
+select '成功刷新 '  + convert(nvarchar, @i) + '个视图' as msg 
+END
+
+*********************************************************************************************
+更新时间：2017-03-24
+更 新 人：金成龙
+更新内容：
+	1. syssetting表中添加两条记录，表示【账号密码修改】，【账号密码重置】的模板信息
+
+数据库脚本：
+INSERT INTO syssetting ( [CompanyCode], [GroupId], [SettingCode], [SettingName], [SettingValue], [IsUpload], [IsTemplate], [DisplayOrder], [InUse]) VALUES ( '', 'SMS_PASSWORDCHANGE_SETTING', 'SMS_PASSWORDCHANGE_SETTING_TEMPLATE_CODE_USERINFO', N'账号密码修改模板标识', 'smsTpl:6099b077-e910-44de-b6dd-b3090b15b07b', '0', '0', '8', '1');
+INSERT INTO syssetting ( [CompanyCode], [GroupId], [SettingCode], [SettingName], [SettingValue], [IsUpload], [IsTemplate], [DisplayOrder], [InUse]) VALUES ( '', 'SMS_PASSWORDRESET_SETTING', 'SMS_PASSWORDRESET_SETTING_TEMPLATE_CODE_USERINFO', N'账号密码重置模板标识', 'smsTpl:47030578-275d-485a-8c1e-b3282ef92c72', '0', '0', '9', '1');
+
+
+*********************************************************************************************
+更新时间：2017-03-27
+更 新 人：金成龙
+更新内容：
+	1. 流程步骤设计中，修改 line 的分支条件默认值，从【请输入分支条件】 改为【1==1】
+
+数据库脚本：
+
+update stroutingrule
+set TransGraphName=replace(TransGraphName, '6K+36L6T5YWl5YiG5pSv5p2h5Lu2', 'MT09MQ==')
+
+update ststartactivity
+set TransGraphName=replace(TransGraphName, '6K+36L6T5YWl5YiG5pSv5p2h5Lu2', 'MT09MQ==')
+*********************************************************************************************
+更新时间：2017-07-27
+更 新 人：冯海夫
+更新内容：
+	1.文件表中加缩略图字段
+数据库脚本：
+	alter table stfile add FileThumbnail image
+*********************************************************************************************
+更新时间：2019-05-07
+更 新 人：金成龙
+更新内容：
+	1、更新StActivity中的字段GotoUrl, 增加该字段长度
+数据库脚本：
+ALTER TABLE [dbo].[STActivity] ALTER COLUMN [GotoUrl] varchar(MAX) COLLATE Chinese_PRC_CI_AS 
+GO
+*********************************************************************************************
+更新时间：2020-02-17
+更 新 人：金成龙 
+更新内容：流程模块支持OSS
+	1、更新STFILE, 添加字段STORAGETYPE、FILEURL、SMALLURL
+数据库脚本：
+alter table STFILE add STORAGETYPE nvarchar(50)
+GO
+alter table STFILE add FILEURL nvarchar(500)
+GO
+alter table STFILE add SMALLURL nvarchar(500)
+GO
+
+2、configs/config.xml 添加OSS配置
+<!-OssCdn地址,cdncode 改成自己的, 与录入界面配置一样 -->
+<FileOssCdn>121.42.40.1:18010</FileOssCdn>
+<OssCdnCodeWj>wzwj</OssCdnCodeWj>
+
+3、configs/wfconfig.xml 添加配置项:
+<storagetype>OSS</storagetype>
+
+

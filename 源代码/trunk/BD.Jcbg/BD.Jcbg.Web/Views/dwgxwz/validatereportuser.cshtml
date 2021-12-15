@@ -1,0 +1,379 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var jsonparams = '@ViewBag.jsonparams';
+        var phone = '@ViewBag.phone';
+
+        var smsService = {
+            sendSpan: 0,
+            send: function () {
+                var phone = $('#phone').val();
+
+                if (phone == "") {
+                    layer.alert('手机号码不能为空！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+                var p1 = /^1\d{10}$/;
+
+                if (!p1.test(phone)) {
+                    layer.alert('手机号码格式错误！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+
+                this.setSendVCButtonId();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/sms/getverifycodespan",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.code != "0") {
+                            var msg = data.msg;
+                            if (msg == "")
+                                msg = "获取短信发送间隔失败";
+                            layer.alert(msg, {
+                                icon: 0,
+                                skin: 'layer-ext-moon'
+                            });
+                        } else {
+                            smsService.sendSpan = data.msg * 1;
+                            $.ajax({
+                                type: "POST",
+                                url: "/sms/DoSendValidateReportUserVerifyCode?receiver=" + phone,
+                                dataType: "json",
+                                async: false,
+                                success: function (data) {
+                                    if (data.msg != "") {
+                                        layer.alert(msg, {
+                                            icon: 0,
+                                            skin: 'layer-ext-moon'
+                                        });
+
+                                    } else {
+                                        smsService.setButtonText();
+                                    }
+                                },
+                                complete: function (XMLHttpRequest, textStatus) {
+                                },
+                                beforeSend: function (XMLHttpRequest) {
+                                }
+                            });
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+
+            },
+            setSendVCButtonId: function () {
+                try {
+                    var btns = document.getElementsByTagName("input");
+                    for (var i = 0; i < btns.length; i++) {
+                        if (btns[i].value == "获取验证码" && btns[i].type == "button") {
+                            btns[i].id = "btn_send_vc";
+                        }
+                    }
+                } catch (err) {
+                    alert(err);
+                }
+            },
+            setButtonText: function () {
+                if (smsService.sendSpan == 0) {
+                    document.getElementById("btn_send_vc").value = "获取验证码";
+                    document.getElementById("btn_send_vc").disabled = false;
+                } else {
+
+                    document.getElementById("btn_send_vc").value = smsService.sendSpan + "秒后再次发送";
+                    document.getElementById("btn_send_vc").disabled = true;
+                    smsService.sendSpan = smsService.sendSpan - 1;
+                    window.setTimeout(smsService.setButtonText, 1000);
+                }
+            }
+        }
+        $(function () {
+            try {
+                if (jsonparams != "") {
+                    var base64 = new Base64();
+                    jsonparams = base64.decode(jsonparams);
+                }
+                $('#phone').val(phone);
+                InitKeydown();
+            } catch (err) {
+                alert(e);
+            }
+        });
+
+        function InitKeydown() {
+            try {
+                $("#phone").keydown(function (e) {
+                    var ev = document.all ? window.event : e;
+                    if (ev.keyCode == 13) {
+                        smsService.send();
+                    }
+                });
+                $("#yzm").keydown(function (e) {
+                    var ev = document.all ? window.event : e;
+                    if (ev.keyCode == 13) {
+                        doSubmit();
+                    }
+                });
+            } catch (e) {
+                layer.alert('初始化按键事件异常', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+            }
+        }
+
+
+        function isValid() {
+            try {
+
+                if ($("#phone").val() == "") {
+                    layer.alert('请填写手机号码！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+                else if (!checkphone()) {
+                    layer.alert('请输入有效的手机号码！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+                if ($("#yzm").val() == "") {
+                    layer.alert('请输入手机验证码！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+
+
+            } catch (e) {
+                alert(e);
+            }
+            return true;
+        }
+        function checkphone() {
+            var reg = /^1\d{10}$/;
+            var phone = $('#phone').val();
+            return reg.test(phone);
+        }
+        function doSubmit() {
+            var ret = false;
+            // 校验表单
+            if (!isValid())
+                return false;
+
+            var yzm = $("#yzm").val();
+            var phone = $('#phone').val();
+
+            // 校验验证码
+            $.ajax({
+                type: "POST",
+                url: "/dwgxwz/CheckReportUserYZM?yzm=" + encodeURIComponent(yzm) + "&jsonparams=" + jsonparams + "&sjhm=" + phone,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    ret = data.code == "0";
+                    if (data.msg != "") {
+                        layer.alert(data.msg, {
+                            icon: 0,
+                            skin: 'layer-ext-moon'
+                        });
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            if (!ret) {
+                return false;
+            }
+
+            try {
+                if (jsonparams != "") {
+                    var data = JSON.parse(jsonparams);
+                    if (data) {
+                        var reportfile = encodeURIComponent(data.reportfile);
+                        var serial = encodeURIComponent(data.serial);
+                        var type = data.type;
+                        var jdjlid = data.recid;
+                        var print = data.isprint;
+                        var reporttype = data.reporttype;
+                        var url = "/jdbg/flowreport?reportfile=" + reportfile + "&serial=" + serial + "&type=" + type + "&jdjlid=" + jdjlid + "&print=" + print + "&reporttype=" + reporttype;
+                        parent.layer.closeAll();
+                        parent.parent.layer.open({
+                            type: 2,
+                            title: '报表查看',
+                            shadeClose: false,
+                            shade: 0.8,
+                            area: ['95%', '95%'],
+                            content: "/jdbg/flowreport?reportfile=" + reportfile + "&serial=" + encodeURIComponent(serial) + "&jdjlid=" + jdjlid + "&print=" + print + "&reporttype=ZGD",
+                            end: function () {
+                            }
+                        });
+                        //window.location = url;
+                    }
+                }
+                
+            } catch (e) {
+                alert(e);
+            }
+            return ret;
+        }
+
+        function Base64() {
+
+            // private property
+            _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+            // public method for encoding
+            this.encode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = _utf8_encode(input);
+                while (i < input.length) {
+                    chr1 = input.charCodeAt(i++);
+                    chr2 = input.charCodeAt(i++);
+                    chr3 = input.charCodeAt(i++);
+                    enc1 = chr1 >> 2;
+                    enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                    enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                    enc4 = chr3 & 63;
+                    if (isNaN(chr2)) {
+                        enc3 = enc4 = 64;
+                    } else if (isNaN(chr3)) {
+                        enc4 = 64;
+                    }
+                    output = output +
+                    _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                    _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+                }
+                return output;
+            }
+
+            // public method for decoding
+            this.decode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3;
+                var enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+                while (i < input.length) {
+                    enc1 = _keyStr.indexOf(input.charAt(i++));
+                    enc2 = _keyStr.indexOf(input.charAt(i++));
+                    enc3 = _keyStr.indexOf(input.charAt(i++));
+                    enc4 = _keyStr.indexOf(input.charAt(i++));
+                    chr1 = (enc1 << 2) | (enc2 >> 4);
+                    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                    chr3 = ((enc3 & 3) << 6) | enc4;
+                    output = output + String.fromCharCode(chr1);
+                    if (enc3 != 64) {
+                        output = output + String.fromCharCode(chr2);
+                    }
+                    if (enc4 != 64) {
+                        output = output + String.fromCharCode(chr3);
+                    }
+                }
+                output = _utf8_decode(output);
+                return output;
+            }
+
+            // private method for UTF-8 encoding
+            _utf8_encode = function (string) {
+                string = string.replace(/\r\n/g, "\n");
+                var utftext = "";
+                for (var n = 0; n < string.length; n++) {
+                    var c = string.charCodeAt(n);
+                    if (c < 128) {
+                        utftext += String.fromCharCode(c);
+                    } else if ((c > 127) && (c < 2048)) {
+                        utftext += String.fromCharCode((c >> 6) | 192);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    } else {
+                        utftext += String.fromCharCode((c >> 12) | 224);
+                        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    }
+
+                }
+                return utftext;
+            }
+
+            // private method for UTF-8 decoding
+            _utf8_decode = function (utftext) {
+                var string = "";
+                var i = 0;
+                var c = c1 = c2 = 0;
+                while (i < utftext.length) {
+                    c = utftext.charCodeAt(i);
+                    if (c < 128) {
+                        string += String.fromCharCode(c);
+                        i++;
+                    } else if ((c > 191) && (c < 224)) {
+                        c2 = utftext.charCodeAt(i + 1);
+                        string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                        i += 2;
+                    } else {
+                        c2 = utftext.charCodeAt(i + 1);
+                        c3 = utftext.charCodeAt(i + 2);
+                        string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                        i += 3;
+                    }
+                }
+                return string;
+            }
+        }
+    </script>
+}
+
+<ul class="list-group">
+    <li class='list-group-item' id='li_sjhm'>
+        <div class="input-group">
+            <span class="input-group-addon">手 机 号  码</span>
+            <input type="text" class="form-control" id='phone' name="phone" value="" placeholder="请填写手机号码">
+            <span class="input-group-btn">
+                <input class="btn btn-default" type="button" id="btn_send_vc" name="btn_send_vc" value="获取验证码" onclick="smsService.send()" />
+            </span>
+        </div>
+    </li>
+    <li class='list-group-item' id='li_yzm'>
+        <div class="input-group">
+            <span class="input-group-addon">手机验证码</span>
+            <input type="text" class="form-control" id='yzm' name="yzm">
+        </div>
+    </li>
+    <li class='list-group-item' id='li_yzm'>
+        <div>
+            <p>您是第一次查看该报告，需要校验手机号码和验证码，作为电子签收的凭证。</p>
+            <p>如登记的手机不是你的号码，请带有效证明（企业请带介绍信，个人请带身份证）到温州市建设工程质量监督站办理修改手机号码。</p>
+        </div>
+    </li>
+</ul>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="提交" />
+        &nbsp;&nbsp;
+    </form>
+</div>
+
+
+

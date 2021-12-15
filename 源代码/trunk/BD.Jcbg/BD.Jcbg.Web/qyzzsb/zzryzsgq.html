@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/tab.css">
+    <title>sxjz</title>
+    <style type="text/css">
+    .dltabs dd {
+        height: 80vh;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;padding-bottom: 80px;box-sizing: border-box;">
+        <dl class="dltabs" id="tabTitle">
+            <dt class="active" value="0" style="margin-left: 1px;"><span>有效企业资质</span></dt>
+            <dd class="active" id="gczzt">
+                <div>
+                    <table class="layui-table" lay-size="lg">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>资质编号</th>
+                                <th>企业名称</th>
+                                <th>企业类型</th>
+                                <th>主项（增项）</th>
+                                <th>资质类型</th>
+                                <th>资质内容</th>
+                                <th>资质等级</th>
+                                <th>是否临时</th>
+                                <th>资质有效日期</th>
+                                <th>证书文件</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-list" id="yxqyzz">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="page-warp"><div id="test1"></div></div>
+            </dd>
+            <dt value="1"><span>问题资质</span></dt>
+            <dd>
+                <div>
+                    <table class="layui-table" lay-size="lg">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>资质编号</th>
+                                <th>企业名称</th>
+                                <th>企业类型</th>
+                                <th>主项（增项）</th>
+                                <th>资质类型</th>
+                                <th>资质内容</th>
+                                <th>资质等级</th>
+                                <th>是否临时</th>
+                                <th>资质有效日期</th>
+                                <th>问题说明</th>
+                                <th>市场行为</th>
+                                <th>企业行为</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-list" id="wtzz">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="page-warp"><div id="test2"></div></div>
+
+            </dd>
+            <dt value="2"><span>审核中的资质</span></dt>
+            <dd>
+                <div>
+                    <table class="layui-table" lay-size="lg">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>单位名称</th>
+                                <th>企业类型</th>
+                                <th>主项（增项）</th>
+                                <th>资质类型</th>
+                                <th>资质内容</th>
+                                <th>资质等级</th>
+                                <th>是否临时</th>
+                                <th>申请表</th>
+                                <th>审核进度</th>
+                            </tr>
+                        </thead>
+                        <tbody class="tbody-list" id="shzdzz">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="page-warp"><div id="test3"></div></div>
+
+            </dd>
+        </dl>
+
+    </div>
+
+    <!--  <div class="save-boottom" style="text-align: center;">
+        <button class="layui-btn" id="save" style="margin-top: 10px;">保存</button>
+    </div> -->
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/lib/jquery.form.min.js"></script>
+
+    <script type="text/javascript">
+    var list = [];
+    var uploadList = [];
+
+    var params = getParams();
+    $(function () {
+        // var height = $("#panel1").height();
+        // $("#tabTitle").find("dd").height(height - 110);
+
+        // $("#tabWarp").append("<input type='text' name='id' value='" + params.id + "' style='display:none;' />")
+        // layui.use('form', function () {
+        //     var form = layui.form;
+        //     form.render();
+        // });
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'test1', //注意，这里的 test1 是 ID，不用加 # 号
+                count: 10 //数据总数，从服务端得到
+            });
+            laypage.render({
+                elem: 'test2', //注意，这里的 test1 是 ID，不用加 # 号
+                count: 10 //数据总数，从服务端得到
+            });
+            laypage.render({
+                elem: 'test3', //注意，这里的 test1 是 ID，不用加 # 号
+                count: 10 //数据总数，从服务端得到
+            });
+        });
+
+        loadYxqyzz();
+        loadWtzz();
+        loadShzdzz();
+    })
+
+    function loadYxqyzz() {
+
+        var str = '';
+        var item = ["zzbh", "qymc", "qylx", "zxlx", "zzlx", "zznr", "zzdj", "sfls", "zzyxrq"];
+        var ary = [{
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+
+        }];
+        var tmp;
+        for (var i = 0, len = ary.length; i < len; i++) {
+            tmp = ary[i];
+            str += "<tr>";
+            str += "<td>" + (i + 1) + "</td>";
+            for (var j = 0, len2 = item.length; j < len2; j++) {
+                str += "<td>" + tmp[item[j]] || "" + "</td>";
+            }
+            str += "<td><div class='curd'>下载</div></td>";
+            str += "</tr>";
+        }
+
+
+        $("#yxqyzz").html(str);
+    }
+
+    function loadWtzz() {
+        var str = '';
+        var item = ["zzbh", "qymc", "qylx", "zxlx", "zzlx", "zznr", "zzdj", "sfls", "wtsm", "scxw", "zzyxrq"];
+        var ary = [{
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            wtsm: "人员证书过期",
+            scxw: "受限",
+            zzyxrq: "2019-12-31",
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            wtsm: "人员证书过期",
+            scxw: "受限",
+            zzyxrq: "2019-12-31",
+        }];
+        var tmp;
+        for (var i = 0, len = ary.length; i < len; i++) {
+            tmp = ary[i];
+            str += "<tr>";
+            str += "<td>" + (i + 1) + "</td>";
+            for (var j = 0, len2 = item.length; j < len2; j++) {
+                str += "<td>" + tmp[item[j]] || "" + "</td>";
+            }
+            str += "<td><div class='curd'>添加</div></td>";
+            str += "</tr>";
+        }
+
+
+        $("#wtzz").html(str);
+    }
+
+    function loadShzdzz() {
+        var str = '';
+        var item = ["zzbh", "qymc", "qylx", "zxlx", "zzlx", "zznr", "zzdj", "sfls"];
+        var ary = [{
+            zzbh: "000001",
+            qymc: "单位1",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+        }, {
+            zzbh: "000002",
+            qymc: "单位2",
+            qylx: "施工单位",
+            zxlx: "主项",
+            zzlx: "总承包",
+            zznr: "房屋建筑工程",
+            zzdj: "特技",
+            sfls: "是否临时",
+            zzyxrq: "2019-12-31",
+        }];
+        var tmp;
+        for (var i = 0, len = ary.length; i < len; i++) {
+            tmp = ary[i];
+            str += "<tr>";
+            str += "<td>" + (i + 1) + "</td>";
+            for (var j = 0, len2 = item.length; j < len2; j++) {
+                str += "<td>" + tmp[item[j]] || "" + "</td>";
+            }
+            str += "<td><div class='curd'>查看详情</div></td>";
+            str += "</tr>";
+        }
+        $("#shzdzz").html(str);
+    }
+
+
+    $("#tabTitle").on("click", "dt", function () {
+        $("#tabTitle").children().removeClass('active');
+        $(this).addClass('active').next().addClass('active');
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layer/theme/default/layer.css">
+
+    <title>sxjz</title>
+    <style type="text/css">
+    * {
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+    }
+
+    .warp {
+        display: table;
+        width: 90%;
+        margin: 20px auto;
+        table-layout: fixed;
+    }
+
+    .warp>div {
+        display: table-cell;
+        vertical-align: top;
+    }
+
+    .left {
+        width: 30%;
+    }
+
+    .line {
+        width: 3%;
+        margin: 0 auto;
+    }
+
+    .line>div {
+        width: 1px;
+        margin: 0 auto;
+        background: lightgray;
+        height: 100%;
+    }
+
+    .right {
+        width: 67%;
+    }
+
+    .info {
+        line-height: 34px;
+        border:
+            /*font-size: 16*/
+    }
+
+    .info .msg {
+        display: inline-block;
+        width: 40%;
+        text-align: right;
+        color: #393D49;
+
+    }
+
+    .val {
+        display: inline-block;
+        width: 55%;
+        padding-left: 10px;
+        /*color: #707070;*/
+        color: #666666;
+    }
+
+    .search-warp {
+        width: 80%;
+        margin: 20px auto;
+    }
+
+    .search-warp .layui-form-item {
+        display: inline-block;
+    }
+
+    .layui-table .layui-input.inline {
+        display: inline-block;
+        width: 120px;
+    }
+
+    h3 {
+        font-size: 20px;
+        font-weight: 600;
+        text-align: center;
+        line-height: 50px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="layui-table search-warp">
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名:</label>
+            <input type="text" class="layui-input inline" id="name" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 120px;">身份证号码:</label>
+            <input type="text" class="layui-input inline" id="sfzh" style="width: 200px;" />
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">地区:</label>
+            <select class="layui-select" id="area" style="width: 140px;-webkit-appearance: menulist;"></select>
+            <!-- <input type="text" class="layui-input inline" id="jsfzrXl" /> -->
+        </div>
+
+        <div class="layui-btn" id="search" style="margin-left: 50px;">搜索</div>
+    </div>
+    <div class="warp">
+        <div class="left">
+            <h3>社保个人基本信息</h3>
+            <div class="leftArea"></div>
+        </div>
+        <div class="line">
+            <div></div>
+        </div>
+        <div class="right">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>缴费年月</th>
+                        <th>单位编号</th>
+                        <th>养老缴费状态</th>
+                        <th>养老缴费基数</th>
+                        <th>养老个人缴纳金额 </th>
+                        <th>医疗缴费基数</th>
+                        <th>医疗个人缴纳金额</th>
+                        <th>失业缴费基数</th>
+                        <th>失业个人缴纳金额</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody class="tbody-list" id="sbList">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/lib/layer/layer.js"></script>
+
+    <script type="text/javascript">
+    $(function () {
+        $(".warp").height(window.innerHeight - 140);
+        getAreaList();
+        // /dwgxsxjzy/GetPersonSS?name=蒋雪峰&idcard=330602198801201514&areakey=330601
+    });
+    $("#search").click(function (event) {
+        var name = $("#name").val();
+        var sfzh = $("#sfzh").val();
+        var area = $("#area").val();
+        if (name.length && sfzh.length && area != 0) {
+            load({
+                name: name,
+                idcard: sfzh,
+                areakey: area
+            });
+        } else {
+            var str = name == "" ? '请输入姓名' : sfzh == "" ? '请输入身份证号' : '请选择地区';
+            alert(str);
+        }
+    });
+
+    function getAreaList() {
+        ajaxTpl('/dwgxsxjzy/GetAreaList', '', function (res) {
+            if (res.code == 0) {
+                var tmp, str = '<option value="0">请选择地区</option>';
+                for (var i = 0; i < res.data.length; i++) {
+                    tmp = res.data[i];
+                    str += "<option value='" + tmp.areakey + "'>" + tmp.areaname + "</option>";
+                }
+                $("#area").html(str);
+            }
+        });
+    }
+
+    function load(obj) {
+
+        ajaxTpl("/dwgxsxjzy/GetPersonSS", obj, function (data) {
+            // var tmp = `{"data":{"success": true,"message": "查询成功","id": "c06a2c40ebaa489b822976c91d597537","singleData":{"aac002": "342401198901018864","aac004": "男","aac003": "张三","aab004": "浙江天正 (112786)","aab301": "杭州市本级","jfsum": "24","jfmax": "201708","jfmin": "201509","ylzt": "参保缴费","ybzt": "参保缴费","gszt": "参保缴费","syzt": "参保缴费","syuzt": "参保缴费"},"collectionData": [{"year": "2015","month": "09","aab001": "0112786","ylzk": "已实缴","yljs": "2600","ylgr": "208","ybjs": "2600","ybgr": "56","syjs": "2600","sygr": "13","aae013": "正常"},{"year": "2015","month": "09","aab001": "0112786","ylzk": "已实缴","yljs": "2600","ylgr": "208","ybjs": "2600","ybgr": "56","syjs": "2600","sygr": "13","aae013": "正常2"}]}}`;
+            // var data = JSON.parse(tmp);
+            var res = data.data;
+            if (res.success) {
+                var ary = [{
+                        key: "姓名",
+                        val: "aac003"
+                    }, {
+                        key: "性别",
+                        val: "aac004"
+                    },
+                    {
+                        key: "身份证",
+                        val: "aac002"
+                    }, {
+                        key: "参保单位+单位编号",
+                        val: "aab004"
+                    },
+                    {
+                        key: "查询地区",
+                        val: "aab301"
+                    }, {
+                        key: "本次查询缴费月数",
+                        val: "jfsum"
+                    },
+                    {
+                        key: "本次查询缴费结束年月",
+                        val: "jfmax"
+                    }, {
+                        key: "本次查询缴费开始年月",
+                        val: "jfmin"
+                    },
+                    {
+                        key: "养老参保情况",
+                        val: "ylzt"
+                    }, {
+                        key: "医疗参保情况",
+                        val: "ybzt"
+                    },
+                    {
+                        key: "工伤参保情况",
+                        val: "gszt"
+                    }, {
+                        key: "失业参保情况",
+                        val: "syzt"
+                    },
+                    {
+                        key: "生育参保情况 ",
+                        val: "syuzt"
+                    }
+                ];
+                var tmp, str = "";
+                for (var i = 0; i < ary.length; i++) {
+                    tmp = ary[i];
+                    if (res.singleData[tmp.val]) {
+                        str += "<div class='info'><span class='msg'>" + tmp.key + ":</span><span class='val'>" + res.singleData[tmp.val] + "</span></div>";
+                    }
+                }
+                $(".leftArea").html(str);
+                str = '';
+                for (var i = res.collectionData.length - 1; i >= 0; i--) {
+                    tmp = res.collectionData[i];
+                    str += "<tr><td>" + tmp.year + "-" + tmp.month + "</td><td>" + tmp.aab001 + "</td><td>" + tmp.ylzk + "</td><td>" + tmp.yljs + "</td><td>" + tmp.ylgr + "</td><td>" + tmp.ybjs + "</td><td>" + tmp.ybgr + "</td><td>" + tmp.syjs + "</td><td>" + tmp.sygr + "</td><td>" + tmp.aae013 + "</td></tr>"
+                }
+                $("#sbList").html(str);
+            } else {
+                alert(data.msg);
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

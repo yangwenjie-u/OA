@@ -1,0 +1,97 @@
+﻿@using BD.DataInputCommon;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>发送短信</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="@Skins.GetPubPath("hplus/css/bootstrap.min.css?v=3.3.5")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/font-awesome.min.css?v=4.4.0")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/animate.min.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/style.min.css?v=4.0.0")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/plugins/chosen/chosen.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css")" rel="stylesheet" type="text/css"/>
+    <!-- 下拉过滤控件 -->
+    <link href="@Skins.GetPubPath("bootstrap/plugins/bootstrap-multiselect/css/bootstrap-multiselect.css")" rel="stylesheet"/>
+
+
+    <link href="@Skins.GetPubPath("layer/skin/layer.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("uploadify/uploadify.css")" rel="stylesheet"/>
+
+    <link href="@Skins.GetCssPath("datainput.css?v=2016031501")" rel="stylesheet"/>
+    <link href="@Skins.GetCssPath("stjleft.css?v=2016031502")" rel="stylesheet"/>
+    <script type="text/javascript" src="@Skins.GetPubPath("easyui/jquery.min.js")"></script>
+</head>
+<body class="gray-bg" style="font-size:13px;text-align:center;">
+    <script type="text/javascript" language="javascript">
+        function send() {
+
+            $.ajax({
+                type: "POST",
+                url: "/Sxga/send?id=" + encodeURIComponent($("#send").val()),// + encodeURIComponent(jydbh)
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.success=="success") {
+                        alert(data.Msg);
+                    } else {
+                        alert(data.Msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+
+</script>
+  
+    <textarea style="margin:40px auto;width:800px;height:150px;" id="send" ></textarea>
+    <br/>
+    <button  style="margin:20px auto;"onclick="send()" >发送信息</button>
+<div style="text-align:left;padding-left:30px;">
+
+    <font>
+
+        <br />三个参数：
+        <br />SMSdata  上传数据的参数，json格式 ，例：{"HanderDeptName":"s","PROJID":"aa","TRANSACTTIME":"a","TRANSACTRESULT":"aaa","SERVICECODE":"aa","SERVICENAME":"aa","INFOTYPE":"aa","APPLYNAME":"很多事","TELPHONE":"13757512309","BELONGSYSTEM":"scsc","POLICETYPECODE":"QWE","POLICETYPE":"交警","AreaCode":"20001","AreaName":"柯桥区","AcceptTime":"2017-09-08 09:12:10"} 
+        <br />注:最好进行URLEncoder编码，否则可能导致部分字符串丢失(java则一定需要进行编码)，以上字段皆为必填字段
+        <br />timemillis  时间戳字符串
+        <br />MD5Data  时间戳字符串+ bdsoft   进行MD5加密，用于验证
+        <br />注:这个验证具有时效性
+        <br />
+        <br />字段附录:
+        <br />*[ProjId] (50) 申报信息的唯一编码
+        <br />[HanderDeptName] (100) 办结人所属部门名称,申报地点（部门）
+        <br />[HanderDeptId] (50) 办结人所属部门编码
+        <br />*[AreaCode] (20) 办结人所属部门的所在行政区划编码
+        <br />*[AreaName] (50) 办结人所属部门的所在行政区名称
+        <br />[AcceptMan] (50) 受理人员
+        <br />*[AcceptTime] (19) 受理时间: 时间格式yyyy-mm-dd hh24:mi:ss	
+        <br />[PromiseValue] (50) 承诺期限
+        <br />[PromiseType] (20) 承诺期限单位: 工作日、工作小时
+        <br />[PromiseEtime] (19) 承诺办结时间: 日期格式yyyy-mm-dd hh24:mi:ss
+        <br />[TransactUser] (50) 办理人员姓名
+        <br />*[TransactTime] (20) 办结日期
+        <br />*[TransactResult] (20) 办理结果: 准予许可、不予许可、转报
+        <br />*[ServiceCode] (20) 审批事项编号
+        <br />*[ServiceName] (200) 权力事项名称
+        <br />*[InfoType] (20) 办件类型: 即办件、承诺件
+        <br />*[ApplyName] (100) 申报者名称：如为个人，则填写姓名；如为法人，则填写单位名称
+        <br />[ApplyCardType] (30) 申报者证件类型: 身份证、组织机构代码证等	[ApplyCardNumber] (100) 申报者证件号码
+        <br />[ContactMan] (100) 联系人/代理人姓名
+        <br />[ContactManCardType] (100) 联系人/代理人证件类型	[ContactManCardNumber] (100) 联系人/代理人证件号码
+        <br />[TelPhone] (13) 联系人手机号码
+        <br />[PostCode] (6) 邮编
+        <br />[Address] (100) 通讯地址
+        <br />[LegalMan] (50) 法人代表
+        <br /> [DataState] (1) 数据状态: 0=作废=有效
+        <br /> *[BelongSystem] (50) 所属系统
+        <br /> *[POLICETYPECODE] (50)  警种代码
+        <br /> *[POLICETYPE] (50)  警种名称
+        <br /> 注：*表示必填字段
+
+    </font>
+</div>
+</body>
+</html>

@@ -1,0 +1,3386 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建设工程消防验收现场评定表</title>
+    <!-- <link rel="stylesheet" href="http://res.jzyglxt.com/app/jcjg/layui/css/layui.css" media="all"> -->
+    <link rel="stylesheet" href="/static/xcpdlib/element_ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/xcpdlib/layui/css/layui.css">
+    <script src="/static/xcpdlib/vue.min.js"></script>
+    <script src="/static/xcpdlib/jquery.js"></script>
+    <script src="/static/xcpdlib/element_ui/index.js"></script>
+    <!-- <script src="http://res.jzyglxt.com/app/jcjg/layui/layui.all.js"></script>
+    <script type="text/javascript" src="http://res.jzyglxt.com/app/jcjg/jquery.js"></script> -->
+    <style>
+        .my_table {
+            width: 1200px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" v-show="showApp" style="display: none;">
+
+
+        <div class="tab_wrap">
+            <table class="layui-table my_table">
+                <colgroup>
+                    <col width="122">
+                    <col>
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td>工程编号</td>
+                        <td>
+                            <el-input size="mini" v-model="f.xcpdbh" readonly></el-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>工程名称</td>
+                        <td>
+                            <el-input size="mini" v-model="f.gcmc" readonly></el-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>工程地址</td>
+                        <td>
+                            <el-input size="mini" v-model="f.gcdd" readonly></el-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>评定人员</td>
+                        <td>
+                            <el-input size="mini" v-model="f.xcpdry" readonly></el-input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>评定时间</td>
+                        <td>
+                            <el-date-picker v-model="f.xcpdsj" :default-value="new Date()" value-format="yyyy-MM-dd"
+                                type="date" placeholder="选择日期" size="mini" style="width: 100%;">
+                            </el-date-picker>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>评定结论</td>
+                        <td>
+                            <el-input size="mini" v-model="f.xcpdjl" type="textarea"></el-input>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="layui-table my_table">
+                <colgroup>
+                    <col width="122">
+                    <col width="270">
+                    <col>
+                    <col width="144">
+                    <col width="144">
+                    <col width="210">
+                    <col width="144">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th colspan='2'>现场评定项目</th>
+                        <th>执行标准(参考）</th>
+                        <th>抽查部位</th>
+                        <th>抽查数量</th>
+                        <th>抽查情况</th>
+                        <th>评定结论</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="7">（一）建筑与结构</td>
+                    </tr>
+                    <tr>
+                        <td>建筑类别</td>
+                        <td></td>
+                        <td>《建筑设计防火规范》GB50016-2014（2018版）</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw1" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,1)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl1"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk1" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl1" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">耐火等级</td>
+                        <td>主要构件燃烧性能和耐火极限</td>
+                        <td rowspan="2">《建筑设计防火规范》GB 50016-2014（2018版）
+                            《建筑钢结构防火技术规范》GB 51249-2017
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw2" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,2)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl2"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk2" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl2" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>钢结构耐火极限及防火保护措施</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw3" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,3)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl3"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk3" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl3" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="4">总平面布局</td>
+                        <td>防火间距</td>
+                        <td rowspan="4">
+                            《建筑设计防火规范》GB50016-2014（2018版）
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw4" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,4)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl4"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk4" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl4" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防车道</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw5" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,5)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl5"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk5" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl5" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防车登高面</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw6" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,6)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl6"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk6" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl6" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防车登高操作场地</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw7" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,7)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl7"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk7" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl7" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">平面布置</td>
+                        <td>关键部位（消防控制室、消防水泵房、变配电房等）</td>
+                        <td rowspan="3">
+                            《建筑设计防火规范》GB50016-2014（2018版）
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw8" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,8)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl8"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk8" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl8" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>民用建筑特殊场所（儿童活动场所，老年人照料场所，医院和疗养院，电影院、歌舞娱乐放映游艺场所等）</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw9" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,9)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl9"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk9" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl9" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>工业建筑中特殊场所(高火灾危险性部位、中间仓库以及总控制室、员工宿舍、办公室、休息室等场)</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw10" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,10)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl10"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk10" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl10" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="7">防火、防烟分隔</td>
+                        <td>防火分区</td>
+                        <td rowspan="7">
+                            《建筑设计防火规范》GB50016-2014（2018版）
+                            《建筑防烟排烟系统技术标准》GB51251-2017
+                            《防火卷帘防火门防火窗施工及验收规范》GB 50877-2014
+                            《建筑用安全玻璃-防火玻璃》GB 15763.1-2009
+                            《防火玻璃非承重隔墙通用技术条件》GA 97-1995
+                            《建筑防火封堵应用技术标准》GB/T 51410
+                            《挡烟垂壁》GA 533-2012
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw11" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,11)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl11"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk11" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl11" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>防烟分区</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw12" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,12)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl12"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk12" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl12" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>防火防烟分隔设施（防火门、防火卷帘、防火墙、防火玻璃、挡烟垂壁、防火阀、排烟防火阀、耐火外窗等）</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw13" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,13)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl13"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk13" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl13" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>竖向管道井</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw14" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,14)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl14"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk14" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl14" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>窗间墙、窗槛墙、玻璃幕墙、防火墙两侧及转角处</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw15" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,15)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl15"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk15" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl15" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>建筑缝隙防火封堵（管道穿防火墙、变形缝、幕墙封堵、外墙保温系统与基层墙体、装饰层之间的封堵等）</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw16" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,16)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl16"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk16" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl16" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>其他有防火分隔要求的部位（天桥、建筑防火构件、下沉广场、防火隔间、避难走道等）</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw17" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,17)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl17"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk17" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl17" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>建筑防爆</td>
+                        <td>爆炸危险场所、泄压设施、电气防爆、防静电、防积聚、防流散等措施</td>
+                        <td>建筑设计防火规范》GB50016-2014（2018版）</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw18" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,18)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl18"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk18" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl18" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="4">安全疏散与避难</td>
+                        <td>安全出口（疏散楼梯）</td>
+                        <td rowspan="4">
+                            《建筑设计防火规范》GB50016-2014（2018版）
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw19" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,19)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl19"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk19" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl19" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>疏散距离</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw20" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,20)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl20"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk20" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl20" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>疏散走道</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw21" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,21)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl21"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk21" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl21" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>避难层（间）</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw22" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,22)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl22"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk22" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl22" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">（二）建筑装饰装修</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="9">室内装饰装修</td>
+                        <td>室内装修范围和使用功能</td>
+                        <td rowspan="9">
+                            《建筑内部装修设计防火规范》》GB50222-2017
+                            《建筑内部装修防火施工及验收规范》GB 50354-2005
+                            《建筑材料及制品燃烧性能分级》GB 8624-2012
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw23" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,23)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl23"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk23" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl23" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>顶棚、墙面、地面材料燃烧性能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw24" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,24)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl24"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk24" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl24" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>隔墙或隔断材料燃烧性能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw25" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,25)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl25"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk25" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl25" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>装饰织物燃烧性能</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw26"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw26" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,26)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl26"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk26" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl26" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>塑料电工套管燃烧性能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw27" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,27)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl27"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk27" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl27" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>对疏散设施影响</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw28" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,28)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl28"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk28" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl28" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>对消防设施影响</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw29" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,29)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl29"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk29" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl29" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>用电装置发热情况和防火隔热、散热措施</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw30" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,30)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl30"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk30" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl30" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>电气装置（配电箱、控制面板、接线盒、开关、插座等）安装基材的燃烧性能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw31" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,31)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl31"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk31" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl31" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>外墙装饰</td>
+                        <td>外墙装饰材料燃烧性能</td>
+                        <td>
+                            《建筑设计防火规范》GB50016-2014（2018版）《建筑材料及制品燃烧性能分级》GB 8624-2012
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw32" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,32)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl32"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk32" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl32" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">（三）建筑给水排水及供水</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="11">消防给水及消火栓系统</td>
+                        <td>水源</td>
+                        <td rowspan="11">
+                            《消防给水及消火栓系统技术规范》GB 50974-2014
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw33" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,33)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl33"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk33" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl33" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防水池</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw34" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,34)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl34"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk34" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl34" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>高位消防水箱</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw35" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,35)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl35"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk35" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl35" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防水泵房</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw36" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,36)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl36"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk36" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl36" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防水泵</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw37" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,37)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl37"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk37" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl37" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>稳压泵气压罐</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw3" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,38)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl38"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk38" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl38" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>减压阀</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw39" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,39)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl39"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk39" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl39" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>管网</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw40"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw40" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,40)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl40"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk40" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl40" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消火栓</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw41" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,41)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl41"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk41" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl41" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>系统功能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw42" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,42)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl42"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk42" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl42" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>水泵接合器</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw43" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,43)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl43"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk43" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl43" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="10">自动喷水灭火系统</td>
+                        <td>系统供水水源</td>
+                        <td rowspan="10">
+                            《自动喷水灭火系统设计规范》 GB 50084-2017
+                            《自动喷水灭火系统施工及验收规范》 GB 50261-2017
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw44"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw44" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,44)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl44"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk44" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl44" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防水池</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw45" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,45)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl45"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk45" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl45" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防水泵房</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw46" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,46)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl46"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk46" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl46" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防水泵</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw47"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw47" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,47)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl47"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk47" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl47" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>稳压泵气压罐</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw48"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw48" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,48)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl48"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk48" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl48" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>报警阀组</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw49" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,49)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl49"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk49" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl49" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>管网</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw50" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,50)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl50"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk50" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl50" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>喷头</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw51"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw51" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,51)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl51"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk51" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl51" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>系统功能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw52" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,52)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl52"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk52" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl52" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>水泵接合器</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw53" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,53)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl53"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk53" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl53" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="7">气体灭火系统</td>
+                        <td>防护区</td>
+                        <td rowspan="7">
+                            《气体灭火系统设计规范》GB50370-2005
+                            《气体灭火系统施工及验收规范》GB 50263-2007
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw54"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw54" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,54)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl54"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk54" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl54" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>储存装置间</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw55" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,55)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl55"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk55" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl55" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>灭火剂储存装置</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw56"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw56" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,56)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl56"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk56" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl56" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>驱动装置</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw57" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,57)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl57"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk57" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl57" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>管网</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw58" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,58)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl58"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk58" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl58" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>喷嘴</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw59" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,59)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl59"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk59" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl59" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>系统功能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw60" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,60)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl60"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk60" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl60" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="6">泡沫灭火系统</td>
+                        <td>防护区</td>
+                        <td rowspan="6">
+                            《泡沫灭火系统施工及验收规范 》GB 50281
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw61"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw61" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,61)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl61"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk61" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl61" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>泡沫液储罐</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw62" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,62)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl62"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk62" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl62" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>泡沫比例混合器（装置）</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw63"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw63" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,63)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl63"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk63" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl63" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>泡沫产生装置</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw64"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw64" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,64)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl64"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk64" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl64" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防泵</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw65"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw65" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,65)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl65"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk65" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl65" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>系统功能</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw66"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw66" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,66)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl66"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk66" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl66" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="6">其他灭火系统</td>
+                        <td>细水雾灭火系统</td>
+                        <td>
+                            《细水雾灭火系统技术规范》GB 50898
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw67"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw67" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,67)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl67"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk67" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl67" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>大空间智能型主动喷水灭火系统</td>
+                        <td>
+                            大空间智能型主动喷水灭火系统技术规程 CECS 263
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw68"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw68" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,68)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl68"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk68" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl68" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>水喷雾灭火系统</td>
+                        <td>
+                            《水喷雾灭火系统技术规范》GB 50219
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw69"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw69" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,69)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl69"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk69" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl69" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防炮灭火系统</td>
+                        <td>
+                            《固定消防炮灭火系统施工与验收规范》GB 350298
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw70"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw70" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,70)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl70"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk70" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl70" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>干粉灭火系统</td>
+                        <td>
+                            《干粉灭火系统及部件通用技术条件》GB16668-2010
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw71"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw71" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,71)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl71"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk71" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl71" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>厨房设备灭火装置等</td>
+                        <td></td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw72"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw72" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,72)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl72"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk72" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl72" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">（四）通风与空调</td>
+                    </tr>
+                    <tr>
+                        <td>通风、空调系统防火</td>
+                        <td>通风、空调系统防火</td>
+                        <td>
+                            《通风与空调工程施工质量验收规范》GB 50234
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw73"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw73" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,73)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl73"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk73" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl73" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="8">防烟、排烟系统</td>
+                        <td>系统设置</td>
+                        <td rowspan="8">
+                            《建筑防烟排烟系统技术标准》GB 51251-2017
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw108" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,108)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl108"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk108" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl108" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>自然通风及自然排烟设施</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw75"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw109" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,109)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl109"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk109" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl109" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>机械排烟系统</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw110" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,110)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl110"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk110" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl110" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>机械防烟系统</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw111" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,111)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl111"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk111" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl111" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>风机</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw112" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,112)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl112"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk112" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl112" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>管道</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw113" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,113)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl113"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk113" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl113" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>防火阀及排烟防火阀</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw114" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,114)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl114"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk114" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl114" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>系统功能</td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccbw115" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,115)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl115"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk115" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl115" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">（五）建筑电气</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="8">消防电源及其配电</td>
+                        <td>消防电源的负荷等级与供电形式</td>
+                        <td rowspan="8">
+                            《建筑设计防火规范》GB 50016-2014（2018版）
+                            《建筑电气工程施工质量验收规范》GB 50303
+                            《火灾自动报警系统设计规范》GB50116-2013
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw74"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw74" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,74)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl74"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk74" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl74" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>备用电源（发电机、UPS等）</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw75"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw75" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,75)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl75"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk75" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl75" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>柴油发电机房</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw76"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw76" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,76)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl76"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk76" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl76" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>变配电房</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw77"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw77" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,77)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl77"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk77" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl77" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>配电箱、末端切换装置及断路器设置</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw78"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw78" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,78)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl78"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk78" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl78" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防配电线路敷设及防护措施</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw79"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw79" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,79)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl79"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk79" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl79" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>用电设施</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw80"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw80" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,80)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl80"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk80" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl80" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>电气火灾监控系统</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw81"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw81" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,81)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl81"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk81" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl81" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">消防电源及其配电</td>
+                        <td>系统形式和功能选择</td>
+                        <td rowspan="3">
+                            《建筑设计防火规范》GB 50016-2014（2018版）
+                            《消防应急照明和疏散指示系统技术标准》GB 51309-2018
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw82"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw82" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,82)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl82"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk82" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl82" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防控制室、消防水泵房、自备发电机房、配电室、防排烟机房以及发生火灾时仍需正常工作的消防设备房备用照明</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw83"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw83" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,83)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl83"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk83" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl83" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>系统功能</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw84"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw84" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,84)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl84"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk84" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl84" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="11">火灾自动报警系统</td>
+                        <td>火灾探测器种类选择</td>
+                        <td rowspan="11">
+                            《火灾自动报警系统设计规范》GB50116-2013
+                            《火警自动报警系统施工及验收规范》GB 50166-2007
+                            《阻燃和耐火电线电缆或光缆通则》GB/T 19666
+                            《阻燃及耐火电缆》GA 306.2
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw85"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw85" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,85)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl85"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk85" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl85" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>布线</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw86"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw86" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,86)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl86"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk86" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl86" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>火灾报警控制器</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw87"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw87" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,87)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl87"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk87" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl87" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防联动控制器</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw88"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw88" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,88)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl88"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk88" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl88" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防应急广播</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw89"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw89" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,89)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl89"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk89" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl89" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>手动报警按钮</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw90"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw90" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,90)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl90"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk90" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl90" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>火灾声光警报器</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw91"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw91" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,91)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl91"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk91" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl91" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防专用电话</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw92"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw92" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,92)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl92"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk92" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl92" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>火灾显示盘</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw93"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw93" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,93)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl93"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk93" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl93" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>消防控制室</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw94"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw94" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,94)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl94"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk94" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl94" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>系统联动功能</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw95"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw95" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,95)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl95"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk95" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl95" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>城市消防远程监控系统</td>
+                        <td>远程监控系统主要设备功能</td>
+                        <td>
+                            《城市消防远程监控系统技术规范》GB 50440
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw96"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw96" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,96)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl96"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk96" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl96" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">（六）建筑节能</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">建筑外墙节能工程防火</td>
+                        <td>保温材料燃烧性能</td>
+                        <td rowspan="7">
+                            《建筑设计防火规范》GB 50016-2014（2018版）
+                            《建筑节能工程施工质量验收规范》GB 50411
+                            《建筑材料及制品燃烧性能分级》GB 8624
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw97"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw97" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,97)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl97"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk97" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl97" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>防护层</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw98"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw98" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,98)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl98"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk98" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl98" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>防火隔离带</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw99"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw99" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,99)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl99"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk99" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl99" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3">建筑屋面节能工程防火</td>
+                        <td>保温材料燃烧性能</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw100"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw100" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,100)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl100"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk100" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl100" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>防护层</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw101"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw101" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,101)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl101"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk101" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl101" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>防火隔离带</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw102"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw102" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,102)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl102"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk102" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl102" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>幕墙节能工程防火</td>
+                        <td>保温隔热材料燃烧性能</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw103"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw103" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,103)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl103"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk103" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl103" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">（七）电梯</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">消防电梯</td>
+                        <td>消防电梯</td>
+                        <td rowspan="2">
+                            《建筑设计防火规范》GB 50016
+                            《电梯工程施工质量验收规范》GB 50310-2002
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw104"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw104" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,104)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl104"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk104" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl104" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>水防电梯前室等</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw105"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw105" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,105)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl105"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk105" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl105" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="7">(八）建筑灭火器</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2">建筑灭火器</td>
+                        <td>配置</td>
+                        <td rowspan="2">
+                            《建筑设计防火规范》GB 50016-2014（2018版）
+                            《建筑灭火器配置设计规范》GB50140-2005
+                        </td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw106"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw106" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,106)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl106"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk106" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl106" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>布置</td>
+                        <td>
+                            <!-- <el-input size="mini" v-model="f.ccbw107"></el-input> -->
+                            <el-select filterable allow-create v-model="f.ccbw107" size="mini"
+                                v-on:change="((val)=>{changeCCBW(val,107)})">
+                                <el-option label="选择或输入" value=""></el-option>
+                                <el-option label="----" value="----"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-input size="mini" v-model="f.ccsl107"></el-input>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.ccqk107" size="mini">
+                                <el-option v-for="(item, index) in ccqkList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                        <td>
+                            <el-select filterable allow-create v-model="f.pdjl107" size="mini">
+                                <el-option v-for="(item, index) in pdjlList" :key="index" :label="item.label"
+                                    :value="item.value"></el-option>
+                            </el-select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>备注</td>
+                        <td colspan="6">每个单位工程每一细项抽样数量不少于2处，总数不大于2处全部检查，涉及防火间距、消防车登高场地、消防车道及安全出口形式和数量的，应全部检查。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tools">
+            <el-button type="primary" v-on:click="submit" size="mini">提交</el-button>
+        </div>
+    </div>
+</body>
+<script>
+    // 对Date的扩展，将 Date 转化为指定格式的String   
+    // 月(M)、日(d)、小时(H)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，   
+    // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)   
+    // 例子：   
+    // (new Date()).Format("yyyy-MM-dd HH:mm:ss.S") ==> 2006-07-02 08:09:04.423   
+    // (new Date()).Format("yyyy-M-d H:m:s.S")      ==> 2006-7-2 8:9:4.18   
+    Date.prototype.Format = function (fmt) { //author: meizz   
+        var o = {
+            "M+": this.getMonth() + 1, //月份   
+            "d+": this.getDate(), //日   
+            "h+": this.getHours(), //小时   
+            "m+": this.getMinutes(), //分   
+            "s+": this.getSeconds(), //秒   
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+            "S": this.getMilliseconds() //毫秒   
+        };
+        if (/(y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k])
+                    .length)));
+        return fmt;
+    }
+
+    var that
+    new Vue({
+        el: '#app',
+        data: {
+            showApp: false,
+            f: {},
+            ccqkList: [{
+                    label: '----',
+                    value: '----'
+                }, {
+                    label: '与图纸相一致',
+                    value: '与图纸相一致'
+                },
+                {
+                    label: '发现问题（详见联系单）',
+                    value: '发现问题（详见联系单）'
+                }
+            ],
+            pdjlList: [{
+                    label: '----',
+                    value: '----'
+                }, {
+                    label: '合格',
+                    value: '合格'
+                },
+                {
+                    label: '整改合格',
+                    value: '整改合格'
+                }
+            ],
+            baseData: {}
+        },
+        methods: {
+            changeCCBW: function (val, index) {
+                if (val == '----') {
+                    this.f['ccsl' + index] = '----'
+                    this.f['ccqk' + index] = '----'
+                    this.f['pdjl' + index] = '----'
+                }
+            },
+            submit: function () {
+                console.log(JSON.parse(JSON.stringify(that.f)))
+                var obj = JSON.parse(JSON.stringify(that.f))
+                // obj['recid'] = GetQueryString('recid')
+                // obj['parentid'] = GetQueryString('parentid')
+                // obj['fxbaid'] = GetQueryString('fxbaid')
+
+                obj['xfyspd'] = ""
+                console.log(obj);
+                //return
+                $.ajax({
+                    url: "/wlxf/addXfyspd",
+                    type: 'post',
+                    data: {
+                        recid: GetQueryString('recid'),
+                        parentid: GetQueryString('parentid'),
+                        fxbaid: GetQueryString('fxbaid'),
+                        serialno: GetQueryString('serialno'),
+                        xfyspd: JSON.stringify(obj)
+                    },
+                    dataType: "json",
+                    success: function (res) {
+                        if (res.code == 0) {
+                            //that.$message.success('保存成功')
+                            alert('保存成功');
+                            parent.layer.closeAll();
+                        } else
+                        {
+                            alert(res.msg);
+                        }
+                    }
+                })
+            },
+            getBaseData: function () {
+                $.ajax({
+                    url: "/wlxf/xcpdgcxx",
+                    type: 'post',
+                    data: {
+                        serialno: GetQueryString('serialno'),
+                        fxbaid: GetQueryString('fxbaid'),
+                        recid: GetQueryString('recid'),
+                        parentid: GetQueryString('parentid'),
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (res) {
+                        console.log(res.rows.xcpdxx);
+                        if (res.rows.xcpdxx.length != 1) {
+                            var d = res.rows.xcpdxx
+                            d.forEach(function (e) {
+                                that.f[e.itemname] = e.itemvalue
+                            })
+                        } else {
+                            that.f['xcpdbh'] = res.rows.xcpdbh
+                            that.f['gcmc'] = res.rows.xcpdxx[0].gcmc
+                            that.f['gcdd'] = res.rows.xcpdxx[0].gcdd
+                            that.f['xcpdry'] = res.rows.xcpdxx[0].xcpdry
+                            that.f['gcmc'] = res.rows.xcpdxx[0].gcmc
+                        }
+                    }
+                })
+            }
+        },
+        mounted: function () {
+            that = this
+            that.showApp = true
+            var f = {
+                xcpdbh: '',
+                gcmc: '',
+                gcdd: '',
+                xcpdry: '',
+                xcpdsj: new Date().Format("yyyy-MM-dd"),
+                xcpdjl: '',
+            }
+            for (var i = 1; i < 116; i++) {
+                f['ccbw' + i] = ''
+                f['ccsl' + i] = '2'
+                f['ccqk' + i] = '与图纸相一致'
+                f['pdjl' + i] = '合格'
+            }
+            var qsjcList = [1, 4, 5, 6, 7, 8, 19, 33, 34, 35, 36, 37, 38, 44, 45, 46, 47, 48, 54, 55, 56,
+                57, 61, 62, 63, 64, 65
+            ]
+            qsjcList.forEach(function (e) {
+                f['ccsl' + e] = '全数检查'
+            })
+            console.log(JSON.parse(JSON.stringify(f)))
+            that.f = f
+            that.getBaseData()
+        }
+    })
+
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return "";
+    }
+</script>
+<style>
+    body,
+    html {
+        position: relative;
+        height: 100%;
+        height: 100%;
+    }
+
+    #app {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tab_wrap {
+        flex: 1;
+        overflow: auto;
+    }
+
+    .tools {
+        flex: 0 0 40px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 30px;
+        box-sizing: border-box;
+        background-color: #fafafa;
+        box-shadow: 0 0 8px 0 rgba(232, 237, 250, .6), 0 2px 4px 0 rgba(232, 237, 250, .5);
+        /* height: 40px; */
+    }
+</style>
+
+</html>

@@ -1,0 +1,297 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/User/_contentlayout.cshtml";
+}
+@section head
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            generateBar();
+        $(".shouye_all").height($(window).height());
+        $(".shouye_all").width($(window).width());
+        $(".shouye_left").width($(".shouye_all").width() * 0.7 - 5);
+        $(".shouye_left").height($(".shouye_all").height());
+        $(".shouye_right").width($(".shouye_all").width() * 0.3 - 5);
+        $(".shouye_right").height($(".shouye_all").height());
+        $(".shouye_left_top").height($(".shouye_left").height() * 0.5 - 5);
+        $(".shouye_left_bottom").height($(".shouye_left").height() * 0.5 - 5);
+        $(".shouye_left_top_left").width($(".shouye_left_top").width() * 0.25 - 5);
+        $(".shouye_left_top_right").width($(".shouye_left_top").width() * 0.75 - 5);
+        $(".shouye_right_top").height($(".shouye_right").height() * 0.2 - 5);
+
+        $(".shouye_right_mid").height($(".shouye_right").height()*0.3-10);
+        $(".shouye_right_bottom").height($(".shouye_right").height()*0.5-5);
+        $(".xiazai_left").height($(".shouye_xiazai").height()-$(".gongzhonghao_n_word").height()-5);
+     //   $(".shouye_xiazai_ewm").height(($(".xiazai_left").height()-$(".shouye_xiazai_ewm_word").height())*0.8);
+       // $(".shouye_xiazai_ewm").width($(".shouye_xiazai_ewm").height());
+        var shouye_xiazai_ewm_paddingleft=($(".xiazai_left").width()-$(".shouye_xiazai_ewm").width())/2;
+       // $(".shouye_xiazai_ewm").css({"margin-left":shouye_xiazai_ewm_paddingleft});
+
+
+        document.getElementById("shouye_bzzx_margin").style.paddingTop = ($(".bangzhu").height() - $(".bangzhu_div").height()) / 2 + "px";
+
+        getTodoTasks();
+    });
+
+    $(window).resize(function () {
+        $(".shouye_all").height($(window).height());
+        $(".shouye_all").width($(window).width());
+        $(".shouye_left").width($(".shouye_all").width() * 0.7 - 5);
+        $(".shouye_left").height($(".shouye_all").height());
+        $(".shouye_right").width($(".shouye_all").width() * 0.3 - 5);
+        $(".shouye_right").height($(".shouye_all").height());
+        $(".shouye_left_top").height($(".shouye_left").height() * 0.5 - 5);
+        $(".shouye_left_bottom").height($(".shouye_left").height() * 0.5 - 5);
+        $(".shouye_left_top_left").width($(".shouye_left_top").width() * 0.25 - 5);
+        $(".shouye_left_top_right").width($(".shouye_left_top").width() * 0.75 - 5);
+        $(".shouye_right_top").height($(".shouye_right").height() * 0.2 - 5);
+
+
+        $(".shouye_right_mid").height($(".shouye_right").height()*0.3-10);
+        $(".shouye_right_bottom").height($(".shouye_right").height()*0.5-5);
+        $(".xiazai_left").height($(".shouye_xiazai").height()-$(".gongzhonghao_n_word").height()-5);
+      //  $(".shouye_xiazai_ewm").height(($(".xiazai_left").height()-$(".shouye_xiazai_ewm_word").height())*0.8);
+      //  $(".shouye_xiazai_ewm").width($(".shouye_xiazai_ewm").height());
+        var shouye_xiazai_ewm_paddingleft=($(".xiazai_left").width()-$(".shouye_xiazai_ewm").width())/2;
+     //   $(".shouye_xiazai_ewm").css({"margin-left":shouye_xiazai_ewm_paddingleft});
+
+
+        document.getElementById("shouye_bzzx_margin").style.paddingTop = ($(".bangzhu").height() - $(".bangzhu_div").height()) / 2 + "px";
+
+    });
+
+    function generateBar() {
+        try{
+            $("#barIos").qrcode({
+                render: "table", //table方式
+                width: 74, //宽度
+                height: 74, //高度
+                text: "@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_APPIOS") " //任意内容
+                });
+            $("#barAndroid").qrcode({
+                render: "table", //table方式
+                width: 74, //宽度
+                height: 74, //高度
+		
+                text: "@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_APPANDROID") " //任意内容
+            });
+            } catch (e) {
+                alert(e);
+            }
+    }
+
+        function changePass() {
+            try {
+
+                parent.layer.open({
+                    type: 2,
+                    title: '修改密码',
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['400px', '300px'],
+                    content: "/user/changepass",
+                    btn: ["保存", "关闭"],
+                    yes: function (index) {
+                        if (window.parent[layerObj.find('iframe')[0]['name']].doSubmit())
+                            parent.layer.closeAll();
+                    },
+                    success: function (layero, index) {
+                        layerObj = layero;
+                    },
+                    btn2: function (index) {
+                        parent.layer.closeAll();
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        function uploadSignature() {
+            try {
+
+                parent.layer.open({
+                    type: 2,
+                    title: '上传签名',
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['400px', '300px'],
+                    content: "/user/uploadsignature",
+                    btn: ["关闭"],
+                    yes: function (index) {
+                        parent.layer.closeAll();
+                    },
+                    success: function (layero, index) {
+                        layerObj = layero;
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        function getTodoTasks() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/workflow/getworktodolist",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        $("#shouye_dbrw_body").html("");
+                        if (data.total > 0) {
+                            $.each(data.rows, function (i, item) {
+                                var extrainfo = "";
+                                if (item.ExtraInfo2 != "")
+                                    extrainfo = "[" + item.ExtraInfo2 + "]";
+
+                                var dt = eval("new "+item.DateAccepted.substr(1,item.DateAccepted.length-2));
+                                var acceptDate = dt.pattern("yyyy-MM-dd HH:mm");
+                                ///workflow/checkwork?taskid="+item.Taskid+"
+                                $("#shouye_dbrw_body").append("<div><a href='javascript:showCheckWorkDialog("+item.Taskid+")'>[" + acceptDate + "][来自：" + item.PreUserRealName + "]" + item.ActivityName + extrainfo + "</a></div>");
+                            });
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        //layer.closeAll('loading');
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        //layer.load();
+                    }
+                });
+            } catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        }
+        function showCheckWorkDialog(taskid) {
+            parent.layer.open({
+                type: 2,
+                title: '',
+                shadeClose: true,
+                shade: 0.5,
+                area: ['95%', '95%'],
+                content: "/workflow/checkwork?taskid=" + taskid+"&DlgId=1&_="+Math.random(),
+                end: function () {
+                }
+            });
+
+        }
+        function showMoreWorkDialog() {
+            window.parent.addTab("workflow_todo", "待办任务", "/workflow/worktodo");
+        }
+    </script>
+}
+<div class="shouye_all">
+    <div class="shouye_left">
+        <div class="shouye_left_top">
+            <!-- 用户管理  -->
+            <div class="shouye_left_top_left">
+                <div class="panel panel-primary shouye">
+                    <div class="panel-heading" style="padding-top:5px; padding-bottom:5px;">
+                        <h3 class="panel-title mianban">账户管理</h3>
+                    </div>
+                    <div class="panel-body stj_shouye">
+                        <div class="shouye_zhanghu_1">
+                            <div class="shouye_zhanghu_1_pic"> <img src="@SkinManager.GetImagePath("touxiang.png")" /> </div>
+                        <!--    <div class="shouye_zhanghu_1_word"> @CurrentUser.RealName </div>-->
+                        </div>
+
+
+			 <div class="shouye_zhanghu_2">
+      
+      <p class="shouye_center" title=@CurrentUser.RealName>@CurrentUser.RealName </p>
+      
+      </div>
+
+                        <!--
+                        <div class="shouye_zhanghu_2">
+                          <p class="text-center text-info"  style="font-size:16px; padding-left:10px; padding-right:10px;">绍兴市标点电子技术有限公司</p>
+                        </div>
+                        -->
+                        <div class="shouye_zhanghu_3">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="uploadSignature();">上传签名</button>
+                        </div>
+                        <div class="shouye_zhanghu_3">
+                            <button type="button" class="btn btn-primary btn-lg" onclick="changePass();">修改密码</button>
+                        </div>
+                        <div class="shouye_zhanghu_3" style="display:none;">
+                            <button type="button" class="btn btn-warning btn-lg" onclick="window.parent.logout();">注销退出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 消息提醒  -->
+            <div class="shouye_left_top_right">
+                <div class="panel panel-primary shouye">
+                    <div class="panel-heading" style="padding-top:5px; padding-bottom:5px;">
+                        <h3 class="panel-title mianban"><font class="mianban_left"> 消息提醒 </font><font class="mianban_right">  more</font></h3>
+                        <!--<font class="mianban_left">  </font>  <font class="mianban_right">  </font>               -->
+                    </div>
+                    <div class="panel-body">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shouye_left_mid"> </div>
+        <!-- 待办记事  -->
+        <div class="shouye_left_bottom">
+            <div class="panel  panel-primary shouye">
+                <div class="panel-heading" style="padding-top:5px; padding-bottom:5px;">
+                    <h3 class="panel-title mianban"><font class="mianban_left"> 待办任务 </font><font class="mianban_right"><a href="javascript:showMoreWorkDialog();">more</a></font></h3>
+                </div>
+                <div class="panel-body" id="shouye_dbrw_body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="shouye_right">
+        <!-- 帮助中心  -->
+        <div class="shouye_right_top">
+            <div class="bangzhu">
+                <div class="bangzhu_div" id="shouye_bzzx_margin">
+                    <div class="bangzhu_pic"> <img src="@SkinManager.GetImagePath("bangzhu.png")" /> </div>
+                    <div class="bangzhu_word">
+                        <p style=" font-size:20px; line-height:20px;">帮助中心 </p>
+                        <p style="font-size:16px; line-height:16px;"> <a href="@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_MAIN_HELPDOC")" target="_blank">了解操作方法 </a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shouye_right_temp"> </div>
+        <div class="shouye_right_mid" style="background-color:#C69;">
+  
+   <div class="shouye_xiazai" >
+        <div class="gongzhonghao_n_word "><font color="#4da12f" > 下载专区 </font> </div>
+        
+        <div class="xiazai_left">
+        <div  class="left_nei_div">
+          <div class="shouye_xiazai_ewm"><div id="barIos"></div>  </div>
+      <!--  <div class="shouye_xiazai_ewm_word" > ios版</div>-->
+      ios版
+        </div>
+        
+        </div>
+        
+         <div class="xiazai_left">
+        <div class="left_nei_div">
+          <div class="shouye_xiazai_ewm"><div id="barAndroid"></div> </div>
+      <!--  <div class="shouye_xiazai_ewm_word" > 安卓版</div>  -->
+      安卓版
+
+	</div>
+        </div>
+      </div>
+  </div>
+   <div class="shouye_right_temp"> </div>
+  <div class="shouye_right_bottom" style="background-color:#696;">
+      <div><a href="/downs/ie安全设置.rar" target="_blank">浏览器安全性设置工具（请解压缩后运行）</a></div>
+      <div><a href="/downs/标点软件客户端.rar" target="_blank">标点软件客户端（请解压缩后运行）</a></div>
+      <div><a href="/downs/idr.exe" target="_blank">身份证刷卡器控件下载</a></div>
+      <div><a href="/downs/BioIDDriver.rar" target="_blank">虹膜注册驱动（请解压缩后安装）</a></div>
+      <div><a href="/downs/BioID.exe" target="_blank">虹膜注册控件</a></div>
+  </div>
+      
+        
+    </div>
+</div>

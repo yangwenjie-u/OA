@@ -1,0 +1,55 @@
+﻿@using BD.Jcbg.Common;
+
+@{
+    Layout = "~/Views/xwwzUserHT/_f_common.cshtml";
+}
+@section head
+{
+
+}
+@section body
+{
+ 
+    <div align="center">
+
+        <div style="margin:20px 0;"></div>
+        <table id="dg" title="新闻列表" 
+               data-options="rownumbers:true,singleSelect:true,pagination:true,url:'datagrid_data1.json',method:'post'">
+            <thead>
+                <tr>
+                    <th data-options="field:'itemid',width:80">Item ID</th>
+                    <th data-options="field:'productid',width:100">Product</th>
+                    <th data-options="field:'listprice',width:80,align:'right'">List Price</th>
+                    <th data-options="field:'unitcost',width:80,align:'right'">Unit Cost</th>
+                    <th data-options="field:'attr1',width:240">Attribute</th>
+                    <th data-options="field:'status',width:60,align:'center'">Status</th>
+                </tr>
+            </thead>
+        </table>
+        <script type="text/javascript">
+
+            var pager = $('#dg').datagrid().datagrid('getPager');	// get the pager of datagrid
+
+            $(function () {
+                addpager();
+
+            })
+
+
+
+            function addpager() {
+                pager.pagination({
+                    pageList: [10, 20, 50, 100],
+                    onSelectPage: function (pageNumber, pageSize) {
+                        $(this).pagination('loading');
+                        alert(pageNumber + '-' + pageSize);
+                        $(this).pagination('loaded');
+                    }
+                });
+            }
+        </script>
+
+
+    </div>
+}
+

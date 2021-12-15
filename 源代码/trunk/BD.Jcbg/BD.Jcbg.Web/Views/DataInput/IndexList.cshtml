@@ -1,0 +1,207 @@
+﻿@using BD.DataInputCommon;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>数据录入</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="@Skins.GetPubPath("My97DatePicker/WdatePicker.js")"></script>
+    <link href="@Skins.GetPubPath("hplus/css/bootstrap.min.css?v=3.3.5")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/font-awesome.min.css?v=4.4.0")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/animate.min.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/style.min.css?v=4.0.0")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/plugins/chosen/chosen.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css")" rel="stylesheet" type="text/css"/>
+    <!-- 下拉过滤控件 -->
+    <link href="@Skins.GetPubPath("bootstrap/plugins/bootstrap-multiselect/css/bootstrap-multiselect.css")" rel="stylesheet"/>
+
+
+    <link href="@Skins.GetPubPath("layer/skin/layer.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("uploadify/uploadify.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("H5uploadify/Huploadify.css")" rel="stylesheet"/>
+
+    <link href="@Skins.GetCssPath("datainput.css?v=2016031501")" rel="stylesheet"/>
+    <link id="easyuiTheme" rel="stylesheet" href="@Skins.GetPubPath("easyui/themes/default/easyui.css")" type="text/css"/>
+    <link href="@Skins.GetPubPath("easyui/themes/icon.css")" rel="stylesheet"/>
+    <link href="@Skins.GetCssPath("stj.css?v=2016031501")" rel="stylesheet"/>
+</head>
+<body class="gray-bg" style="font-size:13px;">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <form id="form1" name="form1" style="padding: 0 10px 0 0" action="" enctype="multipart/form-data">
+            <input type="hidden" id="param" name="param" value="@ViewData["param"]" />
+            <input type="hidden" id="btnContent" name="btnContent" />
+            <div id="contentDiv"></div>
+            <br /><br />
+        </form>
+
+        <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/jquery.min.js?v=2.1.4")"></script>
+        <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/bootstrap.min.js?v=3.3.5")"></script>
+        <!-- 多选下拉框 -->
+        <script type="text/javascript" src="@Skins.GetPubPath("hplus/js/plugins/chosen/chosen.jquery.js")"></script>
+        <!-- 多选下拉框过滤 -->
+        <script type="text/javascript" src="@Skins.GetPubPath("bootstrap/plugins/bootstrap-multiselect/js/bootstrap-multiselect.js")"></script>
+
+        <script type="text/javascript" src="@Skins.GetJsPath("myControllist.js?v=2016040506")"></script>
+        <script type="text/javascript" src="@Skins.GetJsPath("myContent.js?v=2016040503")"></script>
+        <script type="text/javascript" src="@Skins.GetJsPath("mybootstrap.js?v=2016012601")"></script>
+        <script type="text/javascript" src="@Skins.GetPubPath("layer/layer.js")"></script>
+        <script type="text/javascript" src="@Skins.GetPubPath("uploadify/jquery.uploadify.min.js")"></script>
+        <script type="text/javascript" src="@Skins.GetPubPath("H5uploadify/jquery.Huploadify.js")"></script>
+        <script type="text/javascript" src="@Skins.GetPubPath("easyui/jquery.easyui.min.js")"></script>
+        @Html.Raw(ViewData["js"].ToString())
+
+        <script type="text/javascript" language="javascript">
+            //是不是Helplink新建或修改
+            var helplinkOpt = "@ViewData["helplinkopt"]";
+            //OSS存储对象
+            var storagetype = "@ViewData["storagetype"]";         
+            //初始化字段组
+            var fieldArray = new Array();
+            //读取数据
+            function readData() {
+                $.ajax({
+                    type: "POST",
+                    url: "/DataInput/SearchListData",
+                    dataType: "json",
+                    data: { param: $("#param").val() },
+                    async: true,
+                    success: function (val) {
+                        if (!val.success) {
+                            alert(val.msg);
+                            return;
+                        }
+
+                        //定义每行几列
+                        if (val.data.rownum > 0)
+                            conditionNum = val.data.rownum;
+                        //是否显示底部栏
+                        if (val.data.bottomdiv)
+                            document.getElementById("div_bottom").style.display = 'block';
+                        //跳转
+                        if (val.data.jumpdata.length > 0) {
+                            document.getElementById("div_jump").style.display = 'block';
+                        }
+                        //循环加载标题
+                        $(val.data.jumpdata).each(function (index) {
+                            $("#jumpCtrl").append("<option value='" + val.data.jumpdata[index].jump + "'>" + val.data.jumpdata[index].title + "</option>");
+                        });
+                        //按钮
+                        $(val.data.btndata).each(function (index) {
+                            //$("#btnDiv").append("<input type='button' class='btn btn-primary btn-sm'   name='" + val.data.btndata[index].name + "' value='" + val.data.btndata[index].title + "' onclick='" + val.data.btndata[index].event + "(\"" + val.data.btndata[index].url + "\");' />");
+                            $("#btnDiv").append("<button class=\"btn btn-primary stj_ti\" type=\"button\"    name='" + val.data.btndata[index].name + "' value='" + val.data.btndata[index].title + "' onclick='" + val.data.btndata[index].event + "(\"" + val.data.btndata[index].url + "\");' ><i class=\"" + val.data.btndata[index].css + "\" ></i>" + val.data.btndata[index].title + "</button>");
+                        });
+                        //自定义按钮
+                        $(val.data.custombutton).each(function (index) {
+                            //$("#btnDiv").append("<input type='button' class='btn btn-primary btn-sm'   name='" + val.data.custombutton[index].name + "' value='" + val.data.custombutton[index].title + "' onclick=\"" + ParamRep(val.data.custombutton[index].event) + "\" />");
+                            $("#btnDiv").append("<button class=\"btn btn-primary stj_ti\" type=\"button\"    name='" + val.data.custombutton[index].name + "' value='" + val.data.custombutton[index].title + "' onclick='" + ParamRep(val.data.custombutton[index].event) + "\" ><i class=\"" + val.data.custombutton[index].css + "\" ></i>" + val.data.custombutton[index].title + "</button>");
+                        });
+                        //判断是否要显示主表
+                        var t1fieldcontent = "";
+                        if (val.data.t1visible) {
+                            //添加锚点
+                            t1fieldcontent += "<a id=\"" + val.data.t1table + "Anchor\" name=\"" + val.data.t1table + "Anchor\"></a>";
+                            t1fieldcontent += CreateField(val.data.t1table, val.data.t1hidden, val.data.t1field, "", "");
+                        }
+                        //替换数据属性
+                        var t1dataField = new RegExp("&&datain&&", "g");
+                        t1fieldcontent = t1fieldcontent.replace(t1dataField, "datain");
+                        $("#contentDiv").append(t1fieldcontent);
+                        //判断是否要显示从表
+                        $(val.data.t2fields).each(function (index) {
+                            //判断是否有从表t2
+                            if (val.data.t2fields[index].t2visible) {
+                                //获取字段列
+                                fieldArray[val.data.t2fields[index].t2table] = JSON.stringify(val.data.t2fields[index].t2field);
+                                //创建列表
+                                $("#contentDiv").append(CreateGridToolbar(val.data.t2fields[index].t2table));
+                                CreateGrid(val.data.t2fields[index].t2table, val.data.t2fields[index].t2field);
+                                //添加从表隐藏层
+                                //$("#hiddenDiv").append(CreateDiv(val.data.t2fields[index].t2table, val.data.t2fields[index].t2hidden, val.data.t2fields[index].t2field, "_", "&&record&&"));
+                                //添加从表隐藏层JS
+                                //$("#hiddenJsDiv").append(CreateJs(val.data.t2fields[index].t2table, val.data.t2fields[index].t2triggerfield, val.data.t2fields[index].t2field, "_"));
+                                //显示内容
+                                //$("#contentDiv").append(GetT2Tab(val.data.t2fields[index].t2table, val.data.t2fields[index].t2sy, val.data.t2fields[index].t3visible, val.data.t2fields[index].t3table, val.data.t2fields[index].t3sy));
+                            }
+                        });
+                        //**** 触发按钮事件 ****
+                        //**** 主表触发 ****
+                        $(val.data.t1triggerfield).each(function (index) {
+                            //按顺序触发改变值
+                            InitCtrlEvent(val.data.t1triggerfield[index].fieldname);
+                        });
+
+                        //**** 主表还原默认值 ****
+                        $(val.data.t1field).each(function (index) {
+                            //初始化特殊控件
+                            InitSpecialCtrl(val.data.t1field[index].fieldname);
+                            //还原默认值
+                            RecoveryDefValue(val.data.t1field[index].fieldname);
+                            //触发改变事件
+                            InitCtrlEvent(val.data.t1field[index].fieldname);
+                        });
+
+                        //判断是否是修改信息
+                        if (val.data.datacheck) {
+                            //赋值主表数据
+                            $(val.data.t1datas.t1data).each(function (index) {
+                                SetCtrlValue(val.data.t1datas.t1data[index].zdmc, val.data.t1datas.t1data[index].zdval);
+                                //触发改变事件
+                                InitCtrlEvent(val.data.t1datas.t1data[index].zdmc);
+                            });
+                            //赋值从表数据
+                            $(val.data.t2datas).each(function (index) {
+                                //************** 从表 *************
+                                //触发新建按钮
+                                $("#" + val.data.t2datas[index].t2table + "AddBtn").click();
+                                //获取从表当前记录
+                                var t2Rec = parseInt($("#" + val.data.t2datas[index].t2table + "Record").val());
+                                //设置此记录主键
+                                $("#" + val.data.t2datas[index].t2table + "PRIDATA_" + t2Rec).val(val.data.t2datas[index].t2pri);
+                                //赋值从表记录每个字段
+                                $(val.data.t2datas[index].t2data).each(function (zdzdIndex) {
+                                    SetCtrlValue(val.data.t2datas[index].t2data[zdzdIndex].zdmc + "_" + t2Rec, val.data.t2datas[index].t2data[zdzdIndex].zdval);
+                                    //触发改变事件
+                                    InitCtrlEvent(val.data.t2datas[index].t2data[zdzdIndex].zdmc + "_" + t2Rec);
+                                });
+                                //************** 从表 *************                   
+                            });
+                        }
+                        //重新渲染
+                        iniBootstrap();
+                        //遮罩
+                        layer.closeAll("loading");
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        //遮罩
+                        layer.load();
+                    }
+                });
+            }
+            //初始化从表信息
+            @Html.Raw(ViewData["cbjs"].ToString());
+
+            //初始化数据
+            $(function () {
+                readData();
+            });
+
+        </script>
+
+        <!-- 用于创建单层的隐藏从表或明细表信息 -->
+        <div id="hiddenDiv" style="display:none"></div>
+        <!-- 用于创建单层的隐藏从表或明细表的JS信息 -->
+        <div id="hiddenJsDiv" style="display:none"></div>
+    </div>
+    <div id="div_bottom" class="stj_lr_but" style="display:none">
+        <div class="st_lr_but_n">
+            <div id="div_jump" class="st_lr_but_n_1" style="display:none">
+                <label class="but_tz"><strong>跳转</strong></label>
+                <select id="jumpCtrl" class="form-control" title="yeey" onchange="JumpHref(this.value);">
+                 </select>
+            </div>
+            <div id="btnDiv" class="" style="float:left; width:auto"></div>
+        </div>
+    </div>
+</body>
+</html>

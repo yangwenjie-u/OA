@@ -1,0 +1,126 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/User/_easyuieditlayout.cshtml";
+}
+<script language="javascript" type="text/javascript">
+    $(function () {
+        try {
+            var geturl = "/oa/getchangetotal?id=@ViewBag.Recid&_=" + Math.random();
+
+            $('#changetotle_maintable').datagrid({
+                title: '建设项目设计变更汇总表',
+                border: false,
+                url: geturl,
+                rownumbers: true,
+                nowrap: false,
+                fitColumns: false,
+                idField: 'ChangeTotalItemID',
+                striped: false,
+                fit: true,
+                singleSelect: true,
+                pagination: true,
+                pageNumber: 1,
+                pageSize: 20,
+                pageList: [20, 40, 50, 100],
+                columns: [[
+                { field: 'ChangeTotalItemID', title: '条目id', width: 100, sortable: true, align: "center", hidden: 'hidden' },
+                { field: 'ChangeTotalID', title: '汇总id', width: 100, sortable: true, align: "center", hidden: 'hidden' },
+                { field: 'ChangeTotalItemID', title: '部门代码', width: 100, sortable: true, align: "center", hidden: 'hidden' },
+                { field: 'ProjectType', title: '工程类别', width: 100, sortable: true, align: "center", editor: { type: 'validatebox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'DepartmentName', title: '合同段', width: 100, sortable: true, align: "center", editor: { type: 'validatebox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'OldMoney', title: '原合同总价<br/>（万元）', width: 70, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'TempMoney', title: '暂列金<br/>（万元）', width: 70, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'Cno', title: 'C类<br/>本季度<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'Cmoney', title: 'C类<br/>本季度<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'CtotalNo', title: 'C类<br/>累计<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'CtotalMoney', title: 'C类<br/>累计<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'Bno', title: 'B类<br/>本季度<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'Bmoney', title: 'B类<br/>本季度<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'BtotalNo', title: 'B类<br/>累计<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'BtotalMoney', title: 'B类<br/>累计<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'Ano', title: 'A类<br/>本季度<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'Amoney', title: 'A类<br/>本季度<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'AtotalNo', title: 'A类<br/>累计<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'AtotalMoney', title: 'A类<br/>累计<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'BigNo', title: '重大<br/>本季度<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'BigMoney', title: '重大<br/>本季度<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'BigTotalNo', title: '重大<br/>累计<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'BigTotalMoney', title: '重大<br/>累计<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'AlllNo', title: '合计<br/>本季度<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'AllMoney', title: '合计<br/>本季度<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'TotalNo', title: '合计<br/>累计<br/>项数', width: 40, sortable: true, align: "center", editor: { type: 'validatebox', options: { required: true, validType: 'maxLength[200]'}} },
+                { field: 'TotalMoney', title: '合计<br/>累计<br/>金额<br/>(万元)', width: 50, sortable: true, align: "center", editor: { type: 'numberbox', options: { required: true, validType: 'maxLength[200]'}} }
+				]],
+                toolbar: "#changetotle_tb",
+                showFooter: true,
+                onLoadSuccess: function (data) {
+                    changetotle_item_setfooter();
+                }
+
+            });
+
+        }
+        catch (e) {
+            $.messager.alert('初始化页面异常', e.message, 'warning');
+        }
+
+    });
+    function changetotle_item_setfooter() {
+        try {
+            $('#changetotle_maintable').datagrid('reloadFooter', [
+	               { ProjectType: "项目合计", DepartmentName: "", OldMoney: changetotle_item_compute("OldMoney"), TempMoney: changetotle_item_compute("TempMoney"), Cno: changetotle_item_compute("Cno"), Cmoney: changetotle_item_compute("Cmoney"), CtotalNo: changetotle_item_compute("CtotalNo"), CtotalMoney: changetotle_item_compute("CtotalMoney"), Bno: changetotle_item_compute("Bno"), Bmoney: changetotle_item_compute("Bmoney"), BtotalNo: changetotle_item_compute("BtotalNo"), BtotalMoney: changetotle_item_compute("BtotalMoney"), Ano: changetotle_item_compute("Ano"), Amoney: changetotle_item_compute("Amoney"), AtotalNo: changetotle_item_compute("AtotalNo"), AtotalMoney: changetotle_item_compute("AtotalMoney"), BigNo: changetotle_item_compute("BigNo"), BigMoney: changetotle_item_compute("BigMoney"), BigTotalNo: changetotle_item_compute("BigTotalNo"), BigTotalMoney: changetotle_item_compute("BigTotalMoney"), AlllNo: changetotle_item_compute("AlllNo"), AllMoney: changetotle_item_compute("AllMoney"), TotalNo: changetotle_item_compute("TotalNo"), TotalMoney: changetotle_item_compute("TotalMoney") }
+            ]);
+
+        } catch (e) {
+            $.messager.alert('统计异常', e.message, 'warning');
+        }
+    }
+
+    //指定列求和
+    function changetotle_item_compute(colName) {
+        var rows = $('#changetotle_maintable').datagrid('getRows');
+        var total = 0;
+        for (var i = 0; i < rows.length; i++) {
+            total += parseFloat(rows[i][colName]);
+        }
+        return total;
+    }
+    function company_changetotal_excel() {
+        try {
+            window.location = "/oa/getchangetotalitemexcel?id=@ViewBag.Recid";
+            /*
+            $.ajax({
+            type: "POST",
+            url: "/oa/getchangeitemexcel?id=@ViewBag.Recid",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+            try {
+            alert('导出excel成功！');
+            window.location = data; //执行下载操作
+            } catch (e) {
+            $.messager.alert('提示', e, 'warning');
+            }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            $("body").unmask();
+            },
+            beforeSend: function (XMLHttpRequest) {
+            $("body").mask("excel生成中...");
+            }
+            });*/
+        } catch (e) {
+            $.messager.alert('提示', e, 'info');
+        }
+    }
+
+    </script>
+<table id="changetotle_maintable"></table>  
+<div id="changetotle_tb" style="padding:5px;height:auto;">   
+	<div>
+		<span style="font-weight:bolder">汇总名称：</span>@ViewBag.Name；<br />
+		<span style="font-weight:bolder">填报人：</span>@ViewBag.CreatedBy；
+		<span style="font-weight:bolder">填报时间：</span>@ViewBag.CreatedOn；
+        <a onclick="company_changetotal_excel();" id="company_changetotal_excel_btnrename" class="easyui-linkbutton" iconCls="icon-print" plain="true" >导出excel</a>
+	</div>
+</div>

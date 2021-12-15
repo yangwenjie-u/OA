@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BD.Jcbg.Service.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BD_Jcbg_Service_XsXhWebService_QrpwsImpService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://211.155.231.169:80/qrp/qrpws</Value>
+    </Setting>
+    <Setting Name="BD_Jcbg_Service_JyJzqyWebService_InterfaceService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://wenz.jyjzqy.com/Service/InterfaceService.asmx</Value>
+    </Setting>
+    <Setting Name="BD_Jcbg_Service_XsPinMingWebService_SupplyProjectInfo" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://xs.pt.pinming.cn:8090/SupplyProjectInfo.asmx</Value>
+    </Setting>
+    <Setting Name="BD_Jcbg_Service_UserWebService_Services" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://xsjcjg.jzyglxt.com:8082/webservice/services.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

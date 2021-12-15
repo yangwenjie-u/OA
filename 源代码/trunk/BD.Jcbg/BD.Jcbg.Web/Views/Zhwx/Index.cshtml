@@ -1,0 +1,41 @@
+﻿@using BD.DataInputCommon;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>生成二维码</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="@Skins.GetPubPath("hplus/css/bootstrap.min.css?v=3.3.5")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/font-awesome.min.css?v=4.4.0")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/animate.min.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/style.min.css?v=4.0.0")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/plugins/chosen/chosen.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("hplus/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css")" rel="stylesheet" type="text/css"/>
+    <!-- 下拉过滤控件 -->
+    <link href="@Skins.GetPubPath("bootstrap/plugins/bootstrap-multiselect/css/bootstrap-multiselect.css")" rel="stylesheet"/>
+
+
+    <link href="@Skins.GetPubPath("layer/skin/layer.css")" rel="stylesheet"/>
+    <link href="@Skins.GetPubPath("uploadify/uploadify.css")" rel="stylesheet"/>
+
+    <link href="@Skins.GetCssPath("datainput.css?v=2016031501")" rel="stylesheet"/>
+    <link href="@Skins.GetCssPath("stjleft.css?v=2016031502")" rel="stylesheet"/>
+</head>
+<body class="gray-bg" style="font-size:13px;text-align:center;">
+    <script type="text/javascript" language="javascript">
+        function dy() {
+            window.navigate("/ReportPrint/Index?filename=SBEWM&table=zhwx_sbewm&where=id='@ViewData["param"]'&opentype=print");
+
+
+         //   http://192.168.0.11:8888/ReportPrint/Index?filename=SBEWM&table=zhwx_sbewm&where=id='@ViewData["param"]'&opentype=print
+        }
+
+</script>
+    <div id="image">
+        <img src="/zhwx/getvcode?equipid=@ViewData["param"]" style="margin:40px auto;" />
+
+    </div>
+    
+    <br/>
+    <button  style="margin:40px auto;"onclick="dy()" >打印二维码</button>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="BD.Jcbg.DataModal.Entities.SysLogPic, BD.Jcbg.DataModal" table="SysLog_Pic" lazy="false">
+		<id name="ID" type="Int32" unsaved-value="null">
+			<column name="ID" length="4" sql-type="int" not-null="true" unique="true" index="PK_SysLog_Pic"/>
+			<generator class="native" />
+		</id>
+		<property name="UserCode" type="String">
+			<column name="UserCode" length="40" sql-type="varchar" not-null="true"/>
+		</property>
+		<property name="PicName" type="String">
+			<column name="PicName" length="100" sql-type="nvarchar" not-null="true"/>
+		</property>
+		<property name="PicContent" type="Byte[]">
+			<column name="PicContent" length="1073741823" sql-type="varbinary" not-null="true"/>
+		</property>
+		<property name="CreateTime" type="DateTime">
+			<column name="CreateTime" length="8" sql-type="datetime" not-null="true"/>
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.KqjUserDayLogDetail,BD.Jcbg.DataModal" table="KqjUserDayLogDetail" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="int" name="ParentId" column="[ParentId]" />
+    <property type="DateTime" name="InTime" column="[InTime]" />
+    <property type="DateTime" name="OutTime" column="[OutTime]" />
+    <property type="string" length="20" name="ScheduleId" column="[ScheduleId]" />
+  </class>
+</hibernate-mapping>

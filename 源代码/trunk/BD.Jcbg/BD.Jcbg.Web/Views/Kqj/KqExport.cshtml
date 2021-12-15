@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/User/_easyuilayout.cshtml";
+}
+
+<style type="text/css">
+    body {
+        background-color: transparent;
+    }
+
+    .form-control {
+        height: 34px;
+    }
+
+    .tdlabel {
+        padding: 5px;
+        width: 90px;
+        font-weight: 700;
+        text-align: right;
+        margin-left: 20px;
+    }
+
+    .tdinput {
+        padding: 5px;
+        width: 210px;
+        text-align: left;
+    }
+
+    .dropdown-menu {
+        margin-top: 0;
+    }
+
+    .ibox-content {
+        padding: 15px 20px 10px;
+        background-color: transparent;
+    }
+</style>
+<script type="text/javascript">
+
+    $(function () {
+        $("#readers").combotree({
+            url: '/oa/getdeps',
+            valueField: 'id',
+            textField: 'text',
+            multiple: true,
+            editable: false,
+            panelHeight: 200,
+            width: 250,
+            checkbox: true,
+            onlyLeafCheck: false,
+            animate: false,
+            onLoadSuccess: function (node, data) {
+                
+            }
+        });
+    });
+    function doexprot()
+    {
+        var t1 = $('#datetimepicker1').datebox('getValue');
+        var t2 = $('#datetimepicker2').datebox('getValue');
+
+        if (t1 == "")
+        {
+            alert("请选择统计开始日期！")
+            return;
+        }
+        if (t2 == "") {
+            alert("请选择统计结束日期！")
+            return;
+        }
+
+        var deps = $("#readers").combotree("getValues");
+        parent.layer.open({
+            type: 2,
+            title: "报表下载",
+            shadeClose: true,
+            shade: 0.8,
+            area: ['50%', '50%'],
+            content: "/dwgxwz/ExportMonth?t1=" + t1 + "&t2=" + t2 + "&deps=" + deps,
+            end: function () {
+            }
+        });
+
+        
+
+    }
+
+</script>
+
+
+<div style=" text-align:center;">
+    <table>
+        <tbody>
+            <tr>
+                <th>统计对象：</th>
+                <td colspan="3"><input type="text" id="readers" name="readers" /></td>
+            </tr>
+            <tr>
+                <th>开始时间</th>
+                <td>
+                    <input id="datetimepicker1" type="text" readonly="readonly" class="easyui-datebox" required="required" />
+                </td>
+                <th>结束时间</th>
+                <td>
+                    <input id="datetimepicker2" type="text" readonly="readonly" class="easyui-datebox" required="required" />
+                </td>
+            </tr>
+            <tr>
+                <td  colspan="4" style="text-align:right">
+                    <a href="#" onclick="doexprot()" class="easyui-linkbutton" data-options="iconCls:'icon-save'">导出</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+    <title>sxjz</title>
+    <style type="text/css">
+    .search-warp .layui-form-item {
+        display: inline-block;
+    }
+
+    .layui-table .layui-input.inline {
+        display: inline-block;
+        width: 160px;
+    }
+
+    #searchBtn {
+        margin-left: 30px;
+    }
+
+    .layui-table,
+    .search-warp {
+        width: 90%;
+        margin: 0 5%;
+    }
+
+    .ipt-radio {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+    }
+
+    .table-warp {
+        padding-bottom: 80px;
+        user-select: none;
+    }
+
+    .save-boottom {
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        left: 0px;
+        background: rgba(55, 55, 55, 0.5);
+        height: 60px;
+        padding-top: 10px;
+    }
+
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;box-sizing: border-box;padding-top: 30px;">
+        <!--         <div class="layui-table search-warp">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 120px;">工程名称:</label>
+                <input type="text" class="layui-input inline" id="gcmcSearch" />
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 120px;">工程编号:</label>
+                <input type="text" class="layui-input inline" id="gcbhSearch" />
+            </div>
+            <div class="layui-btn" id="searchBtn">搜索</div>
+        </div> -->
+        <div id="tableWarp" class="table-warp">
+            <div style="overflow: auto;height: 100%;">
+                <table class="table layui-table table-border table-bordered table-hover" lay-size='lg'>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;"></th>
+                            <th style="width: 60px;">序号</th>
+                            <th>资质等级</th>
+                            <th>资质证号</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-list" id="tabList"></tbody>
+                </table>
+            </div>
+            <div id="test" class="page">
+                <span class="count"></span>
+                <div class="layer-page" id="page"></div>
+                <input type="text" class="page-val" value="1" />
+                <span class="sure">确定</span>
+                <!-- <div class="size">每页显示
+                    <input type="text" class="page-size" value="10" /> 条
+                </div> -->
+            </div>
+        </div>
+        <div class="save-boottom" id="saveBtn" style="text-align: center;z-index: 99;">
+            <div class="layui-btn layui-btn-danger " id="back">取消</div>
+            <div class="layui-btn layui-btn-normal " id="sureBtn" style="margin-left: 50px;">确认</div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/pub/table.js"></script>
+    <script type="text/javascript">
+    var listData = [];
+    var layer;
+
+    $(function() {
+        layui.use('layer', function() {
+            layer = layui.layer;
+            load({});
+        });
+
+        $("#tableWarp").css("height", window.innerHeight - 140);
+    })
+    $("#searchBtn").click(function() {
+        load({
+            page: 1,
+            rows: 10,
+            gcbh: $("#gcbhSearch").val(),
+            gcmc: $("#gcmcSearch").val()
+        });
+    });
+
+    function load(params) {
+        var handle = function(res, reqData) {
+            // if (res.code == 0) {
+            var tmp, str = '';
+            listData = res.rows;
+
+            if (listData.length) {
+                for (var i = 0; i < listData.length; i++) {
+                    tmp = listData[i];
+                    str += "<tr><td><input type='radio' class='ipt-radio' name='ipt-radio' /></td><td>" + ((reqData.page - 1) * reqData.rows + i + 1) + "</td><td>" + tmp.zzdj + "</td><td>" + tmp.zzmc + "</td></tr>";
+                }
+            } else {
+                str += "<tr><td colspan='3' style='text-align:center;'>暂无数据</td></tr>";
+            }
+
+            $("#tabList").html(str);
+        }
+
+
+        params.qybh = getParams().qybh
+        // console.log(params)
+        getTable("/wlxf/getQyzzList", params, handle, {
+            doc: $('#tableWarp'),
+            pageSize: 'rows',
+            count: 'total'
+        });
+    }
+    $("#back").click(function() {
+        try {
+            parent.closeIfa('back')
+        } catch (e) {}
+    })
+    $("#tabList").on("dblclick", "tr", function() {
+        var idx = $(this).index();
+        try {
+            parent.closeIfa('sure', listData[idx])
+        } catch (e) {}
+    })
+
+    $("#sureBtn").click(function() {
+        var chk = $("#tabList").find(":checked");
+        if (chk.length == 1) {
+            var idx = chk.parents("tr").index();
+            try {
+                parent.closeIfa('sure', listData[idx])
+            } catch (e) {}
+        } else {
+            layer.msg("请选择工程！", {
+                icon: 2,
+                time: 2000
+            });
+        }
+    })
+
+    </script>
+</body>
+
+</html>

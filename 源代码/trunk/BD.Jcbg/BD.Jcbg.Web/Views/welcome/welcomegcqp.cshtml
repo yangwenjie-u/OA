@@ -1,0 +1,63 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.Web.Func;
+@{
+    Layout = "~/Views/welcome/_welcomezslayout.cshtml";
+}
+@section head
+{
+
+}
+
+<link href="@SkinManager.GetWelcomezs("css/liMarquee.css")" rel="stylesheet" type="text/css" />
+<link href="@SkinManager.GetWelcomezs("css/detail.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetWelcomezs("js/indexgc.js")" type="text/javascript" charset="utf-8"></script>
+
+<div class="panel" style="background:rgb(233,236,243)">
+
+    <div id="enginner_title" class="clearfix">
+        <div id="placeselect"><h3>@ViewBag.gcmc</h3><input id="hiddengcbh" type="hidden" value="@ViewBag.gcbh"></div>
+        @*<div id="enginner_title_right">
+                <div class="dowebok" style="width:98%;text-align:center">
+                    <lable id="dowebokContent"></lable>
+                </div>
+            </div>*@
+    </div>
+    <div id="enginner_title">
+        <div class="enginner_title_content">
+            <p class="all_title">在册人员</p>
+            <p class="all_num" id="enginner_zcry">0人</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">在职人员</p>
+            <p class="all_num" id="enginner_zgry">0人</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">在岗人员</p>
+            <p class="all_num" id="enginner_dqry">0人</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">计划金额</p>
+            <p class="all_num" id="enginner_jhje">0亿元</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">到位金额</p>
+            <p class="all_num" id="enginner_dwje">0亿元</p>
+        </div>
+        <div class="enginner_title_content">
+            <p class="all_title">累计发放</p>
+            <p class="all_num" id="enginner_ffje">0亿元</p>
+        </div>
+    </div>
+    <div id="enginner_chart" class="clearfix">
+        <div id="enginner_1"></div>
+        <div id="enginner_2"></div>
+    </div>
+    <div id="enginner_bottom" class="clearfix">
+        <div id="enginner_3"></div>
+        <div id="enginner_4">
+            <table class="layui-hide" id="ryTable"></table>
+        </div>
+    </div>
+
+
+</div>

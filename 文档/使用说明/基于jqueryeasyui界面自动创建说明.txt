@@ -1,0 +1,69 @@
+字段含义
+ZDXZ-字段性质，是哪个单子显示的字段
+SFBHZD-是否编号字段，设置True后才能自动编号
+ZDSX-只读属性，True表示字段只读
+MSGINFO-字段帮助信息，可在NULLTEXT显示
+SFGD-是否固定，固定占3列
+
+
+1、字段类型(ZDLX)
+原有
+	C表示VARCHAR
+	D表示DATE
+	I表示INT
+	M表示TEXT
+	N表示NUMERIC
+	L表示BIT
+	G表示image
+
+新加
+	nvarchar
+
+
+2.控件类型(KJLX)
+原有
+	T表示TEXT
+	S表示SELECT
+ 	R表示RADIO
+	M表示MEMO
+
+	P password
+	C checkbox
+	B combox
+	F 文件控件
+新加
+
+
+
+3.编号模式(BHMS)
+a)'字符串'+YYYY+MM+DD+数字
+b)TB:+表名+编号关键字字段+当前最大编号字段+编号模式字段+关键字 (TB:BHMS-SERIALKEY-MAXSERIAL-SERIALMODULE-GY)
+
+
+4.帮助选项(HELPLNK)
+表名|业务表目标字段|帮助表字段|表格抬头(KHB|KHBH,KHMC|BH,MC|委托单位编号,委托单位名称)
+
+新的修改意见：
+a)在后面加条件 |业务表条件字段|帮助表条件字段字段|
+b)设置时可兼容：业务表字段，和业务表名.业务表字段
+
+5.CtrlString
+
+a.当前控件显示
+a)1-显示值,实际值,是否选中
+如(1-见证取样,见证取样,1|一般委托,一般委托,0|抽检,抽检,0)
+
+b)2-表名,显示字段,值字段, 是否选中,SQL条件
+如(2-SSN,SNCJMC,SNCJMC,0,where ypsl='1组')
+
+b.设置其他控件内容
+||目标控件名称1[,目标控件名称2……]|目标控件字段sql语句1[&&目标控件字段sql语句2……]|SQL语句对应表的条件字段[,SQL语句对应表的条件字段2……]|源控件条件值字段[,源控件名称2……]
+||GCLX_PH|select  DISTINCT PH from GYCDJ |GYCDJ.MC|SJDJ
+
+
+
+5.其他
+a.jquery easyui 展示
+b.从表必须保证一条记录
+c.支持一主一从，一主多从，3层表结构
+参数dw=&t1=MGYC&t2=SGYC1,SGYC2&t3=SGYC1|SK1,SK2||SGYC2|TT1,TT2

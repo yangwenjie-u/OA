@@ -1,0 +1,16 @@
+bin/
+.vs/
+obj/
+Debug/
+/源代码/trunk/BD.Jcbg/BD.Jcbg.Web/downs
+/源代码/trunk/BD.Jcbg/BD.Jcbg.Web/logs
+/源代码/trunk/BD.Jcbg/BD.Jcbg.Web/report
+/源代码/trunk/BD.Jcbg/BD.Jcbg.Web/pageoffice/lic/license.lic
+/源代码/trunk/BD.Jcbg/BD.Jcbg.Web/pageoffice/lic
+/源代码/trunk/BD.Jcbg/BD.Jcbg.Web/ReportPrint
+/源代码/trunk/BD.AccessQuery/DataBase
+/源代码/trunk/BD.AccessQuery/PDFS
+/源代码/trunk/BD.AccessQuery/packages
+/源代码/trunk/BD.AccessQuery/package
+/源代码/trunk/PDFPrint/packages
+/源代码/trunk/PrintSetup/Debug

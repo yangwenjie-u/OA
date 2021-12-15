@@ -1,0 +1,234 @@
+﻿@{
+    Layout = "~/Views/User/_calendareditlayout.cshtml";
+}
+
+<div class="fancy">
+	<h3 id="title">日程安排</h3>
+    <form id="calendarform" action="" method="post">
+    <input type="hidden" name="recid" id="recid" value="@ViewData["id"]"/>
+	<input type="hidden" name="edate" id="edate" value="@ViewData["date"]"/>
+    <p>日程内容：<input type="text" class="input" name="event" id="event" style="width:320px" class="easyui-validatebox" data-options="required:true"/></p>
+    <p id='p_startdate'>开始时间：<input type="text" name="startdate" id="startdate"/></p>
+	<p id='p_starttime'>开始时间：<input type="text" name="starttime" id="starttime" /></p>
+    <p id="p_enddate">结束时间：<input type="text" name="enddate" id="enddate" /></p>
+	<p id='p_endtime'>结束时间：<input type="text" name="endtime" id="endtime" /></p>
+    <p>
+    <label><input type="checkbox" value="1" id="isallday" name="isallday"> 全天</label>
+    <label><input type="checkbox" value="1" id="isend" name="isend"> 结束时间</label>
+    </p>
+    <div class="sub_btn"><span class="del"><input type="button" class="btn btn_del" onclick="deleteCalendar();" id="btndelete" value="删除"></span><input type="button" id="btnsubmit" onclick="submitForm();" class="btn btn_ok" value="确定"> <input type="button" class="btn btn_cancel" value="取消" onClick="$.fancybox.close()"></div>
+    </form>
+</div>
+<script type="text/javascript">
+	$(function () {
+		try {
+			$('#startdate').datebox({
+				width: 120
+			});
+			$('#enddate').datebox({
+				width: 120
+			});
+			$('#starttime').datetimebox({
+				width: 160,
+				showSeconds: false
+			});
+			$('#endtime').datetimebox({
+				width: 160,
+				showSeconds: false
+			});
+			loadData();
+			$("#isallday").bind("click", function () {
+				initCtrl($("#isallday").is(':checked'), false, $("#isend").is(':checked'), false);
+			});
+			$("#isend").bind("click", function () {
+				initCtrl($("#isallday").is(':checked'), false, $("#isend").is(':checked'), false);
+			});
+		} catch (err) {
+			$.messager.alert('初始化函数异常提示', err, 'info');
+		}
+	});
+	// 初始化
+	function loadData() {
+		try {
+			var id = $("#recid").val();
+			var date = $("#edate").val();
+			// 加载内容
+			if (id != "") {
+
+				$.ajax({
+					type: "POST",
+					url: "/user/GetCalendarDetail?id=" + id,
+					dataType: "json",
+					async: false,
+					success: function (data) {
+						if (data.code == 0) {
+							var record = data.record[0];
+							$("#event").val(record.title);
+							var isallday = record.allDay;
+							var isenddate = record.end.indexOf('1970') == -1;
+							initCtrl(isallday, true, isenddate, true);
+							$("#startdate").datebox("setValue", record.start.split(' ')[0]);
+							$("#starttime").datetimebox("setValue", record.start);
+							if (isenddate) {
+								$("#enddate").datebox("setValue", record.end.split(' ')[0]);
+								$("#endtime").datetimebox("setValue", record.end);
+							}
+						}
+						else
+							$.messager.alert('加载数据失败', '加载id为' + id + "的数据失败", 'info');
+					},
+					complete: function (XMLHttpRequest, textStatus) {
+						$("body").unmask();
+					},
+					beforeSend: function (XMLHttpRequest) {
+						$("body").mask("正在加载...");
+					}
+				});
+			}
+			// 设置日期
+			else {
+				initCtrl(true, true, true, true);
+				$('#startdate').datebox('setValue', date);
+				$('#starttime').datetimebox('setValue', date);
+				$('#enddate').datebox('setValue', date);
+				$('#endtime').datetimebox('setValue', date);
+			}
+		} catch (err) {
+			$.messager.alert('loadData异常提示', err, 'info');
+		}
+	}
+	function initCtrl(allday, setallday, endtime, setendtime) {
+		try {
+			if (setallday)
+				$("#isallday").attr("checked", allday);
+			if (allday) {
+				$("#p_startdate").show();
+				$("#p_starttime").hide();
+				$("#p_enddate").show();
+				$("#p_endtime").hide();
+			}
+			else {
+				$("#p_startdate").hide();
+				$("#p_starttime").show();
+				$("#p_enddate").hide();
+				$("#p_endtime").show();
+			}
+			if (setendtime)
+				$("#isend").attr("checked", endtime);
+			if (!endtime){
+				$("#p_enddate").hide();
+				$("#p_endtime").hide();
+			}
+		} catch (err) {
+			$.messager.alert('initCtrl异常提示', err, 'info'); 
+		}
+
+	}
+	function submitForm() {
+		$("#calendarform").form('submit', {
+			url: "/user/savecalendar",
+			onSubmit: function (param) {
+				var ret = false;
+				try {
+					var isValid = $(this).form('validate');
+					if (!isValid)
+						return false;
+					if ($("#event").val() == "") {
+						$.messager.alert('提示', "请输入日程内容", 'info');
+						$('#event').focus();
+						return false;
+					}
+					if ($("#isallday").is(':checked')) {
+						if ($('#startdate').datebox('getValue') == "" || !$('#startdate').datebox('isValid')) {
+							$.messager.alert('提示', "请选择开始时间", 'info');
+							$('#startdate').focus();
+							return false;
+						}
+						if ($("#isend").is(':checked')) {
+							if ($('#enddate').datebox('getValue') == "" || !$('#enddate').datebox('isValid')) {
+								$.messager.alert('提示', "请选择结束时间", 'info');
+								$('#enddate').focus();
+								return false;
+							}
+						}
+					}
+					else {
+						if ($('#starttime').datetimebox('getValue') == "" || !$('#starttime').datetimebox('isValid')) {
+							$.messager.alert('提示', "请选择开始时间", 'info');
+							$('#starttime').focus();
+							return false;
+						}
+						if ($("#isend").is(':checked')) {
+							if ($('#endtime').datetimebox('getValue') == "" || !$('#endtime').datetimebox('isValid')) {
+								$.messager.alert('提示', "请选择结束时间", 'info');
+								$('#endtime').focus();
+								return false;
+							}
+						}
+					}
+					$("body").mask("正在保存……");
+					ret = true;
+				}
+				catch (err) {
+					ret = false;
+					$.messager.alert('提示', err, 'info');
+				}
+				return ret;
+			},
+			success: function (data) {
+				try {
+					$("body").unmask();
+
+					var data = eval('(' + data + ')');
+					var code = data.code;
+					var msg = data.msg;
+					if (msg == "") {
+						if (code == 0)
+							msg = "保存成功";
+						else
+							msg = "保存失败";
+					}
+					if (code == 0)
+						$.messager.alert('提示', msg, 'info', function () {
+							$.fancybox.close();
+							$('#calendar').fullCalendar('refetchEvents');
+						});
+					else
+						$.messager.alert('提示', msg, 'info');
+
+				}
+				catch (err) {
+					$.messager.alert('提示', err, 'info');
+				}
+			}
+		});
+	}
+	function deleteCalendar() {
+		try {
+			$.ajax({
+				type: "POST",
+				url: "/user/DeleteCalendar?id=" + $("#recid").val(),
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					if (data.code == 0) {
+						$.messager.alert('提示', '删除数据成功', 'info', function () {
+							$.fancybox.close();
+							$('#calendar').fullCalendar('refetchEvents');
+						});
+					}
+					else
+						$.messager.alert('提示', '删除数据失败：' + data.msg, 'info');
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("body").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("body").mask("正在删除...");
+				}
+			});
+		} catch (err) {
+			$.messager.alert('deleteCalendar异常提示', err, 'info');
+		}
+	}
+</script>

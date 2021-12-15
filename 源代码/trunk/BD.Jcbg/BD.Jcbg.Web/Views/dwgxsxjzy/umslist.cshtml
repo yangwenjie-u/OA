@@ -1,0 +1,301 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/table.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/lib/layui/css/layui.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/tz/css/load.css" />
+    <style>
+    .top-select {
+
+        padding-top: 5px;
+        box-sizing: border-box;
+    }
+
+    .select-role {
+        position: absolute;
+        bottom: 20px;
+        text-align: center;
+        left: 46%;
+    }
+
+    .layui-layer-page .layui-layer-content {
+        overflow: hidden!important;
+    }
+
+    .edit span {
+        display: inline-block;
+        width: 80px;
+        text-align: center;
+        border-left: 1px solid gray;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .edit span:first-child {
+        border-left: 0px;
+        padding-right: 10px;
+    }
+
+    .filter {
+        width: 80%;
+        margin-left: 10%;
+    }
+
+    .table-warp {
+        padding: 0px;
+        margin-bottom: 20px;
+		width:100%;
+    }
+
+    .page {
+        bottom: 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="top-select">
+        <div class="filter">
+            <div class="f-ipt">
+                <label><span>单位代码</span>
+                    <!-- <input type="text" name="cpcode" id="cpcode"> -->
+                    <select id="cpcode">
+                        <option value="0">请选择单位</option>
+                    </select>
+                </label>
+            </div>
+            <div class="f-ipt">
+                <label><span>用户名称</span>
+                    <input type="text" name="username" id="username">
+                </label>
+            </div>
+            <div class="btn search" style="margin-left: 20px;border-radius: 20px;">搜索</div>
+            <div class="btn add-role" style="background:#d85151;margin-left: 20px;border-radius: 20px;">添加人员</div>
+        </div>
+    </div>
+    <div id="personList" class="table-warp" style="display: inline-block;padding-bottom: 60px;">
+        <!-- <div id="sureSelect">选择</div> -->
+        <table id="tab" class="add-person table table-border table-bordered table-hover">
+            <thead>
+                <tr>
+                    <!--    <th style="width: 80px;">
+                       <input type="radio" class="check-all" /> 
+                                <td>
+                        <input type="radio" name="radioData" class="check" val="{{item.usercode}}" />
+                    </td> 
+
+                    </th>  -->
+                    <th style="width:6%;">序号</th>
+                    <th>账户</th>
+                    <th>姓名</th>
+                    <th>所属单位</th>
+                    <th style="width:10%;">状态</th>
+                    <th style="width:30%;">操作</th>
+                </tr>
+            </thead>
+            <tbody id="personBody"></tbody>
+            <script id="demo" type="text/html">
+                {{# layui.each(d.rows, function(index, item){ }}
+                <tr>
+                    <td>{{ item.itemIndex }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.text}}</td>
+                    <td>{{ item.cpname}}</td>
+                    {{# if(item.sfyx == 1){ }}
+                    <td>正常</td>
+                    {{#} else{ }}
+                    <td style="color: #d85151">注销</td>
+                    {{#} }}
+                    <td class="edit" value="{{item.id}}" username="{{item.name}}">
+                        {{# if(item.sfyx == 1){ }}
+                        <span class="zhuxiao" style="color:#d85151" value="0">注销用户</span> {{#} else{ }}
+                        <span class="zhuxiao" style="color:#5180D8" value="1">启用用户</span> {{#} }}
+                        <span class="modify" style="width: 60px;">修改</span>
+                        <span class="relode" style="color: #5180D8">重置密码</span>
+                    </td>
+                </tr>
+                {{# }); }} {{# if(d.rows.length === 0){ }} 无数据 {{# } }}
+            </script>
+        </table>
+        <div id="test" class="page">
+            <span class="count"></span>
+            <div class="layer-page" id="page"></div>
+            <input type="text" class="page-val" value="1" />
+            <span class="sure">确定</span>
+            <!-- <div class="size">每页显示
+                <input type="text" class="page-size" value="10" /> 条
+            </div> -->
+        </div>
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script src="/static/lib/layui/layui.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/common/table.js"></script>
+    <script>
+    var rowData //角色数据列表
+        , personData = []; //人员数据列表 
+
+    var searchFlag = false;
+    $(function() {
+
+        load();
+        ajaxTpl('/dwgxsxjzy/getcompanys', '', function(data) {
+            if (data.length) {
+                var str = '';
+                for (var i = 0, len = data.length; i < len; i++) {
+                    str += "<option value='" + data[i].CompanyId + "'>" + data[i].CompanyName + "</option>";
+                }
+                $("#cpcode").append(str);
+            }
+        });
+    });
+
+
+    //******************************************选择人员
+
+    function load(flag) {
+        //回调函数
+        var handle = function(data) {
+            if (data.rows.length) {
+                personData = data.rows;
+                // data.count = data.data.total || 10;
+                try {
+                    var page = data.getParams.page;
+                    var rows = data.getParams.rows;
+                    var tmp = (page - 1) * rows;
+                    for (var i = 0, len = data.rows.length; i < len; i++) {
+                        data.rows[i].itemIndex = tmp + i + 1;
+                    }
+                } catch (e) {}
+
+                layui.use('laytpl', function() {
+                    var getTpl = demo.innerHTML,
+                        view = document.getElementById('personBody');
+                    layui.laytpl(getTpl).render(data, function(html) {
+                        view.innerHTML = html;
+
+                        //$("#test").find('.counts').html("共 " + data.rows.length + " 条数据");
+                    });
+                });
+            }else{
+                layer.msg("暂无人员！",{
+                    icon:2,
+                    time:2000
+                });
+            }
+        }
+
+        var obj = {
+            page: 1,
+            rows: 20
+        };
+        if (flag) {
+            var cpcode = $("#cpcode").val();
+            var username = $("#username").val();
+            if (cpcode != 0) {
+                obj.companyid = cpcode;
+            }
+            if (username.length) {
+                obj.text = username;
+            }
+        }
+
+        getTable('/dwgxsxjzy/GetUserList2', obj, handle, {
+            doc: $('#personList'),
+            pageSize: 'rows',
+            count: 'total'
+        });
+    }
+
+
+    $('.search').click(function() {
+        searchFlag = true;
+        load(1);
+    });
+
+
+
+    $('#personBody').on('click', '.zhuxiao', function() {
+        var usercode = $(this).parent().attr('value');
+        var flag = $(this).attr('value');
+
+        var str, msg1, msg2;
+        if (flag == 1) {
+            str = '确认启用用户?';
+        } else {
+            str = '确认注销用户?';
+        }
+        layer.confirm(str, { icon: 3, title: '提示' }, function(index) {
+            ajaxTpl('/dwgxsxjzy/UmsApiService', {
+                method: 'User',
+                opt: 'ModifyUserStatusByUsercode',
+                // username: username,
+                usercode: usercode,
+                userstatus: flag
+            }, function(data) {
+                layer.msg(data.msg);
+                if (searchFlag) {
+                    load(1);
+                } else {
+                    load();
+                }
+            });
+            layer.close(index);
+        });
+    });
+    $('.add-role').click(function() {
+        layer.open({
+            type: 2,
+            title: '添加人员',
+            content: '/dwgxsxjzy/umsedit2',
+            area: ['860px', '700px']
+        });
+    });
+
+    $('#personBody').on('click', '.modify', function() {
+        var usercode = $(this).parent().attr('value');
+
+        layer.open({
+            type: 2,
+            title: '修改人员',
+            content: '/dwgxsxjzy/umsedit2?usercode=' + usercode,
+            area: ['860px', '700px']
+        });
+    });
+
+    $('#personBody').on('click', '.relode', function() {
+        var username = $(this).parent().attr('value');
+
+        layer.confirm('确定要重置密码为:88888?', { icon: 3, title: '提示' }, function(index) {
+
+            ajaxTpl('/jdbg/ReSertPassWord', {
+                username: username,
+                pwd: '88888'
+            }, function(data) {
+                if (data.msg != "") {
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                } else {
+                    layer.msg("账号密码修改成功", {
+                        icon: 1,
+                        time: 1500
+                    });
+                }
+            });
+            layer.close(index);
+        });
+    });
+
+    //******************************************选择人员
+    </script>
+</body>
+
+</html>

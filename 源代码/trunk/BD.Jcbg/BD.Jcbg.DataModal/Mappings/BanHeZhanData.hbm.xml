@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.BanHeZhanData,BD.Jcbg.DataModal" table="BanHeZhanData" lazy="false">
+    <id name="Id" column="ID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="100" name="SheBeiBianHao" column="[SheBeiBianHao]" />
+    <property type="string" length="100" name="GongDanHao" column="[GongDanHao]" />
+    <property type="string" length="100" name="ChaoZuoZhe" column="[ChaoZuoZhe]" />
+    <property type="string" length="100" name="SheJiFangLiang" column="[SheJiFangLiang]" />
+    <property type="string" length="100" name="GuJiFangShu" column="[GuJiFangShu]" />
+    <property type="string" length="100" name="XiGuLiao1ShiJiZhi" column="[XiGuLiao1_ShiJiZhi]" />
+    <property type="string" length="100" name="XiGuLiao1LiLunZhi" column="[XiGuLiao1_LiLunZhi]" />
+    <property type="string" length="100" name="XiGuLiao2ShiJiZhi" column="[XiGuLiao2_ShiJiZhi]" />
+    <property type="string" length="100" name="XiGuLiao2LiLnZhi" column="[XiGuLiao2_LiLnZhi]" />
+    <property type="string" length="100" name="CuGuLiao1ShiJiZhi" column="[CuGuLiao1_ShiJiZhi]" />
+    <property type="string" length="100" name="CuGuLiao1LiLunZhi" column="[CuGuLiao1_LiLunZhi]" />
+    <property type="string" length="100" name="CuGuLiao2ShiJiZhi" column="[CuGuLiao2_ShiJiZhi]" />
+    <property type="string" length="100" name="CuGuLiao2LiLunZhi" column="[CuGuLiao2_LiLunZhi]" />
+    <property type="string" length="100" name="CuGuLiao3ShiJiZhi" column="[CuGuLiao3_ShiJiZhi]" />
+    <property type="string" length="100" name="CuGuLiao3LiLunZhi" column="[CuGuLiao3_LiLunZhi]" />
+    <property type="string" length="100" name="ShuiNi1ShiJiZhi" column="[ShuiNi1_ShiJiZhi]" />
+    <property type="string" length="100" name="ShuiNi1LiLunZhi" column="[ShuiNi1_LiLunZhi]" />
+    <property type="string" length="100" name="ShuiNi2ShiJiZhi" column="[ShuiNi2_ShiJiZhi]" />
+    <property type="string" length="100" name="ShuiNi2LiLunZhi" column="[ShuiNi2_LiLunZhi]" />
+    <property type="string" length="100" name="KuangFen3ShiJiZhi" column="[KuangFen3_ShiJiZhi]" />
+    <property type="string" length="100" name="KuangFen3LiLunZhi" column="[KuangFen3_LiLunZhi]" />
+    <property type="string" length="100" name="FenMeiHui4ShiJiZhi" column="[FenMeiHui4_ShiJiZhi]" />
+    <property type="string" length="100" name="FenMeiHui4LiLunZhi" column="[FenMeiHui4_LiLunZhi]" />
+    <property type="string" length="100" name="FenLiao5ShiJiZhi" column="[FenLiao5_ShiJiZhi]" />
+    <property type="string" length="100" name="FenLiao5LiLunZhi" column="[FenLiao5_LiLunZhi]" />
+    <property type="string" length="100" name="FenLiao6ShiJiZhi" column="[FenLiao6_ShiJiZhi]" />
+    <property type="string" length="100" name="FenLiao6LiLunZhi" column="[FenLiao6_LiLunZhi]" />
+    <property type="string" length="100" name="Shui1ShiJiZhi" column="[Shui1_ShiJiZhi]" />
+    <property type="string" length="100" name="Shui1LiLunZhi" column="[Shui1_LiLunZhi]" />
+    <property type="string" length="100" name="Shui2ShijiZhi" column="[Shui2_ShijiZhi]" />
+    <property type="string" length="100" name="Shui2LiLunZhi" column="[Shui2_LiLunZhi]" />
+    <property type="string" length="100" name="WaiJiaJi1ShiJiZhi" column="[WaiJiaJi1_ShiJiZhi]" />
+    <property type="string" length="100" name="WaiJiaJi1LiLunZhi" column="[WaiJiaJi1_LiLunZhi]" />
+    <property type="string" length="100" name="WaiJiaJi2ShiJiZhi" column="[WaiJiaJi2_ShiJiZhi]" />
+    <property type="string" length="100" name="WaiJiaJi2LiLunZhi" column="[WaiJiaJi2_LiLunZhi]" />
+    <property type="string" length="100" name="WaiJiaJi3ShiJiZhi" column="[WaiJiaJi3_ShiJiZhi]" />
+    <property type="string" length="100" name="WaiJiaJi3LiLunZhi" column="[WaiJiaJi3_LiLunZhi]" />
+    <property type="string" length="100" name="WaiJiaJi4ShiJiZhi" column="[WaiJiaJi4_ShiJiZhi]" />
+    <property type="string" length="100" name="WaiJiaJi4LiLunZhi" column="[WaiJiaJi4_LiLunZhi]" />
+    <property type="string" length="100" name="ChuLiaoShiJian" column="[ChuLiaoShiJian]" />
+    <property type="string" length="100" name="GongChengMingMheng" column="[GongChengMingMheng]" />
+    <property type="string" length="100" name="SiGongDiDian" column="[SiGongDiDian]" />
+    <property type="string" length="100" name="JiaoZuoBuWei" column="[JiaoZuoBuWei]" />
+    <property type="string" length="100" name="ShuiNiPingZhong" column="[ShuiNiPingZhong]" />
+    <property type="string" length="100" name="PeiFangHao" column="[PeiFangHao]" />
+    <property type="string" length="100" name="QiangDuDengJi" column="[QiangDuDengJi]" />
+    <property type="string" length="100" name="JiaoBanShiJian" column="[JiaoBanShiJian]" />
+    <property type="string" length="100" name="BaoCunShiJian" column="[BaoCunShiJian]" />
+    <property type="string" length="100" name="KeHuDuanBianhao" column="[KeHuDuanBianhao]" />
+    <property type="DateTime" name="GetTime" column="[GetTime]" />
+    <property type="int" name="SectionId" column="[SectionId]" />
+  </class>
+</hibernate-mapping>

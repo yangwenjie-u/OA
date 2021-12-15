@@ -1,0 +1,164 @@
+.icon-blank{
+	background:url('icons/blank.gif') no-repeat;
+}
+.icon-add{
+	background:url('icons/edit_add.png') no-repeat;
+}
+.icon-edit{
+	background:url('icons/pencil.png') no-repeat;
+}
+.icon-remove{
+	background:url('icons/edit_remove.png') no-repeat;
+}
+.icon-save{
+	background:url('icons/filesave.png') no-repeat;
+}
+.icon-cut{
+	background:url('icons/cut.png') no-repeat;
+}
+.icon-ok{
+	background:url('icons/ok.png') no-repeat;
+}
+.icon-no{
+	background:url('icons/no.png') no-repeat;
+}
+.icon-cancel{
+	background:url('icons/cancel.png') no-repeat;
+}
+.icon-reload{
+	background:url('icons/reload.png') no-repeat;
+}
+.icon-search{
+	background:url('icons/search.png') no-repeat;
+}
+.icon-print{
+	background:url('icons/print.png') no-repeat;
+}
+.icon-help{
+	background:url('icons/help.png') no-repeat;
+}
+.icon-undo{
+	background:url('icons/undo.png') no-repeat;
+}
+.icon-redo{
+	background:url('icons/redo.png') no-repeat;
+}
+.icon-back{
+	background:url('icons/back.png') no-repeat;
+}
+.icon-sum{
+	background:url('icons/sum.png') no-repeat;
+}
+.icon-tip{
+	background:url('icons/tip.png') no-repeat;
+}
+
+.icon-mini-add{
+	background:url('icons/mini_add.png') no-repeat 2px 2px;
+}
+.icon-mini-edit{
+	background:url('icons/mini_edit.png') no-repeat 2px 2px;
+}
+.icon-mini-refresh{
+	background:url('icons/mini_refresh.png') no-repeat 3px 2px;
+}
+
+/* 自定义内容 */
+.mfolder{
+	background:url('icons/menu_g_001.gif') no-repeat;
+}
+.mitem{
+	background:url('icons/menu_m_001.gif') no-repeat;
+}
+.icon-view
+{
+	background:url('icons/btn_view.gif') no-repeat;
+}
+.icon-print
+{
+	background:url('icons/btn_print.gif') no-repeat;
+}
+.icon-desktop
+{
+	background:url('icons/btn_desktop.gif') no-repeat;
+}
+.icon-btn-check-hardware
+{
+	background:url('icons/btn_check_hardware.gif') no-repeat;
+}
+.icon-btn-read-from
+{
+	background:url('icons/btn_read_from.gif') no-repeat;
+}
+
+.icon-toolbar-up
+{
+	background:url('icons/arr_up.png') no-repeat;
+}
+
+.icon-toolbar-down
+{
+	background:url('icons/arr_down.png') no-repeat;
+}
+
+.icon-toolbar-exit
+{
+	background:url('icons/btn-exit.png') no-repeat;
+	color:#ff0;
+}
+
+.icon-more
+{
+	background:url('icons/more.gif') no-repeat;
+}
+
+.icon-toolbar-desktop
+{
+	background:url('icons/btn-desktop.png') no-repeat;
+	color:#ff0;
+}
+
+.icon-toolbar-calendar
+{
+	background:url('icons/btn-calendar.png') no-repeat;
+	color:#ff0;
+}
+
+.icon-toolbar-changepass
+{
+	background:url('icons/btn-changepass.png') no-repeat;
+	color:#ff0;
+}
+.icon-toolbar-closepage
+{
+	background:url('icons/btn-closepage.png') no-repeat;
+	color:#ff0;
+}
+.icon-toolbar-file-move
+{
+	background:url('icons/icon_file_move.gif') no-repeat;
+}
+.icon-toolbar-file-addfile
+{
+	background:url('icons/icon_file_addfile.gif') no-repeat;
+}
+.icon-toolbar-file-addfolder
+{
+	background:url('icons/icon_file_addfolder.gif') no-repeat;
+}
+.icon-toolbar-file-share
+{
+	background:url('icons/icon_file_share.gif') no-repeat;
+}
+.icon-toolbar-file-removeshare
+{
+	background:url('icons/icon_file_removeshare.gif') no-repeat;
+}
+.icon-toolbar-file-openfolder
+{
+	background:url('icons/icon_file_open.gif') no-repeat;
+}
+.icon-mail-send
+{
+	background:url('icons/icon_mail_send.gif') no-repeat;
+}

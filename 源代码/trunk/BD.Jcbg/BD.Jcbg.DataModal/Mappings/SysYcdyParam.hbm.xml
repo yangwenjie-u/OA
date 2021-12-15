@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="BD.Jcbg.DataModal.Entities.SysYcdyParam, BD.Jcbg.DataModal" table="SysYcdyParam" lazy="false">
+		<id name="RECID" type="Int32" unsaved-value="null">
+			<column name="RECID" length="4" sql-type="int" not-null="true" unique="true" index="PK_SysYcdyParam"/>
+			<generator class="native" />
+		</id>
+		<property name="CallId" type="String">
+			<column name="CallId" length="50" sql-type="varchar" not-null="false"/>
+		</property>
+		<property name="ParamName" type="String">
+			<column name="ParamName" length="100" sql-type="varchar" not-null="false"/>
+		</property>
+		<property name="ParamDesc" type="String">
+			<column name="paramDesc" length="100" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="CtrlType" type="String">
+			<column name="CtrlType" length="50" sql-type="varchar" not-null="false"/>
+		</property>
+		<property name="CtrlString" type="String">
+			<column name="CtrlString" length="500" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="VersionNo" type="String">
+			<column name="VersionNo" length="50" sql-type="varchar" not-null="false"/>
+		</property>
+		<property name="DisplayOrder" type="Decimal">
+			<column name="DisplayOrder" length="5" sql-type="decimal" not-null="false"/>
+		</property>
+	</class>
+</hibernate-mapping>

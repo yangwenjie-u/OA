@@ -1,0 +1,98 @@
+﻿@{
+    Layout = "~/Views/_easyuilayout.cshtml";
+}
+
+<script language="javascript" type="text/javascript">
+    function Open_Dialog() {
+        $('#maindlg').show();
+        $('#maindlg').dialog({
+            collapsible: false,
+            minimizable: false,
+            maximizable: false,
+            resizable: false,
+            shadow: true,
+            modal: false,
+            closable: false,
+            buttons: [{
+                text: '确定',
+                iconCls: 'icon-ok',
+                handler: function () {
+                    var jdzch = '@ViewData["jdzch"]';
+                    var year = $('#year').combobox('getValue')
+                    var month = $('#month').combobox('getValue')
+                    if (year == '')
+                    {
+                        alert("请选择年份！");
+                        return;
+                    }
+                    if (month == '') {
+                        alert("请选择月份！");
+                        return;
+                    }
+                    url = "/WebList/EasyUiIndex?FormDm=WDYKQJL_GCYKQ&FormStatus=0&FormParam=PARAM--" + jdzch + "|" + year + "|" + month;
+                    parent.layer.open({
+                        type: 2,
+                        title: '月报表查看',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['95%', '95%'],
+                        content: url
+                    });
+                }
+            }]
+        });
+    }
+    $(function () {
+        var arrYear = new Array();
+        var arrMonth = new Array();
+        var dt = new Date();
+        for (i = 2014; i <= dt.getFullYear() ; i++) {
+            var arr = new Array();
+            arr[0] = i;
+            arr[1] = i;
+            arrYear[arrYear.length] = arr;
+        }
+        for (i = 1; i <= 12; i++) {
+            var arr = new Array();
+            arr[0] = i;
+            arr[1] = i;
+            arrMonth[arrMonth.length] = arr;
+        }
+        $('#year').combobox({
+            data: arrYear,
+            panelHeight: 'auto',
+            editable: false,
+            textField: 1,
+            valueField: 0
+
+        });
+        $('#month').combobox({
+            data: arrMonth,
+            panelHeight: 'auto',
+            editable: false,
+            textField: 1,
+            valueField: 0
+        });
+
+       
+
+
+        Open_Dialog();
+
+        dt.setMonth(dt.getMonth() - 1);
+        var year = dt.getFullYear();
+        var month = dt.getMonth() + 2;
+        $('#year').combobox('setValue', year);
+        $('#month').combobox('setValue', month);
+    });
+</script>
+<div id="maindlg" style="display:none;padding:20px;width:320px;height:300px;" title="月出勤表查询条件设置">
+   
+    年份：
+    <select id="year" style="width:200px;"></select>
+    <br /><br />
+    月份：
+    <select id="month" style="width:200px;"></select>
+    <br /><br />
+</div>
+

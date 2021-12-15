@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<employees>
+	<employee>
+		<type>事业编人员</type>
+		<rowsum>4</rowsum>
+		<columnmin>18</columnmin>
+		<datas>
+			<data field="wagename" desc="姓名" row="3"/>
+			<data field="wage1" desc="岗位工资" row="4"/>
+			<data field="wage2" desc="薪级工资" row="4"/>
+			<data field="wage3" desc="艰边津贴" row="4"/>
+			<data field="wage4" desc="正高津贴" row="4"/>
+			<data field="wage5" desc="独生子女" row="4"/>
+			<data field="wage6" desc="妇幼保健" row="4"/>
+			<data field="wage7" desc="取暖补贴" row="4"/>
+			<data field="wage8" desc="话费补贴" row="4"/>
+			<data field="wage9" desc="交通补贴" row="4"/>
+			<data field="wage10" desc="基础绩效" row="4"/>
+			<data field="wage11" desc="奖励绩效" row="4"/>
+			<data field="wage12" desc="保健费" row="4"/>
+			<data field="wage13" desc="合计" row="4"/>
+			<data field="wage14" desc="公积金" row="4"/>
+			<data field="wage15" desc="养老保险" row="4"/>
+			<data field="wage16" desc="奖励绩效" row="4"/>
+			<data field="wage17" desc="实领金额" row="3"/>
+			<data field="wage26" desc="其他" row="4"/>
+			<data field="wage27" desc="其他扣款" row="4"/>
+		</datas>
+	</employee>
+	<employee>
+		<type>合同制人员</type>
+		<rowsum>4</rowsum>
+		<columnmin>12</columnmin>
+		<datas>
+			<data field="wagename" desc="姓名" row="3"/>
+			<data field="wage18" desc="基本工资" row="4"/>
+			<data field="wage19" desc="学历工资" row="4"/>
+			<data field="wage20" desc="工龄工资" row="4"/>
+			<data field="wage21" desc="职称工资" row="4"/>
+			<data field="wage6" desc="妇幼保健" row="4"/>
+			<data field="wage9" desc="交通补贴" row="4"/>
+			<data field="wage22" desc="职务工资" row="4"/>
+			<data field="wage26" desc="其他" row="4"/>
+			<data field="wage13" desc="合计" row="4"/>
+			<data field="wage14" desc=" 公积金" row="4"/>
+			<data field="wage15" desc="养老保险" row="4"/>
+			<data field="wage17" desc="实领金额" row="3"/>
+			<data field="wage27" desc="其他扣款" row="4"/>
+		</datas>
+	</employee>
+	<employee>
+		<type>退休人员</type>
+		<rowsum>3</rowsum>
+		<columnmin>5</columnmin>
+		<datas>
+			<data field="wagename" desc="姓名" row="3" cloumn="1"/>
+			<data field="wage23" desc="人事局核定金额" row="3" cloumn="2"/>
+			<data field="wage24" desc="社保局核定金额" row="3" cloumn="3"/>
+			<data field="wage25" desc="差额" row="3" cloumn="4"/>
+			<data field="wage17" desc="实领金额" row="3" cloumn="5"/>
+		</datas>
+	</employee>
+</employees>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="BD.Jcbg.DataModal.Entities.PRMWJ, BD.Jcbg.DataModal" table="PR_M_WJ" lazy="false">
+		<id name="RECID" type="Int32" unsaved-value="null">
+			<column name="RECID" length="4" sql-type="int" not-null="true" unique="true"/>
+			<generator class="native" />
+		</id>
+		<property name="WJLX" type="String">
+			<column name="WJLX" length="50" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="SSDWBH" type="String">
+			<column name="SSDWBH" length="50" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="SYXMBH" type="String">
+			<column name="SYXMBH" length="50" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="GJZ1" type="String">
+			<column name="GJZ1" length="50" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="WJM" type="String">
+			<column name="WJM" length="200" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="WJNR" type="Byte[]">
+			<column name="WJNR" sql-type="varbinary" not-null="false"/>
+		</property>
+		<property name="LRRZH" type="String">
+			<column name="LRRZH" length="50" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="LRRXM" type="String">
+			<column name="LRRXM" length="200" sql-type="nvarchar" not-null="false"/>
+		</property>
+		<property name="LRSJ" type="DateTime">
+			<column name="LRSJ" length="8" sql-type="datetime" not-null="false"/>
+		</property>
+		<property name="GJZ2" type="String">
+			<column name="GJZ2" length="50" sql-type="nvarchar" not-null="false"/>
+		</property>
+	</class>
+</hibernate-mapping>

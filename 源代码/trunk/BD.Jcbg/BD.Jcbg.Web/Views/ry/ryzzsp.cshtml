@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout.cshtml";
+}
+@section head{
+    <script language="javascript" type="text/javascript">
+        $(function () {
+
+
+        });
+        function getValue() {
+            var ret = "1";
+            try {
+                ret = $('input[name="check_option"]:checked ').val();
+            } catch (e) {
+                alert(e);
+            }
+            return ret;
+        }
+        function getReason() {
+            var ret = "1";
+            try {
+                ret = $('input[name="reason"]').val();
+            } catch (e) {
+                alert(e);
+            }
+            return ret;
+        }
+    </script>
+}
+
+<div class="switch switch-blue">
+    <input type="radio" class="switch-input" name="check_option" value="1" id="check_agree" checked>
+    <label for="check_agree" class="switch-label switch-label-off">同意</label>
+    <input type="radio" class="switch-input" name="check_option" value="0" id="check_disagree">
+    <label for="check_disagree" class="switch-label switch-label-on">拒绝</label>
+    拒绝理由:<input id="reason" name="reason" />
+    <span class="switch-selection"></span>
+</div>

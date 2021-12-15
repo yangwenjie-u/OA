@@ -1,0 +1,54 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        
+        var g_jsonArr = @Html.Raw(ViewBag.jsonstr);
+        var g_url = "@ViewBag.url";
+        $(function () {
+            try {
+                $.each(g_jsonArr, function (i, item) {
+                    $("#qys").append("<div class='checkbox'><label><input name='ctrlqy' type='checkbox' checked value='"+item.gcqybh+"'>["+item.qylxmc+"]"+item.qymc+"</label></div>");
+                });
+                var dt = new Date();
+                var year = dt.getFullYear();
+                var month = dt.getMonth()+1;
+                for( var i=year; i>=year-10;i--)
+                    $("#ctrlyear").append("<option value='"+i+"'>"+i+"年</option>")
+                for( var i=1; i<=12;i++)
+                    $("#ctrlmonth").append("<option value='"+i+"'>"+i+"月</option>")
+                $("#ctrlyear").val(year);
+                $("#ctrlmonth").val(month);
+            } catch (err) {
+                alert(e);
+            }
+        });
+        function getValues(){
+            
+        }
+    </script>
+}
+
+<div class="container">
+    <div id="rq" style="margin-top:10px;">
+        <label for="name">考勤日期</label>
+        <div class="row">
+
+            <div class="col-xs-2">
+                <select id="ctrlyear" class="form-control" style="width: auto;"></select>
+            </div>
+            <div class="col-xs-2">
+                <select id="ctrlmonth" class="form-control" style="width: auto;"></select>
+            </div>
+        </div>
+    </div>
+    <div id="qys" style="margin-top:20px;">
+        <label for="name">企业</label>
+        
+    </div>
+    
+</div>

@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{81254B6D-C43C-42DB-950E-93B880F53EDA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BD.Jcbg.Common</RootNamespace>
+    <AssemblyName>BD.Jcbg.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Aliyun.OSS">
+      <HintPath>..\..\..\..\引用库\对象存储\Oss_CDN_SDK\Aliyun.OSS.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging">
+      <HintPath>..\..\..\..\引用库\ssh\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\..\..\..\引用库\pdf加水印\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\引用库\ssh\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\引用库\电子签章\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\..\..\..\引用库\npoi\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\..\..\..\引用库\npoi\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\..\..\..\引用库\npoi\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\..\..\..\引用库\npoi\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="OssSDK">
+      <HintPath>..\..\..\..\引用库\对象存储\Oss_CDN_SDK\OssSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Oss_CDN_SDK">
+      <HintPath>..\..\..\..\引用库\对象存储\Oss_CDN_SDK\Oss_CDN_SDK.dll</HintPath>
+    </Reference>
+    <Reference Include="Oss_CDN_SDK.XmlSerializers">
+      <HintPath>..\..\..\..\引用库\对象存储\Oss_CDN_SDK\Oss_CDN_SDK.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="zxing, Version=0.14.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\引用库\zxing\zxing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BankInfo.cs" />
+    <Compile Include="Barcode.cs" />
+    <Compile Include="BarcodeOptionReport.cs" />
+    <Compile Include="Base64Func.cs" />
+    <Compile Include="BasicDataEnums.cs" />
+    <Compile Include="ClientInfo.cs" />
+    <Compile Include="Configs.cs" />
+    <Compile Include="CryptFun.cs" />
+    <Compile Include="CurrentUser.cs" />
+    <Compile Include="DataFormat.cs" />
+    <Compile Include="DictionaryHelper.cs" />
+    <Compile Include="DynamicWebService.cs" />
+    <Compile Include="EncryBD.cs" />
+    <Compile Include="EncryUtil.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="ExcelHelper.cs" />
+    <Compile Include="ExcelPrintCell.cs" />
+    <Compile Include="ExcelPrintCellCollection.cs" />
+    <Compile Include="ExcelPrintEnums.cs" />
+    <Compile Include="ExcelPrintField.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FileOssConfig.cs" />
+    <Compile Include="GcStatus.cs" />
+    <Compile Include="GlobalVariableConfig.cs" />
+    <Compile Include="GZipUtil.cs" />
+    <Compile Include="HelpLinkHelper.cs" />
+    <Compile Include="HttpHelper.cs" />
+    <Compile Include="Idcard.cs" />
+    <Compile Include="InvokeDllHelper.cs" />
+    <Compile Include="JsonDynamicDeSerializer.cs" />
+    <Compile Include="JsonFormat.cs" />
+    <Compile Include="JsonDeSerializer.cs" />
+    <Compile Include="JsonSerializer.cs" />
+    <Compile Include="JwdDistance.cs" />
+    <Compile Include="LogConst.cs" />
+    <Compile Include="MakeSqlHelper.cs" />
+    <Compile Include="MD5Util.cs" />
+    <Compile Include="MenuItem.cs" />
+    <Compile Include="MimeMapping.cs" />
+    <Compile Include="MyCurve.cs" />
+    <Compile Include="MyDelegates.cs" />
+    <Compile Include="MyHttp.cs" />
+    <Compile Include="MyImage.cs" />
+    <Compile Include="numt2string.cs" />
+    <Compile Include="OssCdnHelper.cs" />
+    <Compile Include="OssCdnUtil.cs" />
+    <Compile Include="PayEnums.cs" />
+    <Compile Include="PdfWaterMark.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QrCodeHelper.cs" />
+    <Compile Include="RandomNumber.cs" />
+    <Compile Include="ReturnParam.cs" />
+    <Compile Include="RSAUtil.cs" />
+    <Compile Include="SaveFileFun.cs" />
+    <Compile Include="ServiceEnum.cs" />
+    <Compile Include="SHA1Util.cs" />
+    <Compile Include="SkinManager.cs" />
+    <Compile Include="StringResource.cs" />
+    <Compile Include="SysConfigs.cs" />
+    <Compile Include="SysEnvironment.cs" />
+    <Compile Include="SysLog4.cs" />
+    <Compile Include="SysSettingEnums.cs" />
+    <Compile Include="SysYcdyData.cs" />
+    <Compile Include="TimeSpanOperation.cs" />
+    <Compile Include="ThreadConfig.cs" />
+    <Compile Include="TimeUtil.cs" />
+    <Compile Include="tools2.cs" />
+    <Compile Include="TreeOrder.cs" />
+    <Compile Include="UserSettingItem.cs" />
+    <Compile Include="WageConfig.cs" />
+    <Compile Include="WageExtraConfig.cs" />
+    <Compile Include="WeiXinHelper.cs" />
+    <Compile Include="WtsSjzt.cs" />
+    <Compile Include="WtsStatus.cs" />
+    <Compile Include="WtsYczt.cs" />
+    <Compile Include="XmlToJson.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

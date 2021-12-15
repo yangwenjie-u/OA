@@ -1,0 +1,23 @@
+流程zdzd表，每个项目一个表
+companycode:单位代码 
+recid:记录识别号
+sjbmc:数据表名称
+zdmc:字段名称
+sfxs:是否显示
+zdsx:只读属性（只读的不显示控件，只显示内容）
+xscd:显示长度（对zdsx false的有效）
+sfgd:是否固定
+activityid:流程节点id
+
+单位个性化zdzd表，每个项目一个表
+companycode:单位代码
+recid:记录识别号
+sjbmc:数据表名称
+zdmc:字段名称
+bhms:编号模式
+defval:默认值
+sfxs:是否显示
+
+
+以sjbmc和zdmc作为主键
+.

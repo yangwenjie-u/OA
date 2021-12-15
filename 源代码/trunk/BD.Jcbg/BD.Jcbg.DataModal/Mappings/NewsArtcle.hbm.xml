@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.NewsArtcle,BD.Jcbg.DataModal" table="News_artcle" lazy="false">
+    <id name="Articleid" column="articleID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="int" not-null="true" name="Categoryid" column="[categoryID]" />
+    <property type="int" name="Templateid" column="[templateID]" />
+    <property type="string" not-null="true" length="200" name="ArticleTitle" column="[articleTitle]" />
+    <property type="string" length="200" name="ArticleKey" column="[articleKey]" />
+    <property type="string" length="100" name="ArticleFrom" column="[articleFrom]" />
+    <property type="DateTime" name="ArticleDate" column="[articleDate]" />
+    <property type="string" length="1073741823" name="ArticleContent" column="[articleContent]" />
+    <property type="Boolean" name="IsImage" column="[isImage]" />
+    <property type="string" length="300" name="ImageUrl" column="[imageUrl]" />
+    <property type="Boolean" name="IsLink" column="[isLink]" />
+    <property type="string" length="300" name="ArticleLink" column="[articleLink]" />
+    <property type="Boolean" name="IsFile" column="[isFile]" />
+    <property type="string" length="300" name="FileName" column="[fileName]" />
+    <property type="Boolean" name="IsAudited" column="[isAudited]" />
+    <property type="Boolean" name="IsRecommand" column="[isRecommand]" />
+    <property type="int" name="Hits" column="[hits]" />
+    <property type="Boolean" name="IsImportant" column="[IsImportant]" />
+    <property type="string" length="50" name="CreatedBy" column="[CreatedBy]" />
+    <property type="DateTime" name="CreatedOn" column="[CreatedOn]" />
+  </class>
+</hibernate-mapping>

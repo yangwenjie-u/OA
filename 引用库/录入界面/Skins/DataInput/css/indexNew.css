@@ -1,0 +1,913 @@
+/* reset */
+
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+p,
+blockquote,
+pre,
+hr,
+figure,
+table,
+caption,
+th,
+td,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+menu {
+    margin: 0;
+    padding: 0;
+}
+
+header,
+footer,
+section,
+article,
+aside,
+nav,
+hgroup,
+address,
+figure,
+figcaption,
+menu,
+details {
+    display: block;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+caption,
+th {
+    text-align: left;
+    font-weight: normal;
+}
+
+html,
+body,
+fieldset,
+img,
+iframe,
+abbr {
+    border: 0;
+}
+
+i,
+cite,
+em,
+var,
+address,
+dfn {
+    font-style: normal;
+}
+
+[hidefocus],
+summary {
+    outline: 0;
+}
+
+li {
+    list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+small {
+    font-size: 100%;
+}
+
+sup,
+sub {
+    font-size: 83%;
+}
+
+pre,
+code,
+kbd,
+samp {
+    font-family: inherit;
+}
+
+q:before,
+q:after {
+    content: none;
+}
+
+textarea {
+    overflow: auto;
+    resize: none;
+}
+
+label,
+summary {
+    cursor: default;
+}
+
+a,
+button {
+    cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+em,
+strong,
+b {
+    font-weight: bold;
+}
+
+del,
+ins,
+u,
+s,
+a,
+a:hover {
+    text-decoration: none;
+}
+
+body,
+textarea,
+input,
+button,
+select,
+keygen,
+legend {
+    font: 12px/1.14 arial, \5b8b\4f53;
+    color: #333;
+    outline: 0;
+}
+
+body {
+    background: #fff;
+}
+
+a,
+a:hover {
+    color: #333;
+}
+
+
+
+
+
+
+
+
+
+/*默认table*/
+
+table {
+    min-width: 100%;
+    empty-cells: show;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+table th {
+    text-align: left;
+    font-weight: 400;
+    /*min-width: 100px;*/
+}
+
+
+
+
+
+
+
+
+
+
+/*带水平线*/
+
+.table th {
+    font-weight: bold
+}
+
+.table th,
+.table td {
+    padding: 8px;
+    line-height: 20px
+}
+
+.table td {
+    text-align: left
+}
+
+.table tbody tr.success>td {
+    background-color: #dff0d8
+}
+
+.table tbody tr.error>td {
+    background-color: #f2dede
+}
+
+.table tbody tr.warning>td {
+    background-color: #fcf8e3
+}
+
+.table tbody tr.info>td {
+    background-color: #d9edf7
+}
+
+.table tbody+tbody {
+    border-top: 2px solid #ddd
+}
+
+.table .table {
+    background-color: #fff
+}
+
+
+
+
+
+
+
+
+
+/*带横向分割线*/
+
+.table-border {
+    border-top: 1px solid #ddd
+}
+
+.table-border th,
+.table-border td {
+    border-bottom: 1px solid #ddd
+}
+
+
+
+
+
+
+
+
+
+/*th带背景*/
+
+.table-bg thead th {
+    background-color: #F5FAFE
+}
+
+
+
+
+
+
+
+
+
+/*带外边框*/
+
+.table-bordered {
+    border: 1px solid #ddd;
+    border-collapse: separate;
+    *border-collapse: collapse;
+    border-left: 0
+}
+
+.table-bordered th,
+.table-bordered td {
+    border-left: 1px solid #ddd
+}
+
+.table-border.table-bordered {
+    border-bottom: 0
+}
+
+
+
+
+
+
+
+
+
+/*奇数行背景设为浅灰色*/
+
+.table-striped tbody>tr:nth-child(odd)>td,
+.table-striped tbody>tr:nth-child(odd)>th {
+    background-color: #f9f9f9
+}
+
+
+
+
+
+
+
+
+
+/*竖直方向padding缩减一半*/
+
+.table-condensed th,
+.table-condensed td {
+    padding: 4px 5px
+}
+
+
+
+
+
+
+
+
+
+/*鼠标悬停样式*/
+
+.table-hover tbody tr:hover td,
+.table-hover tbody tr:hover th {
+    background-color: #f5f5f5
+}
+
+
+
+
+
+
+
+
+
+/*定义颜色*/
+
+
+/*悬停在行*/
+
+.table tbody tr.active,
+.table tbody tr.active>td,
+.table tbody tr.active>th,
+.table tbody tr .active {
+    background-color: #F5F5F5!important
+}
+
+
+
+
+
+
+
+
+
+/*成功或积极*/
+
+.table tbody tr.success,
+.table tbody tr.success>td,
+.table tbody tr.success>th,
+.table tbody tr .success {
+    background-color: #DFF0D8!important
+}
+
+
+
+
+
+
+
+
+
+/*警告或出错*/
+
+.table tbody tr.warning,
+.table tbody tr.warning>td,
+.table tbody tr.warning>th,
+.table tbody tr .warning {
+    background-color: #FCF8E3!important
+}
+
+
+
+
+
+
+
+
+
+/*危险*/
+
+.table tbody tr.danger,
+.table tbody tr.danger>td,
+.table tbody tr.danger>th,
+.table tbody tr .danger {
+    background-color: #F2DEDE!important
+}
+
+
+
+
+
+
+
+
+
+/*表格文字对齐方式，默认是居左对齐*/
+
+.table .text-c th,
+.table .text-c td {
+    text-align: center
+}
+
+
+
+
+
+
+
+
+
+/*整行居中*/
+
+.table .text-r th,
+.table .text-r td {
+    text-align: right
+}
+
+
+
+
+
+
+
+
+
+/*整行居右*/
+
+.table th.text-l,
+.table td.text-l {
+    text-align: left!important
+}
+
+
+
+
+
+
+
+
+
+/*单独列居左*/
+
+.table th.text-c,
+.table td.text-c {
+    text-align: center!important
+}
+
+
+
+
+
+
+
+
+
+/*单独列居中*/
+
+.table th.text-r,
+.table td.text-r {
+    text-align: right!important
+}
+
+
+
+
+
+
+
+
+
+/*单独列居右*/
+
+body {
+    background: #F0F0F0;
+    font-size: 16px;
+}
+
+.main {
+    margin-left: 25%;
+    margin-top: 10px;
+}
+
+.main>div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.g-title {
+    margin-left: 10%;
+    width: 14%;
+    background: #222D32;
+    position: fixed;
+    height: 100%;
+    cursor: pointer;
+}
+
+.g-title h4 {
+    color: white;
+    padding: 10px 0;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.g-title li {
+    color: white;
+    font-size: 16px;
+    height: 50px;
+    padding: 10px 0;
+    line-height: 30px;
+    text-align: center;
+}
+
+.g-title li:hover {
+    background: white;
+    color: #222D32;
+}
+
+.g-title .active {
+    background: white;
+    color: #222D32;
+}
+
+.mustin {
+    color: red;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.g-info {
+    width: 30%;
+    border: 1px solid #DD4B39;
+    background: white;
+}
+
+.g-info h4 {
+    background: #DD4B39;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+    padding-left: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.g-info label {
+    display: block;
+}
+
+.g-info .form-control {
+    width: 70%;
+}
+
+.m-info {
+    padding: 10px;
+}
+
+.g-content {
+    width: 60%;
+    overflow: hidden;
+    /*background: white;*/
+}
+
+.zhushi {
+    display: inline-block;
+}
+
+.field-sed {
+    border: 1px solid #4391BE;
+    margin-bottom: 10px;
+    background: white;
+}
+
+.field-sed h5 {
+    margin: 0;
+    height: 30px;
+    line-height: 30px;
+    font-size: 20px;
+    background: #3C8DBC;
+    color: white;
+    padding-left: 20px;
+}
+
+.field-sed h5 span {
+    float: right;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.field-child {
+    width: 96%;
+    margin: 10px 2%;
+}
+
+
+
+.field-child table th {
+    background: #EEEEEE;
+    padding: 0;
+    text-align: center;
+    height: 25px;
+    font-weight: 600;
+}
+
+.field-child table td {
+    height: 20px;
+}
+
+.tags {
+    margin-top: 10px;
+    border-bottom: 1px solid #DADADA;
+    cursor: pointer;
+    height: 40px;
+    position: relative;
+    white-space: nowrap;
+}
+
+.clickMore {
+    display: none;
+    position: relative;
+    margin-top: -41px;
+    float: right;
+    height: 36px;
+    z-index: 999;
+    background: white;
+    width: 50px;
+    text-align: center;
+    line-height: 36px;
+    color: #3C8DBC;
+    padding-top: 4px;
+}
+
+.tags span {
+    display: inline-block;
+    padding: 10px;
+    width: 100px;
+    text-align: center;
+    height: 36px;
+    position: relative;
+    top: 4px;
+}
+
+.tags .active {
+    border-top: 4px solid #3C8DBC;
+    border-bottom: 0px;
+    border-right: 1px solid #DADADA;
+    border-left: 1px solid #DADADA;
+    /*position: relative;*/
+    /*top: 4px;*/
+    padding-top: 6px;
+    background: white;
+
+}
+
+.u-sed-info {
+    padding-top: 10px;
+}
+
+.input-type label {
+    margin: 4px 0;
+}
+
+.input-type .form-control {
+    width: 70%;
+}
+
+.u-sed-info>.input-type {
+    width: 46%;
+    margin-left: 2%;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.u-sed-info>.input-type label {
+    padding-left: 4%;
+    width: 96%;
+    display: inline-block;
+}
+
+
+.table input {
+    width: 80%;
+}
+
+.table td {
+    padding: 4px;
+}
+
+.combox ul {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 1px;
+    max-height: 200px;
+    background: white;
+    overflow: auto;
+    border: 1px solid black;
+    cursor: pointer;
+    z-index: 999;
+    width: 70%;
+}
+
+.combox li:hover {
+    background: grey;
+    color: white;
+}
+
+.field-child td p {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    outline: none;
+}
+
+.select-type {
+    position: relative;
+}
+
+.select-type .select-ul {
+    display: none;
+    position: absolute;
+    top: 20px;
+    left: 1px;
+    max-height: 200px;
+    background: white;
+    overflow: auto;
+    border: 1px solid black;
+    cursor: pointer;
+    z-index: 999;
+    width: 100%;
+}
+
+.select-ul li:hover {
+    background: grey;
+    color: white;
+}
+
+
+.table-warp {
+    width: 100%;
+    max-height: 350px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    min-height: 60px;
+}
+
+.table {
+    position: relative;
+    width: 100%;
+}
+
+.table td span {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.table th {
+    height: 30px;
+}
+
+.table-edit span {
+    width: 50px;
+    text-align: center;
+    display: inline-block;
+    float: right;
+    margin-bottom: 10px;
+}
+
+tbody {
+    display: block;
+    overflow: auto;
+    max-height: 300px;
+}
+
+thead,
+tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+thead {
+    width: 100%;
+}
+
+
+
+
+
+/*
+.table .active input {
+    border: 1px solid #ccc;
+}
+
+.table input {
+    border: 0;
+    outline: none;
+    background: none;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+}
+.table .active select {
+    border: 1px solid #eee;
+    outline: none;
+    background: none;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
+.table select {
+    border: 0;
+    outline: none;
+    background: none;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}*/
+
+.tonghang_btn_input {
+    border: 1px solid #888;
+    width: 50px;
+    height: 20px;
+}
+.input-type select{
+    display: inline-block;
+}
+
+.radio,
+.checkbox {
+    min-width: 50%;
+    display: inline-block;
+}
+
+
+.radio input,.checkbox input{
+    margin-right: 4px;
+
+}
+.u-sed-info .input-type .radio label,
+.u-sed-info .input-type .checkbox label {
+    display: inline-block;
+    /*width: 80%;*/
+}
+.input-type {
+    vertical-align: top;
+}
+.table .mustin{
+    display: none;
+} 
+.table select{
+    padding: 2px;
+}
+.table td div ,.table .active td>span{
+    display: none;
+}
+.table .active div {
+    display: block;
+}
+.table td>span{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.input-type .form-control{
+    display: inline-block;
+}
+.tonghang_btn_input

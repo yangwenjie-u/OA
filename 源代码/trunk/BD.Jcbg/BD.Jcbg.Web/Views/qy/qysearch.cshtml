@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "~/Views/User/_welcomelayout.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+
+    $(function () {
+        setQY();
+    });
+    function setQY() {
+        try {
+            $.ajax({
+                type: "POST",
+                url: "/qy/getqybyname?key=" + encodeURIComponent(document.getElementById("qykey").value),
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    var t = 0;
+                    $("#table_qy").html("");
+                    $.each(data, function (index, row) {
+                        //$("#table_gc").append("<tr><td>" + row.zjdjh + "</td><td>" + row.gcmc + "</td><td>" + row.sy_jsdwmc + "</td><td>" + row.sgdwmc + "</td><td>" + row.jldwmc + "</td><td>" + row.kcdwmc + "</td><td>" + row.sjdwmc + "</td><td>" + row.spzt + "</td><td>" + row.jdgcsxm + "," + row.tjjdyxm + "," + row.azjdyxm + "</td></tr>");
+                        $("#table_qy").append("<tr><td>" + row.qymc + "</td><td>" + row.qyfr + "</td><td>" + row.qyfzr + "</td><td>" + row.lxsj + "</td><td>" + row.zh + "</td></tr>");
+                        t = t + 1;
+                    });
+                    if(t==0&&document.getElementById("qykey").value!="")
+                        alert("已注册企业中没有找到相关企业信息！")
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (ex) {
+            alert(ex);
+        }
+    }
+</script>
+}
+
+<div class="page2_middle_left">
+    <div class="nei">
+        <div class="title">
+            &nbsp;&nbsp;名称关键字：<input type="text" id="qykey" /> <input type="button" onclick="setQY()" value=" 查 找 " />
+        </div>
+
+
+
+        <div class="table-responsive">
+            <table class="table table-hover" >
+
+                <thead>
+
+                    <tr>
+                        <th>企业名称</th>
+                        <th>企业法人</th>
+                        <th>企业负责人</th>
+                        <th>负责人手机</th>
+                        <th>系统账户</th>
+                    </tr>
+                </thead>
+                <tbody id="table_qy"></tbody>
+            </table>
+        </div>
+
+
+
+
+    </div>
+
+</div>

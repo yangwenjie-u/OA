@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "~/Views/sms/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+
+        $(function () {
+            try {
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function doSubmit() {
+            layer.load();
+            var content = $("#content").val();
+            var phones = $("#phones").val();
+
+            $.ajax({
+                type: "POST",
+                url: "/sms/dosendmessage?content=" + encodeURIComponent(content) + "&phones=" + encodeURIComponent(phones),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+                        alert("发送成功！");
+                        layer.close();
+                        parent.layer.closeAll();
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "发送失败";
+                        alert(data.msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            
+        }
+    </script>
+}
+
+<ul class="list-group">
+    <li class='list-group-item' id='li1'>
+        <div class="input-group text-center">
+            <textarea class="form-control" id="content" name="content" rows="15" cols="110"></textarea>
+        </div>
+    </li>
+</ul>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input type="hidden" id="phones" name="phones" value="@ViewBag.phones"/>
+        <input type="button" value=" 发 送 " onclick="doSubmit()" />
+        &nbsp;&nbsp;
+    </form>
+
+
+</div>

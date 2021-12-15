@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>企业注册</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/login/css/login.css">
+</head>
+
+<body>
+    <form class="layui-form" action>
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业账号</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="zh" id="zh"><i>*</i>
+            </div>
+            <span class="ipt-msg">企业账号有效长度为6-32位，有效字符为字母（a-z，大小写都一样）、数字(0-9)、下滑线(_)</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业全称</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="qymc" id="qymc"><i>*</i>
+            </div>
+            <span class="ipt-msg">输入工商营业执照企业全称</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">组织机构代码或社会统一信用代码</label>
+            <div class="layui-input-block"><input type="text" class="layui-input" name="zzjgdm" id="zzjgdm"><i>*</i></div>
+            <span class="ipt-msg">请优先填写社会统一信用代码，如无则填写组织机构代码。</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">安全负责人手机</label>
+            <div class="layui-input-block"><input type="text" class="layui-input" name="aqfzrsj" id="aqfzrsj"></div>
+            <span class="ipt-msg">请填写真实的手机号码，并作为系统验证号码。</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">企业联系人</label>
+            <div class="layui-input-block"><input type="text" class="layui-input" name="qylxr" id="qylxr"><i>*</i></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">联系人手机</label>
+            <div class="layui-input-block"><input type="text" class="layui-input" name="lxrsj" id="lxrsj"><i>*</i></div>
+            <span class="ipt-msg">请填写真实的手机号码，并作为系统验证号码。</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">手机验证码</label>
+            <div class="layui-input-block"><input type="text" class="layui-input input-btn" name="yzm" id="yzm"><i>*</i><input type="button" class="ipt-btn" id="btn_send_vc" value="发送验证码" />
+            </div>
+            <span class="ipt-msg">请填写您收到的验收码。不区分大小写。</span>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">其他联系方式</label>
+            <div class="layui-input-block"><input type="text" class="layui-input" name="other" id="other"></div>
+        </div>
+         <div class="layui-form-item">
+            <label class="layui-form-label">企业地区</label>
+            <div class="layui-input-block">
+                <input type="radio" name="islocal" value="1" checked title="本地">
+                <input type="radio" name="islocal" value="0" title="外地">
+            </div>
+        </div> 
+    </form>
+    <div style="text-align: center;">
+        <button class="layui-btn layui-btn-normal layui-btn-radius" id="save">提交申请</button>
+        <!-- <button class="layui-btn layui-btn-danger layui-btn-radius" style="margin-left: 200px;">查看用户协议</button> -->
+    </div>
+    <script type="text/javascript" src="/static/lib/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/common/common.js"></script>
+    <script type="text/javascript" src="/static/login/js/smsService.js"></script>
+    <script type="text/javascript" src="/static/login/js/customfunImqy.js"></script>
+    <script type="text/javascript" src="/static/login/js/userService.js"></script>
+    <script type="text/javascript">
+	var isfromhelplink = '@ViewBag.isfromhelplink';
+    layui.use(['form'], function() {
+        var form = layui.form;
+    });
+    $("#btn_send_vc").click(function() {
+        smsService.send($("#lxrsj").val());
+    });
+    $("#save").click(function() {
+        var flag = CustomFun();
+        if (flag) {
+            var obj = {
+                zh: $("#zh").val(), // 账号
+                qymc: $("#qymc").val(), //企业名称
+                zzjgdm: $("#zzjgdm").val(), //组织机构代码
+                aqfzrsj: $("#aqfzrsj").val(), //安全负责人手机
+                qylxr: $("#qylxr").val(), //企业联系人
+                lxrsj: $("#lxrsj").val() //联系人手机
+            }
+            ajaxTpl("/dwgxzj/SaveQYRegister", obj, function(data) {
+                if(data.code == 0){
+                    userService.createUserWithSms('q', data.qybh);
+                    if (isfromhelplink == "1") {
+                        parent.optStatus = "QYBH|" + data.qybh;
+                        parent.layer.closeAll();
+                    }
+                }
+            });
+        } else {
+            // layer.msg();
+            //alert("表单填写不正确");
+        }
+
+    });
+    </script>
+</body>
+</html>

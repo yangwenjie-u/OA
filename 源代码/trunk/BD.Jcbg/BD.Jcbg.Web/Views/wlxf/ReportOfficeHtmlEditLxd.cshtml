@@ -1,0 +1,73 @@
+﻿@using BD.WorkFlow.Common;
+@{
+    Layout = "~/Views/workflow/_workflowweboffice.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+
+        function getType(file) {
+            var filename = file;
+            var index1 = filename.lastIndexOf(".");
+            var index2 = filename.length;
+            var type = filename.substring(index1, index2);
+            return type;
+        }
+
+        function Save() {
+
+            var strValue = document.getElementById("PageOfficeCtrl1").DocumentFileName;
+
+            if (getType(strValue) != ".docx") {
+                document.getElementById("PageOfficeCtrl1").Alert("请导入文件名为.docx的文件，否则可能导致文件打开失败！");
+            } else {
+
+                document.getElementById("PageOfficeCtrl1").WebSave();
+                var msg = document.getElementById("PageOfficeCtrl1").CustomSaveResult;
+                //alert(msg);
+                document.getElementById("PageOfficeCtrl1").Alert(msg);
+                //alert("保存成功！")
+                //return document.getElementById("PageOfficeCtrl1").CustomSaveResult.length == 0;
+                //alert(111)
+            }
+        }
+
+
+        function AfterDocumentOpened() {
+            if (window.parent.officeLoadCallback != undefined) {
+                window.parent.officeLoadCallback();
+            }
+            var strValue = document.getElementById("PageOfficeCtrl1").DocumentFileName;
+
+            if (getType(strValue) != ".docx")
+            {
+                document.getElementById("PageOfficeCtrl1").Alert("请导入文件名为.docx的文件，否则可能导致文件打开失败！");
+            }
+            
+            //document.getElementById("PageOfficeCtrl1").Alert(document.getElementById("PageOfficeCtrl1").DocumentFileName);
+            //alert(document.getElementById("PageOfficeCtrl1").DocumentFileName)
+        }
+
+        function SwitchFullScreen() {
+            document.getElementById("PageOfficeCtrl1").FullScreen = !document.getElementById("PageOfficeCtrl1").FullScreen;
+        }
+        function SaveDocument() {
+            document.getElementById("PageOfficeCtrl1").ShowDialog(2);
+        }
+        function OpenDocument() {
+            document.getElementById("PageOfficeCtrl1").WordImportDialog();
+        }
+        function ShowPrintDlg() {
+            document.getElementById("PageOfficeCtrl1").ShowDialog(4); //打印对话框
+        }
+        $(function () {
+        });
+    </script>
+}
+<form id="formOffice" method="post">
+    <input type="hidden" id="serial" name="serial" />
+    <div style=" width:auto; height:90%;" id="divContent">
+        @Html.Raw(@ViewBag.EditorHtml)
+    </div>
+    <div style=" width:auto; text-align:right; height:8%;"><span style="height:40px;line-height:40px;border-radius:10px;text-align:center;display:inline-block;width:120px;background:#0094ff;color:white;margin:10px 100px 0 0; cursor: pointer;" onclick="Save()">保存报告</span></div>
+</form>

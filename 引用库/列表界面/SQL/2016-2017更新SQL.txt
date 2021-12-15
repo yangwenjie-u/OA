@@ -1,0 +1,337 @@
+--2016-06-03
+CREATE TABLE [dbo].[FORM](
+	[Recid] [int] IDENTITY(1,1) NOT NULL,
+	[FormDm] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[FormStatus] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[MenuCode] [nvarchar](40) COLLATE Chinese_PRC_CI_AS NULL,
+	[TableName] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[PageSize] [int] NULL,
+	[LimitSize] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[DbClickFunName] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[JsName] [nvarchar](100) COLLATE Chinese_PRC_CI_AS NULL,
+	[CheckBox] [bit] NULL,
+	[SqlType] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[SingleSelect] [bit] NULL,
+	[Memo] [nvarchar](600) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_FORM_1] PRIMARY KEY CLUSTERED 
+(
+	[Recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'Recid'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单代码（XXGL）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'FormDm'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单状态（0）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'FormStatus'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'权限代码' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'MenuCode'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表查询语句（select * from xxgm）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'TableName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'每页条数（10）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'PageSize'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'可选择条数[5, 10, 20, 50, 100, 200]' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'LimitSize'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列表的双击事件（editRecord();）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'DbClickFunName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'导入自定义的JS，位置放于（skins/WebList/custom文件夹中）（test1.js,test2.js以逗号隔开）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'JsName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否显示复选框' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'CheckBox'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'执行SQL的类型(SQL表示SQL语句 PROC表示存储过程)' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'SqlType'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否单选' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'SingleSelect'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORM', @level2type=N'COLUMN', @level2name=N'Memo'
+
+GO
+
+CREATE TABLE [dbo].[FORMBUTTON](
+	[Recid] [int] IDENTITY(1,1) NOT NULL,
+	[FormDm] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[FormStatus] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[BtnMc] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[BtnFunName] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[BtnHint] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[BtnIcon] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[OrderNo] [int] NULL,
+ CONSTRAINT [PK_FORMBUTTON] PRIMARY KEY CLUSTERED 
+(
+	[Recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'Recid'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单代码（XXGL）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'FormDm'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单状态（0）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'FormStatus'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'按钮中文名（新建）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'BtnMc'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'函数名（searchFun();）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'BtnFunName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'按钮提示（预留字段）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'BtnHint'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'按钮图标（在CSS中预定义或自己定义的图标CSS名）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'BtnIcon'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'按钮排序位置' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMBUTTON', @level2type=N'COLUMN', @level2name=N'OrderNo'
+
+GO
+
+CREATE TABLE [dbo].[FORMCONDITION](
+	[Recid] [int] IDENTITY(1,1) NOT NULL,
+	[FormDm] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[FormStatus] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldSy] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldName] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldType] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldWidth] [int] NULL,
+	[CtrlString] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[HelpLink] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[DefVal] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[TabField] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[OrderNo] [int] NULL,
+	[Reflash] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[ProcOrderNo] [int] NULL,
+ CONSTRAINT [PK_FORMCONDITION] PRIMARY KEY CLUSTERED 
+(
+	[Recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'Recid'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单代码（XXGL）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FormDm'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单状态（0）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FormStatus'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示条件中文名（用户名）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldSy'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'显示条件ID号（username）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'控件类型（文本T，下拉框S，日期D，复选C，单选R）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldType'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'控件长度' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'FieldWidth'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'CtrlString' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'CtrlString'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'HelpLink' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'HelpLink'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'默认值' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'DefVal'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'对应数据库物理表字段（username）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'TabField'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'位置排序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'OrderNo'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否改变触发刷新（1表示改变值后自动刷新界面，主要用于不同表单状态的切换）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'Reflash'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'存储过程排序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMCONDITION', @level2type=N'COLUMN', @level2name=N'ProcOrderNo'
+
+GO
+
+
+CREATE TABLE [dbo].[FORMDEFMS](
+	[RECID] [int] IDENTITY(1,1) NOT NULL,
+	[DEFNO] [varchar](40) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[DEFMS] [varchar](600) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_FORMDEFMS_1] PRIMARY KEY CLUSTERED 
+(
+	[RECID] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMDEFMS', @level2type=N'COLUMN', @level2name=N'RECID'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMDEFMS', @level2type=N'COLUMN', @level2name=N'DEFNO'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMDEFMS', @level2type=N'COLUMN', @level2name=N'DEFMS'
+GO
+
+CREATE TABLE [dbo].[FORMSUMMARY](
+	[Recid] [int] IDENTITY(1,1) NOT NULL,
+	[FormDm] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[FormStatus] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZdName] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[FieldName] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZdContent] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZdSql] [text] COLLATE Chinese_PRC_CI_AS NULL,
+	[OrderNo] [int] NULL,
+ CONSTRAINT [PK_FORMSUMMARY] PRIMARY KEY CLUSTERED 
+(
+	[Recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'Recid'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单代码（XXGL）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'FormDm'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单状态（0）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'FormStatus'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'汇总字段功能,sum(aaa)，自定义则用CUSTOM' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'ZdName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'汇总字段释义' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'FieldName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'描述内容，【替换】为代替统计得到的值' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'ZdContent'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段SQL,针对于ZdType为Custom(自定义)' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'ZdSql'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMSUMMARY', @level2type=N'COLUMN', @level2name=N'OrderNo'
+
+GO
+
+
+CREATE TABLE [dbo].[FORMZDZD](
+	[Recid] [int] IDENTITY(1,1) NOT NULL,
+	[FormDm] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[FormStatus] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZdName] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZdSy] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZdTip] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZdWidth] [int] NULL,
+	[ZdColor] [nvarchar](600) COLLATE Chinese_PRC_CI_AS NULL,
+	[Align] [nvarchar](10) COLLATE Chinese_PRC_CI_AS NULL,
+	[Sfpx] [bit] NULL CONSTRAINT [DF_FORMZDZD_Sfpx]  DEFAULT (''),
+	[SfShow] [bit] NULL,
+	[SfSwitch] [bit] NULL,
+	[OrderNo] [int] NULL,
+ CONSTRAINT [PK_WEBFORM] PRIMARY KEY CLUSTERED 
+(
+	[Recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'Recid'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单代码（XXGL）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'FormDm'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'表单状态（0）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'FormStatus'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列表字段ID名（username）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'ZdName'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列表头中文释义' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'ZdSy'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'字段提示' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'ZdTip'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列表字段长度' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'ZdWidth'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'列表字段颜色（预留）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'ZdColor'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'对齐方式（左对齐left，居中center，右对齐right）' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'Align'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否允许数据排序' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'Sfpx'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否显示' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'SfShow'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'是否允许切换' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'SfSwitch'
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'排序号' ,@level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name=N'FORMZDZD', @level2type=N'COLUMN', @level2name=N'OrderNo'
+
+GO
+
+--Form表
+alter table FORM add SummaryHeight int
+
+--FORMZDZD表
+alter table FORMZDZD add FilterType nvarchar(50)
+alter table FORMZDZD add DataType nvarchar(50)
+alter table FORMZDZD add CellsFormat nvarchar(50)
+
+--FORMSUMMARY表
+alter table FORMSUMMARY add  ContentTitle nvarchar(50)
+
+--2016-06-22
+--在Form中添加CSS样式引用
+alter table FORM add CssName nvarchar(100)
+
+
+--2016-07-06
+--在FormZdzd中,添加显示样式(是文本还是图片等)
+alter table FORMZDZD add FormatEvent nvarchar(50)
+
+--2016-11-24
+--在FORMBUTTON中，添加按钮类型(默认是按钮button,checkbox,radio)
+alter table FORMBUTTON add BtnType nvarchar(50)
+
+--2017-06-20
+--列表界面中按钮添加权限
+alter table FORMBUTTON add MenuCode nvarchar(40)
+
+2017-09-19
+--列表界面添加行样式
+alter table FORM add RowStyle nvarchar(50)
+
+2017-09-25
+--列表FORMZDZD添加过滤默认值
+alter table FORMZDZD add FilterDefval nvarchar(50)
+
+2017-10-16
+--列表FORMZDZD添加固定列
+alter table FORMZDZD add Sfgd bit
+
+2017-10-18
+--列表FORMZDZD添加helplink列
+alter table FORMZDZD add Helplink nvarchar(500)

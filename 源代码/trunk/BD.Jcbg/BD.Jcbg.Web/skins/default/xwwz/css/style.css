@@ -1,0 +1,29 @@
+/*公共部分*/
+.wc960{width:1000px; font-size:12px;}
+.fl{float:left;}
+.fr{float:right;}
+.mt20{margin-top:20px;}
+.icon{background:url(../images/icon.png) no-repeat 0 0;}
+
+.warp-pic-list li{float:left;display:inline;}
+.warp-pic-list .img_wrap{display:block;font-size:0;overflow:hidden;}
+.warp-pic-list .text-area{background-color:#f2f2f2;line-height:24px;}
+/*全局板块*/
+.row .hd{background:url(../images/hd-line_01.jpg) no-repeat 0 50px;height:55px;}
+/*全局页签*/
+.tab-T-3{width:66px;}
+.tab-T-3 li{width:12px;height:12px;font-size:0;background-color:#dfdfdf;float:left;margin-left:10px;cursor:pointer;display:inline;}
+.tab-T-3 li.cur{background-color:#d81c1b;}
+/*热门车型*/
+.rowE .warp-pic-list{position:relative;width:960px;height:230px;overflow:hidden;}
+.rowE .count li{margin-right:20px;width:176px;height:228px;}
+.rowE .count .img_wrap{width:176px;height:135px;}
+.rowE .count li .text-area{padding:10px 0 10px 15px;}
+.rowE .count li .text-area  p{line-height:24px;height:24px;}
+.rowE .count li:hover .text-area,.rowE .count li.hover .text-area{background-color:#d81c1b;color:#fff;}
+.rowE .count .p-num{font-family:"Tahoma";font-weight:bold;}
+.rowE .btn{display:block;height:55px;position:absolute;top:78px;width:35px;z-index:200;cursor:pointer;}
+.rowE .prev{ background-position:0 -88px;left:0;}
+.rowE .prev:hover{background-position:0 -144px;}
+.rowE .next{ background-position:0 -200px;right:0;}
+.rowE .next:hover{background-position:0 -256px;}

@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/lib/element_ui/theme-chalk/index.css">
+    <script src="../static/lib/vue.min.js"></script>
+    <script src="../static/lib/element_ui/index.js"></script>
+    <script src="../static/lib/jquery.js"></script>
+    <style>
+        body,
+        html {
+            background-color: rgb(82, 86, 89);
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .all_wrap {
+            background-color: #ffffff;
+            box-sizing: border-box;
+            width: 1000px;
+            border-radius: 5px;
+            margin: 40px auto;
+            /* height: 500px; */
+            padding: 10px 15px;
+        }
+
+        .title {
+            padding: 8px 16px;
+            background-color: #ecf5ff;
+            border-radius: 4px;
+            border-left: 5px solid #409eff;
+            margin: 20px 0;
+            color: #409eff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="all_wrap">
+        <div class="title">
+            项目分配详情
+        </div>
+        <div class="tab">
+            <el-table :data="fpxq" style="width: 100%">
+                <el-table-column type="index" width="50" label="序号">
+                </el-table-column>
+                <el-table-column prop="gcmc" label="工程名称">
+                </el-table-column>
+                <el-table-column prop="jdyxm" label="主承办人">
+                </el-table-column>
+                <el-table-column prop="tqryxm" label="协办人">
+                </el-table-column>
+                <el-table-column prop="xmfprq" label="项目分配时间">
+                </el-table-column>
+                <el-table-column prop="apsj" label="安排验收时间">
+                </el-table-column>
+            </el-table>
+        </div>
+        <div class="title">
+            项目分配情况汇总
+        </div>
+        <div class="tab">
+            <el-table :data="fphz" style="width: 100%">
+                <el-table-column type="index" width="50" label="序号">
+                </el-table-column>
+                <el-table-column prop="ryxm" label="姓名">
+                </el-table-column>
+                <el-table-column prop="zcbxms" label="主承办项目数（年度）">
+                </el-table-column>
+                <el-table-column prop="byzcbxms" label="主承办项目数（本月）">
+                </el-table-column>
+                <el-table-column prop="xbxms" label="协办项目数（年度）">
+                </el-table-column>
+                <el-table-column prop="byxbxms" label="协办项目数（本月）">
+                </el-table-column>
+            </el-table>
+        </div>
+    </div>
+</body>
+<script>
+    new Vue({
+        el: ".all_wrap",
+        data: {
+            d: [],
+            fpxq:[],
+            fphz:[],
+        },
+        methods: {
+
+            ViewFpxq: function () {
+                var that = this
+                $.ajax({
+                    url: "/wlxf/ViewFpxq",
+                    type: "post",
+                    dataType: "json",
+                    async: false,
+                    success: function (res) {
+                        that.fpxq=res.fpxq
+                        that.fphz=res.fphz.map(function(e){
+                            return e[0]
+                        })
+                    }
+                })
+            }
+        },
+        mounted: function () {
+            this.ViewFpxq()
+        },
+    })
+</script>
+
+</html>

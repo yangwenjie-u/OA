@@ -1,0 +1,448 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.DataModal.Entities;
+ 
+@{
+    Layout = "~/Views/xwwzUserHT/_f_common.cshtml";
+}
+@section head
+{
+
+}
+@section body
+{
+<script src="@SkinManager.GetXwwzPath("zdy/common.js")" type="text/javascript"></script>
+    <style>
+        body {
+            margin: 0px auto;
+        }
+        .th1 {
+            width:800px;font-size:25px;
+        }
+        .td1 {
+            width:150px;
+            text-align:center;
+        }
+        .td2 {
+            width:650px;
+            text-align:left;
+        }
+        .td3 {
+            width:800px; text-align:center;
+        }
+        .text1 {
+            width:650px;
+        }
+        .text2 {
+            width:450px;
+        }
+        a { text-decoration:none ;color: black }
+
+        .fjfont {
+            color:blue;
+            font-size:14px;
+        }
+        .fja {
+            color:blue;
+            font-size:14px;
+            margin-left:10px;
+        }
+
+
+        .grid{font:12px arial,helvetica,sans-serif;border:1px solid #8DB2E3}
+.grid td{font:100% arial,helvetica,sans-serif;height:24px;padding:5px}
+.grid{border-collapse:collapse}.grid th{background:#E7F3FE;height:27px;line-height:27px;border:1px solid #8DB2E3;padding-left:5px}
+.grid td{border:1px solid #8DB2E3;padding-left:5px}
+    </style>
+    <div align="center">
+
+        @{ 
+            NewsArtcle newsArtcle = ViewData["newsArtcle"] as NewsArtcle;
+            IList<IDictionary<string, string>> tpxw = ViewData["tpxw"] as List<IDictionary<string, string>>;
+            IList<IDictionary<string, string>> fjxw = ViewData["fjxw"] as List<IDictionary<string, string>>;
+            IList<IDictionary<string, string>> fj = ViewData["fj"] as List<IDictionary<string, string>>;
+             }
+       
+        <form id="formid" enctype="multipart/form-data" method="post">
+            <table cellpadding="5" border="1" style="margin: 20px 0 20px 0;" id="tableid" class="grid">
+                <tr>
+                    <th class="th1" colspan="2">新闻信息</th>
+                </tr>
+                <tr>
+                    <td class="td1"><input type="checkbox" id="islink" name="islink" onchange="linkarticle(0)" /><a href="javascript:linkarticle(1)">链接新闻</a> </td>
+                    <td class="td2"><input class="easyui-textbox text1" id="articlelink" name="articlelink" /></td>
+                </tr>
+                <tr>
+                    <td class="td1"><input type="checkbox" id="isimage" name="isimage" onchange="imagearticle(0)" /><a href="javascript:imagearticle(1)">图片新闻</a></td>
+                    <td class="td2">
+                        @foreach (var item in tpxw)
+                        {
+                            <div id="@(item["attachid"]+"div")"><a href="JavaScript:void(0)" onclick="postcall('/xwwzUserHT/getAttachFile',{aid:'@item["attachid"]'})" class="fja">@item["savename"] </a><a href="javascript:removefj('@item["attachid"]','@(item["attachid"]+"div")')" class="fja">删除</a><br /></div>
+                        }
+                        <input class="easyui-filebox text1" id="imagelink" name="imagelink" data-options="buttonText:'选择文件...',prompt:'请选中一个文件...'" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td1"><input type="checkbox" id="isimportant" name="isimportant" /><a href="javascript:important(1)">重点新闻</a> </td>
+                    <td class="td2"> </td>
+                </tr>
+                <tr>
+                    <td class="td1"><input type="checkbox" id="isfile" name="isfile" onchange="changefile(0)" /><a href="javascript:changefile(1)">文件新闻</a> </td>
+                    <td class="td2">
+                        @foreach (var item in fjxw)
+                        {
+                            <div id="@(item["attachid"]+"div")"><a href="JavaScript:void(0)" onclick="postcall('/xwwzUserHT/getAttachFile',{aid:'@item["attachid"]'})" class="fja">@item["savename"] </a><a href="javascript:removefj('@item["attachid"]','@(item["attachid"]+"div")')" class="fja">删除</a><br /></div>
+                        }
+                        <input class="easyui-filebox text1" id="filelink" name="filelink" data-options="buttonText:'选择文件...',prompt:'请选中一个文件...'" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td1">标    题 </td>
+                    <td class="td2"><input class="easyui-textbox text1" id="articletitle" name="articletitle" data-options="required:true,missingMessage:'此项为必输项'" /></td>
+                </tr>
+                <tr>
+                    <td class="td1">日    期 </td>
+                    <td class="td2"><input class="easyui-datetimebox" style="width:200px" id="articledate" name="articledate" data-options="required:true,missingMessage:'此项为必输项'"></td>
+                </tr>
+                <tr>
+                    <td class="td1">栏    目 </td>
+                    <td class="td2">
+                        <input class="easyui-combobox" id="categoryid" name="categoryid" style="width:200px;"
+                               data-options="valueField:'id',textField:'text',required:true,missingMessage:'此项为必输项'">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td1">关 键 字 </td>
+                    <td class="td2"><input class="easyui-textbox text1" id="articlekey" name="articlekey" /></td>
+                </tr>
+                <tr>
+                    <td class="td1">来源 </td>
+                    <td class="td2"><input class="easyui-textbox text1" value="本站原创" id="articlefrom" name="articlefrom" /></td>
+                </tr>
+
+
+                <tr id="trfj1">
+                    <td class="td1"> 附    件 </td>
+                    <td class="td2">
+                        @foreach (var item in fj)
+                        {
+
+                            <div id="@(item["attachid"]+"div")"><a href="JavaScript:void(0)" onclick="postcall('/xwwzUserHT/getAttachFile',{aid:'@item["attachid"]'})" class="fja">@item["savename"] </a><a href="javascript:removefj('@item["attachid"]','@(item["attachid"]+"div")')" class="fja">删除</a><br /></div>
+                        }
+
+                        <input class="easyui-filebox text1" id="fujian1" name="fujian1" data-options="buttonText:'选择文件...',prompt:'请选中一个文件...'" />
+                        <input class="easyui-filebox text1" id="fujian2" name="fujian2" data-options="buttonText:'选择文件...',prompt:'请选中一个文件...'" />
+                        <input class="easyui-filebox text1" id="fujian3" name="fujian3" data-options="buttonText:'选择文件...',prompt:'请选中一个文件...'" />
+                        <input class="easyui-filebox text1" id="fujian4" name="fujian4" data-options="buttonText:'选择文件...',prompt:'请选中一个文件...'" />
+                        <input class="easyui-filebox text1" id="fujian5" name="fujian5" data-options="buttonText:'选择文件...',prompt:'请选中一个文件...'" />
+                    </td>
+                </tr>
+
+
+                <tr id="cked1">
+                    <td class="td3" colspan="2"><textarea id="editor" name="editor" cols="80" rows="500"></textarea> </td>
+                </tr>
+                <tr>
+                    <td class="td3" colspan="2"><a id="btnsave" href="javascript:saveNewsArtcle();" class="easyui-linkbutton c8" data-options="iconCls:'icon-save',size:'large'">保&nbsp;&nbsp;存</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:back();" class="easyui-linkbutton c8" data-options="iconCls:'icon-back',size:'large'">返&nbsp;&nbsp;回</a></td>
+                </tr>
+
+
+            </table>
+            <input type="hidden" id="id" name="id" value="@newsArtcle.Articleid" />
+            <input type="hidden" id="context" name="context" />
+            <input type="hidden" id="type" name="type" value="@ViewData["type"]" />
+
+        </form>          
+                
+        <script>
+
+
+
+    $(function () {
+
+        //初始化CKEDITOR
+        initCKEDITOR()
+
+        //初始化新闻栏目Combox
+        initCombox();
+
+        //初始化数据
+        initData();
+
+
+    });
+
+    //初始化CKEDITOR
+    function initCKEDITOR() {
+
+        CKEDITOR.replace('editor', {
+            //uiColor: '#14B8C4',
+            toolbar: [
+                ['Source', '-', 'Save', 'NewPage', 'Preview', '-', 'Templates'],
+['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
+//'/',
+['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+['Link', 'Unlink', 'Anchor'],
+['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+//'/',
+['Styles', 'Format', 'Font', 'FontSize'],
+['TextColor', 'BGColor']
+    //全屏           显示区块
+   //,['Maximize', 'ShowBlocks', '-']
+            ], height: '500'
+        });
+    }
+
+    function initCombox() {
+        $.ajax({
+            type: "post",
+            url: "/xwwzUserHT/xwlmcom",
+            dataType: "json",
+            data: { needall: '0' },
+            async: true,
+            success: function (jsonData) {
+                if (!jsonData.success) {
+                    $.messager.alert("错误", jsonData.msg, 'error');
+                    return;
+                }
+                var data1 = jsonData.data;
+                $("#categoryid").combobox("loadData", data1);
+                if (data1.length > 0 && "@ViewData["type"]" != "edit") {
+                    $("#categoryid ").combobox('select', data1[0].id);
+                }
+
+            }
+        });
+    }
+
+    function initData() {
+        $("#articlelink").next().hide();
+        $("#imagelink").next().hide();
+        $("#filelink").next().hide();
+        CKEDITOR.instances.editor.setData($.base64.decode('@newsArtcle.ArticleContent'));
+        // CKEDITOR.instances.editor.setData("<p>sdfghgfdvfcbv bvd</p>");
+        $("#articledate").textbox("setValue", "@newsArtcle.ArticleDate.ToString("yyyy-MM-dd HH:mm:ss")");
+        $("#articletitle").textbox("setValue", "@newsArtcle.ArticleTitle");
+        $("#categoryid ").combobox('select', parseInt("@newsArtcle.Categoryid"));
+        $("#articlekey").textbox("setValue", "@newsArtcle.ArticleKey");
+        if ("@newsArtcle.ArticleFrom" != "") {
+            $("#articlefrom").textbox("setValue", "@newsArtcle.ArticleFrom");
+        }
+
+        if ("@newsArtcle.IsImportant" == "True") {
+            ckbyid("isimportant").checked = true;
+        }
+
+
+        if ("@newsArtcle.IsLink" == "True") {
+            ckbyid("islink").checked = true;
+            $("#articlelink").next().show();
+        }
+
+        if ("@newsArtcle.IsFile" == "True") {
+            ckbyid("isfile").checked = true;
+            $("#filelink").next().show();
+        }
+
+        if ("@newsArtcle.IsImage" == "True") {
+            ckbyid("isimage").checked = true;
+            $("#imagelink").next().show();
+        }
+
+
+        if ("@ViewData["buttonshow"]" != "1") {
+            $('#btnsave').linkbutton('disable');
+        }
+
+        //$("#ljxw").next().show();
+    }
+
+    function back() {
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);
+    }
+
+
+    function linkarticle(type) {
+        if (type != 0) {//当不是通过点击选择框时的操作
+            if (ckbyid("islink").checked) {//选中
+                ckbyid("islink").checked = false;
+            } else {//未选中
+                ckbyid("islink").checked = true;
+            }
+        }
+
+        if (ckbyid("islink").checked) {
+            ckbyid("isfile").checked = false;
+        }
+
+        linkarticle_changefile_common();
+    }
+
+    function changefile(type) {
+        if (type != 0) {//当不是通过点击选择框时的操作
+            if (ckbyid("isfile").checked) {//选中
+                ckbyid("isfile").checked = false;
+            } else {//未选中
+                ckbyid("isfile").checked = true;
+            }
+        }
+
+        if (ckbyid("isfile").checked) {
+            ckbyid("islink").checked = false;
+        }
+
+        linkarticle_changefile_common();
+    }
+
+
+    function linkarticle_changefile_common() {
+        if (ckbyid("islink").checked) {//选中
+            $("#articlelink").next().show();
+            //ckbyid("trfj1").style.display = "none";
+            //ckbyid("cked1").style.display = "none";
+        } else {
+            $("#articlelink").next().hide();
+            //ckbyid("trfj1").style.display = "";
+            //ckbyid("cked1").style.display = "";
+        }
+
+        if (ckbyid("isfile").checked) {//选中
+            $("#filelink").next().show();
+            //ckbyid("trfj1").style.display = "none";
+            //ckbyid("cked1").style.display = "none";
+        } else {
+            $("#filelink").next().hide();
+            //ckbyid("trfj1").style.display = "";
+            //ckbyid("cked1").style.display = "";
+        }
+        if (ckbyid("islink").checked || ckbyid("isfile").checked) {
+            ckbyid("trfj1").style.display = "none";
+            ckbyid("cked1").style.display = "none";
+        } else {
+            ckbyid("trfj1").style.display = "";
+            ckbyid("cked1").style.display = "";
+        }
+
+
+    }
+
+
+
+    function imagearticle(type) {
+
+        if (type != 0) {//当不是通过点击选择框时的操作
+            if (ckbyid("isimage").checked) {//选中
+                ckbyid("isimage").checked = false;
+            } else {//未选中
+                ckbyid("isimage").checked = true;
+            }
+        }
+
+        if (ckbyid("isimage").checked) {//选中
+            $("#imagelink").next().show();
+        } else {
+            $("#imagelink").next().hide();
+        }
+
+    }
+
+
+    function important(type) {
+        if (type != 0) {//当不是通过点击选择框时的操作
+            if (ckbyid("isimportant").checked) {//选中
+                ckbyid("isimportant").checked = false;
+            } else {//未选中
+                ckbyid("isimportant").checked = true;
+            }
+        }
+    }
+
+
+
+
+    function saveNewsArtcle() {
+        // 提交表单 start
+
+        //ckbyid("context").value = encodeURIComponent(CKEDITOR.instances.editor.getData());
+
+
+        ckbyid("context").value = $.base64.encode(CKEDITOR.instances.editor.getData());
+
+
+        $('#formid').form('submit', {
+            url: 'saveNewsArtcle',
+
+            success: function (data) {     // 提交成功后的回调函数。
+
+
+                var data = eval('(' + data + ')');  // change the JSON string to javascript object
+                //alert(data.msg);
+                if (data.success) {
+
+                    layer.open({
+                        icon: 6,
+                        content: data.msg,
+                        btn: ['确定'],
+                        yes: function (index, layero) {
+                            back();
+                        }, cancel: function () {
+                            back();
+                        }
+                    });
+                } else {
+                    layer.alert(data.msg, { icon: 5 });
+                }
+
+            }
+        });
+        // $('#ff').submit();
+        // 提交表单 end
+    }
+
+
+
+
+    function removefj(id, iddiv) {
+
+        $.ajax({
+            type: "post",
+            url: "/xwwzUserHT/deleteNewsAttach",
+            dataType: "json",
+            data: { id: id },
+            async: true,
+            success: function (jsonData) {
+                if (!jsonData.success) {
+                    // $.messager.alert("错误", jsonData.msg, 'error');
+                    layer.alert(jsonData.msg, { icon: 5 });
+                    return;
+                } else {
+                    $("#" + iddiv).remove();
+                    layer.alert(jsonData.msg, { icon: 6 });
+                }
+                
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                $.messager.progress('close');
+            },
+            beforeSend: function (XMLHttpRequest) {
+                $.messager.progress({ msg: '操作执行中，请稍后 ......' });
+            }
+        });
+
+    }
+
+
+    function ckbyid(id) {
+
+        return document.getElementById(id);
+    }
+
+</script>
+
+    </div>
+}
+

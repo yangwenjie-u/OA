@@ -1,0 +1,113 @@
+﻿html {
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+
+}
+body {
+    margin:0;
+    padding:0;
+    height:100%;
+    width:100%;
+}
+.font_size_13 {
+    font-size:13px;
+}
+.font_family{
+    font-family:"Microsoft Yahei", SimHei,SimSun , sans-serif;
+    /**微软雅黑 ，黑体，宋体，自带字体*/
+}
+.font_size_20 {
+font-size:20px;
+}
+.font_size_33 {
+    font-size:33px;
+}
+.body_back{
+    background-image:url("../images/back.png");
+    background-repeat:repeat-x;
+    overflow: hidden;
+    background-color: #fff;
+}
+.back_top {
+    background-image:url("../images/back_top.png");
+    position:absolute;
+    top:299px;
+    left:50%;
+    margin-left:-657px;
+    height:420px;
+        width: 1314px;
+        background-repeat:no-repeat;
+}
+.main {
+    height:250px;
+    width:1000px;
+
+    position:relative;
+    top:250px;
+    margin:0 auto;
+    text-align:center;
+
+}
+.main_left{
+    float:left;
+    width:500px;
+    height:100%;
+    
+
+}
+.main_right {
+    float:left;
+    width:500px;
+     height:100%;
+        padding-top: 20px;
+  
+}
+.main_left .title {
+    font-weight:bolder;
+   
+}
+.main_left .middle{
+  
+    height:121px;
+    width:421px;
+    margin:0 auto;
+    text-align:center;
+
+}
+.main_left .last{
+    height:44px;
+}
+.last .xiaozi {
+    height:28px;
+    vertical-align:top;
+    line-height:28px;
+}
+.last .tel {
+   font-style:italic;
+   font-weight:bold;
+}
+.input_k {
+    height:38px;
+    margin-top:10px;
+    line-height:34px;
+    margin-bottom:10px;
+}
+.input_k input {
+    height:30px;
+    width:250px;
+}
+.btn_denglu {
+    background-color:#0e7bd0;
+    height:34px;
+    width:308px;
+    border-radius:10px;
+    margin:0 auto;
+    text-align:center;
+    line-height:34px;
+    margin-top:20px;
+    color:#ffffff;
+    cursor:pointer;
+
+}

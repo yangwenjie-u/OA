@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <title>sxjz</title>
+    <style type="text/css">
+    h2 {
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        font-weight: 600;
+        font-size: 24px;
+    }
+
+    .save-boottom {
+        display: none;
+        position: fixed;
+        bottom: 0px;
+        width: 100%;
+        left: 0px;
+        background: rgba(55, 55, 55, 0.5);
+        height: 60px;
+        text-align: center;
+    }
+
+    .layui-input {
+        border: 0px;
+    }
+
+    .ipt-line {
+        border-bottom: 1px solid rgb(230, 230, 230);
+        display: inline-block;
+        width: 80%;
+        box-sizing: border-box;
+        /*padding-right: 60px;*/
+    }
+
+    .tab .layui-table tbody tr:hover {
+        background: none;
+    }
+
+    .tbody-list td {
+        vertical-align: middle;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;padding-bottom: 80px;box-sizing: border-box;">
+        <form class="layui-form tab" id="tabWarp" action="/dwgxsxjzy/SaveZZSBSCYJ" method="POST">
+            <table class="layui-table ipt-no-border" style="width: 90%;margin:0 5%;">
+                <colgroup>
+                    <col width="100px">
+                    <col width="60px">
+                </colgroup>
+                <thead id="thead">
+                    <tr>
+                        <th colspan="7">
+                            <h2>初审部门审查意见（特级企业除外）</h2>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>指标类别</th>
+                        <th>序号</th>
+                        <th colspan="2">考核指标</th>
+                        <th>审查标准</th>
+                        <th>审查认定值</th>
+                        <th>达标情况</th>
+                    </tr>
+                </thead>
+                <tbody class="tbody-list" id="list">
+                    <tr>
+                        <td rowspan="3">资产与技术装备</td>
+                        <td>1</td>
+                        <td colspan="2">净资产</td>
+                        <td><input type="text" name="csbmyjsc_jzc_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jzc_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jzc_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td colspan="2">机械设备</td>
+                        <td><input type="text" name="csbmyjsc_jxsb_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jxsb_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jxsb_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td colspan="2">其他申请条件（是否越级申请等）</td>
+                        <td><input type="text" name="csbmyjsc_qttj_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_qttj_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_qttj_dbqk" class="layui-input"></td>
+                    </tr>
+
+                    <tr>
+                        <td rowspan="8">主要人员</td>
+                        <td>4</td>
+                        <td colspan="2">技术负责人</td>
+                        <td><input type="text" name="csbmyjsc_jsfzr_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jsfzr_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jsfzr_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="4">5</td>
+                        <td rowspan="4">注册建造师</td>
+                        <td><input type="text" name="csbmyjsc_zczzs1_zy" class="layui-input ipt-line"><span>专业</span></td>
+                        <td><input type="text" name="csbmyjsc_zczzs1_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs1_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs1_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="csbmyjsc_zczzs2_zy" class="layui-input ipt-line"><span>专业</span></td>
+                        <td><input type="text" name="csbmyjsc_zczzs2_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs2_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs2_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="csbmyjsc_zczzs3_zy" class="layui-input ipt-line"><span>专业</span></td>
+                        <td><input type="text" name="csbmyjsc_zczzs3_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs3_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs3_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="csbmyjsc_zczzs4_zy" class="layui-input ipt-line"><span>专业</span></td>
+                        <td><input type="text" name="csbmyjsc_zczzs4_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs4_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zczzs4_dbqk" class="layui-input"></td>
+                    </tr>
+
+                    <tr>
+                        <td rowspan="3">6</td>
+                        <td colspan="2">中级及以上的职称人员</td>
+                        <td><input type="text" name="csbmyjsc_zjjyszc_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zjjyszc_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_zjjyszc_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">现场管理人员</td>
+                        <td><input type="text" name="csbmyjsc_xcglry_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_xcglry_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_xcglry_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">技术工人</td>
+                        <td><input type="text" name="csbmyjsc_jsgr_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jsgr_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_jsgr_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="5">业绩指标</td>
+                        <td rowspan="5">7</td>
+                        <td rowspan="5">代表工程业绩</td>
+                        <td>代表工程1</td>
+                        <td><input type="text" name="csbmyjsc_dbgc1_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc1_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc1_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td>代表工程2</td>
+                        <td><input type="text" name="csbmyjsc_dbgc2_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc2_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc2_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td>代表工程3</td>
+                        <td><input type="text" name="csbmyjsc_dbgc3_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc3_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc3_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td>代表工程4</td>
+                        <td><input type="text" name="csbmyjsc_dbgc4_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc4_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_dbgc4_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td>累计完成数</td>
+                        <td><input type="text" name="csbmyjsc_ljwcs_scbz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_ljwcs_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_ljwcs_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">诚信记录</td>
+                        <td colspan="2">是否存在违反《建筑业企业资质管理规定》第二十三条的行为</td>
+                        <td>
+                            <input type="radio" class="layui-input" name="csbmyjsc_sfwfzzglgd" title="是" value="是" />
+                            <input type="radio" class="layui-input" name="csbmyjsc_sfwfzzglgd" title="否" value="否" />
+                        </td>
+                        <td><input type="text" name="csbmyjsc_sfwfzzglgd_scrdz" class="layui-input"></td>
+                        <td><input type="text" name="csbmyjsc_sfwfzzglgd_dbqk" class="layui-input"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">复印件与原件核对一致</td>
+                        <td>
+                            <input type="radio" class="layui-input" name="csbmyjsc_fyjyyjhd" title="是" value="是" />
+                            <input type="radio" class="layui-input" name="csbmyjsc_fyjyyjhd" title="否" value="否" />
+                        </td>
+                        <td>
+                            核对人签字
+                        </td>
+                        <td colspan="2"><input type="text" name="csbmyjsc_hdrqz" class="layui-input"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div class="save-boottom">
+        <button class="layui-btn" id="save" style="margin-top: 10px;">保存</button>
+    </div>
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/lib/jquery.form.min.js"></script>
+
+    <script type="text/javascript">
+    var list = [];
+    var uploadList = [];
+
+    var params = getParams();
+    $(function () {
+
+        $("#tabWarp").append("<input type='text' name='id' value='" + params.id + "' style='display:none;' />")
+        layui.use('form', function () {
+            var form = layui.form;
+            form.render();
+            if (params.editType == 3 && params.id) {
+                getEditDtl(params.id)
+            }
+        });
+        if (params.editType == 1) {
+            $(".save-boottom").show();
+        }
+
+    });
+
+    function getEditDtl(id) {
+        ajaxTpl("/dwgxsxjzy/GetZZSBSQXQ", {
+            id: id
+        }, function (res) {
+            var tabWarp = $("#tabWarp");
+            if (res.code == 0) {
+                var tmp;
+                var ary = ["csbmyjsc_sfwfzzglgd", "csbmyjsc_fyjyyjhd"]; //checkbox 类型
+                for (var i = 0, len = res.data.length; i < len; i++) {
+                    tmp = res.data[i];
+                    if (ary.indexOf(tmp.itemname) > -1) {
+                        tabWarp.find("[name='" + tmp.itemname + "']").filter("[value='" + tmp.itemvalue + "']").next().click();
+                        //removeAttr('class').addClass('layui-unselect layui-form-radio layui-form-radioed');
+                    } else {
+                        tabWarp.find("[name='" + tmp.itemname + "']").val(tmp.itemvalue);
+                    }
+                }
+            }
+        });
+    }
+
+    $("#save").click(function (event) {
+        // filterIpt();
+        $("#tabWarp").submit();
+    });
+    $('#tabWarp').submit(function () {
+        $(this).ajaxSubmit(function (res) {
+            var data = JSON.parse(res);
+            if (data.code == 0) {
+                try {
+                    alert("保存成功");
+                    parent.layer.closeAll();
+                } catch (e) {
+
+                }
+            } else {
+                alert(data.msg);
+            }
+        });
+        return false;
+    });
+    </script>
+</body>
+
+</html>

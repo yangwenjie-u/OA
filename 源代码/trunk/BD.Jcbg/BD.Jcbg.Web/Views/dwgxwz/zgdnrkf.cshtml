@@ -1,0 +1,480 @@
+﻿@{
+    //Layout = "~/Views/jdbg/_easyuilayout.cshtml";
+    Layout = "~/Views/workflow/_workflow.cshtml";
+}
+@section head
+{
+    <script type="text/javascript" src="/skins/WebList/pub/layer/layer.js"></script>
+
+    <style type="text/css">
+        .datagrid-header-rownumber {
+            width: 50px;
+        }
+
+        .datagrid-cell-rownumber {
+            width: 50px;
+        }
+    </style>
+
+    <script language="javascript" type="text/javascript">
+        var lastcfsj = '@ViewBag.lastcfsj';
+        var currentcfsj = '@ViewBag.currentcfsj';
+        var zgdlist = [];
+        var isshow = '@ViewBag.isshow';
+
+        $(function () {
+            try {
+                if (lastcfsj == '1900-01-01') {
+                    lastcfsj = '2018-07-21';
+                }
+                $('#lastcfsj').datebox('setValue', lastcfsj);
+                $('#currentcfsj').datebox('setValue', currentcfsj);
+                if (isshow == '1') {
+                    $('.needhidden').show();
+                }
+                $('#workflow_templates_maintable').datagrid({
+                    title: '整改单内容扣分统计',
+                    loadMsg: "正在加载……",
+                    border: false,
+                    //url: '/workflow/gettemplates?rows=' + 100 + '&_=' + Math.random(),
+                    //data:zgdlist,
+                    rownumbers: true,
+                    nowrap: false,
+                    idField: 'recid',
+                    striped: false,
+                    fit: true,
+                    singleSelect: false,
+                    remoteSort: false,
+                    columns: [[
+                    { field: 'ck', title: 'ck', width: 10, sortable: true, align: "center", checkbox: true },
+                    { field: 'extrainfo4', title: '整改通知编号', width: 100, sortable: true, align: "center" },
+                    { field: 'zjdjh', title: '监督登记号', width: 100, sortable: true, align: "center" },
+                    { field: 'gcmc', title: '工程名称', width: 300, sortable: true, align: "center" },
+                    { field: 'sy_jsdwmc', title: '建设单位', width: 200, sortable: true, align: "center" },
+                    { field: 'sjdwmc', title: '设计单位', width: 200, sortable: true, align: "center" },
+                    { field: 'sgdwmc', title: '施工单位', width: 200, sortable: true, align: "center" },
+                    { field: 'jldwmc', title: '监理单位', width: 200, sortable: true, align: "center" },
+                    { field: 'extrainfo2', title: '抽查部位', width: 100, sortable: true, align: "center" },
+                    { field: 'cjryxm', title: '经办人', width: 100, sortable: true, align: "center" },
+                    { field: 'lrrxm', title: '审核人', width: 100, sortable: true, align: "center" },
+                    { field: 'jdgcsxm', title: '监督工程师', width: 100, sortable: true, align: "center" },
+                    { field: 'sy_lrsj', title: '出单日期', width: 100, sortable: true, align: "center" },
+                    { field: 'extrainfo5', title: '当前整改期限', width: 100, sortable: true, align: "center" },
+                    { field: 'extrainfo14', title: '原始整改期限', width: 100, sortable: true, align: "center" },
+		    { field: 'yqjl', title: '整改延期记录', width: 200, sortable: true, align: "center" },
+                    { field: 'extrainfo1', title: '是否回复', width: 100, sortable: true, align: "center" },
+                    { field: 'extrainfo3', title: '整改状态', width: 120, sortable: true, align: "center" },
+                    { field: 'sy_jdjlsj', title: '回复日期', width: 100, sortable: true, align: "center" },
+                    { field: 'sgdwkfqk', title: '施工单位扣分设置', width: 100, sortable: true, align: "center" },
+                    { field: 'sgdwlastkfjg', title: '施工单位最近一次扣分结果', width: 300, sortable: true, align: "center" },
+                    { field: 'jldwkfqk', title: '监理单位扣分设置', width: 100, sortable: true, align: "center" },
+                    { field: 'jldwlastkfjg', title: '监理单位最近一次扣分结果', width: 300, sortable: true, align: "center" },
+                    { field: 'lastkfrq', title: '最近一次扣分日期', width: 100, sortable: true, align: "center" },
+                    { field: 'kfyy', title: '扣分原因', width: 200, sortable: true, align: "center" }
+                    ]],
+                    toolbar: "#workflow_templates_tb"
+                });
+
+            } catch (e) {
+                $.messager.alert('初始化页面异常', e.message, 'warning');
+            }
+
+        });
+        function workflow_templates_search() {
+            try {
+                workflow_templates_gridReload();
+            } catch (e) {
+                $.messager.alert('查找记录异常', e.message, 'warning');
+            }
+        }
+        function zgdcf_deleteRecord() {
+            try {
+                var records = $("#workflow_templates_maintable").datagrid('getSelections');
+                if (records == null || records.length == 0) {
+                    $.messager.alert('提示', '请选择要操作的记录', 'info');
+                    return;
+                }
+
+                $.messager.confirm('提示', '确定要删除选中的记录吗?', function (r) {
+                    if (r) {
+                        var ids = [];
+                        $.each(records, function (index, rec) {
+                            ids.push(rec.recid);
+                        });
+
+                        if (ids.length) {
+                            $.each(ids, function (index, id) {
+                                var rowIndex = $('#workflow_templates_maintable').datagrid('getRowIndex', id);
+                                if (rowIndex > -1) {
+                                    $('#workflow_templates_maintable').datagrid('deleteRow', rowIndex);
+                                }
+                            });
+
+                        }
+                    }
+                });
+            } catch (e) {
+                $.messager.alert('删除记录异常', e.message, 'warning');
+            }
+        }
+        function workflow_templates_gridReload() {
+            try {
+                var lastcfsj = $("#lastcfsj").datebox("getValue");
+                var currentcfsj = $("#currentcfsj").datebox("getValue");
+                if (lastcfsj == null || lastcfsj == '') {
+                    $.messager.alert('上次截止日期不能为空', e.message, 'warning');
+                }
+                else if (currentcfsj == null || currentcfsj == '') {
+                    $.messager.alert('本次截止日期不能为空', e.message, 'warning');
+                }
+                else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/dwgxwz/GetZGDNRKFTJJL",
+                        data: { 'lastcfsj': lastcfsj, 'currentcfsj': currentcfsj },
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data.code == "0") {
+                                if (data.total > 0) {
+                                    $('#workflow_templates_maintable').datagrid('loadData', data.rows);
+                                }
+                                else {
+                                    $('#workflow_templates_maintable').datagrid('loadData', []);
+                                    alert('没有统计数据!');
+                                } 
+                            } else {
+                                if (data.msg == "")
+                                    data.msg = "获取统计数据失败！";
+                                alert(data.msg);
+                            }
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                            $("body").unmask();
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                            $("body").mask("正在加载统计结果");
+                        }
+                    });
+                }
+
+            } catch (e) {
+                $.messager.alert('加载表格异常', e.message, 'warning');
+            }
+        }
+
+        function checkZGDCFTJ() {
+            var ret = false;
+            $.ajax({
+                type: "POST",
+                url: "/dwgxwz/checkZGDCFTJ",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+                        ret = true;
+                    }
+                    else {
+                        ret = false;
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            return ret;
+        }
+
+        function zgdcf_exportRecord() {
+            try {
+                var lastcfsj = $("#lastcfsj").datebox("getValue");
+                var currentcfsj = $("#currentcfsj").datebox("getValue");
+                if (lastcfsj == null || lastcfsj == '') {
+                    $.messager.alert('上次截止日期不能为空', e.message, 'warning');
+                }
+                else if (currentcfsj == null || currentcfsj == '') {
+                    $.messager.alert('本次截止日期不能为空', e.message, 'warning');
+                }
+                else {
+                    var form = $("<form></form>");//定义一个form表单
+                    form.attr("style", "display:none");
+                    form.attr("target", "");
+                    form.attr("method", "post");
+                    form.attr("action", "/dwgxwz/ExportZGDNRKFTJJL");
+                    var input1 = $("<input />");
+                    input1.attr("type", "hidden");
+                    input1.attr("name", "lastcfsj");
+                    input1.attr("value", lastcfsj);
+                    var input2 = $("<input />");
+                    input2.attr("type", "hidden");
+                    input2.attr("name", "currentcfsj");
+                    input2.attr("value", currentcfsj);
+
+                    $("body").append(form);//将表单放置在web中
+                    form.append(input1);
+                    form.append(input2);
+
+                    form.submit();//表单提交
+                }
+
+            } catch (e) {
+                $.messager.alert('导出数据失败！', e.message, 'warning');
+            }
+        }
+
+
+        function zgdcf_exportQYKFLB() {
+            try {
+                var zgdbhlist = [];
+                var records = $("#workflow_templates_maintable").datagrid('getData');
+                if (records.total == 0) {
+                    $.messager.alert('提示', '整改单扣分记录不能为空', 'info');
+                    return;
+                }
+                else {
+                    $.each(records.rows, function (index, rec) {
+                        if (rec.extrainfo4 != null && rec.extrainfo4 != '') {
+                            zgdbhlist.push(rec.extrainfo4);
+                        }
+                    });
+                }
+
+                var lastcfsj = $("#lastcfsj").datebox("getValue");
+                var currentcfsj = $("#currentcfsj").datebox("getValue");
+                if (lastcfsj == null || lastcfsj == '') {
+                    $.messager.alert('上次截止日期不能为空', e.message, 'warning');
+                }
+                else if (currentcfsj == null || currentcfsj == '') {
+                    $.messager.alert('本次截止日期不能为空', e.message, 'warning');
+                }
+                else {
+
+                    var form = $("<form></form>");//定义一个form表单
+                    form.attr("style", "display:none");
+                    form.attr("target", "");
+                    form.attr("method", "post");
+                    form.attr("action", "/dwgxwz/ExportZGDNRKFQYKFLB");
+                    var input1 = $("<input />");
+                    input1.attr("type", "hidden");
+                    input1.attr("name", "lastcfsj");
+                    input1.attr("value", lastcfsj);
+                    var input2 = $("<input />");
+                    input2.attr("type", "hidden");
+                    input2.attr("name", "currentcfsj");
+                    input2.attr("value", currentcfsj);
+                    var input3 = $("<input />");
+                    input3.attr("type", "hidden");
+                    input3.attr("name", "zgdbhlist");
+                    input3.attr("value", zgdbhlist.join(','));
+
+                    $("body").append(form);//将表单放置在web中
+                    form.append(input1);
+                    form.append(input2);
+                    form.append(input3);
+
+                    form.submit();//表单提交
+                }
+
+            } catch (e) {
+                $.messager.alert('导出数据失败！', e.message, 'warning');
+            }
+        }
+
+        function zgdcf_review() {
+            var records = $("#workflow_templates_maintable").datagrid('getData');
+            if (records.total == 0) {
+                $.messager.alert('提示', '请选择要操作的记录', 'info');
+                return;
+            }
+            else {
+                var zgdbhlist = [];
+                $.each(records.rows, function (index, rec) {
+                    if (rec.extrainfo4 != null && rec.extrainfo4 != '') {
+                        zgdbhlist.push(rec.extrainfo4);
+                    }
+                });
+                if (zgdbhlist.length) {
+                    var zgdbhs = zgdbhlist.join(',');
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/dwgxwz/SaveZGDCFTJZGDBH",
+                        data: { 'zgdbhlist': zgdbhs },
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data.code == "0") {
+                                var guid = data.id;
+                                var bcode = new Base64();
+                                var extrainfo1 = bcode.encode("view_jdbg_jdjl|" + bcode.encode("lx='zgd'"));
+                                var currentcfsj = $("#currentcfsj").datebox("getValue");
+                                var rdm = Math.random();
+                                var url = '/workflow/startwork?processid=81' +
+                                    "&extrainfo=" + encodeURIComponent(extrainfo1) +
+                                    "&guid=" + guid +
+                                    //"&zgdbhlist=" + zgdbhs +
+                                    "&currentcfsj=" + currentcfsj +
+                                    "&lastcfsj=" + lastcfsj +
+                                    "&callbackjs=" + encodeURIComponent("parent.layer.closeAll();") +
+                                    //"&returnurl=" + encodeURIComponent(window.location) +
+                                    "&_=" + rdm;
+
+                                parent.layer.open({
+                                    type: 2,
+                                    title: '整改单内容扣分处罚申请',
+                                    shadeClose: true,
+                                    shade: 0.8,
+                                    area: ['95%', '95%'],
+                                    content: url,
+                                    end: function () {
+                                    }
+                                });
+                            } else {
+                                if (data.msg == "")
+                                    data.msg = "保存整改单编号失败！";
+                                alert(data.msg);
+                            }
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                            $("body").unmask();
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                            $("body").mask("正在加载统计结果");
+                        }
+                    });
+
+
+                    //window.location = url;
+
+                }
+
+            }
+        }
+
+
+        function Base64() {
+
+            // private property
+            _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+            // public method for encoding
+            this.encode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = _utf8_encode(input);
+                while (i < input.length) {
+                    chr1 = input.charCodeAt(i++);
+                    chr2 = input.charCodeAt(i++);
+                    chr3 = input.charCodeAt(i++);
+                    enc1 = chr1 >> 2;
+                    enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                    enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                    enc4 = chr3 & 63;
+                    if (isNaN(chr2)) {
+                        enc3 = enc4 = 64;
+                    } else if (isNaN(chr3)) {
+                        enc4 = 64;
+                    }
+                    output = output +
+                    _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                    _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+                }
+                return output;
+            }
+
+            // public method for decoding
+            this.decode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3;
+                var enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+                while (i < input.length) {
+                    enc1 = _keyStr.indexOf(input.charAt(i++));
+                    enc2 = _keyStr.indexOf(input.charAt(i++));
+                    enc3 = _keyStr.indexOf(input.charAt(i++));
+                    enc4 = _keyStr.indexOf(input.charAt(i++));
+                    chr1 = (enc1 << 2) | (enc2 >> 4);
+                    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                    chr3 = ((enc3 & 3) << 6) | enc4;
+                    output = output + String.fromCharCode(chr1);
+                    if (enc3 != 64) {
+                        output = output + String.fromCharCode(chr2);
+                    }
+                    if (enc4 != 64) {
+                        output = output + String.fromCharCode(chr3);
+                    }
+                }
+                output = _utf8_decode(output);
+                return output;
+            }
+
+            // private method for UTF-8 encoding
+            _utf8_encode = function (string) {
+                string = string.replace(/\r\n/g, "\n");
+                var utftext = "";
+                for (var n = 0; n < string.length; n++) {
+                    var c = string.charCodeAt(n);
+                    if (c < 128) {
+                        utftext += String.fromCharCode(c);
+                    } else if ((c > 127) && (c < 2048)) {
+                        utftext += String.fromCharCode((c >> 6) | 192);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    } else {
+                        utftext += String.fromCharCode((c >> 12) | 224);
+                        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    }
+
+                }
+                return utftext;
+            }
+
+            // private method for UTF-8 decoding
+            _utf8_decode = function (utftext) {
+                var string = "";
+                var i = 0;
+                var c = c1 = c2 = 0;
+                while (i < utftext.length) {
+                    c = utftext.charCodeAt(i);
+                    if (c < 128) {
+                        string += String.fromCharCode(c);
+                        i++;
+                    } else if ((c > 191) && (c < 224)) {
+                        c2 = utftext.charCodeAt(i + 1);
+                        string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                        i += 2;
+                    } else {
+                        c2 = utftext.charCodeAt(i + 1);
+                        c3 = utftext.charCodeAt(i + 2);
+                        string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                        i += 3;
+                    }
+                }
+                return string;
+            }
+        }
+
+
+
+    </script>
+
+}
+
+
+<table id="workflow_templates_maintable"></table>
+<div id="workflow_templates_tb" style="padding:5px;height:auto;">
+    <div>
+        上次截止日期：<input id="lastcfsj" type="text" class="easyui-datebox" data-options="disabled:true">&nbsp;&nbsp;&nbsp;&nbsp;
+        本次截止日期：<input id="currentcfsj" type="text" class="easyui-datebox" data-options="editable:false">&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="javascript:workflow_templates_search();" class="easyui-linkbutton" iconCls="icon-search">获取统计结果</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="javascript:zgdcf_exportRecord();" class="easyui-linkbutton needhidden" iconCls="icon-save" style="display:none;">导出统计结果</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        <!--
+        <a href="javascript:zgdcf_deleteRecord();" class="easyui-linkbutton" iconCls="icon-no">删除</a>&nbsp;&nbsp;&nbsp;&nbsp;
+        -->
+        <a href="javascript:zgdcf_review();" class="easyui-linkbutton needhidden" iconCls="icon-view" style="display:none;">处罚详表</a>
+        <a href="javascript:zgdcf_exportQYKFLB();" class="easyui-linkbutton needhidden" iconCls="icon-save" style="display:none;">导出处罚详表</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+</div>

@@ -1,0 +1,108 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>起重机械详情</title>
+    <link href="@SkinManager.GetCssPath("users.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetEasyuiPath("/themes/icon.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetEasyuiPath("/themes/default/easyui.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetCssPath("jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetJsPath("jquery.easyui.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetJsPath("jquery.loadmask.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetJsPath("jquery-base64.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetJsPath("fileupload.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetJsPath("user.js")" type="text/javascript" charset="utf-8"></script>
+</head>
+<body style="background:white;">
+    <script language="javascript" type="text/javascript">
+        var recid = '@ViewData["recid"]';
+        $(function () {
+
+            var value = getsbcontent();
+            document.getElementById("show1").innerHTML = value;
+        });
+
+        function getsbcontent() {
+            var value = "";
+            $.ajax({
+                type: "POST",
+                url: "/syjg/getsb_info?recid=" + recid,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+
+                        var dt = eval(data.msg);//json为接收的后台返回的数据；
+                        var str = "";
+                        for (var i = 0; i < dt.length; i++) {
+                            str += "设备产权单位名称:" + dt[i]["propertycompanyname"] + "</br>"
+                            str += "--------------------------------------------------</br>";
+                            str += "设备名称:" + dt[i]["machineryname"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "起重机械型号:" + dt[i]["specificationmodel"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "设备备案编号:" + dt[i]["beianicp"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "设备产权单位机构代码证书:" + dt[i]["companycode"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "单位地址:" + dt[i]["propertycompanyaddress"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "企业法人代表:" + dt[i]["propertycompanylinkman"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "企业法人代表电话:" + dt[i]["propertycompanytel"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "技术负责人:" + dt[i]["propertycompanytechlinkman"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "技术负责人电话:" + dt[i]["propertycompanytechlinkmantel"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "联系人:" + dt[i]["factorylinkman"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "联系人电话:" + dt[i]["factorylinkmantel"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "制造单位:" + dt[i]["factoryname"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "出厂编号（依据合格证）:" + dt[i]["factoryno"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "出厂日期:" + dt[i]["madedate"].substr(0, 10) + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "设备购置时间:" + dt[i]["buytime"].substr(0, 10) + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "企业（产权单位）设备自编号:" + dt[i]["internaldeviceno"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "设备备案申报时间:" + dt[i]["addtime"].substr(0, 10) + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "经办人:" + dt[i]["replyman2realname"] + "</br>";
+                            str += "--------------------------------------------------</br>";
+                            str += "批准人:" + dt[i]["replyman1realname"] + "</br>";
+                            str += "</br></br>"
+                        }
+
+                        value = str;
+
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "获取失败";
+                        value = data.msg;
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            return value;
+        }
+
+    </script>
+
+
+    <div id="sbxx" style="padding:100px;width:90%;height:90px;" title="设备信息">
+        <div id="show1" style="font-size:40px"></div>
+    </div>
+</body>
+</html>

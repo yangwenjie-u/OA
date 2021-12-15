@@ -1,0 +1,135 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var rybh = '@ViewBag.rybh';
+        var ryxm= '@ViewBag.ryxm';
+
+        $(function () {
+            try {
+                InitGCList();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function InitGCList() {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/GetSplitedGCList?",
+                dataType: "json",
+                async: false,
+                data: { rybh: rybh },
+                success: function (data) {
+                    if (data.code == "0") {
+                        setGCList(data);
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "获取数据失败！";
+                        alert(data.msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+
+        function setGCList(data) {
+            if (data.total > 0) {
+                $('#gctbody').empty();
+                var contents = ""
+                $.each(data.rows, function (index, row) {
+                    contents += "<tr>";
+                    contents += "   <td><input type=\"checkbox\" name=\"gcbh\" /></td>";
+                    contents += "   <td class=\"gcbh\" id=\"" + row["gcbh"] + "\">" + row["gcbh"] + "</td>";
+                    contents += "   <td>" + row["gcmc"] + "</td>";
+                    contents += "   <td>" + row["gcdd"] + "</td>";
+                    contents += "</tr>";
+                });
+                $(contents).appendTo($('#gctbody'));
+            }
+        }
+
+        function doSubmit() {
+            var selectedgclist = [];
+            $('[name=gcbh]:checkbox').each(function (index, row) {
+                var td = $(this).parent().parent().find('.gcbh');
+                if (td.length > 0) {
+                    if ($(this).is(':checked')) {
+                        selectedgclist.push(td.attr('id'));
+                    }
+                }
+
+            });
+            if (selectedgclist.length == 0) {
+                layer.open({
+                    type: 0,
+                    title: '提示',
+                    content: '请选择工程！'
+                });
+                return;
+            }
+            else {
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/dosplitgc",
+                    dataType: "json",
+                    async: false,
+                    data: { splitedgcbhlist: selectedgclist.join(','), sourcerybh: rybh, sourceryxm: ryxm },
+                    success: function (data) {
+                        if (data.code == "0") {
+                            layer.open({
+                                type: 0,
+                                title: '提示',
+                                content: '拆分成功！',
+                                yes: function (index, layero) {
+                                    parent.layer.closeAll();
+                                }
+                            });
+                        } else {
+                            if (data.msg == "")
+                                data.msg = "获取数据失败！";
+                            layer.open({
+                                type: 0,
+                                title: '提示',
+                                content: data.msg
+                            });
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+
+        }
+
+
+
+
+    </script>
+}
+
+<table class="table table-striped" style="margin-bottom:30px;">
+    <thead>
+        <tr>
+            <th>选择</th>
+            <th>工程编号</th>
+            <th>工程名称</th>
+            <th>工程地点</th>
+        </tr>
+    </thead>
+    <tbody id="gctbody">
+    </tbody>
+</table>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="保存" />
+        &nbsp;&nbsp;
+    </form>
+</div>

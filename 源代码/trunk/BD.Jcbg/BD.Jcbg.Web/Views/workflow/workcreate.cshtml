@@ -1,0 +1,401 @@
+﻿@{
+    Layout = "~/Views/workflow/_workflow.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+	var workflow_workcreate_g_pageSize = 20;
+
+	$(function () {
+		
+
+		try {
+			
+			$('#workflow_workcreate_maintable').datagrid({
+				title: '我发起的工作',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/workflow/getworkcreatelist?rows=' + workflow_workcreate_g_pageSize + '&_=' + Math.random(),
+				rownumbers: true,
+				nowrap: true,
+				idField: 'Formid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: workflow_workcreate_g_pageSize,
+				pageList: [workflow_workcreate_g_pageSize, 40, 50, 100, 1000, 10000],
+				columns: [[
+				{ field: 'SerialNo', title: '流水号', width: 100, sortable: false, align: "center" },
+				{ field: 'FormName', title: '工作名称', width: 600, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var ret = value;
+						//if (row.ExtraInfo3 != null && row.ExtraInfo3 != "")
+						//	ret += "(" + row.ExtraInfo3 + ")";
+						if (row.ExtraInfo2 != null && row.ExtraInfo2 != "")
+							ret += "(" + row.ExtraInfo2 + ")";
+						return ret;
+					}
+				},
+				{ field: 'DoState', title: '状态', width: 60, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (value == -1)
+							return "临时保存";
+						else if (value == 0)
+							return "进行中";
+						else if (value == 1)
+							return "已完成";
+						else if (value == 3)
+							return "已撤销";
+						return "未知";
+					}
+				},
+				{ field: 'CreateTime', title: '时间', width: 120, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var timeVal = value;
+						if (timeVal == null || timeVal == "")
+							return "";
+						var dt = eval("new " + timeVal.substr(1, timeVal.length - 2));
+						return dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+					}
+				}
+				]],
+				toolbar: "#workflow_workcreate_tb",
+				onClickRow: function (rowIndex, rowData) {
+					workflow_workcreate_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					workflow_workcreate_viewRecord();
+				}
+			});
+			workflow_workcreate_initDs();
+			$("#workflow_workcreate_viewtab").tabs({
+				fit: true,
+				border: false,
+				plain: true
+			});
+		} catch (e) {
+			$.messager.alert('初始化页面异常', e.message, 'warning');
+		}
+
+	});
+	function workflow_workcreate_initDs() {
+		try {
+			$("#workflow_workcreate_search_status").combobox({
+				valueField: "state",
+				textField: "text",
+				mode: "local",
+				editable: false,
+				panelHeight: 'auto',
+				data: [{
+					state: '',
+					text: '不限'
+				}, {
+					state:'-1',
+					text: '临时保存'
+				},
+				{
+					state: '0',
+					text: '进行中'
+				},
+				{
+					state: '1',
+					text: '已完成'
+				},
+				{
+					state: '3',
+					text: '已撤销'
+				}]
+			});
+			$("#workflow_workcreate_search_status").combobox("select", "");
+		} catch (e) {
+			$.messager.alert('初始化查询条件异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_search() {
+		try {
+			workflow_workcreate_gridReload();
+		} catch (e) {
+			$.messager.alert('查找记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_showToolbar(rowData) {
+		try {
+			if (rowData.DoState == -1)
+				$("#workflow_workcreate_btnedit").linkbutton('enable');
+			else
+				$("#workflow_workcreate_btnedit").linkbutton('disable');
+			if (rowData.DoState == -1 || rowData.DoState == 0)
+				$("#workflow_workcreate_btncancel").linkbutton('enable');
+			else
+				$("#workflow_workcreate_btncancel").linkbutton('disable');
+
+			$("#workflow_workcreate_btnview").linkbutton('enable');
+			$("#workflow_workcreate_btnviewform").linkbutton('enable');
+			
+		} catch (e) {
+			$.messager.alert('显示工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_showNoRecToolbar() {
+		try {
+			$("#workflow_workcreate_maintable").datagrid('unselectAll');
+			$("#workflow_workcreate_btnedit").linkbutton('disable');
+			$("#workflow_workcreate_btnview").linkbutton('disable');
+			$("#workflow_workcreate_btncancel").linkbutton('disable');
+			$("#workflow_workcreate_btnviewform").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('显示无记录工具条异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_editRecord() {
+		try {
+			var rec = $("#workflow_workcreate_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			if (rec.DoState != -1) {
+				$.messager.alert('提示', '未提交的工作才能提交', 'info');
+				return;
+			}
+			window.location = "/workflow/startwork?processid=" + rec.Processid + "&serial=" + rec.SerialNo + "&_=" + Math.random() + "&ReturnUrl=" + encodeURIComponent(window.location)+ "&preurldone=true";
+		} catch (e) {
+			$.messager.alert('提交工作异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_gridReload() {
+		try {
+			$('#workflow_workcreate_maintable').datagrid('load', {
+				key: $("#workflow_workcreate_search_key").val(),
+				state:$("#workflow_workcreate_search_status").combobox("getValue")
+			});
+			workflow_workcreate_showNoRecToolbar();
+		} catch (e) {
+			$.messager.alert('加载表格异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_viewRecord() {
+		try {
+			var rec = $("#workflow_workcreate_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$('#workflow_workcreate_viewtable2').datagrid({
+				title: '',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/workflow/getdonetasks?serial=' + rec.SerialNo + '&_=' + Math.random(),
+				rownumbers: true,
+				nowrap: true,
+				idField: 'Taskid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: false,
+				columns: [[
+				{ field: 'TaskName', title: '任务名称', width: 100, sortable: false, align: "center" },
+				{ field: 'DateCompleted', title: '完成时间', width: 100, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var timeVal = value;
+						if (timeVal == null || timeVal == "")
+							return "";
+						var dt = eval("new " + timeVal.substr(1, timeVal.length - 2));
+						return dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+					}
+				},
+				{ field: 'GrantorRealName', title: '来自', width: 60, sortable: false, align: "center" },
+				{ field: 'UserRealName', title: '完成人', width: 60, sortable: false, align: "center" },
+				{ field: 'IsBack', title: '退回件', width: 40, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (value)
+							return "是";
+						return "否";
+					}
+				},
+				{ field: 'Opinion', title: '审批意见', width: 80, sortable: true, align: "center" }
+				]]
+			});
+			$('#workflow_workcreate_viewtable1').datagrid({
+				title: '',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/workflow/gettodotasks?serial=' + rec.SerialNo + '&_=' + Math.random(),
+				rownumbers: true,
+				nowrap: true,
+				idField: 'Taskid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: false,
+				columns: [[
+				{ field: 'TaskName', title: '任务名称', width: 100, sortable: false, align: "center" },
+				{ field: 'UserRealName', title: '下一步操作人', width: 100, sortable: false, align: "center" },
+				{ field: 'DateAccepted', title: '接收时间', width: 100, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var timeVal = value;
+						if (timeVal == null || timeVal == "")
+							return "";
+						var dt = eval("new " + timeVal.substr(1, timeVal.length - 2));
+						return dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate() + " " + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+					}
+				},
+				
+				{ field: 'PreUserRealName', title: '来自', width: 60, sortable: false, align: "center" },
+				{ field: 'IsBack', title: '退回件', width: 40, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						if (value)
+							return "是";
+						return "否";
+					}
+				},
+				{ field: 'TaskStatus', title: '状态', width: 60, sortable: false, align: "center",
+					formatter: function (value, row, index) {
+						if (value==7)
+							return "已撤销";
+						return "办理中";
+					} 
+				}
+				]],
+				onLoadSuccess: function (data) {
+					if (data.total == 0)
+						$('#workflow_workcreate_viewtab').tabs('select', 1);
+					else 
+						$('#workflow_workcreate_viewtab').tabs('select', 0);    
+					
+				}
+			});
+			$("#workflow_workcreate_viewdiv").dialog({
+				title: "审批过程查看",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: false,
+				cache: false,
+				width: 500,
+				height: 400,
+				buttons: [{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_workcreate_cancelview",
+					handler: function () {
+						$("#workflow_workcreate_viewdiv").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('审批过程查看异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_cancelRecord() {
+		try {
+			var rec = $("#workflow_workcreate_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			if (rec.DoState != -1 && rec.DoState != 0) {
+				$.messager.alert('提示', '只有未提交或者进行中的工作才能撤销', 'info');
+				return;
+			}
+			$.messager.confirm('提示', '确定要撤销选择的工作吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/workflow/canceltask?serial=" + rec.SerialNo,
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									var index = $("#workflow_workcreate_maintable").datagrid('getRowIndex', rec);
+									rec.DoState = 3;
+									$('#workflow_workcreate_maintable').datagrid('updateRow', {
+										index: index,
+										row: rec
+									});
+									workflow_workcreate_showNoRecToolbar();
+									$.messager.alert('提示', '撤销工作成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e.message, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在撤销...");
+						}
+					});
+				}
+			});
+		} catch (e) {
+			$.messager.alert('删除记录异常', e.message, 'warning');
+		}
+	}
+	function workflow_workcreate_viewForm() {
+		try {
+			var rec = $("#workflow_workcreate_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			} 
+			$("#workflow_workcreate_viewformdiv").dialog({
+				title: "表单查看",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				content: "<iframe width='100%' height='99%' name='workflow_workcreate_viewform_frm' id='workflow_workcreate_viewform_frm' frameborder='0' scrolling='auto' src='/workflow/processtest?serial=" + rec.SerialNo + "&id=" + rec.Processid + "&_=" + Math.random() + "'></iframe>",
+				fit: true,
+				cache: false,
+				buttons: [{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "workflow_workcreate_cancelformview",
+					handler: function () {
+						$("#workflow_workcreate_viewformdiv").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('表单查看异常', e.message, 'warning');
+		}
+	}
+</script>
+<table id="workflow_workcreate_maintable"></table>  
+<div id="workflow_workcreate_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a onclick="workflow_workcreate_editRecord();" id="workflow_workcreate_btnedit" class="easyui-linkbutton" iconCls="icon-edit" plain="true" disabled="true">转到提交页面</a>
+		<a onclick="workflow_workcreate_cancelRecord();" id="workflow_workcreate_btncancel" class="easyui-linkbutton" iconCls="icon-cancel" plain="true" disabled="true">撤销任务</a>
+		<a onclick="workflow_workcreate_viewRecord();" id="workflow_workcreate_btnview" class="easyui-linkbutton" iconCls="icon-donetasks" plain="true" disabled="true">审批过程查看</a>
+		<a onclick="workflow_workcreate_viewForm();" id="workflow_workcreate_btnviewform" class="easyui-linkbutton" iconCls="icon-view" plain="true" disabled="true">查看申请表</a>
+	</div>  
+	<div>
+		工作状态：<input id="workflow_workcreate_search_status" style="width:200px" />
+		关键字：<input id="workflow_workcreate_search_key" style="width:200px" />
+		<a href="javascript:workflow_workcreate_search();" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+	</div>
+</div>
+<div id="workflow_workcreate_viewdiv">
+<div id="workflow_workcreate_viewtab">   
+    <div title="审批中" data-options="closable:false">
+        <table id="workflow_workcreate_viewtable1"></table>     
+    </div>   
+    <div title="已完成" data-options="closable:false">
+       <table id="workflow_workcreate_viewtable2"></table> 
+    </div>   
+</div>  
+</div>
+<div id="workflow_workcreate_viewformdiv"></div>

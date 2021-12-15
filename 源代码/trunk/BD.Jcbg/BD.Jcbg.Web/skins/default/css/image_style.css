@@ -1,0 +1,36 @@
+﻿.image_row{
+    padding-top:10px;
+    padding-bottom:10px;
+    padding-left:0;
+    padding-right:0;
+    border-bottom:1px solid #f0f0f0;
+}
+.image_row1{
+    font-size:15px;
+    font-weight:600;
+    color:#909090;
+    line-height:30px;
+}
+.image_row4{
+    font-size:14px;
+    font-weight:100;
+    color:#909090;
+    line-height:24px;
+}
+.image_row3{
+    font-size:20px;
+    font-weight:100;
+    line-height:40px;
+}
+
+.image_row5{
+    font-size:12px;
+    font-weight:100;
+    color:#a0a0a0;
+    line-height:20px;
+}
+
+.cursor_hand{
+    cursor:pointer;
+}
+

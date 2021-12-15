@@ -1,0 +1,63 @@
+﻿@{
+	Layout = "~/Views/workflow/_workfloweditor.cshtml";
+}
+<script language="javascript" type="text/javascript">
+	$(function () {
+
+		try {
+			CKEDITOR.replace('editor', {
+				//uiColor: '#14B8C4',
+				toolbar:[
+					['Cut','Copy','Paste','PasteText','PasteFromWord'],
+					['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
+					['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
+					['Font', 'FontSize'],
+					['TextColor', 'BGColor'],
+					'/',
+					['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
+					['NumberedList','BulletedList','-','Outdent','Indent','Blockquote'],
+					['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+					['Link','Unlink','Anchor'],
+					['Image','Flash','Table','HorizontalRule','Smiley','SpecialChar','PageBreak'],	
+					['Source','Maximize']
+				]
+			});
+			var editor = CKEDITOR.instances.editor;
+			editor.on('instanceReady',
+				function (event) {
+					event.editor.getCommand('maximize').exec();
+				}
+			);
+		}
+		catch(e){
+			alert(e.message);
+		}
+	});
+	function getData() {
+		var data = "";
+		try {
+			var editor = CKEDITOR.instances.editor;
+			var data = $.base64.encode(editor.getData());
+		}
+		catch (e) {
+			alert(e.message);
+		}
+		return data;
+	}
+	function isDataChange() {
+		var ret = true;
+		
+		try {
+			var editor = CKEDITOR.instances.editor;
+			ret = editor.checkDirty();
+		}
+		catch (e) {
+			alert(e.message);
+		}
+		return ret;
+		
+	}
+</script>
+<textarea id="editor" name="editor" cols="80" rows="40">
+@Html.Raw(ViewBag.Html)
+</textarea>

@@ -1,0 +1,92 @@
+﻿@using BD.WorkFlow.Common;
+@{
+    ViewBag.Title = "工作审批";
+    Layout = "~/Views/workflow/_workflowdo.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    var g_Step = '@ViewBag.Step';
+    var g_Serial = '@ViewBag.Serial';
+    var g_ReturnUrl = '@ViewBag.ReturnUrl';
+
+    function backClick() {
+        window.location = g_ReturnUrl;
+    }
+
+    function doSubmit() {
+        try {
+            var extraparams = "?serial=" + g_Serial + "&step=" + g_Step;
+            $("#formbody").form('submit', {
+                url: "/workflow/DoModifyWork" + extraparams,
+                onSubmit: function (param) {
+                    var ret = false;
+                    try {
+                        var isValid = $(this).form('validate');
+                        if (!isValid)
+                            return false;
+                        
+                        $("#divformmain").mask("正在保存……");
+                        ret = true;
+                    }
+                    catch (err) {
+                        ret = false;
+                        $.messager.alert('提示', err, 'info');
+                    }
+                    return ret;
+                },
+                success: function (data) {
+                    try {
+                        if ($("#divformmain").isMasked()) {
+                            $("#divformmain").unmask();
+                        }
+                        var data = eval('(' + data + ')');
+                        var code = data.code;
+                        var msg = data.msg;
+                        if (code != 0) {
+                            $.messager.alert('提示', msg, 'info');
+                        }
+                        else {
+                            if (msg != "")
+                                g_ReturnUrl = msg;
+                            var str = "保存成功！";
+                            var offError = false;
+                            
+                            $.messager.alert('提示', str, 'info', function () {
+
+                                window.location = g_ReturnUrl;
+
+
+                            });
+                        }
+                    }
+                    catch (err) {
+                        $.messager.alert('提示', err, 'info');
+                    }
+                }
+            });
+        }
+        catch (err) {
+            $.messager.alert('提示', err, 'info');
+        }
+    }
+</script>
+}
+<div id="divformmain">
+    <form id='formbody' method='post'>
+        @Html.Raw(ViewBag.Html)
+    </form>
+
+    <div id="divbuttons">
+        <table cellpadding="0" cellspacing="0" style="width:100%">
+            <tr>
+
+                <td style="text-align:left">
+                    <div id="startwork_btn_td">
+                        <a id="btnSubmit" class="easyui-linkbutton" iconcls="icon-ok" onclick="doSubmit()">提交</a>
+                        <a id="btnBack" class="easyui-linkbutton" iconcls="icon-back" onclick="backClick()">返回</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>

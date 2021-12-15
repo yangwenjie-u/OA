@@ -1,0 +1,37 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!--移动设备-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--高速模式,webkit内核-->
+    <meta name="renderer" content="webkit">
+    <!--不支持IE兼容模式-->
+    <meta http-equiv="x-ua-compatible" content="IE=9,10,11">
+    <!--禁止搜索引擎转码,并附带广告-->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@Configs.Title</title>
+    <link href="@SkinManager.GetCssPath("style_20161216.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetJsPath("jquery-2.0.3.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src=@SkinManager.GetBootstrapPath("/PlugIns/Layer/layer.js") type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetJsPath("js_20161216.js")" type="text/javascript" charset="utf-8"></script>
+    @RenderSection("head", false)
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            if (typeof (CallCSharpMethodByResult) == "undefined") {
+                //window.location = "/user/downie"
+            }
+
+        });
+    </script>
+
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>

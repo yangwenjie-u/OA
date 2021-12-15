@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css" />
+    <link rel="stylesheet" type="text/css" href="/static/common/table.css" />
+    <style type="text/css">
+    .warp {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        margin-bottom: 50px;
+        min-height: 300px;
+    }
+
+    .lay-page {
+        position: absolute;
+        bottom: -50px;
+        right: 30px;
+        width: 100%;
+    }
+
+    .layer-page {
+        float: right;
+        margin-right: 20px;
+    }
+
+    .h-main {
+        float: right;
+        margin-top: -120px;
+    }
+
+    .layui-form-select {
+        width: 200px;
+        display: inline-block;
+    }
+
+    .find {
+        margin: 20px;
+    }
+
+    .search {
+        display: inline-block;
+        width: 100px;
+        text-align: center;
+        margin-left: 30px;
+        background: #4f81d8;
+        color: white;
+        border-radius: 10px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="find">
+        <label>请选择考勤区间</label>
+        <input class="Wdate" type="text" name="data1" id="dt1" onClick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd HH:mm:ss'})">-
+        <input class="Wdate" type="text" name="data2" id="dt2" onClick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+        <span id="search" class="search">搜索</span>
+    </div>
+    <div class="warp">
+        <table class="table table-border" id="table1">
+            <thead style="background: #f0f3fa;">
+                <tr>
+                    <th>工程名称</th>
+                    <th>施工单位</th>
+                    <th>考勤机序列号</th>
+                    <th>考勤时间</th>
+                    <th>进出类型</th>
+                </tr>
+            </thead>
+            <tbody id="tbody1">
+            </tbody>
+        </table>
+        <div id='test1' class="lay-page">
+            <div class="layer-page" id="page1"></div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static/lib/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/static/lib/My97DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript" src="/static/lib/layer/layer.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/common/common.js"></script>
+    <script type="text/javascript" src="/static/common/table.js"></script>
+    <script type="text/javascript">
+    var sfzhm = "@ViewBag.sfzhm";
+    var gcbh = "@ViewBag.gcbh";
+    load({
+        sfzhm: sfzhm,
+        gcbh: gcbh,
+        page: 1,
+        rows: 10
+    });
+    $("#search").click(function(event) {
+        var dt1 = $("#dt1").val(),
+            dt2 = $("#dt2").val();
+        if (!dt1 && !dt2) {
+            layer.msg("请输入时间");
+            return;
+        } else if (dt1 && dt2 && compare(dt1, dt2)) {
+            layer.msg("开始时间大于结束时间，请重新选择时间");
+            return;
+        }
+
+        load({
+            dt1: dt1,
+            dt2: dt2,
+            sfzhm: sfzhm,
+            gcbh: gcbh,
+            page: 1,
+            rows: 10
+        });
+    });
+
+    function compare(dt1, dt2) {
+        return parseFloat(dt1.replace(/\D/g, '')) > parseFloat(dt2.replace(/\D/g, ''))
+
+    }
+
+    function load(params) {
+        getTable('/tz/GetKQList', params, function(data) {
+            var str = '',
+                tmp;
+            for (var i = 0, len = data.data.length; i < len; i++) {
+                tmp = data.data[i];
+                str += "<tr><td>" + tmp.projectname + "</td><td>" + tmp.companyname + "</td><td>" + tmp.serial + "</td><td>" + tmp.logdate + "</td><td>";
+                str += (tmp.logtype == 1) ? '进门考勤' : '出门考勤' + "</td></tr>";
+            }
+            $("#tbody1").html(str);
+
+        }, {
+            doc: $('#test1'),
+            page: 'page',
+            pageSize: 'rows',
+            count: 'count',
+        });
+    }
+    </script>
+</body>
+
+</html>

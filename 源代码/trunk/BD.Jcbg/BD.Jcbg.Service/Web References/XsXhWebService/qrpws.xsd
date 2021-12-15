@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://ws.web.wxg.com/" targetNamespace="http://ws.web.wxg.com/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="afterUpNotLklcData" type="tns:afterUpNotLklcData" />
+  <xs:element name="afterUpNotLklcDataResponse" type="tns:afterUpNotLklcDataResponse" />
+  <xs:element name="afterUploadJcDataForLklc" type="tns:afterUploadJcDataForLklc" />
+  <xs:element name="afterUploadJcDataForLklcResponse" type="tns:afterUploadJcDataForLklcResponse" />
+  <xs:element name="defaultQrCodeImgWithBase64" type="tns:defaultQrCodeImgWithBase64" />
+  <xs:element name="defaultQrCodeImgWithBase64Response" type="tns:defaultQrCodeImgWithBase64Response" />
+  <xs:element name="editJcOrganAll" type="tns:editJcOrganAll" />
+  <xs:element name="editJcOrganAllEx" type="tns:editJcOrganAllEx" />
+  <xs:element name="editJcOrganAllExResponse" type="tns:editJcOrganAllExResponse" />
+  <xs:element name="editJcOrganAllResponse" type="tns:editJcOrganAllResponse" />
+  <xs:element name="editJcOrganName" type="tns:editJcOrganName" />
+  <xs:element name="editJcOrganNameResponse" type="tns:editJcOrganNameResponse" />
+  <xs:element name="getLastErr" type="tns:getLastErr" />
+  <xs:element name="getLastErrResponse" type="tns:getLastErrResponse" />
+  <xs:element name="getNotLklcQRCode" type="tns:getNotLklcQRCode" />
+  <xs:element name="getNotLklcQRCodeResponse" type="tns:getNotLklcQRCodeResponse" />
+  <xs:element name="getNotLklcQRCodeStr" type="tns:getNotLklcQRCodeStr" />
+  <xs:element name="getNotLklcQRCodeStrResponse" type="tns:getNotLklcQRCodeStrResponse" />
+  <xs:element name="getOrgIdByJcdwName" type="tns:getOrgIdByJcdwName" />
+  <xs:element name="getOrgIdByJcdwNameResponse" type="tns:getOrgIdByJcdwNameResponse" />
+  <xs:element name="getOrgIdByJcdwOrgCode" type="tns:getOrgIdByJcdwOrgCode" />
+  <xs:element name="getOrgIdByJcdwOrgCodeResponse" type="tns:getOrgIdByJcdwOrgCodeResponse" />
+  <xs:element name="preGetNotLklcQRCodeStr" type="tns:preGetNotLklcQRCodeStr" />
+  <xs:element name="preGetNotLklcQRCodeStrResponse" type="tns:preGetNotLklcQRCodeStrResponse" />
+  <xs:element name="preGetQrCodeString" type="tns:preGetQrCodeString" />
+  <xs:element name="preGetQrCodeStringResponse" type="tns:preGetQrCodeStringResponse" />
+  <xs:element name="registerJcJg" type="tns:registerJcJg" />
+  <xs:element name="registerJcJgAll" type="tns:registerJcJgAll" />
+  <xs:element name="registerJcJgAllResponse" type="tns:registerJcJgAllResponse" />
+  <xs:element name="registerJcJgResponse" type="tns:registerJcJgResponse" />
+  <xs:element name="requestDefaultQrCodeImg" type="tns:requestDefaultQrCodeImg" />
+  <xs:element name="requestDefaultQrCodeImgResponse" type="tns:requestDefaultQrCodeImgResponse" />
+  <xs:element name="requestDefaultQrCodeStr" type="tns:requestDefaultQrCodeStr" />
+  <xs:element name="requestDefaultQrCodeStrResponse" type="tns:requestDefaultQrCodeStrResponse" />
+  <xs:element name="requestQrCodeImg" type="tns:requestQrCodeImg" />
+  <xs:element name="requestQrCodeImgResponse" type="tns:requestQrCodeImgResponse" />
+  <xs:element name="upLoadCurve" type="tns:upLoadCurve" />
+  <xs:element name="upLoadCurveResponse" type="tns:upLoadCurveResponse" />
+  <xs:element name="upLoadVideo" type="tns:upLoadVideo" />
+  <xs:element name="upLoadVideoResponse" type="tns:upLoadVideoResponse" />
+  <xs:element name="upNotLklcData" type="tns:upNotLklcData" />
+  <xs:element name="upNotLklcDataResponse" type="tns:upNotLklcDataResponse" />
+  <xs:element name="upNotLklcReport" type="tns:upNotLklcReport" />
+  <xs:element name="upNotLklcReportResponse" type="tns:upNotLklcReportResponse" />
+  <xs:element name="upReport" type="tns:upReport" />
+  <xs:element name="upReportResponse" type="tns:upReportResponse" />
+  <xs:element name="uploadJcDataForLklc" type="tns:uploadJcDataForLklc" />
+  <xs:element name="uploadJcDataForLklcResponse" type="tns:uploadJcDataForLklcResponse" />
+  <xs:element name="ypNumberPerPage" type="tns:ypNumberPerPage" />
+  <xs:element name="ypNumberPerPageResponse" type="tns:ypNumberPerPageResponse" />
+  <xs:complexType name="upLoadVideo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upLoadVideoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ypNumberPerPage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ypNumberPerPageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="uploadJcDataForLklc">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="uploadJcDataForLklcResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upReport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+      <xs:element minOccurs="0" name="arg6" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upReportResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="editJcOrganAll">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="editJcOrganAllResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestDefaultQrCodeImg">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestDefaultQrCodeImgResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="editJcOrganAllEx">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="editJcOrganAllExResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="defaultQrCodeImgWithBase64">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="defaultQrCodeImgWithBase64Response">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upNotLklcReport">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upNotLklcReportResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registerJcJg">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registerJcJgResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="editJcOrganName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="editJcOrganNameResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="afterUploadJcDataForLklc">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="afterUploadJcDataForLklcResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getOrgIdByJcdwOrgCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getOrgIdByJcdwOrgCodeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="preGetNotLklcQRCodeStr">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="preGetNotLklcQRCodeStrResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upLoadCurve">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="arg4" nillable="true" type="xs:base64Binary" />
+      <xs:element minOccurs="0" name="arg5" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upLoadCurveResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestQrCodeImg">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+      <xs:element name="arg3" type="xs:int" />
+      <xs:element name="arg4" type="xs:int" />
+      <xs:element minOccurs="0" name="arg5" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestQrCodeImgResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" nillable="true" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registerJcJgAll">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element minOccurs="0" name="arg4" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registerJcJgAllResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getNotLklcQRCode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getNotLklcQRCodeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getNotLklcQRCodeStr">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getNotLklcQRCodeStrResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="preGetQrCodeString">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="preGetQrCodeStringResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getLastErr">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getLastErrResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getOrgIdByJcdwName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getOrgIdByJcdwNameResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="afterUpNotLklcData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="afterUpNotLklcDataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestDefaultQrCodeStr">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element name="arg2" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="requestDefaultQrCodeStrResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upNotLklcData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="xs:string" />
+      <xs:element minOccurs="0" name="arg1" type="xs:string" />
+      <xs:element minOccurs="0" name="arg2" type="xs:string" />
+      <xs:element minOccurs="0" name="arg3" type="xs:string" />
+      <xs:element name="arg4" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upNotLklcDataResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

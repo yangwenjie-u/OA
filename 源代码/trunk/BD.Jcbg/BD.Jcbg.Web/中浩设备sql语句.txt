@@ -1,0 +1,483 @@
+*********************************************************************************************
+更新时间：2017-07-01
+更 新 人：章淼
+更新内容：
+	中浩微信设备管理数据表增加
+
+
+
+DROP TABLE I_M_SB;
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[I_M_SB](
+	[RECID] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[SSDWBH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SSDWMC] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[SBBH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SBMC] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[SBXH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SCCJ] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[SBFL] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[GMRQ] [datetime] NULL,
+	[QYRQ] [datetime] NULL,
+	[CCRQ] [datetime] NULL,
+	[CCBH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[CLFW] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[XCBDRQ] [datetime] NULL,
+	[JNJHSYSJ] [datetime] NULL,
+	[ZQDDJ] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[BZ] [nvarchar](500) COLLATE Chinese_PRC_CI_AS NULL,
+	[LRRZH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[LRRXM] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[LRSJ] [datetime] NULL,
+	[STATUS] [nvarchar](8) COLLATE Chinese_PRC_CI_AS NULL,
+	[DEPCODE] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[DEPNAME] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[SYDW] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZSLX] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[ZSBH] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SYFS] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[SFJL] [nvarchar](8) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_I_M_SB] PRIMARY KEY CLUSTERED 
+(
+	[RECID] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+DROP TABLE zhwx_equipstatus;
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[zhwx_equipstatus](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[status] [varchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[statusname] [varchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[toact] [varchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[sfqr] [varchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[sfmylendequips] [varchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[presfqr] [varchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[sfgz] [varchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_equipstatus] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+
+
+/***********修改视图*************/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER VIEW [dbo].[View_I_M_SB]
+AS
+SELECT     t1.RECID, t1.SSDWBH, t1.SSDWMC, t1.SBBH, t1.SBMC, t1.SBXH, t1.SCCJ, t1.SBFL, dbo.FuncGetDateString(t1.GMRQ) AS SY_GMRQ, dbo.FuncGetDateString(t1.QYRQ) 
+                      AS SY_QYRQ, dbo.FuncGetDateString(t1.CCRQ) AS SY_CCRQ, t1.CCBH, t1.CLFW, dbo.FuncGetDateString(t1.XCBDRQ) AS SY_XCBDRQ, t1.JNJHSYSJ, t1.ZQDDJ, t1.BZ,
+                       t1.LRRZH, t1.LRRXM, t1.LRSJ, t1.STATUS, t1.DEPCODE, t1.DEPNAME, t1.SYDW, t1.ZSLX, t1.ZSBH, t1.SYFS, t1.SFJL, t2.statusname
+FROM         dbo.I_M_SB AS t1 LEFT OUTER JOIN
+                      dbo.zhwx_equipstatus AS t2 ON t1.STATUS = t2.status
+
+
+
+/************************/
+
+
+
+delete from FORM where FormDm = 'JCJGGL_JGSBGL';
+insert into FORM(formdm,formstatus,menucode,tablename,pagesize,limitsize,dbclickfunname,jsname,checkbox,sqltype,singleselect,memo,cssname,summaryheight) values (  'JCJGGL_JGSBGL', '0', 'JCJGGL_JGSBGL', 'select * from View_I_M_SB where ( 1=1 or lrrzh=''$$用户名称$$'') order by recid desc', '20', '[20,50,100,1000]', 'edit();', 'JCJGGL_JGSBGL.js', 'True', 'SQL', 'True', '机构设备管理', '', '0') ;
+
+delete FROM         FORMBUTTON  WHERE     (FormDm = 'JCJGGL_JGSBGL');
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '录入', 'add();', '', 'fa fa-plus', '1', '') ;
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '修改', 'edit();', '', 'fa fa-pencil-square-o', '3', '') ;
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '删除', 'del();', '', 'fa fa-close', '4', '') ;
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '复制', 'copy();', '', 'fa fa-copy', '2', '') ;
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '生成二维码', 'createvcode();', '', 'fa fa-qrcode', '5', '') ;
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '导出到Excel', 'exportexcel();', '', 'fa fa-file-excel-o', '6', '') ;
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '导出测量设备', 'celiangexcel();', '', 'fa fa-file-excel-o', '7', '') ;
+insert into FORMBUTTON(formdm,formstatus,btnmc,btnfunname,btnhint,btnicon,orderno,btntype) values ( 'JCJGGL_JGSBGL', '0', '导出溯源设备', 'suyuanexcel()', '', 'fa fa-file-excel-o', '8', '') ;
+
+
+delete  FROM    FORMZDZD where (FormDm = 'JCJGGL_JGSBGL')
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'RECID', '记录识别号', '', '100', '', 'center', 'True', 'False', 'False', '0', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SSDWMC', '单位名称', '', '140', '', 'center', 'True', 'False', 'False', '1', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'DEPNAME', '所属部门名称', '', '120', '', 'center', 'True', 'True', 'True', '3', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SBMC', '设备名称', '', '100', '', 'center', 'True', 'True', 'True', '4', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SBXH', '型号规格', '', '80', '', 'center', 'True', 'True', 'True', '5', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SCCJ', '生产厂家', '', '140', '', 'center', 'True', 'True', 'True', '6', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SYFS', '溯源方式', '', '60', '', 'center', 'True', 'True', 'True', '7', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SY_XCBDRQ', '溯源到期时间', '', '200', '', 'center', 'True', 'True', 'True', '8', '', 'date', 'date', 'yyyy-MM-dd') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SYDW', '溯源单位', '', '160', '', 'center', 'True', 'True', 'True', '9', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SBFL', '设备分类', '', '100', '', 'center', 'True', 'True', 'True', '10', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'BZ', '备注', '', '100', '', 'center', 'True', 'True', 'True', '7', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'statusname', '状态', '', '60', '', 'center', 'True', 'True', 'True', '12', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SFJL', '是否计量', '', '60', '', 'center', 'True', 'True', 'True', '13', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'SBBH', '内部编号', '', '100', '', 'center', 'True', 'True', 'True', '2', '', '', '', '') ;
+insert into FORMZDZD(formdm,formstatus,zdname,zdsy,zdtip,zdwidth,zdcolor,align,sfpx,sfshow,sfswitch,orderno,formatevent,filtertype,datatype,cellsformat) values ( 'JCJGGL_JGSBGL', '0', 'CCBH', '出厂编号', '', '100', '', 'center', 'True', 'True', 'True', '2', '', '', '', '') ;
+
+
+
+delete from zhwx_equipstatus
+
+insert into zhwx_equipstatus(status,statusname,toact,sfqr,sfmylendequips,presfqr,sfgz) values ( '2', '借出', '7-借出归还|8-转借|3-外借,8-转借', '0', '1', '1', '1') ;
+insert into zhwx_equipstatus(status,statusname,toact,sfqr,sfmylendequips,presfqr,sfgz) values ( '3', '外借', '7-外借归还|8-转借|3-外借,8-转借', '0', '1', '1', '1') ;
+insert into zhwx_equipstatus(status,statusname,toact,sfqr,sfmylendequips,presfqr,sfgz) values ( '4', '报废', '|', '0', '0', '0', '0') ;
+insert into zhwx_equipstatus(status,statusname,toact,sfqr,sfmylendequips,presfqr,sfgz) values ( '5', '保养', '7-保养归还|', '0', '0', '0', '0') ;
+insert into zhwx_equipstatus(status,statusname,toact,sfqr,sfmylendequips,presfqr,sfgz) values ( '6', '检定', '7-检定归还|', '0', '0', '0', '0') ;
+insert into zhwx_equipstatus(status,statusname,toact,sfqr,sfmylendequips,presfqr,sfgz) values ( '7', '可借', '4-报废&5-保养&6-检定|2-借出|3-外借,2-借出', '0', '0', '0', '0') ;
+insert into zhwx_equipstatus(status,statusname,toact,sfqr,sfmylendequips,presfqr,sfgz) values ( '8', '转借', '7-转借归还|8-转借|3-外借,8-转借', '0', '1', '1', '1') ;
+
+
+delete FROM         ZDZD_JC WHERE     (SJBMC = 'I_M_SB')
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'RECID', '记录识别号', 'nvarchar', '50', '0', '', '', 'True', 'TB:table-PR_M_BHMS|fieldname-BHMS|customwhere-BHMSJZ=''I_M_SB__RECID''|maxbhfield-ZDBH', 'False', 'False', '0', '1.0000', 'False', 'False', '', '', '', 'X', '1.0000', 'False', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SSDWBH', '单位编号', 'nvarchar', '50', '0', '', '', 'False', '', 'True', 'False', '0', '2.0000', 'False', 'True', '$$CPCODE$$', '', '', 'W', '2.0000', 'False', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SSDWMC', '单位名称', 'nvarchar', '200', '0', '', '', 'False', '', 'True', 'True', '0', '3.0000', 'True', 'True', '$$CPNAME$$', '', '', 'W', '3.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SBBH', '内部设备编号', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '6.0000', 'False', 'True', '', '', '', 'W', '6.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SBMC', '设备名称', 'nvarchar', '200', '0', '', '', 'False', '', 'False', 'True', '0', '7.0000', 'False', 'True', '', '', '', 'W', '7.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SBXH', '型号规格', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '8.0000', 'False', 'False', '', '', '', 'W', '8.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SCCJ', '生产厂家', 'nvarchar', '200', '0', '', '', 'False', '', 'False', 'True', '0', '19.0000', 'False', 'False', '', '', '', 'W', '19.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SBFL', '设备分类', 'nvarchar', '50', '0', '', 'SELECT', 'False', '', 'False', 'True', '0', '22.0000', 'False', 'False', '', '', 'valueFixed--,,1|节能,节能,0|市政,市政,0|环境设备,环境设备,0|智能,智能,0|测绘,测绘,0|建材,建材,0|辅助型设备,辅助型设备,0', 'W', '22.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'GMRQ', '购买日期', 'datetime', '8', '0', 'DATETIME', '', 'False', '', 'False', 'False', '0', '111.0000', 'False', 'False', '', '', '', 'W', '111.0000', 'False', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'QYRQ', '溯源时间', 'datetime', '8', '0', 'DATETIME', 'DATE', 'False', '', 'False', 'True', '0', '11.0000', 'False', 'False', '', '', '', 'W', '11.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'CCRQ', '出厂日期', 'datetime', '8', '0', 'DATETIME', '', 'False', '', 'False', 'False', '0', '111.0000', 'False', 'False', '', '', '', 'W', '111.0000', 'False', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'CCBH', '出厂编号', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '15.0000', 'False', 'False', '', '', '', 'W', '15.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'CLFW', '测量范围', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '16.0000', 'False', 'False', '', '', '', 'W', '16.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'XCBDRQ', '溯源到期时间', 'datetime', '8', '0', 'DATETIME', 'DATE', 'False', '', 'False', 'True', '0', '14.0000', 'False', 'True', '#DATETIME#', '', '', 'W', '14.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'JNJHSYSJ', '今年计划溯源时间', 'datetime', '8', '0', 'DATETIME', 'DATE', 'False', '', 'False', 'True', '0', '10.0000', 'False', 'False', '', '', '', 'W', '10.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'ZQDDJ', '准确度/等级', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '17.0000', 'False', 'False', '', '', '', 'W', '17.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'BZ', '备注', 'nvarchar', '500', '0', '', '', 'False', '', 'False', 'True', '0', '25.0000', 'True', 'False', '', '', '', 'W', '25.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'LRRZH', '保管人账号', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '20.0000', 'False', 'False', '$$USERNAME$$', '', '', 'W', '20.0000', 'False', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'LRRXM', '保管人姓名', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '21.0000', 'False', 'False', '$$REALNAME$$', '', '', 'W', '21.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'LRSJ', '录入时间', 'datetime', '8', '0', 'DATETIME', '', 'False', '', 'False', 'False', '0', '1111.0000', 'False', 'False', '#DATETIME#', '', '', 'W', '1111.0000', 'False', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'STATUS', '设备状态', 'nvarchar', '8', '0', '', 'SELECT', 'False', '', 'True', 'True', '0', '23.0000', 'False', 'False', '7', '', 'valueTable--table-zhwx_equipstatus|fieldname-statusname,status|order-status', 'W', '23.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'DEPCODE', '所属部门代码', 'nvarchar', '50', '200', '', '', 'False', '', 'True', 'True', '0', '4.0000', 'False', 'True', '$$DEPCODE$$', '', '', 'W', '4.0000', 'False', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'DEPNAME', '所属部门名称', 'nvarchar', '50', '200', '', 'SELECT', 'False', '', 'True', 'True', '0', '5.0000', 'False', 'True', '$$DEPNAME$$', '', 'valueMemory--table-#DEP#|fieldname-#DEPNAME#,#DEPNAME#|blank-0||ctrlChange--targetctrl-I_M_SB.DEPCODE|fieldname-#DEPCODE#|table-#DEP#|blank-0|datatype-memory|wherectrl-I_M_SB.DEPNAME|wherefield-#DEPNAME#', 'W', '5.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SYDW', '溯源单位', 'nvarchar', '200', '0', '', '', 'False', '', 'False', 'True', '0', '9.0000', 'False', 'False', '', '', '', 'W', '9.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'ZSLX', '证书类型', 'nvarchar', '20', '0', '', 'SELECT', 'False', '', 'False', 'True', '0', '12.0000', 'False', 'False', '', '', 'valueFixed--校准证书,校准证书,1|检定证书,检定证书,0|核查规程,核查规程,0|一年,一年,0|功能性检查,功能性检查,0|/,/,0', 'W', '12.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'ZSBH', '证书编号', 'nvarchar', '50', '0', '', '', 'False', '', 'False', 'True', '0', '13.0000', 'False', 'False', '', '', '', 'W', '13.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SYFS', '溯源方式', 'nvarchar', '20', '0', '', 'SELECT', 'False', '', 'False', 'True', '0', '18.0000', 'False', 'False', '', '', 'valueFixed--,,1|送校,送校,0|送检,送检,0|校准,校准,0|核查,核查,0|功能性检查,功能性检查,0', 'W', '18.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+insert into ZDZD_JC(sjbmc,zdmc,sy,zdlx,zdcd1,zdcd2,inputzdlx,kjlx,sfbhzd,bhms,zdsx,sfxs,xscd,xssx,sfgd,mustin,defaval,helplnk,ctrlstring,zdxz,wxssx,wsfxs,msginfo,eqlfunc,helpwhere,getbybh,ssjcx,sfbgzd,validproc,lx) values ( 'I_M_SB', 'SFJL', '是否计量', 'nvarchar', '8', '0', '', 'SELECT', 'False', '', 'False', 'True', '0', '24.0000', 'False', 'False', '', '', 'valueFixed--是,是,1|否,否,0', 'W', '24.0000', 'True', '', '', '', 'True', '', '', '', 'N') ;
+
+
+
+DROP TABLE zhwx_bd_message_total;
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_bd_message_total](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[phone] [nvarchar](11) COLLATE Chinese_PRC_CI_AS NULL,
+	[yzmday] [int] NULL,
+	[total] [int] NULL,
+	[yzmtotal] [int] NULL,
+ CONSTRAINT [PK_zhwx_bd_message_total] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+ 
+
+DROP TABLE zhwx_equiprecord;
+/****** 对象:  Table [dbo].[zhwx_equiprecord]    脚本日期: 06/30/2017 15:27:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_equiprecord](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[equipid] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[handler] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[name] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[unitid] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[unitname] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[datetime] [datetime] NULL,
+	[attachname] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[attachwidth] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[attachheight] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[attach] [image] NULL,
+	[thumbattach] [image] NULL,
+	[attachtype] [nvarchar](4) COLLATE Chinese_PRC_CI_AS NULL,
+	[act] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[address] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[nextaddress] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[status] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[depcode] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[depname] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_equiprecord] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+DROP TABLE zhwx_equiprecord_tmp;
+
+/****** 对象:  Table [dbo].[zhwx_equiprecord_tmp]    脚本日期: 06/30/2017 15:27:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_equiprecord_tmp](
+	[uuid] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[equipid] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[handler] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[name] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[unitid] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[unitname] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[attachname] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[attachwidth] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[attachheight] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[attach] [image] NULL,
+	[thumbattach] [image] NULL,
+	[attachtype] [nvarchar](4) COLLATE Chinese_PRC_CI_AS NULL,
+	[datetime] [datetime] NULL,
+	[depcode] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[depname] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_equiprecord_tmp_1] PRIMARY KEY CLUSTERED 
+(
+	[uuid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+DROP TABLE zhwx_equipremind_bd;
+/****** 对象:  Table [dbo].[zhwx_equipremind_bd]    脚本日期: 06/30/2017 15:28:05 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_equipremind_bd](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[equipid] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_equipremind_bd] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+DROP TABLE zhwx_equipremind_gz;
+/****** 对象:  Table [dbo].[zhwx_equipremind_gz]    脚本日期: 06/30/2017 15:28:19 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_equipremind_gz](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[equipid] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_equipremind_gc] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+DROP TABLE zhwx_excel_no_depcode;
+/****** 对象:  Table [dbo].[zhwx_excel_no_depcode]    脚本日期: 06/30/2017 15:28:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_excel_no_depcode](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[sqlcode] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[itemname] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[sort] [int] NULL,
+ CONSTRAINT [PK_zhwx_excel_no_depcode] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+DROP TABLE zhwx_mylendequips
+/****** 对象:  Table [dbo].[zhwx_mylendequips]    脚本日期: 06/30/2017 15:28:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_mylendequips](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[usercode] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[equipid] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[username] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[datetime] [datetime] NULL,
+ CONSTRAINT [PK_zhwx_myequips] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+DROP TABLE zhwx_pushmessages
+/****** 对象:  Table [dbo].[zhwx_pushmessages]    脚本日期: 06/30/2017 15:29:19 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_pushmessages](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[title] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[context] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[pusher] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[pushername] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[datetime] [datetime] NULL,
+	[type] [nvarchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[issure] [nvarchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[isneedsure] [nvarchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[isread] [nvarchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[ispush] [nvarchar](2) COLLATE Chinese_PRC_CI_AS NULL,
+	[equipid] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_pushmessages] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+DROP TABLE zhwx_sbewm;
+/****** 对象:  Table [dbo].[zhwx_sbewm]    脚本日期: 06/30/2017 15:29:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_sbewm](
+	[id] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[value] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_sbewm] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+DROP TABLE zhwx_syssetting;
+/****** 对象:  Table [dbo].[zhwx_syssetting]    脚本日期: 06/30/2017 15:29:58 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[zhwx_syssetting](
+	[SettingId] [int] IDENTITY(1,1) NOT NULL,
+	[SettingCode] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[SettingName] [nvarchar](100) COLLATE Chinese_PRC_CI_AS NULL,
+	[SettingValue] [varchar](500) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwx_syssetting] PRIMARY KEY CLUSTERED 
+(
+	[SettingId] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+
+DROP TABLE zhwx_user;
+/****** 对象:  Table [dbo].[zhwx_user]    脚本日期: 06/30/2017 15:30:12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_user](
+	[uuid] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[usercode] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[openid] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[session_key] [nvarchar](200) COLLATE Chinese_PRC_CI_AS NULL,
+	[phone] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+ CONSTRAINT [PK_zhwxuser] PRIMARY KEY CLUSTERED 
+(
+	[uuid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+DROP TABLE zhwx_waitreturn;
+/****** 对象:  Table [dbo].[zhwx_waitreturn]    脚本日期: 06/30/2017 15:30:29 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_waitreturn](
+	[recid] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NOT NULL,
+	[equipid] [nvarchar](50) COLLATE Chinese_PRC_CI_AS NULL,
+	[sql] [nvarchar](2000) COLLATE Chinese_PRC_CI_AS NULL,
+	[sort] [int] NULL,
+ CONSTRAINT [PK_zhwx_waitreturn] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+DROP TABLE zhwx_yzm;
+
+/****** 对象:  Table [dbo].[zhwx_yzm]    脚本日期: 06/30/2017 15:30:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[zhwx_yzm](
+	[recid] [int] IDENTITY(1,1) NOT NULL,
+	[phone] [nvarchar](11) COLLATE Chinese_PRC_CI_AS NULL,
+	[yzm] [nvarchar](20) COLLATE Chinese_PRC_CI_AS NULL,
+	[datetime] [datetime] NULL,
+ CONSTRAINT [PK_zhwx_yzm] PRIMARY KEY CLUSTERED 
+(
+	[recid] ASC
+)WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_BASE_SETTING', 'SMS_BASE_SETTING_DNS', '百度短信域名', 'sms.bj.baidubce.com', 'False', 'False', '1', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_BASE_SETTING', 'SMS_BASE_SETTING_URL', '百度短信网页', '/bce/v2/message', 'False', 'False', '2', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_BASE_SETTING', 'SMS_BASE_SETTING_INVOKE_ID', '百度短信签名标识', 'ewbqiJgs-irON-BTAT', 'False', 'False', '3', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_REGISTER_SETTING', 'SMS_REGISTER_SETTING_TEMPLATE_CODE', '注册验证模板标识', 'smsTpl:fe395b91-24d3-4deb-9331-ff619bb15127', 'False', 'False', '4', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_MESSAGE_SETTING', 'SMS_MESSAGE_SETTING_TEMPLATE_CODE', '通知模板标识', 'smsTpl:bf726ed4-ea9f-4a6e-9360-30f276893946', 'False', 'False', '6', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_REGISTER_SETTING', 'SMS_REGISTER_SETTING_VERIFY_CODE_LENGTH', '注册验证码长度', '6', 'False', 'False', '6', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_REGISTER_SETTING', 'SMS_REGISTER_SETTING_VERIFY_CODE_SECONDS', '注册验证码有效时间（分）', '10', 'False', 'False', '7', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_REGISTER_SETTING', 'SMS_REGISTER_SETTING_VERIFY_CODE_MIN_SPAN', '注册验证码重发时间（分）', '1', 'False', 'False', '8', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_BASE_SETTING', 'SMS_BASE_SETTING_APP_ID', '应用标识', 'JDBG', 'False', 'False', '7', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_BASE_SETTING', 'SMS_BASE_SETTING_KEY_ID', '百度密钥标识', 'bec22da42afa4b71914a03a5d91e1172', 'False', 'False', '5', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_BASE_SETTING', 'SMS_BASE_SETTING_SECRET_KEY', '百度传输密钥', '71e84fbbb6164e96963794e733c7f391', 'False', 'False', '6', 'True') ;
+insert into SysSetting(companycode,groupid,settingcode,settingname,settingvalue,isupload,istemplate,displayorder,inuse) values ( '', 'SMS_REGISTER_SETTING', 'SMS_REGISTER_SETTING_TEMPLATE_CODE_USERINFO', '账号密码通知模板标识', 'smsTpl:a49b8c70-c40a-44c3-8543-5e3dbbd87cbe', 'False', 'False', '5', 'True') ;
+
+
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_APPID', '微信小程序appid', 'wxc7e4da3abafb7bde') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_SECRET', '微信小程序secret', '65e160b471effda6a0847bce39e11718') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_TEMPLATE_ID_1', '微信小程序设备状态推送模板1', 'G54Q6I540w34uK5oKYAPoopqjWjktytqU39c9ioCdkU') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_LOGIN_URL', '微信小程序登录链接', 'https://api.weixin.qq.com/sns/jscode2session') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_LOGIN_GRANT_TYPE', '微信小程序获取session_key时的必要参数grant_type', 'authorization_code') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'BD_WX_LOGIN_VERIFYCODE_LENGTH', '微信小程序百度验证码长度（最大20位）', '6') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'BD_WX_LOGIN_VERIFYCODE_TIME', '微信小程序百度验证码有效期（分钟）', '20') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'BD_WX_LOGIN_VERIFYCODE_TEMPLATE', '微信小程序百度验证码模板', 'smsTpl:14b154e0-0821-4060-b022-83b5c04b774a') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'BD_WX_EQUIP_STATUS_TEMPLATE', '微信小程序设备状态通知模板', 'smsTpl:f67712fd-4ec7-4a00-9d20-69a529f5d729') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_PAGESIZE', '微信小程序分页size', '10') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_MESSAGE_PUSH_GET_ACCESS_TOKEN_URL', '微信小程序消息推送时获取access_token的url', 'https://api.weixin.qq.com/cgi-bin/token') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_MESSAGE_PUSH_GET_ACCESS_TOKEN_GRANT_TYPE', '微信小程序消息推送时获取access_token的grant_type', 'client_credential') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_MESSAGE_PUSH_URL', '微信小程序消息推送url', 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'WX_PUSH_UNITNAME', '微信小程序单位名称', '浙江中浩') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'BD_WX_LOGIN_VERIFYCODE_COUNT', '微信小程序百度验证码每天限制条数', '3') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'ZHWX_EQUIP_BD_DAYS', '微信小程序设备标定天数', '30') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'ZHWX_EQUIP_GZ_DAYS', '微信小程序设备外借跟踪天数', '30') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'ZHWX_EQUIPRECORD_TMP_DAYS', 'zhwx_equiprecord_tmp记录存在天数', '15') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'ZHWX_YZM_EQUIPRECORD_TMP_GX_HOUR', '验证码和zhwx_equiprecord_tmp记录每天轮询有效小时（几点前有效）', '3') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'ZHWX_BD_SMS_BASE_APPId', '应用标识', 'ZHWX') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'BD_WX_UNIVERSAL_TEMPLATE', '微信小程序百度短信通用模板', 'smsTpl:00c1a8d6-a1c8-4e16-a4ec-b4e280fd2ce8') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'ZHWX_EQUIPRECORD_GZ_BD_GX_HOUR_START', '跟踪和提醒推送开始时间', '8') ;
+insert into zhwx_syssetting(settingcode,settingname,settingvalue) values ( 'ZHWX_EQUIPRECORD_GZ_BD_GX_HOUR_END', '跟踪和提醒推送结束时间', '21') ;
+
+
+
+
+--zhwx_bd_message_total、zhwx_equiprecord、zhwx_equiprecord_tmp、zhwx_equipremind_bd、zhwx_equipremind_gz、zhwx_excel_no_depcode、zhwx_mylendequips、zhwx_pushmessages、zhwx_sbewm、zhwx_user、zhwx_waitreturn、zhwx_yzm自行导入
+*********************************************************************************************

@@ -1,0 +1,124 @@
+﻿@using BD.WorkFlow.Common;
+@{
+    ViewBag.Title = "流程模块";
+    Layout = "~/Views/workflow/_workflow.cshtml";
+}
+
+@section head 
+{
+
+<script language="javascript" type="text/javascript">
+	var g_LoginUser = "@WorkFlowUser.UserName";
+	$(function () {
+		getUsers();
+		$('body').layout();
+		$("#tabfrm").tabs({
+			fit: true,
+			border: false,
+			plain: true
+		});
+		
+	});
+	function getMenus(){
+		$.ajax({
+				type: "GET",
+				url: "/workflow/getmenus",
+				dataType: "json",
+				success: function (data) {
+					loadMenu(data);
+				},
+				complete: function (XMLHttpRequest, textStatus) {
+					$("#west").unmask();
+				},
+				beforeSend: function (XMLHttpRequest) {
+					$("#west").mask("加载中...");
+				}
+			});
+	}
+	function loadMenu(data) {
+		$("#menus").text("");
+		$.each(data, function (i, val) {
+			$("#menus").append("<span class='menu_item' ><a href='javascript:loadPage(\"" + val.Title + "\",\"" + val.Url + "\")'>&nbsp;&nbsp;<img src='"+@WorkFlowSkins.GetImagePath("menu.gif")+"' border='0' alt='' align='middle'/>&nbsp;&nbsp;" + val.Title + "</a></span>");
+
+		});
+		$("#menus").append("<span class='menu_item' ><a href='/activex/iweboffice2015.rar' target='_blank'>&nbsp;&nbsp;<img src='@WorkFlowSkins.GetImagePath("menu.gif")' border='0' alt='' align='middle'/>&nbsp;&nbsp;Office控件下载</a></span>");
+		$("#menus").accordion();
+	}
+	function loadPage(title, url) {
+		var realurl = url;
+		if (!$('#tabfrm').tabs('exists', title)) {
+			$('#tabfrm').tabs('add', {
+				title: title,
+				href: realurl,
+				id: title,
+				closable: true
+			});
+		}
+		else {
+			$("#tabfrm").tabs('close', title);
+			$('#tabfrm').tabs('add', {
+				title: title,
+				href: realurl,
+				id: title,
+				closable: true
+			});
+		}
+
+	}
+	function closeAllPage(){
+		var allTabs = $("#tabfrm").tabs('tabs');
+		for (i=0;i<allTabs.length;i++)
+			$("#tabfrm").tabs('close', i);
+	}
+	function getUsers(){
+		$('#loginusers').combotree({   
+			valueField:"id",
+			textField:"text",
+			mode:"remote",
+			dataType: "json",
+			method:"post", 
+			url: '/workflow/getusertree',
+			onLoadSuccess:function(node, data){
+				if (g_LoginUser == ""){
+					var tree = $('#loginusers').combotree('tree');
+					var cp = tree.tree('getRoot');
+					var dep = tree.tree('getChildren',cp.target);
+					var user =  tree.tree('getChildren',dep[0].target);
+					$('#loginusers').combotree('setValue', user[0].id);
+				}
+				else{
+					$('#loginusers').combotree('setValue', g_LoginUser);
+				}
+			},
+			onSelect:function(node){
+				var tree = $('#loginusers').combotree('tree');
+				var isLeaf = tree.tree('isLeaf', node.target);
+				if (isLeaf){
+					$.ajax({
+						type: "post",
+						url: "/workflow/setloginuser?username="+encodeURIComponent(node.id),
+						dataType: "json",
+						success: function (data) {
+							getMenus();
+							g_LoginUser = node.id;
+							$("#spUser").text(node.text);
+							closeAllPage();
+						}
+					});
+				}
+			}
+		});  
+
+	}
+</script>
+}
+<div region="north" id="north" split="false" title="" style="height:40px;padding:8px;">
+	选择用户：<input id="loginusers" name="loginusers" style="width:400px">  &nbsp;&nbsp;
+	当前登录用户：<span id='spUser'></span>
+</div>
+<div region="west" id="west" split="true" title="导航菜单" style="width:150px;padding:0px;">
+	<div id="menus" fit="true" border="false"></div>
+</div>
+<div region="center" title="" id="center" style="padding:0px;">
+	<div id="tabfrm"></div>
+</div>

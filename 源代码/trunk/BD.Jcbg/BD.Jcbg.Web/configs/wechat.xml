@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configs>
+  <!--用户权限代码-->
+  <code>JCXT_ZJZH</code>
+  <!--默认管理员账号-->
+  <username>jcxtadmin</username>
+  <!--默认管理员密码-->
+  <password>bd8660818</password>
+  <!--查看报告URL-->
+  <viewreport>http://139.129.205.143:8012/jc/viewreport?wtdwyh=</viewreport>
+</configs>

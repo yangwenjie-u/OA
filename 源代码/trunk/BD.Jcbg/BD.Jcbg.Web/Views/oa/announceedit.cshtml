@@ -1,0 +1,119 @@
+﻿@{
+    Layout = "~/Views/User/_dialoglayout.cshtml";
+}
+
+	<script language="javascript" type="text/javascript">
+		$(function () {
+			try {
+				CKEDITOR.replace('editor', {
+					//uiColor: '#14B8C4',
+					toolbar: [
+					['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord'],
+					['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+					['Font', 'FontSize'],
+					['TextColor', 'BGColor'],
+					'/',
+					['Bold', 'Italic', 'Underline', 'Strike'],
+					['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+					['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+					['Link', 'Unlink', 'Anchor'],
+					['Table', 'HorizontalRule', 'SpecialChar'],
+					['Maximize']
+				]
+				});
+				$("#readers").combotree({
+					url: '/dwgxwzlc/getusertree',
+					valueField: 'id',
+					textField: 'text',
+					multiple: true,
+					editable: false,
+					panelHeight: 200,
+					width: 250,
+					checkbox: true,
+					onlyLeafCheck: false,
+					animate: false,
+					onBeforeLoad: function (node, param) {
+					    $("body").mask("数据加载中……");
+                    },
+					onLoadSuccess: function (node, data) {
+					    try {
+					        $("body").unmask();
+							var users = '@ViewBag.Users';
+							if (users != "") {
+								var arrusers = users.split(',');
+								$('#readers').combotree('setValues', arrusers);
+							}
+							$('#readers').combotree('tree').tree("collapseAll");
+						} catch (e) {
+							alert(e);
+						}
+					}
+				});
+				initFileCtrl();
+				showUpFiles('FILEFIELD_fj', '@ViewBag.FileIds');
+				var editor = CKEDITOR.instances.editor;
+				editor.setData($.base64.decode('@ViewBag.Body'));
+			}
+			catch (e) {
+				alert(e.message);
+			}
+		});
+		function getData() {
+			var data = "";
+			try {
+				var editor = CKEDITOR.instances.editor;
+				var data = $.base64.encode(editor.getData());
+			}
+			catch (e) {
+				alert(e.message);
+			}
+			return data;
+		}
+		function isDataChange() {
+			var ret = true;
+
+			try {
+				var editor = CKEDITOR.instances.editor;
+				ret = editor.checkDirty();
+			}
+			catch (e) {
+				alert(e.message);
+			}
+			return ret;
+
+		}
+	</script>
+	
+		<table class="form2" width="800" align="center" cellspacing="1" border="0" style="margin-top:10px">
+			<tr>
+				<td>
+					<form id="form_announce_edit" method="post" action="">
+					<table width="100%" border="0" cellspacing="1" class="form2">
+						<tr>
+							<th width="100">标题：</th>
+							<td><input type="text" id="title" name="title"  class="easyui-validatebox" data-options="required:true" value='@ViewBag.Title'/></td>
+							<th width="100">发布对象：</th>
+							<td><input type="text" id="readers" name="readers" /></td>
+						</tr>
+						<tr>
+							<th>附件：</th>
+							<td colspan="3">
+								<input type='hidden' id='fj' name='fj' value='@ViewBag.FileIds'/>
+								<input type='file' id='FILEFIELD_fj' name='FILEFIELD_fj' size='100'/>
+								<div id='FILEFIELD_DIV_fj' class='wfa_all_div'></div>
+								<input type="hidden" name="content" id="content" value='@ViewBag.Body' />
+								<input type="hidden" id="recid" name="recid" value='@ViewBag.Recid'/>
+							</td>
+						</tr>
+					</table>
+					</form>
+				</td>
+				
+			</tr>
+			
+			<tr>
+				<td >
+					<textarea id="editor" name="editor" cols="80" rows="60"></textarea>
+				</td>
+			</tr>
+		</table>

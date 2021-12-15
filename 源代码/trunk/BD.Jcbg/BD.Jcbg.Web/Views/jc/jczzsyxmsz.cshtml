@@ -1,0 +1,182 @@
+﻿@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var g_jczzxmid = '@ViewBag.recid';
+        var g_jczzfl = [];
+        var g_jczznr = [];
+        var g_jczzxm = [];
+
+        $(function () {
+            try {
+                initData();
+                showData();
+
+
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function initData() {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getjczzzzfl",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        try {
+                            if (data.code != "0")
+                                alert(data.msg);
+                            else
+                                g_jczzfl = data.result;
+                        } catch (e) {
+                            alert(e);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getjczzzznr",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        try {
+                            if (data.code != "0")
+                                alert(data.msg);
+                            else
+                                g_jczznr = data.result;
+                        } catch (e) {
+                            alert(e);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/GetJczzxmById",
+                    dataType: "json",
+                    data:"id="+g_jczzxmid,
+                    async: false,
+                    success: function (data) {
+                        try {
+                            if (data.code != "0")
+                                alert(data.msg);
+                            else
+                                g_jczzxm = data.result;
+                        } catch (e) {
+                            alert(e);
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        layer.closeAll();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        layer.msg('正在加载数据……', { icon: 16 });
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+        }
+        function getFlmc(flid) {
+            var ret = "";
+            try{
+                $.each(g_jczzfl, function (i, value) {
+                    if (value.zzlxbh == flid) {
+                        ret = value.zzlxmc;
+                        return false;
+                    }
+                });
+            } catch (err) {
+                alert(err);
+            }
+            return ret;
+        }
+        function getZzxm(zznrid) {
+            var ret = "";
+            try {
+                $.each(g_jczzxm, function (i, value) {
+                    if (value.zznrbh == zznrid) {
+                        if (ret != "")
+                            ret += ",";
+                        ret += value.syxmbh;
+                    }
+                });
+            } catch (err) {
+                alert(err);
+            }
+            return ret;
+        }
+        function showData() {
+            try {
+                var totalWidth = 840;
+                var isfirst1 = true;
+                $.each(g_jczznr, function (i, value) {
+                    var zzlxmc = getFlmc(value.zzlxbh);
+                    var zzxm = getZzxm(value.zznrbh);
+
+                    var otaba1 = "";
+                    var otaba2 = "";
+                    if (isfirst1) {
+                        otaba1 = "in active";
+                        otaba2 = "active";
+                        isfirst1 = false;
+                    }
+                    var o_div_id = "o_tab_" + value.zznrbh;
+                    var o_cur_div = "<div class=\"tab-pane fade " + otaba1 + "\" id=\"" + o_div_id + "\"></div>";
+                    $("#out_tab_content").append(o_cur_div);
+                    $("#out_tab_tab").append("<li class=\"" + otaba2 + "\"><a href=\"#" + o_div_id + "\" data-toggle=\"tab\">[" + zzlxmc +"]"+ value.zznrmc + "</a></li>");
+                    $("#" + o_div_id).append("<div id=\"main_tab_content_" + value.zznrbh + "\" ><iframe id='frame_" + value.zznrbh + "' name='frame_" + value.zznrbh + "' width='100%' height='400px' frameborder='0' scrolling='auto' src='/jc/jcxmxz?selectxmbh=" + zzxm + "&global=True'></iframe></div>");
+
+                });
+
+            } catch (e) {
+                alert(e);
+            }
+        }
+        
+        // 外层调用接口
+        function getJczzsyxm() {
+            var ret = "";
+            try {
+                $('iframe').each(function () {
+                    var id = $(this).attr("id");
+                    if (id.indexOf("frame_") == -1)
+                        return true;
+                    var zznrbh = id.replace("frame_", "");
+                    var syxm = $("#" + id)[0].contentWindow.getTreeValue();
+                    if (ret != "")
+                        ret += "||";
+                    var index = syxm.indexOf("|");
+                    if (index > 0)
+                        syxm = syxm.substr(0, index);
+                    else
+                        syxm = "";
+                    ret += zznrbh + "-" + syxm;
+
+                });
+            } catch (e) {
+                alert(e);
+            }
+            return ret;
+        }
+    </script>
+}
+<div class="container-fluid">
+    <ul id="out_tab_tab" class="nav nav-tabs"></ul>
+    <div id="out_tab_content" class="tab-content"></div>
+</div>

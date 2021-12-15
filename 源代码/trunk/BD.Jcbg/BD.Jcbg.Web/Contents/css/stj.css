@@ -1,0 +1,98 @@
+@charset "utf-8";
+/* CSS Document */
+
+.navbar-header
+{
+	padding:10px;
+	}
+.navbar-top-links .dropdown-shezhi{width:150px;min-width:0}
+.navbar-top-links .dropdown-shezhi{margin-left:-123px}
+.dropdown-shezhi{padding:10px}
+
+.dropdown-shezhi li a{font-size:12px}.dropdown-shezhi li em{font-size:10px}
+
+
+.nav.navbar-top-links .dropdown-shezhi a{font-size:12px}
+.img-circle {border-radius: 5%;}
+
+.nav-header {	padding: 33px 25px;	}
+/*
+.profile_left {	float: left;}
+.profile_right{	float:right; margin:auto;}
+
+.profile-element {padding: 0px 0px 80px 0px;}
+
+.btn-primary {font-size: 25px;padding: 0px;background-color: transparent;border-style: none;}
+.btn-primary.active, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open .dropdown-toggle.btn-primary {
+background-color: transparent;
+border-style:none;
+color: #1ab394;
+}
+*/
+.stj_check_select{padding-top:20px;}
+/*.stj_check_select_col{width:30%;float:left;}*/
+	
+td .col-sm-3.control-label {	text-align: right;	vertical-align: middle;	line-height:34px;}
+.stj_btn_y_f{	margin-left:10px;	margin-right:10px;	}
+.stj_dll_logo {
+	background-image: url(../img/wmgs_log.png);
+	background-repeat: no-repeat;
+	margin: 10px;
+}
+.body_login_v3 {
+	background-image: url(../img/login-background.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover; 
+	-webkit-background-size: cover;
+	height:auto;
+}
+.login_v3_all {	margin-top: 13%;	margin-right: 15%;	margin-left: 15%;	}
+.login_v3_logo {	text-align: center;	width: 100%;}
+.stj_dll_neirong {	background-color: rgba(0,0,0,.5);	width: 800px;	height: 50px;	margin: 20px auto;	text-align: center;
+	
+}
+.stj_neirong_label
+{width:auto;
+color:rgba(255,255,255,1);
+line-height:50px;
+text-align:center;
+padding-left: 25px;
+padding-right: 5px;
+
+}
+.stj_dll_neirong .form-inline{	text-align:center;	}
+.stj_login_btn{margin-left: 25px;margin-right: 5px;background-color: #1ab394;color: #fff;width: 10%;}
+.signinpanel.stj{margin: 5% auto 0;	}
+.col-sm-7.stj{ color: #0d52ad;font-weight: bolder;	}.stj_login4_body {
+	background-color: #e8edf0;
+}
+.login_v4_logo {
+	text-align: left;
+	width: 100%;
+	padding-top: 15px;
+	padding-left:25px;
+}
+.stj_login4_mid {
+	height: 485px;
+	background-image: url(../img/login4-back.png);
+	background-repeat: repeat-x;
+	width: 100%;
+	margin-top: 20px;
+}
+.stj_login4_mid_neirong {
+	background-image: url(../img/login4_mid.png);
+	text-align: center;
+	vertical-align: middle;
+	height: 465px;
+	width: 881px;
+	margin:auto;
+	
+}
+.stj_login4_denglu {
+	height: 300px;
+	width: 260px;
+	background-color: rgba(51,153,255,1);
+	margin-left: 555px;
+	padding-top:35px;
+}

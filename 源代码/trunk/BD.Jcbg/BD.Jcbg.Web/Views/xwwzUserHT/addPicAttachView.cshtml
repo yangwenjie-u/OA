@@ -1,0 +1,136 @@
+﻿@using BD.Jcbg.Common;
+@using BD.Jcbg.DataModal.Entities;
+ 
+@{
+    Layout = "~/Views/xwwzUserHT/_f_common.cshtml";
+}
+@section head
+{
+
+}
+@section body
+{
+<script src="@SkinManager.GetXwwzPath("zdy/common.js")" type="text/javascript"></script>
+    <style>
+        body {
+            margin: 0px auto;
+        }
+        .th1 {
+            width:800px;font-size:25px;
+        }
+        .td1 {
+            width:150px;
+            text-align:center;
+        }
+        .td2 {
+            width:650px;
+            text-align:left;
+        }
+        .td3 {
+            width:800px; text-align:center;
+        }
+        .text1 {
+            width:650px;
+        }
+        .text2 {
+            width:450px;
+        }
+        a { text-decoration:none ;color: black }
+
+        .fjfont {
+            color:blue;
+            font-size:14px;
+        }
+        .fja {
+            color:blue;
+            font-size:14px;
+            margin-left:10px;
+        }
+
+
+        .grid{font:12px arial,helvetica,sans-serif;border:1px solid #8DB2E3}
+.grid td{font:100% arial,helvetica,sans-serif;height:24px;padding:5px}
+.grid{border-collapse:collapse}.grid th{background:#E7F3FE;height:27px;line-height:27px;border:1px solid #8DB2E3;padding-left:5px}
+.grid td{border:1px solid #8DB2E3;padding-left:5px}
+    </style>
+    <div align="center">
+
+
+       
+        <form id="formid" enctype="multipart/form-data" method="post">
+            <table cellpadding="5" border="1" style="margin: 20px 0 20px 0;" id="tableid" class="grid">
+                <tr>
+                    <th class="th1" colspan="2">图片信息</th>
+                </tr>
+                <tr>
+                    <td class="td1">图片标题</td>
+                    <td class="td2">
+                        <input class="easyui-textbox text1" id="savename" name="savename" data-options="required:true,missingMessage:'此项为必输项'" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td1">选择图片 </td>
+                    <td class="td2"><input class="easyui-filebox text1" id="filecontent" name="filecontent" data-options="required:true,missingMessage:'此项为必输项',buttonText:'选择文件...',prompt:'请选中一个文件...'" /> </td>
+                </tr>
+                <tr>
+                    <td class="td3" colspan="2"><a   href="javascript:savePicAttach();" class="easyui-linkbutton c8" data-options="iconCls:'icon-save',size:'large'">保&nbsp;&nbsp;存</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:back();" class="easyui-linkbutton c8" data-options="iconCls:'icon-back',size:'large'">返&nbsp;&nbsp;回</a></td>
+                </tr>
+
+
+            </table>
+
+        </form>          
+                
+        <script>
+
+
+
+    function back() {
+        var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+        parent.layer.close(index);
+    }
+
+
+
+    function savePicAttach() {
+
+        $('#formid').form('submit', {
+            url: 'savePicAttach',
+
+            success: function (data) {     // 提交成功后的回调函数。
+
+                var data = eval('(' + data + ')');  // change the JSON string to javascript object
+                //alert(data.msg);
+                if (data.success) {
+
+                    layer.open({
+                        icon: 6,
+                        content: data.msg,
+                        btn: ['确定'],
+                        yes: function (index, layero) {
+                            back();
+                        }, cancel: function () {
+                            back();
+                        }
+                    });
+                } else {
+                    layer.alert(data.msg, { icon: 5 });
+                }
+
+            }
+        });
+        // $('#ff').submit();
+        // 提交表单 end
+    }
+
+
+    function ckbyid(id) {
+
+        return document.getElementById(id);
+    }
+
+</script>
+
+    </div>
+}
+

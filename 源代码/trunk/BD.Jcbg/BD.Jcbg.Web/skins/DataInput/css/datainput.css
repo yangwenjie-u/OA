@@ -1,0 +1,135 @@
+﻿/****** 必输红点 *****/
+.mustin {
+    color: Red;
+    float: left;
+    width: auto;
+    line-height: 34px;
+    padding-left: 2px;
+    font-size: 20px;
+}
+
+.mustin1 {
+    color: Red;
+    width: auto;
+    line-height: 34px;
+    padding-left: 2px;
+    font-size: 20px;
+}
+
+.mustinContent {
+    width:90%;
+    float:left;
+}
+
+/**** 文件上传 ****/
+.wfa_all_div {
+	text-align: left;
+	color: #D6D6D6;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+.wfa_frame_div {
+	margin: 0px;
+	height: 41px;
+	width: 226px;
+	background-image: url(../images/wfa_frame.gif);
+	background-repeat: no-repeat;
+	color: #000000;
+	font-size: 12px;
+	text-align: center;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	font-weight: bolder;
+	float: left;
+}
+.wfa_frame_div_image {
+	margin: 0px;
+	height: 151px;
+	width: 226px;
+	background-image: url(../images/wfa_frame_image.gif);
+	background-repeat: no-repeat;
+	color: #000000;
+	font-size: 12px;
+	text-align: center;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	font-weight: bolder;
+	float: left;
+}
+.wfa_frame_div2 {
+	margin: 0px;
+	height: 41px;
+	width: 226px;
+	background-image: url(../images/wfa_frame2.gif);
+	background-repeat: no-repeat;
+	color: #000000;
+	font-size: 12px;
+	text-align: center;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	font-weight: bolder;
+	float: left;
+}
+.wfa_frame_div2_image {
+	margin: 0px;
+	height: 151px;
+	width: 226px;
+	background-image: url(../images/wfa_frame2_image.gif);
+	background-repeat: no-repeat;
+	color: #000000;
+	font-size: 12px;
+	text-align: center;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	font-weight: bolder;
+	float: left;
+}
+.wfa_image {
+	background-repeat: no-repeat;
+	height: 20px;
+	width: 20px;
+	float: right;
+	padding: 0px;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+}
+.wfa_text a{
+	margin: 0px;
+	float: left;
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	padding-top: 13px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 12px;
+	text-align: center;
+	color:#0a0a0a;
+	text-decoration:none;
+}
+
+.wfa_text a{ white-space: nowrap;}
+
+.stj_lr_td .multiselect-native-select{
+    float: left;
+}
+
+.multiselect-container {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.hiddentd 
+{
+    display:none
+}

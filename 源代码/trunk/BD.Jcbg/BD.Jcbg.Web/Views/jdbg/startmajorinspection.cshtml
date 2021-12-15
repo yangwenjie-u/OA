@@ -1,0 +1,1023 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <!--移动设备-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--高速模式,webkit内核-->
+    <meta name="renderer" content="webkit">
+    <!--不支持IE兼容模式-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--禁止搜索引擎转码,并附带广告-->
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <meta http-equiv="Refresh" content="0;url=http://www.bing.com">
+    <![endif]-->
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="@SkinManager.GetCssPath("font-awesome.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetBootstrapPath("/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <script src="@SkinManager.GetBootstrapPath("js/jquery.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src="@SkinManager.GetBootstrapPath("/js/bootstrap.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script src=@SkinManager.GetBootstrapPath("/PlugIns/Layer/layer.js") type="text/javascript" charset="utf-8"></script>
+
+    <link href="@SkinManager.GetCssPath("jquery.loadmask.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetCssPath("easyui/themes/gray/easyui.css")" rel="stylesheet" type="text/css" />
+    <link href="@SkinManager.GetCssPath("easyui/themes/icon.css")" rel="stylesheet" type="text/css" />
+    @*<script src="@SkinManager.GetJsPath("jquery-1.8.0.min.js")" type="text/javascript"></script>*@
+    <script src="@SkinManager.GetJsPath("jquery.easyui.min.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetJsPath("easyui-lang-zh_CN.js")" type="text/javascript"></script>
+    <script src="@SkinManager.GetJsPath("jquery.loadmask.min.js")" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        var g_pageSize = 10;
+        var g_extractedGC =[];
+        var g_extractedZZRY = [];
+        var g_extractedAZRY = [];
+        var g_extractedTJRY = [];
+        var skipdays = 1;
+        $(function () {
+            try {
+                initSearchUI();
+            } catch (e) {
+                alert( e.message);
+            }
+        });
+
+        function initZZ() {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/GetExtractableRYList",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    setZZ(data);
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+
+        function initSearchUI() {
+            $.ajax({
+                type: "POST",
+                url: "/jdbg/GetDJCSearchDS" ,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data) {
+                        var gcztdiv = $('#gcztCheckboxDiv');
+                        var gclxdiv = $('#gclxCheckboxDiv');
+                        var gcqydiv = $('#gcqyCheckboxDiv');
+                        var jzxzdiv = $('#jzxzCheckboxDiv');
+                        var zdgcdiv = $('#zdgcCheckboxDiv');
+                        var jglbdiv = $('#jglbCheckboxDiv');
+                        var zdjc = $('#s_zdgc');
+                        var jblb = $('#s_jglb');
+
+                        gcztdiv.empty();
+                        gclxdiv.empty();
+                        gcqydiv.empty();
+                        jzxzdiv.empty();
+                        zdgcdiv.empty();
+                        jglbdiv.empty();
+                        var gcztstr = ""
+                        var gclxstr = "";
+                        var gcqystr = "";
+                        var jzxzstr = "";
+                        var zdgcstr="";
+                        var jglbstr="";
+                        var cols = 4;
+                        var rows = 0;
+                        if (data.gcztlist && data.gcztlist.length) {
+                            rows = (data.gcztlist.length - 1) / cols + 1;
+                            $.each(data.gcztlist, function (index, zt) {
+                                if (index % cols == 0)
+                                    gcztstr += "<div>";
+
+                                gcztstr += "<label class=\"checkbox-inline\" style=\"width:100px;\">" +
+                                                "<input type=\"checkbox\" name=\"s_gczt\" value=\"" + zt["bh"] + "\">" + zt["mc"] +
+                                            "</label>";
+
+                                if((index+1)%cols==0  || index==data.gcztlist.length)                    
+                                    gcztstr += "</div>";
+                            });
+                            $(gcztstr).appendTo(gcztdiv);
+                        }
+
+                        if (data.gclxlist && data.gclxlist.length) {
+                            rows = (data.gclxlist.length - 1) / cols + 1;
+                            $.each(data.gclxlist, function (index, lx) {
+                                if (index % cols == 0)
+                                    gclxstr += "<div>";
+
+                                gclxstr += "<label class=\"checkbox-inline\" style=\"width:100px;\">" +
+                                                "<input type=\"checkbox\" name=\"s_gclx\" value=\"" + lx["lxbh"] + "\">" + lx["lxmc"] +
+                                            "</label>";
+
+                                if ((index + 1) % cols == 0 || index == data.gclxlist.length)
+                                    gclxstr += "</div>";
+                            });
+                            $(gclxstr).appendTo(gclxdiv);
+                        }
+
+                        if (data.gcqylist && data.gcqylist.length) {
+                            rows = (data.gcqylist.length - 1) / cols + 1;
+                            $.each(data.gcqylist, function (index, qy) {
+                                if (index % cols == 0)
+                                    gcqystr += "<div>";
+
+                                gcqystr += "<label class=\"checkbox-inline\" style=\"width:100px;\">" +
+                                                "<input type=\"checkbox\" name=\"s_gcqy\" value=\"" + qy["qybh"] + "\">" + qy["qymc"] +
+                                            "</label>";
+
+                                if ((index + 1) % cols == 0 || index == data.gcqylist.length)
+                                    gcqystr += "</div>";
+                            });
+                            $(gcqystr).appendTo(gcqydiv);
+                        }
+
+                        if (data.jzxzlist && data.jzxzlist.length) {
+                            rows = (data.jzxzlist.length - 1) / cols + 1;
+                            $.each(data.jzxzlist, function (index, xz) {
+                                if (index % cols == 0)
+                                    jzxzstr += "<div>";
+
+                                jzxzstr += "<label class=\"checkbox-inline\" style=\"width:100px;\">" +
+                                                "<input type=\"checkbox\" name=\"s_jzxz\" value=\"" + xz["lxmc"] + "\">" + xz["lxmc"] +
+                                            "</label>";
+
+                                if ((index + 1) % cols == 0 || index == data.jzxzlist.length)
+                                    jzxzstr += "</div>";
+                            });
+                            $(jzxzstr).appendTo(jzxzdiv);
+                        }
+
+                        if (data.zdgclist && data.zdgclist.length) {
+                            rows = (data.zdgclist.length - 1) / cols + 1;
+                            $.each(data.zdgclist, function (index, zdgc) {
+                                if (index % cols == 0)
+                                    zdgcstr += "<div>";
+
+                                zdgcstr += "<label class=\"checkbox-inline\" style=\"width:100px;\">" +
+                                                "<input type=\"checkbox\" name=\"s_zdgc\" value=\"" + zdgc["lxmc"] + "\">" + zdgc["lxmc"] +
+                                            "</label>";
+
+                                if ((index + 1) % cols == 0 || index == data.zdgclist.length)
+                                    zdgcstr += "</div>";
+                            });
+                            $(zdgcstr).appendTo(zdgcdiv);
+                        }
+
+                        if (data.jglblist && data.jglblist.length) {
+
+                            rows = (data.jglblist.length - 1) / cols + 1;
+                            $.each(data.jglblist, function (index, jglb) {
+                                if (index % cols == 0)
+                                    jglbstr += "<div>";
+
+                                jglbstr += "<label class=\"checkbox-inline\" style=\"width:100px;\">" +
+                                                "<input type=\"checkbox\" name=\"s_jglb\" value=\"" + jglb["lxmc"] + "\">" + jglb["lxmc"] +
+                                            "</label>";
+
+                                if ((index + 1) % cols == 0 || index == data.jglblist.length)
+                                    jglbstr += "</div>";
+                            });
+                            $(jglbstr).appendTo(jglbdiv);
+
+                        }
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        }
+
+        function getExtraParams() {
+            var param = {};
+            if ($('#s_jdzch').val() !='') {
+                param['jdzch'] = $('#s_jdzch').val();
+            }
+            if ($('#s_gcmc').val() != '') {
+                param['gcmc'] = $('#s_gcmc').val();
+            }
+            if ($("input[name='s_gczt']:checked").length) {
+                var zts=[];
+                $("input[name='s_gczt']:checked").each(function (index, obj) {
+                    zts.push($(this).val());
+                })
+                if (zts.length) {
+                    param['zt'] = zts.join(',');
+                }  
+            }
+            if ($("input[name='s_gclx']:checked").length) {
+                var lxs = [];
+                $("input[name='s_gclx']:checked").each(function (index, obj) {
+                    lxs.push($(this).val());
+                })
+                if (lxs.length) {
+                    param['lx'] = lxs.join(',');
+                }  
+            }
+            
+            if ($("input[name='s_gcqy']:checked").length) {
+                var qys = [];
+                $("input[name='s_gcqy']:checked").each(function (index, obj) {
+                    qys.push($(this).val());
+                })
+                if (qys.length) {
+                    param['qy'] = qys.join(',');
+                }
+            }
+
+            if ($("input[name='s_jzxz']:checked").length) {
+                var jzxzs = [];
+                $("input[name='s_jzxz']:checked").each(function (index, obj) {
+                    jzxzs.push($(this).val());
+                })
+                if (jzxzs.length) {
+                    param['jzxz'] = jzxzs.join(',');
+                }
+            }
+            if ($('#s_jngc').val()!='') {
+                param['jngc'] = $('#s_jngc').val();
+            }
+            if ($('#s_czgc').val() != '') {
+                param['czgc'] = $('#s_czgc').val();
+            }
+            if ($("input[name='s_zdgc']:checked").length) {
+                var zdgcs = [];
+                $("input[name='s_zdgc']:checked").each(function (index, obj) {
+                    zdgcs.push($(this).val());
+                })
+                if (zdgcs.length) {
+                    param['zdgc'] = zdgcs.join(',');
+                }
+            }
+            if ($("input[name='s_jglb']:checked").length) {
+                var jglbs = [];
+                $("input[name='s_jglb']:checked").each(function (index, obj) {
+                    jglbs.push($(this).val());
+                })
+                if (jglbs.length) {
+                    param['jglb'] = jglbs.join(',');
+                }
+            }
+            if ($('#s_jzmj').val() !='') {
+                var jzmj = parseInt($('#s_jzmj').val(), 10);
+                param['jzmj'] = $('#s_jzmjtj').val() + jzmj.toString();
+
+            }
+            return param;
+
+        }
+
+        function checkJZMJ() {
+            if ($('#s_jzmj').val()!='') {
+                var jzmj = $('#s_jzmj').val();
+                if (isNaN(jzmj) ) {
+                    alert('建筑面积必须为大于等于零的整数！');
+                    return false;
+                }
+                jzmj = parseInt(jzmj, 10);
+                if (jzmj < 0) {
+                    alert('建筑面积必须为大于等于零的整数！');
+                    return false;
+                }
+            }
+            return true;
+        }
+        function extractGC() {
+            if (checkGCSL() && checkJZMJ()) {
+                var gcsl = $.trim($('#gcsl').val());
+                var param = getExtraParams();
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/GetExtractableGCList?gcsl=" + encodeURIComponent(gcsl) + "&skipdays=" + encodeURIComponent(skipdays),
+                    data: param,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        setExtractedGC(data);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+        }
+        function extractZZRY() {
+            if (checkZZSL()) {
+                var zzsl = $.trim($('#zzsl').val());
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/GetExtractableZZRYList?sl=" + encodeURIComponent(zzsl),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        setExtractedZZRY(data);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+        }
+        function extractAZRY() {
+            if (checkAZSL()) {
+                var azrysl = $.trim($('#azrysl').val());
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/GetExtractableAZRYList?sl=" + encodeURIComponent(azrysl),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        setExtractedAZRY(data);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+        }
+        function extractTJRY() {
+            if (checkTJSL()) {
+                var tjrysl = $.trim($('#tjrysl').val());
+                $.ajax({
+                    type: "POST",
+                    url: "/jdbg/GetExtractableTJRYList?sl=" + encodeURIComponent(tjrysl) ,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        setExtractedTJRY(data);
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+            }
+        }
+
+        function checkGCSL() {
+            
+            var gcsl = $.trim($('#gcsl').val());
+            var sl = 0;
+            var ret = true;
+            if (gcsl == '') {
+                alert('请输入需要抽取的工程数量');
+                $('#gcsl').focus();
+                ret = false;
+            }
+            if (isNaN(gcsl)) {
+                alert('工程数量应为大于0的整数');
+                $('#gcsl').focus();
+                ret = false;
+            }
+            sl = parseInt(gcsl);
+            if (sl < 1 ) {
+                alert('工程数量必须大于0');
+                $('#gcsl').focus();
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        function checkZZSL() {
+
+            var zzsl = $.trim($('#zzsl').val());
+            var sl = 0;
+            var ret = true;
+            if (zzsl == '') {
+                alert('请输入需要抽取的组长数量');
+                $('#zzsl').focus();
+                ret = false;
+            }
+            if (isNaN(zzsl)) {
+                alert('组长数量应为大于0的整数');
+                $('#zzsl').focus();
+                ret = false;
+            }
+            sl = parseInt(zzsl);
+            if (sl < 1) {
+                alert('组长数量必须大于0');
+                $('#zzsl').focus();
+                ret = false;
+            }
+
+            return ret;
+        }
+        function checkAZSL() {
+
+            var azrysl = $.trim($('#azrysl').val());
+            var sl = 0;
+            var ret = true;
+            if (azrysl == '') {
+                alert('请输入需要抽取的安装监督员数量');
+                $('#azrysl').focus();
+                ret = false;
+            }
+            if (isNaN(azrysl)) {
+                alert('安装监督员数量应为大于0的整数');
+                $('#azrysl').focus();
+                ret = false;
+            }
+            sl = parseInt(azrysl);
+            if (sl < 1) {
+                alert('安装监督员数量必须大于0');
+                $('#azrysl').focus();
+                ret = false;
+            }
+
+            return ret;
+        }
+        function checkTJSL() {
+
+            var tjrysl = $.trim($('#tjrysl').val());
+            var sl = 0;
+            var ret = true;
+            if (tjrysl == '') {
+                alert('请输入需要抽取的土建监督员数量');
+                $('#tjrysl').focus();
+                ret = false;
+            }
+            if (isNaN(tjrysl)) {
+                alert('土建监督员数量应为大于0的整数');
+                $('#tjrysl').focus();
+                ret = false;
+            }
+            sl = parseInt(tjrysl);
+            if (sl < 1) {
+                alert('土建监督员数量必须大于0');
+                $('#tjrysl').focus();
+                ret = false;
+            }
+
+            return ret;
+        }
+
+        function setExtractedGC(data) {
+            $('#ExtractedGcList').empty();
+            g_extractedGC = [];
+            if (data.total > 0) {
+                $('#NoGCInfo').css('display', 'none');
+                var list = $('#ExtractedGcList');
+                $.each(data.rows, function (index, gc) {
+                    var li = $('<li class="list-group-item">' + '[' + gc["zjdjh"] + ']' + gc["gcmc"] + '</li>');
+                    li.appendTo(list);
+                    g_extractedGC.push(gc["gcbh"]);
+                })
+                
+            }
+            else {
+                $('#NoGCInfo').css('display', 'block');
+                
+            }
+        }
+
+        function setExtractedZZRY(data) {
+            g_extractedZZRY = [];
+            $('#extractedZZ').empty();
+            if (data.total > 0) {
+                var zzdiv = $('#extractedZZdiv');
+                var ryinfo = "";
+                zzdiv.empty();
+                $.each(data.rows, function (index, ry) {
+                    if (ryinfo !='') {
+                        ryinfo += ',';
+                    }
+                    ryinfo += ry["UserRealName"];
+                    g_extractedZZRY.push(ry["UserId"]);
+                })
+                zzdiv.html(ryinfo);
+
+            }
+        }
+        function setExtractedAZRY(data) {
+            g_extractedAZRY = [];
+            $('#extractedAZRYdiv').empty();
+            
+            if (data.total > 0) {
+                var azdiv = $('#extractedAZRYdiv');
+                var ryinfo = "";
+                $.each(data.rows, function (index, ry) {
+                    if (ryinfo != '') {
+                        ryinfo += ',';
+                    }
+                    ryinfo += ry["UserRealName"];
+                    g_extractedAZRY.push(ry["UserId"]);
+                })
+                azdiv.html(ryinfo);
+
+            }
+        }
+        function setExtractedTJRY(data) {
+            g_extractedTJRY = [];
+            $('#extractedTJRYdiv').empty();
+            if (data.total > 0) {
+                var tjdiv = $('#extractedTJRYdiv');
+                var ryinfo = "";
+                $.each(data.rows, function (index, ry) {
+                    if (ryinfo != '') {
+                        ryinfo += ',';
+                    }
+                    ryinfo += ry["UserRealName"];
+                    g_extractedTJRY.push(ry["UserId"]);
+                })
+                tjdiv.html(ryinfo);
+
+            }
+        }
+
+        function checkSubmit() {
+            
+            if ($('#ccbt').val() == '') {
+                alert('请输入抽查标题！');
+                return false;
+            } if (g_extractedGC.length == 0) {
+                alert('请抽取工程！');
+                return false;
+            }
+            if (g_extractedZZRY.length == 0) {
+                alert('请抽取组长！');
+                return false;
+            }
+            if (g_extractedAZRY.length == 0) {
+                alert('请抽取安装监督员！');
+                return false;
+            }
+            if (g_extractedTJRY.length == 0) {
+                alert('请抽取土建监督员！');
+                return false;
+            }
+
+            return true;
+
+        }
+
+        function doSubmit() {
+            if (checkSubmit()) {
+                
+                var extractedGC = g_extractedGC.join(',');
+                var extractedZZRY = g_extractedZZRY.join(',');
+                var extractedAZRY = g_extractedAZRY.join(',');
+                var extractedTJRY = g_extractedTJRY.join(',');
+                var ccbt = $('#ccbt').val();
+                var processid = getProcessId();
+                var url = "/jdbg/savemajorinspection?extractedgc=" + encodeURIComponent(extractedGC) +
+                    "&extractedzzry=" + encodeURIComponent(extractedZZRY) +
+                    "&extractedazry=" + encodeURIComponent(extractedAZRY) +
+                    "&extractedtjry=" + encodeURIComponent(extractedTJRY) +
+                    "&ccbt=" + encodeURIComponent(ccbt) +
+                    "&processid=" + encodeURIComponent(processid);
+                
+                $.ajax({
+                    type: "POST",
+                    url:  url ,
+                    dataType: "json",
+                    async: false,
+                    success: function (ret) {
+                        $('body').unmask();
+                        if (ret.code == "1") {
+                            alert(ret.msg);
+                        }
+                        else {
+                            alert("大检查发起成功！");
+                            
+                        }
+                        
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                        $("body").unmask();
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                        $("body").mask("正在发起中...");
+                    }
+                });
+                
+                
+            }
+        }
+
+
+        function getProcessId() {
+            
+            var processid = 0;
+            try {
+                var workurl = getQueryString("workurl");
+                var arrItem = workurl.split('?');
+                if (arrItem.length > 1) {
+                    var params = arrItem[1].split('&');
+                    $.each(params, function(index, param){
+                        var items = param.split('=');
+                        if (items.length == 2 && items[0].toLowerCase()=='processid') {
+                            processid = items[1];
+                            return false;
+                        }
+                    });
+
+                }
+                
+            } catch (e) {
+                alert(e);
+            }
+            return processid;
+        }
+
+        function getQueryString(paramName) {
+
+            var reg = new RegExp("(^|&)" + paramName + "=([^&]*)(&|$)", "i");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)
+                return unescape(r[2]);
+            return null;
+        }
+
+        function Base64() {
+
+            // private property
+            _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+            // public method for encoding
+            this.encode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = _utf8_encode(input);
+                while (i < input.length) {
+                    chr1 = input.charCodeAt(i++);
+                    chr2 = input.charCodeAt(i++);
+                    chr3 = input.charCodeAt(i++);
+                    enc1 = chr1 >> 2;
+                    enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                    enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                    enc4 = chr3 & 63;
+                    if (isNaN(chr2)) {
+                        enc3 = enc4 = 64;
+                    } else if (isNaN(chr3)) {
+                        enc4 = 64;
+                    }
+                    output = output +
+                    _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                    _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+                }
+                return output;
+            }
+
+            // public method for decoding
+            this.decode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3;
+                var enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+                while (i < input.length) {
+                    enc1 = _keyStr.indexOf(input.charAt(i++));
+                    enc2 = _keyStr.indexOf(input.charAt(i++));
+                    enc3 = _keyStr.indexOf(input.charAt(i++));
+                    enc4 = _keyStr.indexOf(input.charAt(i++));
+                    chr1 = (enc1 << 2) | (enc2 >> 4);
+                    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                    chr3 = ((enc3 & 3) << 6) | enc4;
+                    output = output + String.fromCharCode(chr1);
+                    if (enc3 != 64) {
+                        output = output + String.fromCharCode(chr2);
+                    }
+                    if (enc4 != 64) {
+                        output = output + String.fromCharCode(chr3);
+                    }
+                }
+                output = _utf8_decode(output);
+                return output;
+            }
+
+            // private method for UTF-8 encoding
+            _utf8_encode = function (string) {
+                string = string.replace(/\r\n/g, "\n");
+                var utftext = "";
+                for (var n = 0; n < string.length; n++) {
+                    var c = string.charCodeAt(n);
+                    if (c < 128) {
+                        utftext += String.fromCharCode(c);
+                    } else if ((c > 127) && (c < 2048)) {
+                        utftext += String.fromCharCode((c >> 6) | 192);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    } else {
+                        utftext += String.fromCharCode((c >> 12) | 224);
+                        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    }
+
+                }
+                return utftext;
+            }
+
+            // private method for UTF-8 decoding
+            _utf8_decode = function (utftext) {
+                var string = "";
+                var i = 0;
+                var c = c1 = c2 = 0;
+                while (i < utftext.length) {
+                    c = utftext.charCodeAt(i);
+                    if (c < 128) {
+                        string += String.fromCharCode(c);
+                        i++;
+                    } else if ((c > 191) && (c < 224)) {
+                        c2 = utftext.charCodeAt(i + 1);
+                        string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                        i += 2;
+                    } else {
+                        c2 = utftext.charCodeAt(i + 1);
+                        c3 = utftext.charCodeAt(i + 2);
+                        string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                        i += 3;
+                    }
+                }
+                return string;
+            }
+        }
+        
+    </script>
+</head>
+<body>
+    <div class="container" style="margin-top:20px;">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="panel panel-info" style="padding:5px;width:650px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">工程抽取条件</h3>
+                    </div>
+                    <div class="panel-body" >
+                        <form id="searchform" >
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">监督注册号</span>
+                                            </div>
+                                        </td>
+                                        <td width="35%">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" id='s_jdzch' name="s_jdzch" value="" placeholder="">
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">工程名称</span>
+                                            </div>
+                                        </td>
+                                        <td width="35%">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control" id='s_gcmc' name="s_gcmc" value="" placeholder="">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">工程状态</span>
+                                            </div>
+                                        </td>
+                                        <td colspan="3">
+                                            <div id="gcztCheckboxDiv">
+                                            </div>
+                                            
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">工程类型</span>
+                                            </div>
+                                        </td>
+                                        <td colspan="3">
+                                            <div id="gclxCheckboxDiv">
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">工程区域</span>
+                                            </div>
+                                        </td>
+                                        <td colspan="3">
+                                            <div id="gcqyCheckboxDiv">
+
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">建筑性质</span>
+                                            </div>
+                                        </td>
+                                        <td colspan="3">
+                                            <div id="jzxzCheckboxDiv">
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">是否重点工程</span>
+                                            </div>
+                                        </td>
+                                        <td colspan="3">
+                                            <div id="zdgcCheckboxDiv">
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">工程监管类别</span>
+                                            </div>
+                                        </td>
+                                        <td colspan="3">
+                                            <div id="jglbCheckboxDiv">
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">是否节能工程</span>
+                                            </div>
+                                        </td>
+                                        <td width="35%">
+                                            <div class="input-group input-group-sm">
+                                                <select class="form-control" id='s_jngc' name="s_jngc" style="width:150px;">
+                                                    <option value="" selected="selected">全部</option>
+                                                    <option value="1">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td width="15%">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">是否财政工程</span>
+                                            </div>
+                                        </td>
+                                        <td width="35%">
+                                            <div class="input-group input-group-sm">
+                                                <select class="form-control" id='s_czgc' name="s_czgc" style="width:150px;">
+                                                    <option value="" selected="selected">全部</option>
+                                                    <option value="1">是</option>
+                                                    <option value="0">否</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-addon ">建筑面积</span>
+                                            </div>
+                                        </td>
+                                        <td colspan="3">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="input-group input-group-sm">
+                                                        <select class="form-control" id='s_jzmjtj' name="s_jzmjtj" style="width:150px;">
+                                                            <option value=">">大于</option>
+                                                            <option value=">=">大于等于</option>
+                                                            <option value="<">小于</option>
+                                                            <option value="<=">小于等于</option>
+                                                            <option value="=">等于</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="input-group input-group-sm">
+                                                        <input class="form-control" type="text" id='s_jzmj' name="s_jzmj" value="" placeholder="">
+                                                        <span class="input-group-addon">平方米</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+               
+                <form id="extractform">
+                    <div id="divGCCH" style="padding:5px;width:500px;">
+                        <ul class="list-group">
+                            <li class='list-group-item'>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">抽查标题</span>
+                                    <input type="text" class="form-control" id='ccbt' name="ccbt" value="第一次大检查" placeholder="请输入大检查标题">
+                                </div>
+                            </li>
+                            <li class='list-group-item'>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">工程数量</span>
+                                    <input type="text" class="form-control" id='gcsl' name="gcsl" value="1" placeholder="请输入需要抽取的工程数量">
+                                    <span class="input-group-btn">
+                                        <button id="btnGcExtract" name="btnGcExtract" class="btn btn-default" type="button" onclick="extractGC()">抽取工程</button>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class='list-group-item'>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">组长数量</span>
+                                    <input type="text" class="form-control" id='zzsl' name="zzsl" value="1" placeholder="请输入需要抽取的人员数量">
+                                    <span class="input-group-btn">
+                                        <button id="btnZZRyExtract" name="btnZZRyExtract" class="btn btn-default" type="button" onclick="extractZZRY()">抽取人员</button>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class='list-group-item'>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">安装监督员数量</span>
+                                    <input type="text" class="form-control" id='azrysl' name="azrysl" value="1" placeholder="请输入需要抽取的人员数量">
+                                    <span class="input-group-btn">
+                                        <button id="btnAZRyExtract" name="btnAZRyExtract" class="btn btn-default" type="button" onclick="extractAZRY()">抽取人员</button>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class='list-group-item'>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon">土建监督员数量</span>
+                                    <input type="text" class="form-control" id='tjrysl' name="tjrysl" value="1" placeholder="请输入需要抽取的人员数量">
+                                    <span class="input-group-btn">
+                                        <button id="btnTJRyExtract" name="btnTJRyExtract" class="btn btn-default" type="button" onclick="extractTJRY()">抽取人员</button>
+                                    </span>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="panel panel-info" style="padding:5px;width:500px;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">当前已抽取工程</h3>
+                        </div>
+                        <div class="panel-body" style="max-height:150px;">
+                            <div id="NoGCInfo" style="text-align:center;">
+                                没有工程
+                            </div>
+                            <ul class="list-group" id="ExtractedGcList"></ul>
+                        </div>
+                    </div>
+                    
+                    <div class="panel panel-info" style="padding:5px;width:500px;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">当前已抽取人员</h3>
+                        </div>
+                        <div class="panel-body" style="max-height:150px;">
+                            <ul class="list-group" id="ExtractedRYList">
+                                <li class="list-group-item">
+                                    <div>组长</div>
+                                    <div id="extractedZZdiv"></div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div>安装监督员</div>
+                                    <div id="extractedAZRYdiv"></div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div>土建监督员</div>
+                                    <div id="extractedTJRYdiv"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="navbar navbar-default navbar-fixed-bottom">
+        <div class="navbar-form navbar-right" role="search">
+            <input class="btn btn-default" type="button" onclick="doSubmit()" value="发起大检查" />
+            &nbsp;&nbsp;
+        </div>
+    </div>
+</body>
+</html>

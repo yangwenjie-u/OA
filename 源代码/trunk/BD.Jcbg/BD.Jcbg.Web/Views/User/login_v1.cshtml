@@ -1,0 +1,176 @@
+@using BD.Jcbg.Web.Func;
+@{
+    ViewBag.Title = "用户登录";
+    Layout = "~/Views/User/_loginlayout.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+    $(function () {
+        try {
+            $("#login_name").focus();
+            $("#btnLogin").click(function () {
+                if (!IsIE()) {
+                    return;
+                }
+                if (!checkLogin())
+                    return;
+                login();
+            });
+            document.onkeydown = function (e) {
+                var ev = document.all ? window.event : e;
+                if (ev.keyCode == 13) {
+                    $("#btnLogin").click();
+                }
+            };
+
+        }
+        catch (e) {
+            layer.open({ title: '错误', content: e.message, icon: 2 });
+        }
+    });
+    function checkLogin() {
+        if ($("#login_name").val() == "") {
+            layer.open({ title: '提示', content: '请输入账号！', icon: 5 });
+            return false;
+        }
+        if ($("#login_pwd").val() == "") {
+            layer.open({ title: '提示', content: '请输入密码！', icon: 4 });
+            return false;
+        }
+        return true;
+    }
+    function login() {
+
+        $.ajax({
+            type: "POST",
+            url: "/user/dologin",
+            dataType: "json",
+            data: "login_name=" + escape($("#login_name").val()) + "&login_pwd=" + escape($("#login_pwd").val()) + '&_=' + Math.random(),
+            success: function (data) {
+                try {
+                    if (data.code == 0)
+                        window.location = "/user/main";
+                    else {
+                        var msg = data.msg
+                        if (msg == "")
+                            msg = "用户名或密码错误，请重新登录";
+                        //$("#login_name").val('');
+                        $("#login_pwd").val('');
+                        
+                        layer.open({ title: '提示', content: msg, icon: 2 });
+                        
+                    }
+                }
+                catch (e) {
+                    layer.open({ title: '错误', content: e.message, icon: 2 });
+                }
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+                layer.closeAll('loading');
+            },
+            beforeSend: function (XMLHttpRequest) {
+                layer.load();
+            }
+        });
+    }
+    function openRegisterDlgQy() {
+
+        var fieldparam = "I_M_QY,SPTG,0|I_M_QY,SFYX,0";
+        var js = encodeURIComponent("customfunImqy.js");
+        var url = "/datainput/Index?zdzdtable=ZDZD_JC" +
+        "&t1_tablename=I_M_QY" +
+        "&t1_pri=QYBH" +
+        "&t1_title=" + encodeURIComponent("企业信息") +
+        "&button=" + encodeURIComponent("提交申请|TJ| | |申请成功，审批后将以短信的方式发送到你手机") +
+        "&rownum=2" +
+        "&fieldparam=" + fieldparam +
+        "&js=" + js +
+        "&LX=N";
+        layer.open({
+            type: 2,
+            title: '企业账号注册申请',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['1000px', '600px'],
+            content: url,
+            end: function () {
+            }
+        });
+    }
+    function openRegisterDlgRy() {
+        var fieldparam = "I_M_RY,SPTG,0|I_M_RY,SFYX,0";
+        var js = encodeURIComponent("customfunImry.js");
+        var url = "/datainput/Index?zdzdtable=ZDZD_JC" +
+        "&t1_tablename=I_M_RY" +
+        "&t1_pri=RYBH" +
+        "&t1_title=" + encodeURIComponent("人员基本信息") +
+        "&button=" + encodeURIComponent("提交申请|TJ| | |申请成功，审批后将以短信的方式发送到你手机") +
+        "&rownum=2" +
+        "&fieldparam=" + fieldparam +
+        "&js=" + js +
+        "&LX=N";
+
+        layer.open({
+            type: 2,
+            title: '企业账号注册申请',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['1000px', '600px'],
+            content: url,
+            end: function () {
+            }
+        });
+    }
+</script>
+}
+<div class="index_middle">
+  <div class="index_rjm"> @GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_LOGIN_TITLE1") </div>
+  <div class="index_zh_mm"> 
+    <!--
+
+<div class="container">
+	<div class="row">
+		<div class="span12">
+        -->
+    
+    <form class="form-horizontal">
+      <div class="control-group">
+          <label class="control-label shouye" for="login_name">帐号</label>
+        <div class="controls shouye">
+            <input style="width:150px;margin-left:10px; height:35px; " id="login_name" name="login_name" type="text">
+          <!--placeholder="请输入帐号" --> 
+        </div>
+      </div>
+      <div class="control-group">
+          <label class="control-label shouye" for="login_pwd">密码</label>
+        <div class="controls shouye">
+            <input id="login_pwd" style="width:150px; margin-left:10px;height:35px; " type="password" name="login_pwd">
+          <!--placeholder="请输入密码"--> 
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls stj_denglu" >
+            <input type="button" class="denglu_btn" id="btnLogin" value="登录"/>
+       <!--   <button type="submit" class="btn btn-primary stj_denglu_btn" contenteditable="true">登陆</button>-->
+        </div>
+      </div>
+    </form>
+    
+    <!--
+		</div>
+	</div>
+</div>
+--> 
+  </div>
+  
+  <div class="index_rjm">@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_LOGIN_TITLE2") </div>
+</div>
+<div class="index_yejiao">
+    <p>
+        <a href="javascript:openRegisterDlgQy();" style="font-size:18px;">企业账号申请</a>&nbsp;&nbsp;
+        <a href="javascript:openRegisterDlgRy();" style="font-size:18px;">人员账号申请</a>
+    </p>
+<p>@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_LOGIN_TAIL1")</p>
+<p>@GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_LOGIN_TAIL2")</p>
+</div>

@@ -1,0 +1,6 @@
+1.在ZDZD中,添加“辅助参数”字段
+在
+1).基础字段字典
+2).项目字段字典
+3).单位字段字典
+alter table *ZDZD add FZCS text

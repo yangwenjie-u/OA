@@ -1,0 +1,271 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var username = '';
+        var g_type = '@ViewBag.resettype';
+        var g_realname = '@ViewBag.realname';
+        var g_msg = '@ViewBag.msg';
+        $(function () {
+            try {
+                InitKeydown();
+                
+                $('#yhzh').change(function () {
+                    $('#username').val($(this).val());
+                });
+                init();
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function init() {
+            try{
+                if (g_type == "" || g_type == "u") {
+                    $("input[name='zhlx']").eq(0).attr("checked", "checked");
+                    $("input[name='zhlx']").eq(1).removeAttr("checked");
+                    $("input[name='zhlx']").eq(0).click();
+                } else {
+                    $("input[name='zhlx']").eq(1).attr("checked", "checked");
+                    $("input[name='zhlx']").eq(0).removeAttr("checked");
+                    $("input[name='zhlx']").eq(1).click();
+                }
+                if (g_realname != "") {
+                    $("#yhxm").val(g_realname);
+                    searchYH();
+                }
+                if (g_msg != "") {
+                    layer.alert('您已经有账号，不能重复注册。为您转到重置密码界面，请选择对应的账号，取回密码！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                }
+            }
+            catch (err) {
+                alert(err);
+            }
+        }
+
+        function InitKeydown() {
+            try {
+                $("#username").keydown(function (e) {
+                    var ev = document.all ? window.event : e;
+                    if (ev.keyCode == 13) {
+                        doSubmit();
+                    }
+                });
+            } catch (e) {
+                alert('初始化按键事件异常', e.message, 'warning');
+            }
+        }
+
+
+        function isValid() {
+            try {
+                if ($("#username").val() == "") {
+                    layer.alert('请输入用户名！', {
+                        icon: 0,
+                        skin: 'layer-ext-moon'
+                    });
+                    return false;
+                }
+
+
+            } catch (e) {
+                alert(e);
+            }
+            return true;
+        }
+
+        function doSubmit() {
+            var ret = true;
+
+
+            // 校验表单
+            if (!isValid())
+                return false;
+
+            username = $('#username').val();
+
+            // 校验用户信息
+            $.ajax({
+                type: "POST",
+                url: "/user/checkresetpassusername?username=" + encodeURIComponent(username),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    ret = data.code == "0";
+                    if (ret) {
+                        parent.layer.closeAll();
+                    }
+                    else {
+                        if (data.msg == "")
+                            data.msg = "用户名校验失败！";
+                        parent.layer.open({
+                            type: 0,
+                            title: '提示',
+                            content: data.msg
+                        });
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+            if (!ret) {
+                return false;
+            }
+
+            try {
+                parent.layer.open({
+                    type: 2,
+                    title: '重置密码——第二步',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1000px', '500px'],
+                    content: '/user/resetpass?username=' + encodeURIComponent(username),
+                    end: function () {
+                    }
+                });
+            } catch (e) {
+                alert(e);
+            }
+            return ret;
+        }
+
+
+        function GetSelectedZHLX(){
+            var zhlxlist=[];
+            $('[name=zhlx]:radio').each(function(index, obj){
+                if ($(this).is(":checked")){
+                    zhlxlist.push($(this).attr("value"));
+                }
+            });
+            return zhlxlist;
+        }
+
+        function searchYH() {
+            var zhlxlist = GetSelectedZHLX();
+            if (zhlxlist.length ==0) {
+                parent.layer.open({
+                    type: 0,
+                    title: '提示',
+                    content: "请先选择一种账号类型，再进行查询！"
+                });
+                return;
+            }
+            else if (zhlxlist.length == 2) {
+                parent.layer.open({
+                    type: 0,
+                    title: '提示',
+                    content: "只能查询一种账号类型，请重新选择！"
+                });
+                return;
+            }
+            else if (zhlxlist.length == 1) {
+                var yhxm = $('#yhxm').val();
+
+                if (yhxm != "") {
+                    // 查询用户
+                    $.ajax({
+                        type: "POST",
+                        url: "/jdbg/getyhlist?yhxm=" + encodeURIComponent(yhxm) + "&zhlx=" + encodeURIComponent(zhlxlist[0]),
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            ret = data.code == "0";
+                            if (ret) {
+                                SetYHList(data);
+                            }
+                            else {
+                                parent.layer.open({
+                                    type: 0,
+                                    title: '提示',
+                                    content: "用户查询失败！"
+                                });
+                            }
+                        },
+                        complete: function (XMLHttpRequest, textStatus) {
+                        },
+                        beforeSend: function (XMLHttpRequest) {
+                        }
+                    });
+                }
+            }
+        
+        }
+    
+
+        function SetYHList(data) {
+            $('#yhzh').empty();
+            var options = "<option value=\"\">----请选择----</option>";
+            var selectedval = "";
+            if (data.total > 0) {
+                $.each(data.rows, function (index, row) {
+                    var mc = row["mc"];
+
+                    if (index == 0) {
+                        selectedval = row["zh"];
+                        options += "<option value=\"" + row["zh"] + "\" selected=\"selected\">" + mc + "</option>";
+                    }
+                    else {
+                        options += "<option value=\"" + row["zh"] + "\">" + mc + "</option>";
+                    }
+                
+                });
+            }
+            $(options).appendTo($('#yhzh'));
+            $('#username').val(selectedval);
+        }
+        function change1() {
+            $("#sptum").text("用户姓名");
+        }
+        function change2() {
+            $("#sptum").text("企业名称");
+        }
+    </script>
+}
+
+<ul class="list-group">
+    <li class='list-group-item' id='li_qymc'>
+        <div>
+            <p>如果不知道用户名，请先选择账号类型，输入用户姓名（个人账号请填姓名，企业账号请填企业名称），然后点击右侧按钮“查询用户”进行查询。</p>
+        </div>
+        <div>
+            账号类型：&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="zhlx" value="0" checked="checked"  onclick="change1();"/> 个人账号&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="zhlx" value="1" onclick="change2();"  />企业账号
+        </div>
+        <br/>
+        <div class="input-group">
+            <span class="input-group-addon" id="sptum">用户姓名</span>
+            <input type="text" class="form-control" id='yhxm' name="yhxm" value="" placeholder="请输入需要查询的用户姓名">
+            <span class="input-group-btn">
+                <input class="btn btn-default" type="button" id="btnsearchqy" name="btnsearchqy" value="查询用户" onclick="searchYH()" />
+            </span>
+        </div>
+        <br />
+        <div><p>如果当前不是您的用户，请点击右侧下拉框，进行选择。</p></div>
+        <div class="input-group">
+            <span class="input-group-addon">选择用户</span>
+            <select class="form-control" id='yhzh' name="yhzh">
+                <option value="">----请选择----</option>
+            </select>
+        </div>
+    </li>
+    <li class='list-group-item' id='li_username'>
+        <div><p>如果知道用户名，请直接输入用户名，然后点击下一步。</p></div>
+        <div class="input-group">
+            <span class="input-group-addon">用　户　名</span>
+            <input type="text" class="form-control" id='username' name="username" value="">
+        </div>
+    </li>
+</ul>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="下一步" />
+        &nbsp;&nbsp;
+    </form>
+
+
+</div>

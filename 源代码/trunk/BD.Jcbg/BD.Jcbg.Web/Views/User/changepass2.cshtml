@@ -1,0 +1,107 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@section head
+{
+<script language="javascript" type="text/javascript">
+
+    $(function () {
+        try {
+        } catch (err) {
+            alert(e);
+        }
+    });
+        
+    function isValid() {
+        try {
+            if ($("#pass1").val() == "") {
+                layer.alert('请输入原密码！', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+                return false;
+            }
+            if ($("#pass2").val() == "") {
+                layer.alert('请输入新密码！', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+                return false;
+            }
+            if ($("#pass2").val() != $("#pass3").val()) {
+                layer.alert('两次密码输入不一致！', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+                return false;
+            }
+            
+            
+        } catch (e) {
+            alert(e);
+        }
+        return true;
+    }
+    function doSubmit() {
+        var ret = false;
+
+        // 校验表单
+        if (!isValid())
+            return false;
+
+        try{
+            $.ajax({
+                type: "POST",
+                url: "/user/dochangepass?pass1=" + encodeURIComponent($("#pass1").val()) + "&pass2=" + encodeURIComponent($("#pass2").val()),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+                        alert('密码修改成功，请记住新密码。');
+                    } else {
+                        if (data.msg == "")
+                            data.msg = "原密码输入不正确，修改失败";
+                        alert(data.msg);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                },
+                beforeSend: function (XMLHttpRequest) {
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+        return ret;
+    }
+</script>
+}
+
+    <ul class="list-group">
+        <li class='list-group-item' id='li_pass1'>
+            <div class="input-group">
+                <span class="input-group-addon">原　密　码</span>
+                <input type="password" class="form-control" id='pass1' name="pass1">
+            </div>
+        </li>
+        <li class='list-group-item' id='li_pass2'>
+            <div class="input-group">
+                <span class="input-group-addon">新　密　码</span>
+                <input type="password" class="form-control" id='pass2' name="pass2">
+            </div>
+        </li>
+        <li class='list-group-item' id='li_pass3'>
+            <div class="input-group">
+                <span class="input-group-addon">新密码确认</span>
+                <input type="password" class="form-control" id='pass3' name="pass3">
+            </div>
+        </li>
+    </ul>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="保  存"/>
+        &nbsp;&nbsp;
+    </form>
+
+    
+</div>

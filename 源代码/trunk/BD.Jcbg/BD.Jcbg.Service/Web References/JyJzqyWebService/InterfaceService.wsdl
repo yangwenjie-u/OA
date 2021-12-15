@@ -1,0 +1,985 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="SynProjectInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectnum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="projectname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="constractionunit" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="inspectunit" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="slpeoplejson" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="spnpeoplejson" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="createunit" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SynProjectInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SynProjectInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DelProjectInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectnum" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DelProjectInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DelProjectInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdatePeopleInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="peopleNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="peoplename" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="peopletype" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdatePeopleInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdatePeopleInfoResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpLoadDataList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectnum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="gcbw" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="itemcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="starttime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="endtime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="syynum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="jzynum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="recordid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="qrcode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="orderstatus" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpLoadDataListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpLoadDataListResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpLoadDataListPage">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectnum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="gcbw" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="itemcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="starttime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="endtime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="jstarttime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="jendtime" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="syynum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="jzynum" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="syyname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="jzyname" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="recordid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="qrcode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="orderstatus" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="page" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="limit" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpLoadDataListPageResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpLoadDataListPageResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProjectUpdateData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="projectnum" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetProjectUpdateDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetProjectUpdateDataResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIteminfoUpdateData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="recordId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIteminfoUpdateDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetIteminfoUpdateDataResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateOrderStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="recordList" type="tns:ArrayOfString" />
+            <s:element minOccurs="1" maxOccurs="1" name="orderstatus" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="ordernum" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UpdateOrderStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateOrderStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDataReocrdPhotoUrl">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="recordId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDataReocrdPhotoUrlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDataReocrdPhotoUrlResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDataReocrdPhotoBase64">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="recordId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetDataReocrdPhotoBase64Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetDataReocrdPhotoBase64Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RelievePeopleStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="peoplenum" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RelievePeopleStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RelievePeopleStatusResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="string" nillable="true" type="s:string" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SynProjectInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:SynProjectInfo" />
+  </wsdl:message>
+  <wsdl:message name="SynProjectInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:SynProjectInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="DelProjectInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:DelProjectInfo" />
+  </wsdl:message>
+  <wsdl:message name="DelProjectInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:DelProjectInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePeopleInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdatePeopleInfo" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePeopleInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdatePeopleInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListSoapIn">
+    <wsdl:part name="parameters" element="tns:UpLoadDataList" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListSoapOut">
+    <wsdl:part name="parameters" element="tns:UpLoadDataListResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListPageSoapIn">
+    <wsdl:part name="parameters" element="tns:UpLoadDataListPage" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListPageSoapOut">
+    <wsdl:part name="parameters" element="tns:UpLoadDataListPageResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectUpdateDataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetProjectUpdateData" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectUpdateDataSoapOut">
+    <wsdl:part name="parameters" element="tns:GetProjectUpdateDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIteminfoUpdateDataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetIteminfoUpdateData" />
+  </wsdl:message>
+  <wsdl:message name="GetIteminfoUpdateDataSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIteminfoUpdateDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrderStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateOrderStatus" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrderStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateOrderStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoUrlSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDataReocrdPhotoUrl" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoUrlSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDataReocrdPhotoUrlResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoBase64SoapIn">
+    <wsdl:part name="parameters" element="tns:GetDataReocrdPhotoBase64" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoBase64SoapOut">
+    <wsdl:part name="parameters" element="tns:GetDataReocrdPhotoBase64Response" />
+  </wsdl:message>
+  <wsdl:message name="RelievePeopleStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:RelievePeopleStatus" />
+  </wsdl:message>
+  <wsdl:message name="RelievePeopleStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:RelievePeopleStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="SynProjectInfoHttpGetIn">
+    <wsdl:part name="projectnum" type="s:string" />
+    <wsdl:part name="projectname" type="s:string" />
+    <wsdl:part name="constractionunit" type="s:string" />
+    <wsdl:part name="inspectunit" type="s:string" />
+    <wsdl:part name="slpeoplejson" type="s:string" />
+    <wsdl:part name="spnpeoplejson" type="s:string" />
+    <wsdl:part name="createunit" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SynProjectInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DelProjectInfoHttpGetIn">
+    <wsdl:part name="projectnum" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DelProjectInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePeopleInfoHttpGetIn">
+    <wsdl:part name="peopleNo" type="s:string" />
+    <wsdl:part name="peoplename" type="s:string" />
+    <wsdl:part name="peopletype" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePeopleInfoHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListHttpGetIn">
+    <wsdl:part name="projectnum" type="s:string" />
+    <wsdl:part name="gcbw" type="s:string" />
+    <wsdl:part name="itemcode" type="s:string" />
+    <wsdl:part name="starttime" type="s:string" />
+    <wsdl:part name="endtime" type="s:string" />
+    <wsdl:part name="syynum" type="s:string" />
+    <wsdl:part name="jzynum" type="s:string" />
+    <wsdl:part name="recordid" type="s:string" />
+    <wsdl:part name="qrcode" type="s:string" />
+    <wsdl:part name="orderstatus" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListPageHttpGetIn">
+    <wsdl:part name="projectnum" type="s:string" />
+    <wsdl:part name="gcbw" type="s:string" />
+    <wsdl:part name="itemcode" type="s:string" />
+    <wsdl:part name="starttime" type="s:string" />
+    <wsdl:part name="endtime" type="s:string" />
+    <wsdl:part name="jstarttime" type="s:string" />
+    <wsdl:part name="jendtime" type="s:string" />
+    <wsdl:part name="syynum" type="s:string" />
+    <wsdl:part name="jzynum" type="s:string" />
+    <wsdl:part name="syyname" type="s:string" />
+    <wsdl:part name="jzyname" type="s:string" />
+    <wsdl:part name="recordid" type="s:string" />
+    <wsdl:part name="qrcode" type="s:string" />
+    <wsdl:part name="orderstatus" type="s:string" />
+    <wsdl:part name="page" type="s:string" />
+    <wsdl:part name="limit" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListPageHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectUpdateDataHttpGetIn">
+    <wsdl:part name="projectnum" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectUpdateDataHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIteminfoUpdateDataHttpGetIn">
+    <wsdl:part name="recordId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIteminfoUpdateDataHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoUrlHttpGetIn">
+    <wsdl:part name="recordId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoUrlHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoBase64HttpGetIn">
+    <wsdl:part name="recordId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoBase64HttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="RelievePeopleStatusHttpGetIn">
+    <wsdl:part name="peoplenum" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RelievePeopleStatusHttpGetOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SynProjectInfoHttpPostIn">
+    <wsdl:part name="projectnum" type="s:string" />
+    <wsdl:part name="projectname" type="s:string" />
+    <wsdl:part name="constractionunit" type="s:string" />
+    <wsdl:part name="inspectunit" type="s:string" />
+    <wsdl:part name="slpeoplejson" type="s:string" />
+    <wsdl:part name="spnpeoplejson" type="s:string" />
+    <wsdl:part name="createunit" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SynProjectInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="DelProjectInfoHttpPostIn">
+    <wsdl:part name="projectnum" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DelProjectInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePeopleInfoHttpPostIn">
+    <wsdl:part name="peopleNo" type="s:string" />
+    <wsdl:part name="peoplename" type="s:string" />
+    <wsdl:part name="peopletype" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePeopleInfoHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListHttpPostIn">
+    <wsdl:part name="projectnum" type="s:string" />
+    <wsdl:part name="gcbw" type="s:string" />
+    <wsdl:part name="itemcode" type="s:string" />
+    <wsdl:part name="starttime" type="s:string" />
+    <wsdl:part name="endtime" type="s:string" />
+    <wsdl:part name="syynum" type="s:string" />
+    <wsdl:part name="jzynum" type="s:string" />
+    <wsdl:part name="recordid" type="s:string" />
+    <wsdl:part name="qrcode" type="s:string" />
+    <wsdl:part name="orderstatus" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListPageHttpPostIn">
+    <wsdl:part name="projectnum" type="s:string" />
+    <wsdl:part name="gcbw" type="s:string" />
+    <wsdl:part name="itemcode" type="s:string" />
+    <wsdl:part name="starttime" type="s:string" />
+    <wsdl:part name="endtime" type="s:string" />
+    <wsdl:part name="jstarttime" type="s:string" />
+    <wsdl:part name="jendtime" type="s:string" />
+    <wsdl:part name="syynum" type="s:string" />
+    <wsdl:part name="jzynum" type="s:string" />
+    <wsdl:part name="syyname" type="s:string" />
+    <wsdl:part name="jzyname" type="s:string" />
+    <wsdl:part name="recordid" type="s:string" />
+    <wsdl:part name="qrcode" type="s:string" />
+    <wsdl:part name="orderstatus" type="s:string" />
+    <wsdl:part name="page" type="s:string" />
+    <wsdl:part name="limit" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpLoadDataListPageHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectUpdateDataHttpPostIn">
+    <wsdl:part name="projectnum" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetProjectUpdateDataHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIteminfoUpdateDataHttpPostIn">
+    <wsdl:part name="recordId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIteminfoUpdateDataHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoUrlHttpPostIn">
+    <wsdl:part name="recordId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoUrlHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoBase64HttpPostIn">
+    <wsdl:part name="recordId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataReocrdPhotoBase64HttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="RelievePeopleStatusHttpPostIn">
+    <wsdl:part name="peoplenum" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="RelievePeopleStatusHttpPostOut">
+    <wsdl:part name="Body" element="tns:string" />
+  </wsdl:message>
+  <wsdl:portType name="InterfaceServiceSoap">
+    <wsdl:operation name="SynProjectInfo">
+      <wsdl:input message="tns:SynProjectInfoSoapIn" />
+      <wsdl:output message="tns:SynProjectInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DelProjectInfo">
+      <wsdl:input message="tns:DelProjectInfoSoapIn" />
+      <wsdl:output message="tns:DelProjectInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePeopleInfo">
+      <wsdl:input message="tns:UpdatePeopleInfoSoapIn" />
+      <wsdl:output message="tns:UpdatePeopleInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataList">
+      <wsdl:input message="tns:UpLoadDataListSoapIn" />
+      <wsdl:output message="tns:UpLoadDataListSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataListPage">
+      <wsdl:input message="tns:UpLoadDataListPageSoapIn" />
+      <wsdl:output message="tns:UpLoadDataListPageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectUpdateData">
+      <wsdl:input message="tns:GetProjectUpdateDataSoapIn" />
+      <wsdl:output message="tns:GetProjectUpdateDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIteminfoUpdateData">
+      <wsdl:input message="tns:GetIteminfoUpdateDataSoapIn" />
+      <wsdl:output message="tns:GetIteminfoUpdateDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrderStatus">
+      <wsdl:input message="tns:UpdateOrderStatusSoapIn" />
+      <wsdl:output message="tns:UpdateOrderStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoUrl">
+      <wsdl:input message="tns:GetDataReocrdPhotoUrlSoapIn" />
+      <wsdl:output message="tns:GetDataReocrdPhotoUrlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoBase64">
+      <wsdl:input message="tns:GetDataReocrdPhotoBase64SoapIn" />
+      <wsdl:output message="tns:GetDataReocrdPhotoBase64SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RelievePeopleStatus">
+      <wsdl:input message="tns:RelievePeopleStatusSoapIn" />
+      <wsdl:output message="tns:RelievePeopleStatusSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="InterfaceServiceHttpGet">
+    <wsdl:operation name="SynProjectInfo">
+      <wsdl:input message="tns:SynProjectInfoHttpGetIn" />
+      <wsdl:output message="tns:SynProjectInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DelProjectInfo">
+      <wsdl:input message="tns:DelProjectInfoHttpGetIn" />
+      <wsdl:output message="tns:DelProjectInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePeopleInfo">
+      <wsdl:input message="tns:UpdatePeopleInfoHttpGetIn" />
+      <wsdl:output message="tns:UpdatePeopleInfoHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataList">
+      <wsdl:input message="tns:UpLoadDataListHttpGetIn" />
+      <wsdl:output message="tns:UpLoadDataListHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataListPage">
+      <wsdl:input message="tns:UpLoadDataListPageHttpGetIn" />
+      <wsdl:output message="tns:UpLoadDataListPageHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectUpdateData">
+      <wsdl:input message="tns:GetProjectUpdateDataHttpGetIn" />
+      <wsdl:output message="tns:GetProjectUpdateDataHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIteminfoUpdateData">
+      <wsdl:input message="tns:GetIteminfoUpdateDataHttpGetIn" />
+      <wsdl:output message="tns:GetIteminfoUpdateDataHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoUrl">
+      <wsdl:input message="tns:GetDataReocrdPhotoUrlHttpGetIn" />
+      <wsdl:output message="tns:GetDataReocrdPhotoUrlHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoBase64">
+      <wsdl:input message="tns:GetDataReocrdPhotoBase64HttpGetIn" />
+      <wsdl:output message="tns:GetDataReocrdPhotoBase64HttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RelievePeopleStatus">
+      <wsdl:input message="tns:RelievePeopleStatusHttpGetIn" />
+      <wsdl:output message="tns:RelievePeopleStatusHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="InterfaceServiceHttpPost">
+    <wsdl:operation name="SynProjectInfo">
+      <wsdl:input message="tns:SynProjectInfoHttpPostIn" />
+      <wsdl:output message="tns:SynProjectInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DelProjectInfo">
+      <wsdl:input message="tns:DelProjectInfoHttpPostIn" />
+      <wsdl:output message="tns:DelProjectInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePeopleInfo">
+      <wsdl:input message="tns:UpdatePeopleInfoHttpPostIn" />
+      <wsdl:output message="tns:UpdatePeopleInfoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataList">
+      <wsdl:input message="tns:UpLoadDataListHttpPostIn" />
+      <wsdl:output message="tns:UpLoadDataListHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataListPage">
+      <wsdl:input message="tns:UpLoadDataListPageHttpPostIn" />
+      <wsdl:output message="tns:UpLoadDataListPageHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectUpdateData">
+      <wsdl:input message="tns:GetProjectUpdateDataHttpPostIn" />
+      <wsdl:output message="tns:GetProjectUpdateDataHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIteminfoUpdateData">
+      <wsdl:input message="tns:GetIteminfoUpdateDataHttpPostIn" />
+      <wsdl:output message="tns:GetIteminfoUpdateDataHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoUrl">
+      <wsdl:input message="tns:GetDataReocrdPhotoUrlHttpPostIn" />
+      <wsdl:output message="tns:GetDataReocrdPhotoUrlHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoBase64">
+      <wsdl:input message="tns:GetDataReocrdPhotoBase64HttpPostIn" />
+      <wsdl:output message="tns:GetDataReocrdPhotoBase64HttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RelievePeopleStatus">
+      <wsdl:input message="tns:RelievePeopleStatusHttpPostIn" />
+      <wsdl:output message="tns:RelievePeopleStatusHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="InterfaceServiceSoap" type="tns:InterfaceServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SynProjectInfo">
+      <soap:operation soapAction="http://tempuri.org/SynProjectInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DelProjectInfo">
+      <soap:operation soapAction="http://tempuri.org/DelProjectInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePeopleInfo">
+      <soap:operation soapAction="http://tempuri.org/UpdatePeopleInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataList">
+      <soap:operation soapAction="http://tempuri.org/UpLoadDataList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataListPage">
+      <soap:operation soapAction="http://tempuri.org/UpLoadDataListPage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectUpdateData">
+      <soap:operation soapAction="http://tempuri.org/GetProjectUpdateData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIteminfoUpdateData">
+      <soap:operation soapAction="http://tempuri.org/GetIteminfoUpdateData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrderStatus">
+      <soap:operation soapAction="http://tempuri.org/UpdateOrderStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoUrl">
+      <soap:operation soapAction="http://tempuri.org/GetDataReocrdPhotoUrl" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoBase64">
+      <soap:operation soapAction="http://tempuri.org/GetDataReocrdPhotoBase64" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RelievePeopleStatus">
+      <soap:operation soapAction="http://tempuri.org/RelievePeopleStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="InterfaceServiceSoap12" type="tns:InterfaceServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SynProjectInfo">
+      <soap12:operation soapAction="http://tempuri.org/SynProjectInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DelProjectInfo">
+      <soap12:operation soapAction="http://tempuri.org/DelProjectInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePeopleInfo">
+      <soap12:operation soapAction="http://tempuri.org/UpdatePeopleInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataList">
+      <soap12:operation soapAction="http://tempuri.org/UpLoadDataList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataListPage">
+      <soap12:operation soapAction="http://tempuri.org/UpLoadDataListPage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectUpdateData">
+      <soap12:operation soapAction="http://tempuri.org/GetProjectUpdateData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIteminfoUpdateData">
+      <soap12:operation soapAction="http://tempuri.org/GetIteminfoUpdateData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrderStatus">
+      <soap12:operation soapAction="http://tempuri.org/UpdateOrderStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoUrl">
+      <soap12:operation soapAction="http://tempuri.org/GetDataReocrdPhotoUrl" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoBase64">
+      <soap12:operation soapAction="http://tempuri.org/GetDataReocrdPhotoBase64" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RelievePeopleStatus">
+      <soap12:operation soapAction="http://tempuri.org/RelievePeopleStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="InterfaceServiceHttpGet" type="tns:InterfaceServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="SynProjectInfo">
+      <http:operation location="/SynProjectInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DelProjectInfo">
+      <http:operation location="/DelProjectInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePeopleInfo">
+      <http:operation location="/UpdatePeopleInfo" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataList">
+      <http:operation location="/UpLoadDataList" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataListPage">
+      <http:operation location="/UpLoadDataListPage" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectUpdateData">
+      <http:operation location="/GetProjectUpdateData" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIteminfoUpdateData">
+      <http:operation location="/GetIteminfoUpdateData" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoUrl">
+      <http:operation location="/GetDataReocrdPhotoUrl" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoBase64">
+      <http:operation location="/GetDataReocrdPhotoBase64" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RelievePeopleStatus">
+      <http:operation location="/RelievePeopleStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="InterfaceServiceHttpPost" type="tns:InterfaceServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="SynProjectInfo">
+      <http:operation location="/SynProjectInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DelProjectInfo">
+      <http:operation location="/DelProjectInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePeopleInfo">
+      <http:operation location="/UpdatePeopleInfo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataList">
+      <http:operation location="/UpLoadDataList" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpLoadDataListPage">
+      <http:operation location="/UpLoadDataListPage" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProjectUpdateData">
+      <http:operation location="/GetProjectUpdateData" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIteminfoUpdateData">
+      <http:operation location="/GetIteminfoUpdateData" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoUrl">
+      <http:operation location="/GetDataReocrdPhotoUrl" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataReocrdPhotoBase64">
+      <http:operation location="/GetDataReocrdPhotoBase64" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RelievePeopleStatus">
+      <http:operation location="/RelievePeopleStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="InterfaceService">
+    <wsdl:port name="InterfaceServiceSoap" binding="tns:InterfaceServiceSoap">
+      <soap:address location="http://wenz.jyjzqy.com/Service/InterfaceService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="InterfaceServiceSoap12" binding="tns:InterfaceServiceSoap12">
+      <soap12:address location="http://wenz.jyjzqy.com/Service/InterfaceService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="InterfaceServiceHttpGet" binding="tns:InterfaceServiceHttpGet">
+      <http:address location="http://wenz.jyjzqy.com/Service/InterfaceService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="InterfaceServiceHttpPost" binding="tns:InterfaceServiceHttpPost">
+      <http:address location="http://wenz.jyjzqy.com/Service/InterfaceService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

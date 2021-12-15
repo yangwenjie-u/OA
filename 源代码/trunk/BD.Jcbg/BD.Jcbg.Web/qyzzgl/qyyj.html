@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/css/css-reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/static/lib/layui/css/layui.css">
+
+
+    <title>sxjz</title>
+    <style type="text/css">
+    .dltabs dd {
+        height: 80vh;
+    }
+
+    .page {
+        position: absolute;
+        bottom: 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="height: 100vh;overflow: auto;padding-bottom: 80px;box-sizing: border-box;">
+        <div id="tableWarp" class="table-warp">
+            <div>
+                <table class="table layui-table table-border table-bordered table-hover" lay-size="lg">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">序号</th>
+                            <th rowspan="2">企业名称</th>
+                            <th rowspan="2">工程名称</th>
+                            <th rowspan="2">工程类别</th>
+                            <th colspan="5">工程规模</th>
+                            <th rowspan="2">开工时间</th>
+                            <th rowspan="2">竣工时间</th>
+                        </tr>
+                        <tr>
+                            <th>技术指标</th>
+                            <th>单位</th>
+                            <th>数量</th>
+                            <th>合同价(万元)</th>
+                            <th>结算价格（万元）</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbody-list" id="yxqyzz">
+                    </tbody>
+                </table>
+            </div>
+            <div id="test" class="page">
+                <span class="count"></span>
+                <div class="layer-page" id="page"></div>
+                <input type="text" class="page-val" value="1" />
+                <span class="sure">确定</span>
+                <!-- <div class="size">每页显示
+                <input type="text" class="page-size" value="10" /> 条
+            </div> -->
+            </div>
+        </div>
+
+    </div>
+
+    <!--  <div class="save-boottom" style="text-align: center;">
+        <button class="layui-btn" id="save" style="margin-top: 10px;">保存</button>
+    </div> -->
+
+    <script type="text/javascript" src="/static/lib/jquery.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js"></script>
+    <script type="text/javascript" src="/static/pub/common.js"></script>
+    <script type="text/javascript" src="/static/pub/table.js"></script>
+
+
+    <script type="text/javascript">
+    var list = [];
+    var uploadList = [];
+
+    var params = getParams();
+    $(function () {
+        // var height = $("#panel1").height();
+        // $("#tabTitle").find("dd").height(height - 110);
+
+        // $("#tabWarp").append("<input type='text' name='id' value='" + params.id + "' style='display:none;' />")
+        // layui.use('form', function () {
+        //     var form = layui.form;
+        //     form.render();
+        // });
+
+        loadYxqyzz();
+
+    })
+
+    function loadYxqyzz() {
+
+        var str = '';
+        var item = ["qymc","gcmc", "gclb", "jszb", "dw", "sl", "htj", "jsj", "kgsj","jssj"];
+        var ary = [{
+            qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, {
+           qymc: "企业名称",
+            gcmc: "工程名称",
+            gclb: "工程类别",
+            jszb: "技术指标",
+            dw: "单位",
+            sl: "数量",
+            htj: "合同价",
+            jsj: "结算价",
+            kgsj: "2018-1-1",
+            jssj:"2020-1-1"
+        }, ];
+
+        function handle(res) {
+            res.rows = "10";
+            res.total = "10"
+        }
+
+        getTable('/dwgxsxjzy/GetQYGcyj', {}, handle, {
+            doc: $('#tableWarp'),
+            pageSize: 'rows',
+            count: 'total'
+        });
+
+        var tmp;
+        for (var i = 0, len = ary.length; i < len; i++) {
+            tmp = ary[i];
+            str += "<tr>";
+            str += "<td>" + (i + 1) + "</td>";
+            for (var j = 0, len2 = item.length; j < len2; j++) {
+                str += "<td>" + tmp[item[j]] || "" + "</td>";
+            }
+            str += "</tr>";
+        }
+
+        $("#yxqyzz").html(str);
+    }
+
+    $("#tabTitle").on("click", "dt", function () {
+        $("#tabTitle").children().removeClass('active');
+        $(this).addClass('active').next().addClass('active');
+    });
+    </script>
+</body>
+
+</html>

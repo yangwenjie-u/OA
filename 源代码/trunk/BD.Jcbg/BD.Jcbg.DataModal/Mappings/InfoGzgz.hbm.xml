@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.InfoGzgz,BD.Jcbg.DataModal" table="InfoGzgz" lazy="false">
+    <id name="Recid" column="Recid" type="string">
+      <generator class="assigned" />
+    </id>
+    <property type="string" length="50" name="ScheduleId" column="[ScheduleId]" />
+    <property type="string" length="50" name="CompanyId" column="[CompanyId]" />
+    <property type="string" length="50" name="GzId" column="[GzId]" />
+    <property type="string" length="20" name="PaySum" column="[PaySum]" />
+    <property type="string" length="50" name="ProjectId" column="[ProjectId]" />
+    <property type="string" length="1" name="HasDelete" column="[HasDelete]" />
+    <property type="string" length="1" name="Zt" column="[ZT]" />
+    <property type="string" length="1" name="Sfjs" column="[SFJS]" />
+  </class>
+</hibernate-mapping>

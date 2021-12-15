@@ -1,0 +1,67 @@
+﻿@using BD.Jcbg.Common;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@Configs.Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="@SkinManager.GetCssPath("font-awesome.min.css?v=20170630")" rel="stylesheet" type="text/css" />
+    <link type="text/css" rel="stylesheet" href="@SkinManager.GetCssPath("tab-control.min.css?v=20170630")" />
+    <link rel="stylesheet" href="@SkinManager.GetCssPath("style.css?v=20170630")" type="text/css" />
+    <link rel="stylesheet" href="@SkinManager.GetBootstrapPath("/css/bootstrap.min.css?v=20170630")" type="text/css" />
+    <!--如果为IE9以下,就自动跳转到提示页面-->
+    <!--[if lt IE 9]>
+    <!--<meta http-equiv="Refresh" content="0;url=http://www.bing.com">-->
+    <![endif]-->
+    <link href="@SkinManager.GetCssPath("scrollbar.css?v=20170630")" type="text/css" rel="Stylesheet" />
+    <link href="@SkinManager.GetCssPath("style-20161012.css?v=20170630")" type="text/css" rel="Stylesheet" />
+    <link href="@SkinManager.GetCssPath("style-20170227.css?v=20170630")" type="text/css" rel="Stylesheet" />
+    <script type="text/javascript" src="@SkinManager.GetJsPath("jquery-2.0.3.min.js?v=20170630")"></script>
+    <script src=@SkinManager.GetBootstrapPath("/PlugIns/Layer/layer.js?v=20170630") type="text/javascript" charset="utf-8"></script>
+    <script src=@SkinManager.GetBootstrapPath("/js/bootstrap.min.js?v=20170630") type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="@SkinManager.GetJsPath("jquery.nicescroll.min.js?v=20170630")"></script>
+    <script type="text/javascript" src="@SkinManager.GetJsPath("js_v1.js?v=20170630")"></script>
+    
+    
+    @RenderSection("head", false)
+    <script language="javascript" type="text/javascript">
+    function IsIE() {
+        return true;
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            var browser = navigator.appName
+            var b_version = navigator.appVersion
+            var version = b_version;//b_version.split(";")
+            var trim_Version = version[1].replace(/[ ]/g, "");
+            if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                return false;
+            }
+            else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                return false;
+            }
+            else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+            return false;
+        }
+
+    }
+    </script>
+
+</head>
+<body class="index_body" style="">
+
+    @RenderBody()
+
+    
+</body>
+</html>

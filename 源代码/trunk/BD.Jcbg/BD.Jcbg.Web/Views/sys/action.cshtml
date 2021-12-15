@@ -1,0 +1,32 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var type = '@ViewBag.type';
+        $(function () {
+            try {
+                if (type == "gcsb") {
+                    window.location = "/WebList/EasyUiIndex?FormDm=RCGZ_QYGCSB&FormStatus=0"
+                }
+                if (type == "qygc") {
+                    window.location = "/WebList/EasyUiIndex?FormDm=QYGCBAGL&FormStatus=1"
+                }
+                if (type == "wdgc") {
+                    window.location = "/WebList/EasyUiIndex?FormDm=GCZL_WDGC&FormStatus=1"
+                }
+                if (type == "rydg") {
+                    window.location = "/WebList/EasyUiIndex?FormDm=QYGL_GCRYGL&FormStatus=0&MenuCode=QYGL_GCRYGL"
+                }
+                if (type == "zgd") {
+                    alert("出具整改单")
+                }
+            } catch (e) {
+                alert(e);
+            }
+
+        });
+    </script>
+}

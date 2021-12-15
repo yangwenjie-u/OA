@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D6E163D4-119F-4B34-AB8C-CD4E4C04291E}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BD.JC.JS.Test</RootNamespace>
+    <AssemblyName>BD.JC.JS.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BD.DataInputBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.DataInputBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.DataInputCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputDaoSqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.DataInputDaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.DataInputModel.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputParam, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.DataInputParam.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IDataInputBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.IDataInputBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IDataInputDao, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.IDataInputDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IWebListBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.IWebListBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IWebListDao, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.IWebListDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Bll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.Bll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.DaoSqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.DaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.DataModal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.DataModal.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.IBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.IBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.IDao, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.IDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Web, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Web.XmlSerializers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Jcbg.Web.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.Bll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Log.Bll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Log.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.DaoSqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Log.DaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.DataModal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Log.DataModal.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.IBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Log.IBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.IDao, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.Log.IDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WebListBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListCommon, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WebListCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListDaoSqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WebListDaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListDataModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WebListDataModel.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListParam, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WebListParam.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.Bll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WorkFlow.Bll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WorkFlow.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.DaoSqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WorkFlow.DaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.DataModal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WorkFlow.DataModal.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.IBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WorkFlow.IBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.IDao, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\BD.WorkFlow.IDao.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Aop, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Spring.Aop.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Spring.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data.NHibernate32, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Spring.Data.NHibernate32.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Web, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Spring.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="zxing, Version=0.14.0.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\zxing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="configs\dao.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\daobase.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="configs\log4net.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\service.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\strings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\UserSystem.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\UserSystemConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\wage.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\wageow.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\wfconfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="configs\wfremoteuser.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\BD.DataInputBll.dll" />
+    <Content Include="lib\BD.DataInputCommon.dll" />
+    <Content Include="lib\BD.DataInputDaoSqlServer.dll" />
+    <Content Include="lib\BD.DataInputModel.dll" />
+    <Content Include="lib\BD.DataInputParam.dll" />
+    <Content Include="lib\BD.IDataInputBll.dll" />
+    <Content Include="lib\BD.IDataInputDao.dll" />
+    <Content Include="lib\BD.IWebListBll.dll" />
+    <Content Include="lib\BD.IWebListDao.dll" />
+    <Content Include="lib\BD.Jcbg.Bll.dll" />
+    <Content Include="lib\BD.Jcbg.Common.dll" />
+    <Content Include="lib\BD.Jcbg.DaoSqlServer.dll" />
+    <Content Include="lib\BD.Jcbg.DataModal.dll" />
+    <Content Include="lib\BD.Jcbg.IBll.dll" />
+    <Content Include="lib\BD.Jcbg.IDao.dll" />
+    <Content Include="lib\BD.Jcbg.Web.dll" />
+    <Content Include="lib\BD.Jcbg.Web.XmlSerializers.dll" />
+    <Content Include="lib\BD.Log.Bll.dll" />
+    <Content Include="lib\BD.Log.Common.dll" />
+    <Content Include="lib\BD.Log.DaoSqlServer.dll" />
+    <Content Include="lib\BD.Log.DataModal.dll" />
+    <Content Include="lib\BD.Log.IBll.dll" />
+    <Content Include="lib\BD.Log.IDao.dll" />
+    <Content Include="lib\BD.WebListBll.dll" />
+    <Content Include="lib\BD.WebListCommon.dll" />
+    <Content Include="lib\BD.WebListDaoSqlServer.dll" />
+    <Content Include="lib\BD.WebListDataModel.dll" />
+    <Content Include="lib\BD.WebListParam.dll" />
+    <Content Include="lib\BD.WorkFlow.Bll.dll" />
+    <Content Include="lib\BD.WorkFlow.Common.dll" />
+    <Content Include="lib\BD.WorkFlow.DaoSqlServer.dll" />
+    <Content Include="lib\BD.WorkFlow.DataModal.dll" />
+    <Content Include="lib\BD.WorkFlow.IBll.dll" />
+    <Content Include="lib\BD.WorkFlow.IDao.dll" />
+    <Content Include="lib\Common.Logging.dll" />
+    <Content Include="lib\ICSharpCode.SharpZipLib.dll" />
+    <Content Include="lib\Iesi.Collections.dll" />
+    <Content Include="lib\log4net.dll" />
+    <Content Include="lib\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="lib\NHibernate.dll" />
+    <Content Include="lib\NPOI.dll" />
+    <Content Include="lib\NPOI.OOXML.dll" />
+    <Content Include="lib\NPOI.OpenXml4Net.dll" />
+    <Content Include="lib\NPOI.OpenXmlFormats.dll" />
+    <Content Include="lib\Spring.Aop.dll" />
+    <Content Include="lib\Spring.Core.dll" />
+    <Content Include="lib\Spring.Data.dll" />
+    <Content Include="lib\Spring.Data.NHibernate32.dll" />
+    <Content Include="lib\Spring.Web.dll" />
+    <Content Include="lib\zxing.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BD.JC.JS.Comon\BD.JC.JS.Common.csproj">
+      <Project>{2461ea6b-70bc-4fab-8c9d-2b08641c9a24}</Project>
+      <Name>BD.JC.JS.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

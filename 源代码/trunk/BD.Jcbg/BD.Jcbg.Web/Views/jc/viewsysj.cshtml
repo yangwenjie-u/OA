@@ -1,0 +1,49 @@
+﻿@using BD.Jcbg.Common;
+@{
+
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+
+@section head
+{
+<link href="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table.min.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetJsPath("dateformat.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table-zh-CN.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+        var g_sywyh = "@ViewBag.sywyh";
+        var g_sysjs = [];
+
+        $(function () {
+            try {
+                $('#tableData').bootstrapTable({
+                    url: "/jc/getsysjxqlist?sywyh=" + encodeURIComponent(g_sywyh),
+                    columns: [{
+                        field: 'zdhy',
+                        title: '字段'
+                    }, {
+                        field: 'zdz',
+                        title: '字段值'
+                    } ]
+                });
+                $("#imgQx").attr("src", "/jc/getsysjqx?sywyh=" + g_sywyh);
+
+            } catch (err) {
+                alert(e);
+            }
+        });
+    </script>
+}
+<ul id="main_tab_tab" class="nav nav-tabs">
+    <li class="active"><a href="#tab_1" data-toggle="tab">数据</a></li>
+    <li class=""><a href="#tab_2" data-toggle="tab">曲线</a></li>
+</ul>
+<div id="main_tab_content" class="tab-content">
+    <div class="tab-pane fade in active" id="tab_1" style='padding:0px 10px 0px 10px'>
+        <table id="tableData">
+        </table>
+    </div>
+    <div class="tab-pane fade text-center" id="tab_2" style='padding:0px 10px 0px 10px'>
+        <img border="0" id="imgQx" />
+    </div>
+</div>

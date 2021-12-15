@@ -1,0 +1,115 @@
+﻿@using BD.Jcbg.Common;
+@{
+
+    Layout = "~/Views/jc/_baselayout.cshtml";
+}
+
+@section head
+{
+<link href="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table.min.css")" rel="stylesheet" type="text/css" />
+<script src="@SkinManager.GetJsPath("dateformat.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table.min.js")" type="text/javascript" charset="utf-8"></script>
+<script src="@SkinManager.GetBootstrapPath("/PlugIns/table/bootstrap-table-zh-CN.min.js")" type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+    var g_wtdwyh = "@ViewBag.wtdwyh";
+    var g_wbc = "@ViewBag.wbc";
+    var g_cz = "@ViewBag.cz";
+    var g_cfsy = "@ViewBag.cfsy";
+        var g_viewpath = "@Html.Raw(ViewBag.viewpath)";
+
+        $(function () {
+            try {
+                layer.msg('正在加载数据');
+                $.ajax({
+                    type: "POST",
+                    url: "/jc/getwtdsysjlist",
+                    dataType: "json",
+                    async: false,
+                    data: "wtdwyh=" + g_wtdwyh+"&wbc="+g_wbc+"&cz="+g_cz+"&cfsy="+g_cfsy,
+                    success: function (data) {
+                        var i = 0;
+                        $.each(data.sjs, function () {
+                            var isactive = "";
+                            if (i++ == 0)
+                                isactive = "active";
+
+                            var ycstr = "";
+                            if (this.sfbc == "False" || this.sfcz=="True" || this.sfzzsj=="False")
+                                ycstr = "<span class=\"glyphicon glyphicon-exclamation-sign\" style='color:red'></span>";
+                            $("#main_tab").append("<li class=\"" + isactive + "\"><a href=\"#tab_" + i + "\" data-toggle=\"tab\">第" + this.zh + "组" + ycstr + "</a></li>");
+
+                            var ycstr1 = this.sfbc == "False" ? ycstr : "";
+                            var ycstr2 = this.sfcz == "True" ? ycstr : "";
+                            var ycstr3 = this.sfzzsj == "False" ? ycstr : "";
+                            var sywyh = this.sywyh;
+                            var spdesc = "无";
+                            if (this.uploadfileid != "") {
+                                spdesc = "<input type='button' value='查看视频' onclick='showSp(\"" + this.uploadfileid + "\")'/>";
+                            }
+                            else if (this.spwj != "") {
+                                spdesc = "未上传到云存储，请稍候";
+                            }
+                            var syxqstr = "<table class='table table-bordered table-striped' style='margin-top:10px'>";
+                            syxqstr += "<tr><th>项目</th><th>" + this.symc + "</th></tr>" +
+                                "<tr><th>采集视频</th><th>"+spdesc+"</th></tr>"+
+                                "<tr><th>样品号</th><th>" + this.ypbh + "</th></tr>" +
+                                "<tr><th>组号</th><th>" + this.zh + "</th></tr>" +
+                                "<tr><th>试验人</th><th>" + this.syrxm + "</th></tr>" +
+                                "<tr><th>保存</th><th>" + (this.sfbc == "True" ? "是" : "否") + ycstr1+"</th></tr>" +
+                                "<tr><th>重做</th><th>" + (this.sfcz == "True" ? "是" : "否") + ycstr2+"</th></tr>" +
+                                "<tr><th>最后数据</th><th>" + (this.sfzzsj == "True" ? "是" : "否") +ycstr3+ "</th></tr>" +
+                                "<tr><th>试验结束时间</th><th>" + this.syjssj + "</th></tr>" +
+                                "<tr><th>上传时差</th><th>" + this.scsc + "</th></tr>";
+
+                            $.each(data.xqs, function () {
+                                if (this.sywyh != sywyh)
+                                    return true;
+                                //syxqstr += "<div class=\"col-xl-12 col-sm-6 col-md-4 col-lg-3\">" + this.zdhy + ":" + this.zdz + "</div>";
+                                syxqstr += "<tr><th>" + this.zdhy + "</th><th>" + this.zdz + "</th></tr>";
+                            });
+                            syxqstr += "</table>";
+                            var imgurl = "/jc/getsysjqx?sywyh=" + sywyh;
+                            $("#main_content").append("<div class=\"tab-pane fade in "+isactive+" text-center\" id=\"tab_" + i + "\"><div class=\"row\"><div class='col-lg-3'>" + syxqstr + "</div><div class='col-lg-9'><img border=\"0\" class='img-responsive' src=\"" + imgurl + "\" /></div></div></div>");
+                        });
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+
+
+                layer.closeAll();
+
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function showSp(fileid) {
+            if (fileid == "") {
+                alert("视频文件还未上传到对象存储，无法播放");
+            } else {
+                layer.open({
+                    type: 2,
+                    title: '',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['90%', '90%'],
+                    content: g_viewpath + fileid,
+                    end: function () {
+
+                    }
+                });
+            }
+        }
+    </script>
+}
+
+<div class="container">
+    <ul id="main_tab" class="nav nav-tabs">
+    </ul>
+    <div id="main_content" class="tab-content">
+        
+    </div>
+    
+</div>

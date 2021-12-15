@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+
+        $(function () {
+            try {
+                setBglx();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function setBglx() {
+
+            var divid = "div_yszt";
+            try {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/dwgxzj/getqyxxbglx",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            //$("#" + divid).append("<li class=\"list-group-item\"><div class=\"radio\"><label><input type=\"radio\" value=\"" + item.bh + "\" id=\"item_" + item.bh + "\" name='zts'><span id=\"sp_" + item.bh + "\">" + item.bm + "</span></label></div></li>");
+                            $("#" + divid).append("<label class=\"btn btn-default\" style='margin:5px 5px 5px 5px;'> <input type=\"radio\" class=\"toggle\" value=\"" + item.lxbh + "\"> " + item.lxmc + "</label>");
+                        });
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                    }
+                });
+
+                
+            } catch (ex) {
+                alert(ex);
+            }
+        }
+        function getValues() {
+            if ($('#div_yszt input:radio:checked').length == 0)
+                return "";
+            return $('#div_yszt input:radio:checked').val();
+
+        }
+    </script>
+}
+
+<div class="btn-group" id="div_yszt" data-toggle="buttons" style="margin:10px 10px 10px 10px;">
+
+</div>

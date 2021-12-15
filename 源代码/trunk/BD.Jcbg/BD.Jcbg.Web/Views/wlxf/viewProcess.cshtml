@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="/static/wlxf/element-ui/lib/theme-chalk/index.css" rel="stylesheet" />
+    <script src="/static/wlxf/vue.js"></script>
+    <script src="/static/wlxf/element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href=/static/wlxf/layui/css/layui.css" rel="stylesheet" media="all">
+    <script type="text/javascript" src="/static/wlxf/jquery.js"></script>
+    <script src=/static/wlxf/layui/layui.all.js"></script>
+    <title>查看流程进度</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id="app" v-show="showApp" style="display: none;">
+        <div class="search">
+        </div>
+        <el-tabs type="border-card" v-model="tabVal">
+            <el-tab-pane label="审批中" name="1" >
+                <el-table :header-cell-style="{background:'rgb(250, 250, 250)',color:'#606266'}" :data="tableData2"
+                          border style="width: 100%" :height="tabHeight">
+                    <el-table-column type="index" label="序号" width="50">
+                    </el-table-column>
+                    <el-table-column prop="TaskName" label="任务名称" width="180">
+                    </el-table-column>
+                    <el-table-column prop="UserRealName" label="下一步操作人" width="300">
+                    </el-table-column>
+                    <el-table-column prop="DateAccepted" label="接收时间" width="180">
+                        <template slot-scope="scope">
+                            <span>
+                                {{dateFormat(scope.row.DateAccepted)}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="PreUserRealName" label="来自" width="300">
+                    </el-table-column>
+                    <el-table-column prop="IsBack" label="退回件" width="150">
+                        <template slot-scope="scope">
+                        <span>
+                            {{scope.row.IsBack?'是':'否'}}
+                        </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Opinion" label="审批意见">
+                    </el-table-column> 
+                </el-table>
+            </el-tab-pane>
+            <el-tab-pane label="已完成" name="0">
+                <el-table :header-cell-style="{background:'rgb(250, 250, 250)',color:'#606266'}" :data="tableData"
+                          border style="width: 100%" :height="tabHeight">
+                    <el-table-column type="index" label="序号" width="50">
+                    </el-table-column>
+                    <el-table-column prop="TaskName" label="任务名称" width="180">
+                    </el-table-column>
+                    <el-table-column prop="DateCompleted" label="完成时间" width="180">
+                        <template slot-scope="scope">
+                            <span>
+                                {{dateFormat(scope.row.DateCompleted)}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="GrantorRealName" label="来自" width="300">
+                    </el-table-column>
+                    <el-table-column prop="UserRealName" label="完成人" width="300">
+                    </el-table-column>
+                    <el-table-column prop="IsBack" label="退回件" width="150">
+                        <template slot-scope="scope">
+                            <span>
+                                {{scope.row.IsBack?'是':'否'}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Opinion" label="审批意见">
+                    </el-table-column>
+                    <!--<el-table-column prop="Opinion" label="审批意见">
+                    </el-table-column>-->
+                </el-table>
+            </el-tab-pane>
+        </el-tabs>
+    </div>
+    <script>
+        var g_recid = GetQueryString('recid')
+        var g_sqjg = GetQueryString('sqjg')
+        new Vue({
+            el: '#app',
+            data: {
+                showApp: false,
+                marks: {},
+                initDate: "",
+                tableData: [],
+                tableData2: [],
+                tabVal: g_sqjg,
+                key: '',
+                tabHeight: $(window).height() - 72,
+                sqjg: g_sqjg
+            },
+            methods: {
+                dateFormat: function (d) {
+                    var date = eval('new ' + eval(d).source)
+                    var oDate = new Date(date);
+                    var y = oDate.getFullYear(); //获取年；
+                    var m = oDate.getMonth() + 1; //获取月份，由于月份是从0开始计算，所以要加1
+                    var d = oDate.getDate(); // 获取日
+                    var hours = oDate.getHours();
+                    var minu = oDate.getMinutes();
+                    var sec = oDate.getSeconds();
+                    return y + '-' + addZero(m) + '-' + addZero(d) + " " + addZero(hours) + ":" + addZero(
+                        minu) + ":" + addZero(sec)
+
+                    function addZero(num) {
+                        if (num < 10) {
+                            return "0" + num
+                        } else {
+                            return num
+                        }
+                    }
+                },
+                getdonetasks: function () {
+                    var that = this;
+                    $.ajax({
+                        type: "post",
+                        url: "/workflow/getdonetasks",
+                        data: {
+                            serial: g_recid
+                        },
+                        async: false,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                var d = data.rows
+                                that.tableData = d;
+                            }
+                        }
+                    });
+                },
+                gettodotasks: function () {
+                    var that = this;
+                    $.ajax({
+                        type: "post",
+                        url: "/workflow/gettodotasks",
+                        data: {
+                            serial: g_recid
+                        },
+                        async: false,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data) {
+                                var d = data.rows
+                                that.tableData2 = d;
+                            }
+                        }
+                    });
+                }
+            },
+            watch: {
+                tabVal: function (val) {
+                    switch (val) {
+                        case '0':
+                            this.gettodotasks()
+                            break;
+                        case '1':
+                            this.getdonetasks()
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            },
+            mounted() {
+                var that = this;
+                that.getdonetasks();
+                that.gettodotasks()
+                this.showApp = true
+            }
+        })
+
+
+
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        }
+    </script>
+</body>
+
+</html>

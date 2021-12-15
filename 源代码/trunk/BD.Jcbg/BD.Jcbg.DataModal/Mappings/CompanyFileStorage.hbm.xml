@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.CompanyFileStorage,BD.Jcbg.DataModal" table="CompanyFileStorage" lazy="false">
+    <id name="Recid" column="Recid" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="255" name="FileName" column="[FileName]" />
+    <property type="string" length="200" name="FileDesc" column="[FileDesc]" />
+    <property type="long" name="FileSize" column="[FileSize]" />
+    <property type="BinaryBlob" name="FileContent" column="[FileContent]" />
+    <property type="DateTime" name="CreatedTime" column="[CreatedTime]" />
+    <property type="string" length="50" name="UserName" column="[UserName]" />
+    <property type="string" length="50" name="RealName" column="[RealName]" />
+    <property type="string" length="100" name="ImageName" column="[ImageName]" />
+    <property type="string" length="100" name="FileTypeDesc" column="[FileTypeDesc]" />
+  </class>
+</hibernate-mapping>

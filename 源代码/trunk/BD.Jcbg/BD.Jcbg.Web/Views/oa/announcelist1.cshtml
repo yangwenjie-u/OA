@@ -1,0 +1,304 @@
+﻿@{
+	Layout = "~/Views/User/_easyuieditlayout.cshtml";
+}
+
+
+<script language="javascript" type="text/javascript">
+	var announce_list1_g_pageSize = 20;
+
+	$(function () {
+		try {
+			announce_list1_initDs();
+			$('#announce_list1_maintable').datagrid({
+				title: '公告管理',
+				loadMsg: "正在加载……",
+				border: false,
+				url: '/oa/GetManageAnnounce?rows=' + announce_list1_g_pageSize,
+				rownumbers: true,
+				nowrap: true,
+				idField: 'recid',
+				striped: false,
+				fit: true,
+				singleSelect: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: announce_list1_g_pageSize,
+				pageList: [announce_list1_g_pageSize, 40, 50, 100, 1000, 10000],
+				columns: [[
+				{ field: 'title', title: '标题', width: 150, sortable: true, align: "center" },
+				{ field: 'body', title: '内容摘要', width: 250, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var content = $.base64.decode(value);
+						content = stripHtml(content);
+						if (content.length > 20)
+							return content.substr(0, 20) + "...";
+						return content;
+					}
+				},
+				{ field: 'fileids', title: '附件', width: 200, sortable: true, align: "center",
+					formatter: function (value, row, index) {
+						var ret = "";
+						if (value != "") {
+							var arr = value.split("||");
+							for (var i = 0; i < arr.length; i++) {
+								var arritem = arr[i].split('|');
+								ret += "&nbsp;&nbsp;<a href='/oa/fileview?id=" + arritem[1] + "'>" + arritem[0] + "</a>";
+							}
+
+						}
+						return ret;
+					}
+				},
+				{ field: 'realname', title: '发布人', width: 100, sortable: true, align: "center" },
+				{ field: 'createdtime', title: '发布时间', width: 120, sortable: true, align: "center" }
+				]],
+				toolbar: "#announce_list1_tb",
+				onClickRow: function (rowIndex, rowData) {
+					announce_list1_showToolbar(rowData);
+				},
+				onDblClickRow: function (rowIndex, rowData) {
+					announce_list1_editRecord(); 
+				}
+			});
+
+			announce_list1_initSearch();
+		} catch (e) {
+			$.messager.alert('初始化页面异常', e.message, 'warning');
+		}
+
+	});
+	function announce_list1_initDs() {
+		try {
+			
+		} catch (e) {
+			$.messager.alert('加载初始化数据集异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_initSearch() {
+		try {
+			$("#announce_list1_search_time1").datebox({});
+			$("#announce_list1_search_time2").datebox({});
+		} catch (e) {
+			$.messager.alert('初始化查询控件异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_search() {
+		try {
+			announce_list1_gridReload();
+		} catch (e) {
+			$.messager.alert('查找记录异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_showToolbar(rowData) {
+		try {
+			$("#announce_list1_btnadd").linkbutton('enable');
+			$("#announce_list1_btnedit").linkbutton('enable');
+			$("#announce_list1_btnview").linkbutton('enable');
+			$("#announce_list1_btndelete").linkbutton('enable');
+
+		} catch (e) {
+			$.messager.alert('显示工具条异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_showNoRecToolbar() {
+		try {
+			$("#announce_list1_maintable").datagrid('unselectAll');
+			$("#announce_list1_btnadd").linkbutton('enable');
+			$("#announce_list1_btnedit").linkbutton('disable');
+			$("#announce_list1_btnview").linkbutton('disable');
+			$("#announce_list1_btndelete").linkbutton('disable');
+		} catch (e) {
+			$.messager.alert('显示无记录工具条异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_showEditdlg(recid) {
+		try {
+			$("#announce_list1_edit").dialog({
+				title: "发布公告",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				cache:false,
+				href: "/oa/announceedit?id="+recid,
+				buttons: [{
+					text: "保存",
+					iconCls: "icon-save",
+					id: "announce_list1_btn_save",
+					handler: function () {
+						$("#form_announce_edit").form('submit', {
+							url: "/oa/saveannounce",
+							onSubmit: function (param) {
+								var ret = false;
+								try {
+									var isValid = $(this).form('validate');
+									if (!isValid)
+										return false;
+									$("#content").val(getData());
+									$("body").mask("正在保存……");
+									ret = true;
+								}
+								catch (err) {
+									ret = false;
+									$.messager.alert('提示', err, 'info');
+								}
+								return ret;
+							},
+							success: function (data) {
+								try {
+									$("body").unmask();
+
+									var data = eval('(' + data + ')');
+									var code = data.code;
+									var msg = data.msg;
+									if (msg == "") {
+										if (code == 0)
+											msg = "保存成功！";
+										else
+											msg = "保存失败！";
+									}
+									$.messager.alert('提示', msg, 'info', function () {
+										if (code == 0)
+											window.location = '/oa/announcelist1';
+									});
+
+
+								}
+								catch (err) {
+									$.messager.alert('提示', err, 'info');
+								}
+							}
+						});
+					}
+				}, {
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "announce_list1_btn_cancel",
+					handler: function () {
+						$("#announce_list1_edit").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('添加记录异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_editRecord() {
+		try {
+			var rec = $("#announce_list1_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			announce_list1_showEditdlg(rec.recid);
+		} catch (e) {
+			$.messager.alert('修改记录异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_deleteRecord() {
+		try {
+			var rec = $("#announce_list1_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$.messager.confirm('提示', '确定要删除选中的记录吗?', function (r) {
+				if (r) {
+					$.ajax({
+						type: "POST",
+						url: "/oa/deleteannounce?id=" + rec.recid,
+						dataType: "json",
+						success: function (data) {
+							try {
+								if (data.code == 0) {
+									var index = $("#announce_list1_maintable").datagrid('getRowIndex', rec);
+									$("#announce_list1_maintable").datagrid('deleteRow', index);
+									$('#announce_list1_maintable').datagrid('acceptChanges');
+									announce_list1_showNoRecToolbar();
+									$.messager.alert('提示', '删除成功', 'info');
+								}
+								else
+									$.messager.alert('提示', data.msg, 'info');
+							} catch (e) {
+								$.messager.alert('提示', e.message, 'warning');
+							}
+						},
+						complete: function (XMLHttpRequest, textStatus) {
+							$("body").unmask();
+						},
+						beforeSend: function (XMLHttpRequest) {
+							$("body").mask("正在删除...");
+						}
+					});
+				}
+			});
+		} catch (e) {
+			$.messager.alert('删除记录异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_gridReload() {
+		try {
+			$('#announce_list1_maintable').datagrid('load', {
+				key: $("#announce_list1_search_key").val(),
+				dt1: $("#announce_list1_search_time1").datebox('getValue'),
+				dt2: $("#announce_list1_search_time2").datebox('getValue')
+			});
+			announce_list1_showNoRecToolbar();
+		} catch (e) {
+			$.messager.alert('加载表格异常', e.message, 'warning');
+		}
+	}
+	function announce_list1_viewRecord() {
+		try {
+			var rec = $("#announce_list1_maintable").datagrid('getSelected');
+			if (rec == null) {
+				$.messager.alert('提示', '请选择要操作的记录', 'info');
+				return;
+			}
+			$("#announce_list1_view").dialog({
+				title: "查看公告",
+				collapsible: false,
+				minimizable: false,
+				maximizable: false,
+				resizable: false,
+				draggable: false,
+				closable: true,
+				modal: true,
+				fit: true,
+				cache: false,
+				href: "/oa/announceview?id=" + rec.recid,
+				buttons: [{
+					text: "关闭",
+					iconCls: "icon-cancel",
+					id: "announce_list1_btn_cancel2",
+					handler: function () {
+						$("#announce_list1_view").dialog("close");
+					}
+				}]
+			});
+		} catch (e) {
+			$.messager.alert('预览异常', e.message, 'warning');
+		}
+	}
+</script>
+<table id="announce_list1_maintable"></table>  
+<div id="announce_list1_tb" style="padding:5px;height:auto;">  
+	<div>  
+		<a onclick="announce_list1_showEditdlg(0);" id="announce_list1_btnadd" class="easyui-linkbutton" iconCls="icon-add" plain="true">发布公告</a>
+		<a onclick="announce_list1_editRecord();" id="announce_list1_btnedit" class="easyui-linkbutton" iconCls="icon-edit" plain="true" disabled="true">修改公告</a>
+		<a onclick="announce_list1_deleteRecord();" id="announce_list1_btndelete" class="easyui-linkbutton" iconCls="icon-remove" plain="true" disabled="true">删除公告</a>
+		<a onclick="announce_list1_viewRecord();" id="announce_list1_btnview" class="easyui-linkbutton" iconCls="icon-view" plain="true" disabled="true">公告预览</a>
+	</div>  
+	<div>
+		公告标题：<input id="announce_list1_search_key" style="width:200px" />
+		发布时间：<input id="announce_list1_search_time1" style="width:100px" />&nbsp;到&nbsp;
+				<input id="announce_list1_search_time2" style="width:100px" />
+		<a href="javascript:announce_list1_search();" class="easyui-linkbutton" iconCls="icon-search" >查找</a>  
+	</div>
+</div>
+<div id="announce_list1_edit"></div>
+<div id="announce_list1_view"></div>

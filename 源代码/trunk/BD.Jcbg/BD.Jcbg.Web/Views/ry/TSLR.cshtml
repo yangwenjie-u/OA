@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout.cshtml";
+}
+@section head{
+<script language="javascript" type="text/javascript">
+    $(function () {      
+        try {
+            var zdzdtable = encodeURIComponent("ZDZD_JC"); // zdzd名
+            var tablename = encodeURIComponent("I_M_RY_TS"); 			// 表名
+            var tablerecid = encodeURIComponent("Recid"); 	// 表主键
+            var title = encodeURIComponent("投诉内容"); 	// 标题
+       
+            //var custombutton = encodeURIComponent("提交|TJSJ|ryts('')");
+            var buttons = encodeURIComponent("提交|TJ| | |添加成功"); // 按钮 
+            var js = encodeURIComponent("ryts.js,idcardService.js");
+            var callback = encodeURIComponent("ryts('')");
+
+            var rdm = Math.random();
+            var url = "/datainput/Index?zdzdtable=" + zdzdtable +
+                "&t1_tablename=" + tablename +
+                "&t1_pri=" + tablerecid +
+                "&t1_title=" + title +
+                "&callback=" + callback +
+                "&button=" + buttons +
+                "&rownum=2" +
+                "&js=" + js +
+                "&_=" + rdm;
+
+            parent.layer.open({
+                type: 2,
+                title: '投诉录入',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['95%', '95%'],
+                content: url,
+                end: function () {
+                    parent.layer.closeAll();
+                    // searchRecord();
+                    var existsIndex = window.parent.TabControlGetIndex('RCGZ_TSLR');
+                    window.parent.TabControlRemove(existsIndex);
+                }
+            });
+        } catch (e) {
+            alert(e);
+        }
+    });  
+</script>
+}

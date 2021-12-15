@@ -1,0 +1,331 @@
+﻿@{
+    Layout = "~/Views/User/_contentlayout2.cshtml";
+}
+@using BD.Jcbg.Common;
+@section head
+{
+<script src=@SkinManager.GetJsPath("Idcard.js") type="text/javascript" charset="utf-8"></script>
+    <script language="javascript" type="text/javascript">
+
+    $(function () {
+        try {
+
+        } catch (err) {
+            alert(e);
+        }
+    });
+
+
+
+
+    function isValid() {
+        try {
+            var realname = $("#realname").val().trim();
+            if (realname.length<2 || realname.length>15) {
+                layer.alert('请输入姓名，2~15个汉字！', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+                return false;
+            }
+            var reg = /^[\u4E00-\u9FA5]+$/;
+            if (!reg.test(realname)) {
+                layer.alert('姓名只允许输入汉字！', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+                return false;
+            }
+            var idcardObj = Idcard.createNew($("#sfzh").val());
+            if (!idcardObj.IdCardValidate()) {
+                layer.alert('请输入正确的身份证号码！', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+                return false;
+            }
+            reg = /^1[0-9]{10}$/;
+
+            if (!reg.test($("#sjhm").val())) {
+                layer.alert('请输入正确的手机号码！', {
+                    icon: 0,
+                    skin: 'layer-ext-moon'
+                });
+                return false;
+            }
+
+
+        } catch (e) {
+            alert(e);
+            return false;
+        }
+        return true;
+    }
+
+    function doSubmit() {
+        var ret = true;
+
+
+        // 校验表单
+        if (!isValid())
+            return false;
+
+        var realname = $('#realname').val().trim();
+        var sfzh = $('#sfzh').val().trim();
+        var sjhm = $("#sjhm").val().trim();
+
+        // 校验用户信息
+        $.ajax({
+            type: "POST",
+            url: "/user/checkuserregisterfirststep?realname=" + encodeURIComponent(realname) + "&sfzh=" + encodeURIComponent(sfzh)+"&sjhm="+encodeURIComponent(sjhm),
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                try{
+                    ret = data.code == "0";
+                    
+                    // 新注册
+                    if (ret)
+                        openRegisterWindow();
+                    else {
+                        //姓名，手机，身份证一样，跳转到找回密码
+                        if (data.msg == "1") {
+                            openResetpassWindow();
+                        } else if (data.msg == "2") {
+                            layer.alert('您的身份证已经注册账号，但是手机或者是姓名和您当前输入的不一致，无法重新注册。请携带相关证件到温州市建设工程质量监督站进行核验操作！', {
+                                icon: 0,
+                                skin: 'layer-ext-moon'
+                            });
+                        } else if (data.msg == "3") {
+                            layer.alert('您的手机已经注册账号，但是身份证和您输入的不一致，无法重新注册。请携带相关证件到温州市建设工程质量监督站进行核验操作！', {
+                                icon: 0,
+                                skin: 'layer-ext-moon'
+                            });
+                        } else {
+                            layer.alert(data.msg, {
+                                icon: 0,
+                                skin: 'layer-ext-moon'
+                            });
+                        }
+
+                    }
+                } catch (err) {
+                    alert(err);
+                }
+
+                /*
+                if (ret) {
+                    // 人员姓名与身份证号码相同的记录多于1条
+                    if (data.msg == "1") {
+                        parent.layer.open({
+                            type: 0,
+                            title: '提示',
+                            content: "存在多个身份证号码与姓名相同的用户，请到监督站窗口办理！"
+                        });
+                    }
+                    // 人员姓名与身份证号码相同的记录刚好有1条
+                    else if (data.msg == "2") {
+                        parent.layer.closeAll();
+                        // 获取人员编号，并打开注册人员注册页面
+                        var rybh = data.jsondata;
+                        var fieldparam = "I_M_RY,ZLYZ,1";
+                        var js = encodeURIComponent("agreement.js,customfunImry2.js,userService.js,smsService.js");
+                        var callback = encodeURIComponent("userService.createUserWithSms('u','$$RYBH$$')");
+                        var url = "/datainput/Index?zdzdtable=ZDZD_JC" +
+                        "&t1_tablename=I_M_RY" +
+                        "&t1_pri=RYBH" + 
+                        "&t1_title=" + encodeURIComponent("人员基本信息") +
+                        "&button=" + encodeURIComponent("提交申请|TJ| | | ") +
+                        "&custombutton=" + encodeURIComponent("查看用户协议|AGREEMENT|showAgreement() ") +
+                        "&rownum=1" +
+                        "&fieldparam=" + fieldparam +
+                        "&js=" + js +
+                        "&callback=" + callback +
+                        "&jydbh=" + rybh +
+                        "&LX=R";
+                        
+                        parent.layer.open({
+                            type: 2,
+                            title: '人员账号注册申请',
+                            shadeClose: true,
+                            shade: 0.8,
+                            area: ['1000px', '500px'],
+                            content: url,
+                            end: function () {
+                            }
+                        });
+
+                    }
+                    // 人员姓名与身份证号码相同的记录不存在,人员姓名相同的记录存在
+                    else if (data.msg == "3") {
+                        parent.layer.closeAll();
+                        // 获取人员姓名，并打开手机号码验证页面
+                        var ryxm = data.jsondata;
+                        
+                        parent.layer.open({
+                            type: 2,
+                            title: '人员账号注册申请——第二步',
+                            shadeClose: true,
+                            shade: 0.8,
+                            area: ['800px', '500px'],
+                            content: '/user/userregistersecondstep?ryxm='+ encodeURIComponent(ryxm),
+                            end: function () {
+                            }
+                        });
+
+
+                    }
+                    // 人员姓名与身份证号码相同的记录不存在,人员姓名相同的记录不存在
+                    else if (data.msg=="4") {
+                        //parent.layer.open({
+                        //    type: 0,
+                        //    title: '提示',
+                        //    content: "不存在该姓名的用户，请到监督站窗口办理！"
+                        //});
+
+                        parent.layer.closeAll();
+                        // 打开注册人员注册页面
+                        var rybh = "";
+                        var fieldparam = "I_M_RY,ZLYZ,1|I_M_RY,RYXM," + realname + "|I_M_RY,SFZHM," + sfzh;
+                        var js = encodeURIComponent("agreement.js,customfunImry.js,userService.js,smsService.js");
+                        var callback = encodeURIComponent("userService.createUserWithSms('u','$$RYBH$$')");
+                        var url = "/datainput/Index?zdzdtable=ZDZD_JC" +
+                        "&t1_tablename=I_M_RY" +
+                        "&t1_pri=RYBH" +
+                        "&t1_title=" + encodeURIComponent("人员基本信息") +
+                        "&button=" + encodeURIComponent("提交申请|TJ| | | ") +
+                        "&custombutton=" + encodeURIComponent("查看用户协议|AGREEMENT|showAgreement() ") +
+                        "&rownum=1" +
+                        "&fieldparam=" + fieldparam +
+                        "&js=" + js +
+                        "&callback=" + callback +
+                        "&jydbh=" + rybh +
+                        "&LX=R";
+
+                        parent.layer.open({
+                            type: 2,
+                            title: '人员账号注册申请',
+                            shadeClose: true,
+                            shade: 0.8,
+                            area: ['1000px', '500px'],
+                            content: url,
+                            end: function () {
+                            }
+                        });
+                        
+                    }
+
+                    
+                }
+                else {
+                    if (data.msg == "")
+                        data.msg = "用户信息校验失败！！";
+                    parent.layer.open({
+                        type: 0,
+                        title: '提示',
+                        content: data.msg
+                    });
+                }*/
+            },
+            complete: function (XMLHttpRequest, textStatus) {
+            },
+            beforeSend: function (XMLHttpRequest) {
+            }
+        });
+        if (!ret) {
+            return false;
+        }
+        return ret;
+    }
+    function openRegisterWindow(){
+        try{
+            
+            var realname = $('#realname').val().trim();
+            var sfzh = $('#sfzh').val().trim();
+            var sjhm = $("#sjhm").val().trim();
+            // 打开注册人员注册页面
+            var rybh = "";
+            var fieldparam = "I_M_RY,ZLYZ,1|I_M_RY,RYXM," + realname + "|I_M_RY,SFZHM," + sfzh+"|I_M_RY,SJHM,"+sjhm;
+            var js = encodeURIComponent("Idcard.js,agreement.js,customfunImry.js?v=2017071703,userService.js,smsService.js");
+            var callback = encodeURIComponent("userService.createUserWithSms('u','$$RYBH$$')");
+            var url = "/datainput/Index?zdzdtable=ZDZD_JC" +
+            "&t1_tablename=I_M_RY" +
+            "&t1_pri=RYBH" +
+            "&t1_title=" + encodeURIComponent("人员基本信息") +
+            "&button=" + encodeURIComponent("提交申请|TJ| | | ") +
+            "&custombutton=" + encodeURIComponent("查看用户协议|AGREEMENT|showAgreement() ") +
+            "&rownum=1" +
+            "&fieldparam=" + fieldparam +
+            "&js=" + js +
+            "&callback=" + callback +
+            "&jydbh=" + rybh +
+            "&LX=R";
+            parent.layer.closeAll();
+            parent.layer.open({
+                type: 2,
+                title: '人员账号注册申请',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1000px', '500px'],
+                content: url,
+                end: function () {
+                }
+            });
+                        
+        }
+        catch(err){
+            alert(err);
+        }
+    
+    }
+    function openResetpassWindow() {
+        try {
+            var realname = $('#realname').val().trim();
+            var sfzh = $('#sfzh').val().trim();
+            var sjhm = $("#sjhm").val().trim();
+            parent.layer.closeAll();
+                
+            parent.layer.open({
+                type: 2,
+                title: '重置密码——第一步',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['800px', '500px'],
+                content: '/user/resetpassfirststep?type=u&xm=' + encodeURIComponent(realname) + "&msg=" + encodeURIComponent("您的账号已注册，无法重复注册。现在为您跳转到密码重置页面，您可以找回密码。"),
+                end: function () {
+                }
+            });
+        }
+        catch (err) {
+            alert(err);
+        }
+    }
+    </script>
+}
+
+<ul class="list-group">
+    <li class='list-group-item' id='li_realname'>
+        <div class="input-group">
+            <span class="input-group-addon">姓名（2~15个汉字）</span>
+            <input type="text" class="form-control" id='realname' name="realname" value="" placeholder="请输入姓名">
+        </div>
+    </li>
+    <li class='list-group-item' id='li_sfzh'>
+        <div class="input-group">
+            <span class="input-group-addon">身份证号码</span>
+            <input type="text" class="form-control" id='sfzh' name="sfzh" value="" placeholder="请输入身份证号码" >
+        </div>
+    </li>
+    <li class='list-group-item' id='li_sjhm'>
+        <div class="input-group">
+            <span class="input-group-addon">手机号码</span>
+            <input type="text" class="form-control" id='sjhm' name="sjhm" value="" placeholder="请输入手机号码">
+        </div>
+    </li>
+</ul>
+<div class="navbar navbar-default navbar-fixed-bottom">
+    <form class="navbar-form navbar-right" role="search">
+        <input class="btn btn-default" type="button" onclick="doSubmit()" value="下一步" />
+        &nbsp;&nbsp;
+    </form>
+</div>

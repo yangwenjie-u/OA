@@ -1,0 +1,197 @@
+﻿@using BD.Jcbg.Common;
+@{
+    Layout = "~/Views/jc/_tablayout.cshtml";
+}
+
+@section head 
+{
+<script language="javascript" type="text/javascript">
+    var g_dwbh = "@ViewBag.dwbh";
+    var g_syxmfl1 = [];
+    var g_syxmfl = [];
+    var g_syxm = [];
+    var g_zb = [];
+    var g_qyzb = [];
+	$(function () {
+	    try {
+	        initData();
+	        showData();
+
+	    } catch (err) {
+	        alert(e);
+	    }
+	});
+    function initData() {
+        try {
+
+            $.ajax({
+                type: "POST",
+                url: "/jc/getjcdwxmfz?dwbh=" + g_dwbh,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    try{
+                        $.each(data, function (i, value) {
+                            if (value.sjxsflbh == "")
+                                g_syxmfl1[g_syxmfl1.length] = value;
+                            else
+                                g_syxmfl[g_syxmfl.length] = value;
+                        });
+                    } catch (e) {
+                        alert(e);
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/jc/getjcdwxm?dwbh=" + g_dwbh,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_syxm = data;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/jc/getzb",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_zb = data;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: "/jc/getdwzb?dwbh=" + g_dwbh,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    g_qyzb = data;
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll();
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.msg('正在加载数据……', { icon: 16 });
+                }
+            });
+
+        } catch (e) {
+            alert(e);
+        }
+    }
+    var g_column_sum = 10;
+    function showData() {
+        try {
+            var isfirst1 = true, isfirst2;
+            $.each(g_syxmfl1, function (i, value) {
+                var otaba1 = "";
+                var otaba2 = "";
+                if (isfirst1) {
+                    otaba1 = "in active";
+                    otaba2 = "active";
+                    isfirst1 = false;
+                }
+                var o_div_id = "o_tab_" + value.xsflbh;
+                var o_cur_div = "<div class=\"tab-pane fade " + otaba1 + "\" id=\"" + o_div_id + "\" style='padding:10px 10px 10px 10px'><div class='div_check_all' style='padding:5px 10px 5px 10px;'><input type='checkbox' onchange=\"checkAllChange(this.checked,'" + value.xsflbh + "')\"/>全选</div></div>";
+                $("#out_tab_content").append(o_cur_div);
+                $("#out_tab_tab").append("<li class=\"" + otaba2 + "\"><a href=\"#" + o_div_id + "\" data-toggle=\"tab\">" + value.xsflmc + "</a></li>");
+                $("#" + o_div_id).append("<ul id=\"main_tab_tab_" + value.xsflbh + "\" class=\"nav nav-tabs\"></ul><div id=\"main_tab_content_" + value.xsflbh + "\" class=\"tab-content\"></div>");
+                isfirst2 = true;
+                $.each(g_syxmfl, function (j, value2) {
+                    if (value2.sjxsflbh != value.xsflbh)
+                        return true;
+                    var taba1 = "";
+                    var taba2 = "";
+                    if (isfirst2) {
+                        taba1 = "in active";
+                        taba2 = "active";
+                        isfirst2 = false;
+                    }
+                    var div_id = "tab_" + value2.xsflbh;
+                    var cur_div = "<div class=\"tab-pane fade " + taba1 + "\" id=\"" + div_id + "\" style='padding:10px 10px 10px 10px'><div class='div_check_all' style='padding:5px 10px 5px 10px;'><input type='checkbox' id='" + value.xsflbh + "_" + value2.xsflbh + "' onchange=\"checkAllChange(this.checked,'" + value.xsflbh+"_"+value2.xsflbh + "')\"/>全选</div></div>";
+                    $("#main_tab_content_" + value.xsflbh + "").append(cur_div);
+                    $("#main_tab_tab_" + value.xsflbh + "").append("<li class=\"" + taba2 + "\"><a href=\"#" + div_id + "\" data-toggle=\"tab\">" + value2.xsflmc + "</a></li>");
+                              
+                    
+                    $.each(g_syxm, function (k, syxm) {
+                        if (syxm.xsflbh != value2.xsflbh)
+                            return true;
+                        var syxmdivid = "syxm_" + syxm.syxmbh;
+                        var syxm_div_content = "<li class='list-group-item' id='" + syxmdivid + "' style='padding:5px 10px 5px 10px;'><input type='checkbox' id='" + value.xsflbh + "_" + value2.xsflbh + "_" + syxm.syxmbh + "' onchange=\"checkAllChange(this.checked,'" + value.xsflbh + "_" + value2.xsflbh + "_" + syxm.syxmbh + "')\"/>" + syxm.syxmmc + "：</li>";
+                        $("#" + div_id).append(syxm_div_content);
+                        
+
+
+                        $.each(g_zb, function (l, zb) {
+                            if (zb.syxmbh != syxm.syxmbh)
+                                return true;
+                            var checked = "";
+                            for (var m = 0; m < g_qyzb.length; m++) {
+                                if (g_qyzb[m].zbbh == zb.recid) {
+                                    checked = "checked='checked'";
+                                    break;
+                                }
+                            }
+
+                            var zb_content = "<input type='checkbox' " + checked + " name='zb' value='" + zb.recid + "' id='" +value.xsflbh+"_"+ value2.xsflbh + "_" + syxm.syxmbh + "_" + zb.recid + "'/>" + zb.zbmc + "&nbsp;";
+
+                            $("#" + syxmdivid).append(zb_content);
+                        });
+                    });
+                });
+            });
+        } catch (e) {
+            alert(e);
+        }
+    }
+    function getXmzbs(zbs, xmbh) {
+        var ret = [];
+
+        $.each(zbs, function (l, zb) {
+            if (zb.syxmbh == xmbh) {
+                ret.push(zb);
+            }
+        });
+    }
+    function getTreeValue() {
+        var ids = "";
+        try {
+            $('input[name="zb"]:checked').each(function () {
+                if (ids != "")
+                    ids += ",";
+                ids += $(this).val();
+            });
+        } catch (e) {
+            alert(e);
+        }
+        return ids;
+    }
+    function checkAllChange(ischecked, prefix) {
+        $('input[type="checkbox"][id^="' + prefix + '"]').each(function () {
+            $(this).prop("checked", ischecked);
+        });
+    }
+</script>
+}
+
+<ul id="out_tab_tab" class="nav nav-tabs"></ul>
+<div id="out_tab_content" class="tab-content"></div>

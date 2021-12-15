@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/jdbg/_baselayout.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+        var currentzt = '@ViewBag.currentzt';
+
+        $(function () {
+            try {
+                initcurrentzt();
+                setzt();
+            } catch (err) {
+                alert(err);
+            }
+        });
+
+        function initcurrentzt() {
+            if ($('#currentzt').length) {
+                $('#currentzt').html(currentzt);
+            }
+        }
+
+        function setzt() {
+
+            var divid = "div_yszt";
+            var hfztlist = ['未读', '已读'];
+            $.each(hfztlist, function (i, item) {
+                $("#" + divid).append("<label class=\"btn btn-default\" style='margin:5px 5px 5px 5px;'> <input type=\"radio\" class=\"toggle\" value=\"" + i + "\"> " + item + "</label>");
+            });
+        }
+        function getValues() {
+            if ($('#div_yszt input:radio:checked').length == 0)
+                return "";
+            return $('#div_yszt input:radio:checked').val();
+
+        }
+    </script>
+}
+<div style="margin:10px 10px 10px 10px;">
+    当前阅读状态： <span id="currentzt"></span>
+</div>
+<div class="btn-group" id="div_yszt" data-toggle="buttons" style="margin:10px 10px 10px 10px;">
+
+</div>

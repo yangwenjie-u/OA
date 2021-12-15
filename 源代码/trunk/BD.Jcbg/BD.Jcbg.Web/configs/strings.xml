@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<objects>
+  <settings>
+
+    <!--人员自动退出天数-->
+    <ryoutday>15</ryoutday>
+  </settings>
+	
+	<enums>
+		
+	</enums>
+</objects>

@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2461EA6B-70BC-4FAB-8C9D-2B08641C9A24}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BD.JC.JS.Common</RootNamespace>
+    <AssemblyName>BD.JC.JS.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BD.DataInputBll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.DataInputBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputCommon">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.DataInputCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputDaoSqlServer">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.DataInputDaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputModel">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.DataInputModel.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.DataInputParam">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.DataInputParam.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IDataInputBll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.IDataInputBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IDataInputDao">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.IDataInputDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IWebListBll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.IWebListBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.IWebListDao">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.IWebListDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Bll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.Bll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.DaoSqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.DaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.DataModal, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.DataModal.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.IBll, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.IBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.IDao, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.IDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Web">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Jcbg.Web.XmlSerializers">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Jcbg.Web.XmlSerializers.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.Bll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Log.Bll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.Common">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Log.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.DaoSqlServer">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Log.DaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.DataModal">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Log.DataModal.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.IBll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Log.IBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.Log.IDao">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.Log.IDao.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListBll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WebListBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListCommon">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WebListCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListDaoSqlServer">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WebListDaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListDataModel">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WebListDataModel.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WebListParam">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WebListParam.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.Bll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WorkFlow.Bll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.Common">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WorkFlow.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.DaoSqlServer">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WorkFlow.DaoSqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.DataModal">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WorkFlow.DataModal.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.IBll">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WorkFlow.IBll.dll</HintPath>
+    </Reference>
+    <Reference Include="BD.WorkFlow.IDao">
+      <HintPath>..\BD.JC.JS.Test\lib\BD.WorkFlow.IDao.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\BD.JC.JS.Test\lib\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=3.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\BD.JC.JS.Test\lib\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\BD.JC.JS.Test\lib\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\BD.JC.JS.Test\lib\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\BD.JC.JS.Test\lib\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Aop, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Spring.Aop.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Spring.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data.NHibernate32, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Spring.Data.NHibernate32.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Web, Version=1.3.2.40943, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BD.JC.JS.Test\lib\Spring.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="zxing">
+      <HintPath>..\BD.JC.JS.Test\lib\zxing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ComSetJcyj.cs" />
+    <Compile Include="Configs.cs" />
+    <Compile Include="Controllers\ControllerMstable.cs" />
+    <Compile Include="Controllers\ControllerZdzd.cs" />
+    <Compile Include="DynamicWebService.cs" />
+    <Compile Include="Entities\CollectionZdzd.cs" />
+    <Compile Include="Entities\EntityMstable.cs" />
+    <Compile Include="Entities\EntityZdzd.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="ICalculate.cs" />
+    <Compile Include="BillMstable.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomNumber.cs" />
+    <Compile Include="ReturnParam.cs" />
+    <Compile Include="SqlHelper.cs" />
+    <Compile Include="SysEnvironment.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

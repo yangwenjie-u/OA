@@ -1,0 +1,11 @@
+﻿@charset "utf-8";
+*{margin:0;padding:0;list-style-type:none;}
+a,img{border:0;}
+body{font:12px/180% "Microsoft YaHei UI Light", System, sans-serif;}
+/* side */
+.side{position:fixed;width:34px;height:275px;right:0;top:50%;z-index:100; margin-top:-137px;}
+.side ul li{width:34px;height:44px;float:left;position:relative;}
+.side ul li .sidebox{position:absolute;width:34px;height:34px;top:0;right:0;transition:all 0.3s;background-color:transparent;opacity:0.8;filter:Alpha(opacity=80);color:#fff;font:14px/34px "Microsoft YaHei UI Light";overflow:hidden;}
+.side ul li .sidetop{width:34px;height:34px;line-height:34px;display:inline-block;background:#000;opacity:0.8;filter:Alpha(opacity=80);transition:all 0.3s;}
+.side ul li .sidetop:hover{background:#ae1c1c;opacity:1;filter:Alpha(opacity=100);}
+.side ul li img{float:left;}

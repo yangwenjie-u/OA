@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="BD.Jcbg.DataModal.Entities.CompanyChange,BD.Jcbg.DataModal" table="CompanyChange" lazy="false">
+    <id name="Changeid" column="ChangeID" type="int">
+      <generator class="native" />
+    </id>
+    <property type="string" length="50" name="DepartmentId" column="[DepartmentId]" />
+    <property type="string" length="500" name="DepartmentName" column="[DepartmentName]" />
+    <property type="string" length="50" name="CreatedBy" column="[CreatedBy]" />
+    <property type="string" length="50" name="CreatedOn" column="[CreatedOn]" />
+    <property type="string" length="50" name="UserName" column="[UserName]" />
+    <property type="string" length="50" name="RealName" column="[RealName]" />
+  </class>
+</hibernate-mapping>

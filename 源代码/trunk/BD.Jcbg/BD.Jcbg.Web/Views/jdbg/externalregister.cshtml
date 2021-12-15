@@ -1,0 +1,357 @@
+﻿@using BD.Jcbg.Web.Func;
+@using BD.Jcbg.Common;
+@{
+    ViewBag.Title = "用户登录";
+    Layout = "~/Views/jdbg/_loginlayout.cshtml";
+}
+@section head
+{   
+    <style type="text/css">
+        .login_button{
+            background-color:#b42f2f;
+            color:#ffffff;
+            width:300px;
+            text-align:center;
+            font-size:14px;
+            vertical-align:middle;
+            padding:5px;
+            font-weight:bold;
+            border:0px;
+        }
+        .login_text{
+            width:400px;
+            padding:5px;
+            vertical-align:middle;
+        }
+        .login_title_main{
+            color:#b42f2f;
+            font-size:25px;
+            font-weight:bolder;
+            padding:20px;
+
+        }
+        .login_title{
+            color:#b42f2f;
+            font-size:16px;
+            font-weight:bolder;
+
+        }
+        .login_table{
+            background-color:#bababa;
+            width:550px;
+            
+        }
+        .login_table td{
+            text-align:center;
+            padding:5px;
+        }
+        .button_table{
+            width:500px;
+            margin-left:20px;
+            margin-right:20px;
+            
+        }
+        .button_table td{
+            border:5px solid #bababa;
+            color:#ffffff;
+            font-weight:bold;
+            vertical-align:middle;
+            padding:10px;
+        }
+        .info_table{
+            width:600px;
+            margin-top:50px;
+        }
+        .info_table td{
+            text-align:center;
+            color:#60c066;
+            font-size:20px;
+            font-weight:bold;
+            letter-spacing:2px;
+            height:30px;
+            vertical-align:middle;
+        }
+    </style>
+    <script language="javascript" type="text/javascript">
+        var g_userregiseter = "@GlobalVariable.GetPermitRegister().ToString().ToLower()";
+        $(function () {
+            try {
+                if (IsIE())
+                    $("#info_table").hide();
+                $("#login_name").focus();
+                $("#btnLogin").click(function () {
+                    if (!checkLogin())
+                        return;
+                    login();
+                });
+                document.onkeydown = function (e) {
+                    var ev = document.all ? window.event : e;
+                    if (ev.keyCode == 13) {
+                        $("#btnLogin").click();
+                    }
+                };
+                if (g_userregiseter != "true")
+                    $("#divRegister").css("display", "none");
+            }
+            catch (e) {
+                layer.open({ title: '错误', content: e.message, icon: 2 });
+            }
+        });
+        function checkLogin() {
+            if ($("#login_name").val() == "") {
+                layer.open({ title: '提示', content: '请输入账号！', icon: 5 });
+                return false;
+            }
+            if ($("#login_pwd").val() == "") {
+                layer.open({ title: '提示', content: '请输入密码！', icon: 4 });
+                return false;
+            }
+            return true;
+        }
+        function login() {
+
+            $.ajax({
+                type: "POST",
+                url: "/user/dologin",
+                dataType: "json",
+                data: "login_name=" + escape($("#login_name").val()) + "&login_pwd=" + escape($("#login_pwd").val()) + '&_=' + Math.random(),
+                success: function (data) {
+                    try {
+                        if (data.code == 0)
+                            window.location = "/user/main";
+                        else {
+                            var msg = data.msg
+                            if (msg == "")
+                                msg = "用户名或密码错误，请重新登录";
+                            //$("#login_name").val('');
+                            $("#login_pwd").val('');
+
+                            layer.open({ title: '提示', content: msg, icon: 2 });
+
+                        }
+                    }
+                    catch (e) {
+                        layer.open({ title: '错误', content: e.message, icon: 2 });
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    layer.closeAll('loading');
+                },
+                beforeSend: function (XMLHttpRequest) {
+                    layer.load();
+                }
+            });
+        }
+        function openRegisterDlgQy() {
+            if (g_userregiseter != "true")
+                return;
+            var fieldparam = "";//"I_M_QY,SPTG,0|I_M_QY,SFYX,0";
+            var js = encodeURIComponent("agreement.js,customfunImqy.js?v=2017071705,userService.js,smsService.js");
+            var callback = encodeURIComponent("userService.createUserWithSms('q','$$QYBH$$')");
+            var url = "/datainput/Index?zdzdtable=ZDZD_JC" +
+            "&t1_tablename=I_M_QY" +
+            "&t1_pri=QYBH" +
+            "&t1_title=" + encodeURIComponent("企业信息") +
+            "&button=" + encodeURIComponent("提交申请|TJ| | | ") +
+            "&custombutton=" + encodeURIComponent("查看用户协议|AGREEMENT|showAgreement() ") +
+            "&rownum=1" +
+            "&fieldparam=" + fieldparam +
+            "&callback=" + callback +
+            "&js=" + js +
+            "&LX=R";
+            layer.open({
+                type: 2,
+                title: '企业账号注册申请:企业账号用于企业（单位）操作行为，如作为五方责任主体、需要企业（单位）名义操作的事项时使用',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['1000px', '550px'],
+                content: url,
+                end: function () {
+
+                }
+            });
+        }
+        /*
+        function openRegisterDlgRy() {
+
+            if (g_userregiseter != "true")
+                return;
+            layer.open({
+                type: 2,
+                title: '人员账号注册申请——第一步',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['800px', '500px'],
+                content: '/user/userregisterfirststep',
+                end: function () {
+                }
+            });
+        }*/
+        function openRegisterDlgRy() {
+            try {
+                // 打开注册人员注册页面
+                var rybh = "";
+                var fieldparam = "";
+                var js = encodeURIComponent("Idcard.js,agreement.js,customfunImry.js?v=2017071704,userService.js,smsService.js");
+                var callback = encodeURIComponent("userService.createUserWithSms('u','$$RYBH$$')");
+                var url = "/datainput/Index?zdzdtable=ZDZD_JC" +
+                "&t1_tablename=I_M_RY" +
+                "&t1_pri=RYBH" +
+                "&t1_title=" + encodeURIComponent("人员基本信息") +
+                "&button=" + encodeURIComponent("提交申请|TJ| | | ") +
+                "&custombutton=" + encodeURIComponent("查看用户协议|AGREEMENT|showAgreement() ") +
+                "&rownum=1" +
+                "&fieldparam=" + fieldparam +
+                "&js=" + js +
+                "&callback=" + callback +
+                "&jydbh=" + rybh +
+                "&LX=R";
+                parent.layer.closeAll();
+                parent.layer.open({
+                    type: 2,
+                    title: '人员账号注册申请:个人账号用于个人操作行为，如作为施工项目经理、监理总监、项目负责人等、需要以个人名义操作的事项时使用',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['1000px', '500px'],
+                    content: url,
+                    end: function () {
+                    }
+                });
+
+            }
+            catch (err) {
+                alert(err);
+            }
+
+        }
+
+        function showResetPass() {
+            layer.open({
+                type: 2,
+                title: '重置密码——第一步',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['800px', '500px'],
+                content: '/user/resetpassfirststep',
+                end: function () {
+                }
+            });
+        }
+
+        function DownIE() {
+            window.location = "/downs/标点浏览器.exe";
+        }
+        function IsIE() {
+            try {
+                if (typeof (CallCSharpMethodByResult) != "undefined") {
+                    return true;
+                }
+                var userAgent = navigator.userAgent;
+                var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1;
+                if (!isIE)
+                    return false;
+                var IE5 = IE55 = IE6 = IE7 = IE8 = false;
+                var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+                reIE.test(userAgent);
+                var fIEVersion = parseFloat(RegExp["$1"]);
+                IE55 = fIEVersion == 5.5;
+                IE6 = fIEVersion == 6.0;
+                IE7 = fIEVersion == 7.0;
+                IE8 = fIEVersion == 8.0;
+                return !IE55 && !IE6 && !IE7 && !IE8;
+                /*
+                if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                    var browser = navigator.appName
+                    var b_version = navigator.appVersion
+                    var version = b_version;//b_version.split(";")
+                    var trim_Version = version[1].replace(/[ ]/g, "");
+                    if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE6.0") {
+                        //alert("您的浏览器版本是IE 6.0，请使用IE 9.0或以上版本");
+                        return false;
+                    }
+                    else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE7.0") {
+                        // alert("您的浏览器版本是IE 7.0，请使用IE 9.0或以上版本");
+                        return false;
+                    }
+                    else if (browser == "Microsoft Internet Explorer" && trim_Version == "MSIE8.0") {
+                        //alert("您的浏览器版本是IE 8.0，请使用IE 9.0或以上版本");
+                        return false;
+                    } else {
+                        return true;
+                    }
+
+                } else {
+                    //alert("您的浏览器不是IE浏览器，请使用IE 9.0或以上版本");
+                    return false;
+                }*/
+            }
+            catch (e) {
+                return false;
+            }
+
+        }
+    </script>
+}
+<table width="100%">
+    <tr>
+        <td align="center" style="padding-top:40px;">
+            <table class="login_table">
+                @*<tr>
+                    <td class='login_title_main' style="padding-top:20px;">
+                        @GlobalVariable.GetSysSettingValue(true, "GLOBAL_PAGE_LOGIN_TITLE1")
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class='login_title'>账号：</span><input type="text" id="login_name" name="login_name" class="login_text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class='login_title'>密码：</span><input type="password" name="login_pwd" id="login_pwd" class="login_text" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="login_button" id="btnLogin">登&nbsp;&nbsp;&nbsp;&nbsp;录</button></td>
+                </tr>*@
+                <tr>
+                    <td align="center">
+                        <table class='button_table'>
+                            <tr>
+                                <td onclick="openRegisterDlgQy()" style="cursor:pointer;background-color:#60a0a0;">企业注册</td>
+                                <td onclick="openRegisterDlgRy()" style="cursor:pointer;background-color:#60a060;">个人注册</td>
+                                <td onclick="showResetPass()" style="cursor:pointer;background-color:#a0a060;">忘记账号密码</td>
+                                <td onclick="DownIE()" style="cursor:pointer;background-color:#a060a0;">专用浏览器下载</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="padding-top:10px;">
+            <a href="/downs/账号及密码重置操作说明.docx">账号密码重置说明</a>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="padding-top:10px;">
+            <table class='info_table' id="info_table">
+                <tr>
+                    <td>经检测您的浏览器可能不能正常使用系统，如果确实不能使用，请下载安装专用客户端</td>
+                </tr>
+                <tr>
+                    <td>如您已安装专用客户端，请用专用客户端打开</td>
+                </tr>
+                <tr>
+                    <td><a href="/downs/标点浏览器.exe">专用浏览器下载</a></td>
+                </tr>
+                <tr>
+                    <td><a href="/help/iereadme">安装过程如遇到问题，请点击这里查看安装说明</a></td>
+                </tr>
+            </table>
+
+
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/dwgxzj/_contentlayout2.cshtml";
+}
+@section head
+{
+    <script language="javascript" type="text/javascript">
+
+        $(function () {
+            try {
+                initYear();
+                initSeason();
+                setYearSeason();
+            } catch (err) {
+                alert(err);
+            }
+        });
+        function initYear() {
+            var minYear = 2019;
+            var curYear = (new Date()).getFullYear();
+            var yearList = [];
+            for (var i = minYear; i <= curYear; i++) {
+                yearList.push(i);
+            }
+            var s = "";
+            $.each(yearList, function (i, item) {
+                s += "<option value=\"" + item + "\">" + item + "</option>";
+            });
+            if (s!="") {
+                $("#year").html(s);                
+            }
+
+        }
+        function initSeason() {
+            var mlist = [
+                    "1","2","3","4"
+            ];
+            var s = "";
+            $.each(mlist, function (i, item) {
+                s += "<option value=\"" + item + "\">" + item + "</option>";
+            });
+            if (s != "") {
+                $("#season").html(s);
+            }
+
+        }
+
+        function setYearSeason() {
+            var today = new Date();
+            var curYear = today.getFullYear();
+            var curMonth = today.getMonth()
+            
+            var season = Math.floor(curMonth/3)+1;
+            
+            $('#year').val(curYear.toString());
+            $('#season').val(season);
+        }
+        function getValues() {
+            return {
+                year: $('#year').val(),
+                season: $('#season').val()
+            };
+
+        }
+    </script>
+}
+<div style="margin-left:20px; margin-top:20px;">
+    <span>年份：</span>
+    <select id="year" name="year" style="margin-left:50px; width:100px;">
+
+    </select>
+</div>
+<div style="margin-left:20px; margin-top:20px;">
+    <span>季度：</span>
+    <select id="season" name="season" style="margin-left:50px; width:100px;"></select>
+</div>

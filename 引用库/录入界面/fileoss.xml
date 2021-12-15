@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+  <!--********************文件上传到对象存储设置**********************-->
+  <!-- StorageType为存储类型,空表示本地存储 OSS表示对象存储 -->
+  <FileOss Server="" OwnerCode="" StorageType="" StorageUrl="">
+</FileOss>
