@@ -13,7 +13,7 @@
         }
 
         .m-role {
-            width: 100%;
+            width: 43%;
         }
 
             .m-role .xb {
@@ -22,11 +22,6 @@
                 margin-right: 20px;
             }
 
-            .m-role .sfsyr {
-                width: 20px;
-                height: 20px;
-                margin-right: 20px;
-            }
 
             .role-list .m-role input,
             .m-role select {
@@ -116,22 +111,33 @@
     <div id="dataView" class="data-view">
         <div class="m-role">
             <label>
-                <span>
-                    考勤机名称
-                </span>
-                <input type="text" name="name" id="name" />
+                <span>车辆：</span>
+                <input type="text" id="carid" />
             </label>
         </div>
         <div class="m-role">
             <label>
-                <span>安装位置</span>
-                <input type="text" name="installposition" id="installposition" />
+                <span>申请人：</span>
+                <input type="text" id="applicant" />
+            </label>
+        </div>
+     
+        <div class="m-role">
+            <label>
+                <span>保养日期：</span>
+                <input type="date" id="maintenancetime" />
             </label>
         </div>
         <div class="m-role">
             <label>
-                <span>考勤机序列号</span>
-                <input type="text" name="serialnumber" id="serialnumber" />
+                <span>行驶总里程（公里）：</span>
+                <input type="text" id="totalkilometers" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>保养内容：</span>
+                <input type="text" id="maintenancecontent" />
             </label>
         </div>
 
@@ -141,32 +147,43 @@
     <script src="/static/common/common.js"></script>
     <script src="/static/lib/layer/layer.js"></script>
     <script>
-        var machineId = "@ViewBag.id";
+        var recordId = "@ViewBag.id";
+        var mid = "@ViewBag.mid";
+        var method = "@ViewBag.method";
+        var carid = "@ViewBag.carid";
 
         $(function () {
-            if (machineId)
-            {
-                $("#serialnumber").attr("readonly", true);
-                $("#serialnumber").css({ background: "lightgray" })
+            $('#applicant').val('@ViewBag.applicant');
+            $("#applicant").attr("readonly", true);
+            $("#applicant").css({ background: "lightgray" })
+
+            $('#carid').val('@ViewBag.carid');
+            $("#carid").attr("readonly", true);
+            $("#carid").css({ background: "lightgray" })
+
+            if (recordId) {
+                $('#carid').val('@ViewBag.carid');
+                $('#maintenancetime').val('@ViewBag.maintenancetime');
+                $('#totalkilometers').val('@ViewBag.totalkilometers');
+                $('#maintenancecontent').val('@ViewBag.maintenancecontent');
             }
-            if (machineId) {
-                $('#name').val('@ViewBag.name');
-                $('#installposition').val('@ViewBag.installposition');
-                $('#serialnumber').val('@ViewBag.serialnumber');
-            }
+
         })
 
         $("#dataView .save").click(function () {
-            var name = $('#name').val();
-            var installposition = $('#installposition').val();
-            var serialnumber = $('#serialnumber').val();
+            var applicant = $('#applicant').val();
+            var maintenancetime = $('#maintenancetime').val();
+            var totalkilometers = $('#totalkilometers').val();
+            var maintenancecontent = $('#maintenancecontent').val();
 
-            if (name.length && installposition.length && serialnumber.length) {
+            if (carid.length && maintenancetime.length && totalkilometers.length) {
                 var obj = {
-                    id: machineId,
-                    name: name,
-                    installposition: installposition,
-                    serialnumber: serialnumber
+                    mid: mid,
+                    id: recordId,
+                    maintenancetime: maintenancetime,
+                    totalkilometers: totalkilometers,
+                    maintenancecontent: maintenancecontent,
+                    applicant: applicant
                 };
                 save(obj)
 
@@ -179,7 +196,7 @@
         });
 
         function save(obj) {
-            ajaxTpl('/dhoa/AttendanceMachineUpdate', obj, function (data) {
+            ajaxTpl('/dhoa/CarMaintenanceUpdate', obj, function (data) {
                 if (data.code =='0') {
                     layer.alert('保存成功');
                     try {

@@ -172,7 +172,6 @@
     <script>
         var carId = "@ViewBag.id";
 
-        console.log(carId);
         $(function () {
             if (carId)
             {
@@ -232,7 +231,7 @@
 
         function save(obj) {
             ajaxTpl('/dhoa/CarUpdate', obj, function (data) {
-                if (data.code =='1') {
+                if (data.code =='0') {
                     layer.alert('保存成功');
                     try {
                         setTimeout(function () {

@@ -21,8 +21,8 @@
           <StartAction>CurrentPage</StartAction>
           <AspNetDebugging>True</AspNetDebugging>
           <SilverlightDebugging>False</SilverlightDebugging>
-          <NativeDebugging>True</NativeDebugging>
-          <SQLDebugging>True</SQLDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
           <ExternalProgram>
           </ExternalProgram>
           <StartExternalURL>

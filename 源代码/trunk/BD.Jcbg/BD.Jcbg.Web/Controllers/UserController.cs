@@ -1627,7 +1627,7 @@ namespace BD.Jcbg.Web.Controllers
                 //else
                 {
                     string realname = "";
-                    IList<IDictionary<string, string>> dt = CommonService.GetDataTable("select qymc from I_M_QY where ZH='" + username + "'");
+                    IList<IDictionary<string, string>> dt = CommonService.GetDataTable("selessct qymc from I_M_QY where ZH='" + username + "'");
                     if (dt.Count > 0)
                     {
                         realname = dt[0]["qymc"];

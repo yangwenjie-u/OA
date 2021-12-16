@@ -544,43 +544,50 @@ namespace BD.Jcbg.Web.Controllers
 
         #region 材料管理
         /// <summary>
-        /// 用户管理界面，列表
+        /// 采购订单
         /// </summary>
         /// <returns></returns>
         [LoginAuthorize]
-        public ActionResult MaterialEdit()
+        public ActionResult PurchaseOrderEdit()
         {
-            string recid = Request["recid"].GetSafeString();
+            //类型 采购关联：CGGL 办公耗材 BGHC  试验耗材：SYHC
+            string method = Request["method"].GetSafeString();
 
-            string sql = "select * from dbo.OA_MateriaInfo where Status<>'-1' and Recid='" + recid + "'";
+            string recid = Request["recid"].GetSafeString();
+            ViewBag.recid = recid;
+            
+
+            string sql = "select * from dbo.OA_PurchaseOrder where Status<>'-1' and Recid='" + recid + "'";
             IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
             for (int i = 0; i < dt.Count; i++)
             {
-                ViewBag.MaterialName = dt[i]["materialName"];
-                ViewBag.MaterialUnit = dt[i]["materialUnit"];
-                ViewBag.Price = dt[i]["price"];
-                ViewBag.PurchasePrice = dt[i]["purchasePrice"];
-                ViewBag.Quantity = dt[i]["quantity"];
-                ViewBag.TechnicalRequirement = dt[i]["technicalRequirement"];
-                ViewBag.Supplier = dt[i]["supplier"];
-                ViewBag.Manufacturer = dt[i]["manufacturer"];
-                ViewBag.Purpose = dt[i]["purpose"];
+
+                ViewBag.recid = dt[i]["recid"];
+                ViewBag.materialname = dt[i]["materialname"];
+                ViewBag.materialunit = dt[i]["materialunit"];
+
+                ViewBag.materialid = dt[i]["materialid"];
+                ViewBag.materialunitid = dt[i]["materialunitid"];
+                ViewBag.price = dt[i]["price"];
+                ViewBag.purchaseprice = dt[i]["purchaseprice"];
+                ViewBag.quantity = dt[i]["quantity"];
+                ViewBag.technicalrequirement = dt[i]["technicalrequirement"];
+                ViewBag.supplier = dt[i]["supplier"];
+                ViewBag.manufacturer = dt[i]["manufacturer"];
+                ViewBag.purpose = dt[i]["purpose"];
             }
             return View();
         }
 
-        public void ModifyMaterialInfo()
+        public void PurchaseOrderModify()
         {
             string err = "";
-            bool ret = true;
+            bool ret = false;
             try
             {
                 //材料记录唯一号
                 string recid = Request["recid"].GetSafeString();
 
-                //操作记录 add新增  update 修改 
-                string type = Request["operType"].GetSafeString();
-                //数据类型 1：办公消耗 2：试验消耗 3：采购
                 string dataType = Request["dataType"].GetSafeString();
                 string matId = Request["matId"].GetSafeString();
                 string matName = Request["matName"].GetSafeString();
@@ -594,11 +601,7 @@ namespace BD.Jcbg.Web.Controllers
                 string manufacturer = Request["manufacturer"].GetSafeString();
                 string purpose = Request["purpose"].GetSafeString();
                 string requisitioner = Request["purpose"].GetSafeString();
-
-
-                ret = OaService.ModifyMaterialInfo(type, dataType, recid, matId, matName, unitId, unitName, price, purchasePrice, quantity, purpose, technicalRequirement, supplier, manufacturer, requisitioner);
-
-
+                ret = OaService.PurchaseOrderModify(recid, matId, matName, unitId, unitName, price, purchasePrice, quantity, purpose, technicalRequirement, supplier, manufacturer, requisitioner);
             }
             catch (Exception e)
             {
@@ -607,21 +610,48 @@ namespace BD.Jcbg.Web.Controllers
             }
             finally
             {
-                //JavaScriptSerializer jss = new JavaScriptSerializer();
-                //jss.MaxJsonLength = 10240000;
-                //Response.ContentEncoding = System.Text.Encoding.UTF8;
-                //Response.Write(string.Format("{{ \"code\":\"{0}\", \"msg\": \"{1}\"}}", code, err));
-                //Response.End();
-                //Response.Write(string.Format("{{\"code\":\"{0}\",\"msg\":\"{1}\",\"total\":{2},\"Datas\":{3}}}", code ? "0" : "1", msg, dt.Count, jss.Serialize(dt)));
-
-                Response.ContentType = "text/plain";
-                Response.Write(ret);
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", ret ? "0" : "1", err));
                 Response.End();
+                //Response.ContentType = "text/plain";
+                //Response.Write(ret);
+                //Response.End();
             }
         }
 
 
+        public void PurchaseOrderDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
 
+                IList<string> sqls = new List<string>();
+
+                sqlStr = "update OA_PurchaseOrder set Status='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where recid=" + recid;
+
+                code = CommonService.Execsql(sqlStr);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
         /// <summary>
         /// 获取材料
         /// </summary>
@@ -771,7 +801,7 @@ namespace BD.Jcbg.Web.Controllers
                 JavaScriptSerializer jss = new JavaScriptSerializer();
                 jss.MaxJsonLength = Int32.MaxValue;
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
-                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "1" : "0", msg));
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
                 Response.End();
             }
         }
@@ -813,7 +843,7 @@ namespace BD.Jcbg.Web.Controllers
                 JavaScriptSerializer jss = new JavaScriptSerializer();
                 jss.MaxJsonLength = Int32.MaxValue;
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
-                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "1" : "0", msg));
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
                 Response.End();
             }
         }
@@ -821,6 +851,7 @@ namespace BD.Jcbg.Web.Controllers
 
 
         #region 车辆管理
+        #region 车辆信息
         /// <summary>
         /// 车辆信息修改
         /// </summary>
@@ -830,7 +861,7 @@ namespace BD.Jcbg.Web.Controllers
         {
             string id = Request["id"].GetSafeString();
 
-            string sql = " select  * from OA_CarInfomation where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "' and id='" + id + "'";
+            string sql = " select  * from OA_CarInfomation    where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "' and id='" + id + "'";
             IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
             for (int i = 0; i < dt.Count; i++)
             {
@@ -896,6 +927,7 @@ namespace BD.Jcbg.Web.Controllers
                         ", buyTime='" + buyTime + "'" +
                         ", scrapYears='" + scrapYears + "'" +
                         ", drivingLicense='" + drivingLicense + "'" +
+                        ", isScrap='" + isScrap + "'" +
                         ", remark='" + remark + "',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where id=" + dataId;
                 }
 
@@ -912,10 +944,383 @@ namespace BD.Jcbg.Web.Controllers
                 JavaScriptSerializer jss = new JavaScriptSerializer();
                 jss.MaxJsonLength = Int32.MaxValue;
                 Response.ContentEncoding = System.Text.Encoding.UTF8;
-                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "1" : "0", msg));
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
                 Response.End();
             }
         }
+        #endregion
+
+        #region 汽车使用记录
+        /// <summary>
+        /// 用车申请
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorize]
+        public ActionResult CarRecordEdit()
+        {
+            string id = Request["id"].GetSafeString();
+
+            string oper = Request["oper"].GetSafeString();
+            string method = Request["method"].GetSafeString();
+            //主表唯一号
+            string mid = Request["mid"].GetSafeString();
+
+            //申请人
+            ViewBag.applicant = CurrentUser.RealName;
+            ViewBag.mid = mid;
+
+            string sql = " select   * from [OA_CarIUseRecord]    where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "'";
+
+            if (method == "applyfor")
+            {
+                //添加用车申请
+                sql += " and  mid='" + mid + "'";
+            }
+            else if (method == "updateRecord")
+            {
+                //修改用车申请
+                sql += " and  id='" + id + "'";
+            }
+            else if (method == "improveRecord")
+            {
+                //完善用车记录
+                sql += " and  id='" + id + "'";
+                ViewBag.method = "improveRecord";
+            }
+
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+                ViewBag.id = dt[i]["id"];
+                ViewBag.mid = dt[i]["mid"];
+                //用车部门
+                ViewBag.department = dt[i]["department"];
+                //同车人
+                ViewBag.copassenger = dt[i]["copassenger"];
+                //申请人
+                ViewBag.applicant = dt[i]["applicant"];
+                //目的地
+                ViewBag.destination = dt[i]["destination"];
+                //出车用途
+                ViewBag.usefor = dt[i]["usefor"];
+                //出车时间
+                ViewBag.outtime = dt[i]["outtime"];
+                //返回时间
+                ViewBag.returntime = dt[i]["returntime"];
+                //行驶公里
+                ViewBag.kilometers = dt[i]["kilometers"];
+                //加油（升）
+                ViewBag.oilcost = dt[i]["oilcost"];
+                //过路过桥费
+                ViewBag.roadtoll = dt[i]["roadtoll"];
+                //备注
+                ViewBag.remark = dt[i]["remark"];
+
+            }
+
+
+            return View();
+        }
+
+        /// <summary>
+        /// 更新车辆信息
+        /// </summary>
+        public void CarRecordUpdate()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+
+                string dataId = Request["id"].GetSafeString();
+                string mId = Request["mid"].GetSafeString();
+                //用车部门
+                string department = Request["department"].GetSafeString();
+                //申请人
+                string applicant = Request["applicant"].GetSafeString();
+                //同车人
+                string copassenger = Request["copassenger"].GetSafeString();
+                //目的地
+                string destination = Request["destination"].GetSafeString();
+                //出车用途
+                string usefor = Request["usefor"].GetSafeString();
+                //出车时间
+                string outtime = Request["outtime"].GetSafeString();
+                //返回时间
+                string returntime = Request["returntime"].GetSafeString();
+                //行驶公里
+                string kilometers = Request["kilometers"].GetSafeString();
+                //加油（升）
+                string oilcost = Request["oilcost"].GetSafeString();
+                //过路过桥费
+                string roadtoll = Request["oilcost"].GetSafeString();
+                //备注
+                string remark = Request["remark"].GetSafeString();
+
+
+                IList<string> sqls = new List<string>();
+
+
+                if (string.IsNullOrEmpty(dataId))
+                {
+                    if (string.IsNullOrEmpty(mId))
+                    {
+                        msg = "车辆信息不存在";
+                        throw new Exception();
+                    }
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_CarIUseRecord]([MId],[UseRegion],[UseFor],[Status]," +
+                        "[Applicant],[Department],[Destination],[OutTime],[ReturnTime],[CoPassenger],[Driver],[Kilometers],[OilCost],[RoadToll],[CreateTime],[Creator],[UpdateTime],[JCJGBH],[Updater],[Remark])" +
+                        "VALUES('" + mId + "'" +
+                        ",'1'" + //使用范围（1室内 2 市外）
+                        ",'" + usefor + "'" + //用途
+                        ",'1'" +//< status, int,>
+                        ",'" + applicant + "'" +
+                        ",'" + department + "'" +
+                        ",'" + destination + "'" +
+                        ",'" + outtime + "'" +
+                        ",'" + returntime + "'" +
+                        ",'" + copassenger + "'" +
+                        ",''" +//driver
+                        ",'" + kilometers + "'" +
+                        ",'" + oilcost + "'" +
+                        ",'" + roadtoll + "'" +
+                        ",getdate()" +
+                        ",'" + CurrentUser.RealName + "'" +
+                        ",getdate()" +
+                        ",'" + CurrentUser.Qybh + "'" +
+                        ",'" + CurrentUser.RealName + "'" +
+                        ",'" + remark + "')");
+                }
+                else
+                {
+                    sqlStr = "update OA_CarIUseRecord set department='" + department + "', applicant='" + applicant + "', copassenger='" + copassenger + "'" +
+                        ", destination='" + destination + "'" +
+                        ", usefor='" + usefor + "'" +
+                        ", outtime='" + outtime + "'" +
+                        ", returntime='" + returntime + "'" +
+                        ", kilometers='" + kilometers + "'" +
+                        ", oilcost='" + oilcost + "'" +
+                        ", roadtoll='" + roadtoll + "'" +
+                        ", remark='" + remark + "',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where id=" + dataId;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
+        /// <summary>
+        /// 删除车辆信息
+        /// </summary>
+        public void CarRecordDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string dataId = Request["id"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+                if (string.IsNullOrEmpty(dataId))
+                {
+                    msg = "车辆信息不存在";
+                }
+                else
+                {
+                    sqlStr = "update OA_CarIUseRecord set  status ='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where id=" + dataId;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
+        #endregion
+
+        #region 维保信息
+        [LoginAuthorize]
+        public ActionResult CarMaintenanceEdit()
+        {
+            string id = Request["id"].GetSafeString();
+
+            string method = Request["method"].GetSafeString();
+            //主表唯一号
+            string mid = Request["mid"].GetSafeString();
+
+            string carid = Request["carid"].GetSafeString();
+
+            //申请人
+            ViewBag.applicant = CurrentUser.RealName;
+            ViewBag.mid = mid;
+
+            //主表唯一号
+            string carId = Request["carId"].GetSafeString();
+
+            string sql = " select main.CarID, sub.* from OA_CarMaintenance  sub  left join  OA_CarInfomation main on main.ID=sub.mid  where   sub.Status <>-1  and  sub.JCJGBH='" + CurrentUser.Qybh + "'";
+
+            if (method == "add")
+            {
+                //添加维保记录
+                sql += " and  mid='" + mid + "'";
+                ViewBag.carid = carid;
+            }
+            else if (method == "update")
+            {
+                //修改维保记录
+                sql += " and  sub.id='" + id + "'";
+            }
+
+
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+                ViewBag.id = dt[i]["id"];
+                ViewBag.mid = dt[i]["mid"];
+                ViewBag.carid = dt[i]["carid"];
+                //申请人
+                ViewBag.applicant = dt[i]["applicant"];
+                //申请时间
+                ViewBag.createtime = dt[i]["createtime"];
+                //保养日期
+                ViewBag.maintenancetime = dt[i]["maintenancetime"];
+                //行驶总里程
+                ViewBag.totalkilometers = dt[i]["totalkilometers"];
+                //保养内容
+                ViewBag.maintenancecontent = dt[i]["maintenancecontent"];
+            }
+
+            return View();
+        }
+
+
+        public void CarMaintenanceUpdate()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string dataId = Request["id"].GetSafeString();
+                string mId = Request["mid"].GetSafeString();
+                //申请人
+                string applicant = Request["applicant"].GetSafeString();
+                //保养日期
+                string maintenancetime = Request["maintenancetime"].GetSafeString();
+                //行驶总里程
+                string totalkilometers = Request["totalkilometers"].GetSafeString();
+                //保养内容
+                string maintenancecontent = Request["maintenancecontent"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+                if (string.IsNullOrEmpty(dataId))
+                {
+                    if (string.IsNullOrEmpty(mId))
+                    {
+                        msg = "车辆信息不存在";
+                        throw new Exception();
+                    }
+                    sqlStr = string.Format("INSERT INTO[dbo].[OA_CarMaintenance]([Mid],[Applicant],[TotalKilometers],[MaintenanceTime],[MaintenanceContent],[CreateTime],[Creator],[Status],[JCJGBH])" +
+                        "VALUES ('" + mId + "','" + applicant + "'" +
+                        ",'" + totalkilometers + "'" +
+                        ", '" + maintenancetime + "'" +
+                        ",'" + maintenancecontent + "'" +
+                        ", getdate()" +
+                        ", '" + CurrentUser.RealName + "' " +
+                        ", '1'" +
+                        ", '" + CurrentUser.Qybh + "'  )");
+                }
+                else
+                {
+                    sqlStr = "update OA_CarMaintenance set applicant='" + applicant + "', totalkilometers='" + totalkilometers + "'," +
+                        " maintenancetime='" + maintenancetime + "' where id=" + dataId;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
+        /// <summary>
+        /// 删除维保信息
+        /// </summary>
+        public void CarMaintenanceDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string dataId = Request["id"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+                if (string.IsNullOrEmpty(dataId))
+                {
+                    msg = "车辆信息不存在";
+                }
+                else
+                {
+                    sqlStr = "update OA_CarMaintenance set  status ='-1' where id=" + dataId;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+        #endregion
 
         #endregion
         #endregion

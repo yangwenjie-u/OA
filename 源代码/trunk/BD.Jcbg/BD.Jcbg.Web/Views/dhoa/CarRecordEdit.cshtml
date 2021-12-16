@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/oa/css/load.css" />
+    <style>
+        .data-view {
+            text-align: left;
+        }
+
+        .m-role {
+            width: 43%;
+        }
+
+            .m-role .xb {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+
+            .role-list .m-role input,
+            .m-role select {
+                width: 90%;
+            }
+
+        .role-line {
+            width: 60%;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .m-role span {
+            text-align: center;
+        }
+
+        .role-list .checkbox {
+            width: 16px;
+            height: 16px;
+        }
+
+        .role-list {
+        }
+
+        #roleLine {
+            border: 1px solid #C6C6C6;
+        }
+
+            #roleLine > div {
+                display: table-cell;
+                width: 50%;
+            }
+
+            #roleLine p {
+                background: #F1F1F1;
+                color: #303030;
+                height: 40px;
+                line-height: 40px;
+                border-bottom: 1px solid #E5E5E5;
+                border-left: 1px solid #E5E5E5;
+            }
+
+            #roleLine div:first-child p {
+                border-left: 0px;
+            }
+
+            #roleLine .role-list span {
+                width: 70%;
+                text-align: left;
+                margin-left: 10px;
+            }
+
+        #roleLeft,
+        #roleRight {
+            height: 300px;
+            overflow: auto;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+
+        #roleLine .role-list .close {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            background: url('/static/oa/images/close.png') no-repeat;
+            background-position: 7px 7px;
+        }
+
+        #dataView {
+            display: inline-block;
+            margin: 0px 10%;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .m-role input, .m-role select {
+            width: 70%;
+        }
+        /*860px; 700px*/
+    </style>
+</head>
+
+<body>
+    <div id="dataView" class="data-view">
+        <div class="m-role">
+            <label>
+                <span>
+                    用车部门：
+                </span>
+                <select id="department">
+                    <option value="0">请选择部门</option>
+                </select>
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>申请人：</span>
+                <input type="text" id="applicant" />
+            </label>
+        </div>
+        <div class="m-role" style="width: 100%;">
+            <label>
+                <span>同车人：</span>
+                <input type="text" id="copassenger" style="width: 74%;" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>目的地：</span>
+                <input type="text" id="destination" />
+            </label>
+        </div>
+
+        <div class="m-role">
+            <label>
+                <span>出车用途：</span>
+                <input type="text" id="usefor" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>出车时间：</span>
+                <input type="date" id="outtime" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>返回时间：</span>
+                <input type="date" id="returntime" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>行驶公里：</span>
+                <input type="text" id="kilometers" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>加油（升）：</span>
+                <input type="text" id="oilcost" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>过路过桥费：</span>
+                <input type="text" id="roadtoll" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>备注：</span>
+                <input type="text" name="remark" id="remark" />
+            </label>
+        </div>
+
+        <div class="save" style="margin-top: 0px;border: 0px;"><span class="btn">保存</span></div>
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script>
+        var recordId = "@ViewBag.id";
+        var mid = "@ViewBag.mid";
+        var ksbh = "@ViewBag.department";
+        var method = "@ViewBag.method";
+
+        $(function () {
+            $('#applicant').val('@ViewBag.applicant');
+            $("#applicant").attr("readonly", true);
+            $("#applicant").css({ background: "lightgray" })
+
+            if (recordId)
+            {
+                $("#type").attr("readonly", true);
+                $("#type").css({ background: "lightgray" })
+
+                $("#carid").attr("readonly", true);
+                $("#carid").css({ background: "lightgray" })
+            }
+            if (method =="improveRecord") {
+                $("#department").attr("readonly", true);
+                $("#department").css({ background: "lightgray" })
+
+                $("#applicant").attr("readonly", true);
+                $("#applicant").css({ background: "lightgray" })
+
+                $("#copassenger").attr("readonly", true);
+                $("#copassenger").css({ background: "lightgray" })
+
+                $("#destination").attr("readonly", true);
+                $("#destination").css({ background: "lightgray" })
+
+                $("#usefor").attr("readonly", true);
+                $("#usefor").css({ background: "lightgray" })
+            }
+            if (recordId) {
+                $('#department').val('@ViewBag.department');
+                $('#copassenger').val('@ViewBag.copassenger');
+                $('#applicant').val('@ViewBag.applicant');
+                $('#destination').val('@ViewBag.destination');
+                $('#usefor').val('@ViewBag.usefor');
+                $('#outtime').val('@ViewBag.outtime');
+                $('#returntime').val('@ViewBag.returntime');
+                $('#kilometers').val('@ViewBag.kilometers');
+                $('#oilcost').val('@ViewBag.oilcost');
+                $('#roadtoll').val('@ViewBag.roadtoll');
+                $('#remark').val('@ViewBag.remark');
+            }
+
+            ajaxTpl('/dhoa/GetJcjgks', '', function (data) {
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].ksbh + "'>" + data[i].ksmc + "</option>";
+                    }
+                    if (data.length == 1) {
+                        $('#department').html(str);
+                    } else {
+                        $('#department').append(str);
+                    }
+                    if (ksbh) {
+                        $('#department').val(ksbh);
+                    }
+                }
+            });
+        })
+
+        $("#dataView .save").click(function () {
+            var department = $('#department').val();
+            var copassenger = $('#copassenger').val();
+            var applicant = $('#applicant').val();
+            var destination = $('#destination').val();
+            var usefor = $('#usefor').val();
+            var outtime = $('#outtime').val();
+            var returntime = $('#returntime').val();
+            var kilometers = $('#kilometers').val();
+            var oilcost = $('#oilcost').val();
+            var roadtoll = $('#roadtoll').val();
+            var remark = $('#remark').val();
+
+            if (department.length && applicant.length && destination.length) {
+                var obj = {
+                    mid: mid,
+                    id: recordId,
+                    department: department,
+                    copassenger: copassenger,
+                    applicant: applicant,
+                    destination: destination,
+                    usefor: usefor,
+                    outtime: outtime,
+                    returntime: returntime,
+                    kilometers: kilometers,
+                    oilcost: oilcost,
+                    roadtoll: roadtoll,
+                    remark: remark
+                };
+                save(obj)
+
+            }else {
+                layer.msg('请将表单填写完整', {
+                icon: 2,
+                time: 2000
+                });
+            }
+        });
+
+        function save(obj) {
+            ajaxTpl('/dhoa/CarRecordUpdate', obj, function (data) {
+                if (data.code =='0') {
+                    layer.alert('保存成功');
+                    try {
+                        setTimeout(function () {
+                            parent.layer.closeAll();
+                        },1000)
+                    }
+                    catch(e)
+                    {
+                    }
+                }
+                else {
+
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

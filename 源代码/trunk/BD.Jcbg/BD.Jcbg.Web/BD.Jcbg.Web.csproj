@@ -9567,9 +9567,11 @@
     <Content Include="Views\dhoa\umsedit.cshtml" />
     <Content Include="Views\dhoa\umsedit2.cshtml" />
     <Content Include="static\oa\images\Thumbs.db" />
-    <Content Include="Views\dhoa\materialEdit.cshtml" />
+    <Content Include="Views\dhoa\PurchaseOrderEdit.cshtml" />
     <Content Include="Views\dhoa\AttendanceMachineEdit.cshtml" />
     <Content Include="Views\dhoa\CarEdit.cshtml" />
+    <Content Include="Views\dhoa\CarRecordEdit.cshtml" />
+    <Content Include="Views\dhoa\CarMaintenanceEdit.cshtml" />
     <None Include="Web References\RemoteUserService\services.disco" />
     <Content Include="中浩设备sql语句.txt" />
     <None Include="Contents\.DS_Store" />
@@ -13263,7 +13265,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:41000/</IISUrl>
+          <IISUrl>http://localhost:40007</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

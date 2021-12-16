@@ -1510,25 +1510,31 @@ namespace BD.Jcbg.Bll
         /// 修改材料信息
         /// </summary>
         /// <returns></returns>
-        public bool ModifyMaterialInfo(string operType, string dataType, string recid, string materId, string materName, string unitId, string unitName,
+        public bool PurchaseOrderModify( string recid, string materId, string materName, string unitId, string unitName,
             string price, string purchasePrice, string quantity, string purpose, string technicalRequirement, string supplier, string manufacturer, string requisitioner)
         {
-            //dataType  ：1：办公消耗 2：试验消耗 3：采购
             string sql = "";
-            if (operType.ToLower() == "add")
+            if (string.IsNullOrEmpty(recid))
             {
                  recid = Guid.NewGuid().ToString();
-                sql = "INSERT INTO [dbo].[OA_MateriaInfo]([Recid],[Type],[MaterialID],[MaterialName],[MaterialUnitID],[MaterialUnit],[Price]," +
+                sql = "INSERT INTO [dbo].[OA_PurchaseOrder]([Recid],[MaterialID],[MaterialName],[MaterialUnitID],[MaterialUnit],[Price]," +
                     "[PurchasePrice],[Quantity],[Purpose],[TechnicalRequirement],[Supplier],[Manufacturer],[Requisitioner],[JCJGBH],[Checker]," +
                     "[CheckTime],[CreateTime],[Creator],[UpdateTime],[Updater],[Status]) " +
                     "VALUES(" +
-                    " '" + recid + "', '" + dataType + "', " + materId + ",  '" + materName + "', " + unitId + ",  '" + unitName + "', " + price + "," + purchasePrice + ", " + quantity + "" +
+                    " '" + recid + "', " + materId + ",  '" + materName + "', " + unitId + ",  '" + unitName + "', " + price + "," + purchasePrice + ", " + quantity + "" +
                     ", '" + purpose + "', '" + technicalRequirement + "', '" + supplier + "',  '" + manufacturer + "',  '" + requisitioner + "',  '" + CurrentUser.Qybh + "'" +
-                    ", null, null, getdate(), '" + CurrentUser.RealName + "', getdate(), '" + CurrentUser.RealName + "', 0)";
+                    ", null, null, getdate(), '" + CurrentUser.RealName + "', getdate(), '" + CurrentUser.RealName + "', 1)";
             }
             else
             {
-                sql = string.Format (" update OA_MateriaInfo set    where  recid='{}'",recid);
+                sql = string.Format (" update OA_PurchaseOrder set MaterialID='"+ materId + "'  ,MaterialName='"+ materName + "'" +
+                    ",MaterialUnitID='"+ unitId + "' ,MaterialUnit='"+ unitName + "'" +
+                    ",Price='" + price + "' ,PurchasePrice='" + purchasePrice + "'" +
+                    ",Quantity='" + quantity + "' ,Purpose='" + purpose + "'" +
+                    ",technicalRequirement='" + technicalRequirement + "' ,Supplier='" + supplier + "'" +
+                    ",manufacturer='" + manufacturer + "' ,requisitioner='" + requisitioner + "'" +
+                    ",UpdateTime=getdate() ,Updater='" + CurrentUser.RealName + "'" +
+                    "  where  recid='" + recid + "'");
             }
 
             return CommonDao.ExecSql(sql);

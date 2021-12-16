@@ -388,8 +388,6 @@ namespace BD.Jcbg.IBll
 		/// <summary>
 		/// 修改材料信息
 		/// </summary>
-		/// <param name="operType">操作记录类型 add新增  update 修改 </param>
-		/// <param name="dataType">数据类型 1：办公消耗 2：试验消耗 3：采购</param>
 		/// <param name="recid">材料记录唯一号</param>
 		/// <param name="materId"></param>
 		/// <param name="materName"></param>
@@ -404,7 +402,7 @@ namespace BD.Jcbg.IBll
 		/// <param name="manufacturer"></param>
 		/// <param name="requisitioner"></param>
 		/// <returns></returns>
-		bool ModifyMaterialInfo(string operType, string dataType, string recid, string materId, string materName, string unitId, string unitName,
+		bool PurchaseOrderModify(string recid, string materId, string materName, string unitId, string unitName,
 					string price, string purchasePrice, string quantity, string purpose, string technicalRequirement, string supplier, string manufacturer, string requisitioner);
 
 	}
