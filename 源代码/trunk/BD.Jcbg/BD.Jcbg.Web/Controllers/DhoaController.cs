@@ -106,7 +106,12 @@ namespace BD.Jcbg.Web.Controllers
         }
         #endregion
 
-        #region 德浩数据
+        //公告通知
+        [LoginAuthorize]
+        public ActionResult editor()
+        {
+            return View();
+        }
 
         /// <summary>
         /// 
@@ -150,6 +155,25 @@ namespace BD.Jcbg.Web.Controllers
             }
             JavaScriptSerializer jss = new JavaScriptSerializer();
             return Json(new { code = code ? "0" : "1", msg, datas }, JsonRequestBehavior.AllowGet);
+        }
+
+        //删除公告通知
+        [LoginAuthorize]
+        public JsonResult DeleteAnnouncementNotice()
+        {
+            bool code = true;
+            string msg = "";
+            try
+            {
+                string recids = Request["recids"].GetSafeString();
+                OaService.DelAnnouncementNotice(recids);
+            }
+            catch (Exception e)
+            {
+                msg = e.Message;
+                code = false;
+            }
+            return Json(new { code = code ? "0" : "1", msg }, JsonRequestBehavior.AllowGet);
         }
 
         #region  人员管理-人员信息
@@ -543,6 +567,7 @@ namespace BD.Jcbg.Web.Controllers
 
 
         #region 材料管理
+        #region 采购订单
         /// <summary>
         /// 采购订单
         /// </summary>
@@ -555,7 +580,7 @@ namespace BD.Jcbg.Web.Controllers
 
             string recid = Request["recid"].GetSafeString();
             ViewBag.recid = recid;
-            
+
 
             string sql = "select * from dbo.OA_PurchaseOrder where Status<>'-1' and Recid='" + recid + "'";
             IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
@@ -633,7 +658,7 @@ namespace BD.Jcbg.Web.Controllers
 
                 IList<string> sqls = new List<string>();
 
-                sqlStr = "update OA_PurchaseOrder set Status='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where recid=" + recid;
+                sqlStr = "update OA_PurchaseOrder set Status='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where recid='" + recid + "'";
 
                 code = CommonService.Execsql(sqlStr);
             }
@@ -652,6 +677,147 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
+        #endregion
+
+        #region 材料消耗
+        /// <summary>
+        /// 采购订单
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorize]
+        public ActionResult MaterialConsumptionEdit()
+        {
+            //类型  办公耗材 BGHC  试验耗材：SYHC
+            string method = Request["method"].GetSafeString();
+            //1：办公消耗 2：试验消耗
+            ViewBag.type = Request["type"].GetSafeString();
+
+            string recid = Request["recid"].GetSafeString();
+            ViewBag.recid = recid;
+
+
+            string sql = "select * from dbo.OA_MateriaInfo where Status<>'-1' and Recid='" + recid + "'";
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+
+                ViewBag.recid = dt[i]["recid"];
+                ViewBag.type = dt[i]["type"];
+                ViewBag.materialname = dt[i]["materialname"];
+                ViewBag.materialunit = dt[i]["materialunit"];
+
+                ViewBag.materialid = dt[i]["materialid"];
+                ViewBag.materialunitid = dt[i]["materialunitid"];
+                ViewBag.price = dt[i]["price"];
+                ViewBag.quantity = dt[i]["quantity"];
+                ViewBag.technicalrequirement = dt[i]["technicalrequirement"];
+                ViewBag.supplier = dt[i]["supplier"];
+                ViewBag.manufacturer = dt[i]["manufacturer"];
+                ViewBag.purpose = dt[i]["purpose"];
+            }
+            return View();
+        }
+
+        public void MaterialConsumptionModify()
+        {
+            string msg = "";
+            bool code = false;
+            try
+            {
+                //材料记录唯一号
+                string recid = Request["recid"].GetSafeString();
+
+                //1：办公消耗 2：试验消耗
+                string type = Request["type"].GetSafeString();
+                string matId = Request["matId"].GetSafeString();
+                string matName = Request["matName"].GetSafeString();
+                string unitId = Request["unitId"].GetSafeString();
+                string unitName = Request["unitName"].GetSafeString();
+                string price = Request["price"].GetSafeString();
+                string quantity = Request["quantity"].GetSafeString();
+                string purchasePrice = Request["purchasePrice"].GetSafeString();
+                string technicalRequirement = Request["technicalRequirement"].GetSafeString();
+                string supplier = Request["supplier"].GetSafeString();
+                string manufacturer = Request["manufacturer"].GetSafeString();
+                string purpose = Request["purpose"].GetSafeString();
+                string requisitioner = Request["purpose"].GetSafeString();
+
+                string sqlStr = "";
+                if (string.IsNullOrEmpty(recid))
+                {
+                    recid = Guid.NewGuid().ToString("N");
+                    sqlStr = "INSERT INTO [dbo].[OA_MateriaInfo]([Recid],type,[MaterialID],[MaterialName],[MaterialUnitID],[MaterialUnit],[Price]," +
+                        "[PurchasePrice],[Quantity],[Purpose],[TechnicalRequirement],[Supplier],[Manufacturer],[Requisitioner],[JCJGBH],[Checker]," +
+                        "[CheckTime],[CreateTime],[Creator],[UpdateTime],[Updater],[Status]) " +
+                        "VALUES(" +
+                        "'" + recid + "','" + type + "','" + matId + "','" + matName + "','" + unitId + "','" + unitName + "','" + price + "',null,'" + quantity + "'" +
+                        ",'" + purpose + "','" + technicalRequirement + "','" + supplier + "','" + manufacturer + "','" + requisitioner + "','" + CurrentUser.Qybh + "'" +
+                        ",null,null,getdate(),'" + CurrentUser.RealName + "',getdate(),'" + CurrentUser.RealName + "',1)";
+                }
+                else
+                {
+                    sqlStr = string.Format(" update OA_MateriaInfo set MaterialID='" + matId + "'  ,MaterialName='" + matName + "'" +
+                        ",MaterialUnitID='" + unitId + "' ,MaterialUnit='" + unitName + "'" +
+                        ",Price='" + price + "'" +
+                        ",Quantity='" + quantity + "' ,Purpose='" + purpose + "'" +
+                        ",technicalRequirement='" + technicalRequirement + "' ,Supplier='" + supplier + "'" +
+                        ",manufacturer='" + manufacturer + "' ,requisitioner='" + requisitioner + "'" +
+                        ",UpdateTime=getdate() ,Updater='" + CurrentUser.RealName + "'" +
+                        "  where  recid='" + recid + "'");
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+
+            }
+        }
+
+
+        public void MaterialConsumptionDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+
+                sqlStr = "update OA_MateriaInfo set Status='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where recid='" + recid + "'";
+
+                code = CommonService.Execsql(sqlStr);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+        #endregion
+
         /// <summary>
         /// 获取材料
         /// </summary>
@@ -849,7 +1015,6 @@ namespace BD.Jcbg.Web.Controllers
         }
         #endregion
 
-
         #region 车辆管理
         #region 车辆信息
         /// <summary>
@@ -948,6 +1113,7 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
+        #endregion
         #endregion
 
         #region 汽车使用记录
@@ -1286,7 +1452,7 @@ namespace BD.Jcbg.Web.Controllers
         /// </summary>
         public void CarMaintenanceDelete()
         {
-            bool code = true;
+            bool code = false;
             string msg = "";
             string sqlStr = "";
             try
@@ -1296,11 +1462,112 @@ namespace BD.Jcbg.Web.Controllers
                 IList<string> sqls = new List<string>();
                 if (string.IsNullOrEmpty(dataId))
                 {
-                    msg = "车辆信息不存在";
+                    msg = "删除异常，请联系管理员";
                 }
                 else
                 {
                     sqlStr = "update OA_CarMaintenance set  status ='-1' where id=" + dataId;
+                    code = CommonService.ExecSql(sqlStr, out msg);
+                }
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+        #endregion
+
+        #region 印章管理
+
+        /// <summary>
+        /// 页面
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorize]
+        public ActionResult SignatureEdit()
+        {
+            string recid = Request["recid"].GetSafeString();
+
+            string method = Request["method"].GetSafeString();
+            //主表唯一号
+
+
+            string sql = " select   * from [OA_SignatureManage]    where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "'";
+
+
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+                ViewBag.recid = dt[i]["recid"];
+                ViewBag.signaturecode = dt[i]["signaturecode"];
+                ViewBag.signaturename = dt[i]["signaturename"];
+                ViewBag.departmentbh = dt[i]["departmentbh"];
+                ViewBag.departmentname = dt[i]["departmentname"];
+                ViewBag.ownercode = dt[i]["ownercode"];
+                ViewBag.ownername = dt[i]["ownername"];
+                ViewBag.custodian = dt[i]["custodian"];
+
+            }
+
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        public void SignatureUpdate()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                string mId = Request["mid"].GetSafeString();
+
+                string signaturecode = Request["signaturecode"].GetSafeString();
+                string signaturename = Request["signaturename"].GetSafeString();
+                string departmentbh = Request["departmentbh"].GetSafeString();
+                string ownername = Request["ownername"].GetSafeString();
+                string custodian = Request["custodian"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+                if (string.IsNullOrEmpty(recid))
+                {
+                    recid = Guid.NewGuid().ToString("N"); ;
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_SignatureManage]([SignatureCode],[SignatureName],recid,[DepartmentBH],[DepartmentName],[OwnerCode],[OwnerName],[Status],[Custodian],[CreateTime],[Creator],[UpdateTime],[JCJGBH],[Updater])" +
+                        "VALUES('" + signaturecode + "'" +
+                        ",'" + signaturename + "'" +
+                        ",'" + recid + "'" +
+                        ",'" + departmentbh + "'" +
+                        ",null" +
+                        ",null" +
+                        ",'" + ownername + "'" +
+                        ",'1'" +
+                        ",'" + custodian + "'" +
+                        ",getdate()" +
+                        ",'" + CurrentUser.RealName + "'" +
+                        ",getdate()" +
+                        ",'" + CurrentUser.Qybh + "'" +
+                        ",'" + CurrentUser.RealName + "')");
+                }
+                else
+                {
+                    sqlStr = "update OA_SignatureManage set signaturename='" + signaturename + "', departmentbh='" + departmentbh + "'," +
+                        " ownername='" + ownername + "',UpdateTime=getdate(),Updater='" + CurrentUser.RealName + "'  where recid=" + recid;
                 }
 
                 code = CommonService.ExecSql(sqlStr, out msg);
@@ -1320,9 +1587,48 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        public void SignatureDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string dataId = Request["recid"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+                if (string.IsNullOrEmpty(dataId))
+                {
+                    msg = "删除异常，请联系管理员";
+                    code = false;
+                }
+                else
+                {
+                    sqlStr = "update OA_SignatureManage set  status ='-1' where recid=" + dataId;
+                    code = CommonService.ExecSql(sqlStr, out msg);
+                }
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
         #endregion
 
-        #endregion
-        #endregion
     }
 }

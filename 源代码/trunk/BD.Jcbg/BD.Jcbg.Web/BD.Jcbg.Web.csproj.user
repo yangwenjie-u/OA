@@ -3,14 +3,15 @@
   <PropertyGroup>
     <ToolsVersionPromptShown>1.8</ToolsVersionPromptShown>
     <UseIISExpress>true</UseIISExpress>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
-    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
+    <LastActiveSolutionConfig>Release|Any CPU</LastActiveSolutionConfig>
     <Use64BitIISExpress />
+    <NameOfLastUsedPublishProfile>F:\德浩OA\源代码\trunk\BD.Jcbg\BD.Jcbg.Web\Properties\PublishProfiles\FolderProfile.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

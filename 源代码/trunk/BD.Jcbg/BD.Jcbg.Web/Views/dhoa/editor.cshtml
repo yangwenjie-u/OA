@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="http://res.jzyglxt.com/app/jcjg/element-ui/lib/theme-chalk/index.css"
+        rel="stylesheet" />
+    <script src="http://res.jzyglxt.com/app/jcjg/vue.min.js"></script>
+    <script src="http://res.jzyglxt.com/app/jcjg/element-ui/lib/index.js"></script>
+    <script src="http://res.jzyglxt.com/app/jcjg/jquery.js"></script>
+    <script src="/skins/default/ckeditor4/ckeditor.js"></script>
+    <style>
+        #editor {
+            height: 80vh;
+        }
+
+        .tools {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            display: flex;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .lab {
+            color: #409EFF;
+        }
+
+        .my_inp {
+            width: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" style="display: none;" v-show="showApp">
+        <div class="tools">
+            <el-button v-if="!readonly" v-on:click="saveData" type="primary" size="mini">保存数据</el-button>
+            <div class="content">
+                <div class="lab">标题：</div>
+                <div class="con">
+                    <el-input :disabled="readonly" class="my_inp" size="mini" v-model="title"></el-input>
+                </div>
+            </div>
+
+        </div>
+        <textarea name="test" id="test"></textarea>
+    </div>
+    <script>
+        var bcode = new Base64();
+        var readonly = GetQueryString('LX') == 'read';
+        new Vue({
+            el: '#app',
+            data: {
+                showApp: false,
+                title: "",
+                recid: GetQueryString('recid'),
+                readonly: readonly
+            },
+            methods: {
+                saveData: function () {
+                    var d = CKEDITOR.instances.test.getData()
+                    var that = this
+                    $.ajax({
+                        type: "post",
+                        url: "/dhoa/SaveAnnouncementNotice",
+                        data: {
+                            title: this.title,
+                            recid: this.recid,
+                            NoticeContent: encodeURIComponent(bcode.encode(d))
+                            // NoticeContent: bcode.encode(d)
+                        },
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.code == 0) {
+                                that.$message.success('保存成功')
+                                setTimeout(function () {
+                                    parent.layer.closeAll();
+                                }, 1000);
+                            } else {
+                                that.$message.error(res.msg)
+                            }
+                        }
+                    });
+                },
+                setData: function () {
+                    var that = this
+                    $.ajax({
+                        type: "post",
+                        url: "/dhoa/GetAnnouncementNotice",
+                        data: {
+                            recid: this.recid,
+                        },
+                        dataType: "json",
+                        success: function (res) {
+                            if (res.code == 0) {
+                                var d = res.datas[0]
+                                CKEDITOR.instances.test.setData(bcode.decode(decodeURIComponent(
+                                    d.noticecontent)))
+                                that.title = d.title
+                            } else {
+                                that.$message.error(res.msg)
+                            }
+                        }
+                    });
+                }
+            },
+            mounted() {
+                this.showApp = true
+                if (this.recid) {
+                    this.setData();
+                }
+                CKEDITOR.replace("test", {
+                    language: 'zh-cn',
+                    height: $(document).height() - 180,
+                    readOnly: this.readonly
+                })
+                // if(this.readonly){
+                //     CKEDITOR.instances.test.setReadOnly(true);
+                // }
+            },
+        })
+
+        function GetQueryString(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return "";
+        }
+
+        function Base64() {
+
+            // private property
+            _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+            // public method for encoding
+            this.encode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = _utf8_encode(input);
+                while (i < input.length) {
+                    chr1 = input.charCodeAt(i++);
+                    chr2 = input.charCodeAt(i++);
+                    chr3 = input.charCodeAt(i++);
+                    enc1 = chr1 >> 2;
+                    enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+                    enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+                    enc4 = chr3 & 63;
+                    if (isNaN(chr2)) {
+                        enc3 = enc4 = 64;
+                    } else if (isNaN(chr3)) {
+                        enc4 = 64;
+                    }
+                    output = output +
+                        _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                        _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+                }
+                return output;
+            }
+
+            // public method for decoding
+            this.decode = function (input) {
+                var output = "";
+                var chr1, chr2, chr3;
+                var enc1, enc2, enc3, enc4;
+                var i = 0;
+                input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+                while (i < input.length) {
+                    enc1 = _keyStr.indexOf(input.charAt(i++));
+                    enc2 = _keyStr.indexOf(input.charAt(i++));
+                    enc3 = _keyStr.indexOf(input.charAt(i++));
+                    enc4 = _keyStr.indexOf(input.charAt(i++));
+                    chr1 = (enc1 << 2) | (enc2 >> 4);
+                    chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                    chr3 = ((enc3 & 3) << 6) | enc4;
+                    output = output + String.fromCharCode(chr1);
+                    if (enc3 != 64) {
+                        output = output + String.fromCharCode(chr2);
+                    }
+                    if (enc4 != 64) {
+                        output = output + String.fromCharCode(chr3);
+                    }
+                }
+                output = _utf8_decode(output);
+                return output;
+            }
+
+            // private method for UTF-8 encoding
+            _utf8_encode = function (string) {
+                string = string.replace(/\r\n/g, "\n");
+                var utftext = "";
+                for (var n = 0; n < string.length; n++) {
+                    var c = string.charCodeAt(n);
+                    if (c < 128) {
+                        utftext += String.fromCharCode(c);
+                    } else if ((c > 127) && (c < 2048)) {
+                        utftext += String.fromCharCode((c >> 6) | 192);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    } else {
+                        utftext += String.fromCharCode((c >> 12) | 224);
+                        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                        utftext += String.fromCharCode((c & 63) | 128);
+                    }
+
+                }
+                return utftext;
+            }
+
+            // private method for UTF-8 decoding
+            _utf8_decode = function (utftext) {
+                var string = "";
+                var i = 0;
+                var c = c1 = c2 = 0;
+                while (i < utftext.length) {
+                    c = utftext.charCodeAt(i);
+                    if (c < 128) {
+                        string += String.fromCharCode(c);
+                        i++;
+                    } else if ((c > 191) && (c < 224)) {
+                        c2 = utftext.charCodeAt(i + 1);
+                        string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                        i += 2;
+                    } else {
+                        c2 = utftext.charCodeAt(i + 1);
+                        c3 = utftext.charCodeAt(i + 2);
+                        string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                        i += 3;
+                    }
+                }
+                return string;
+            }
+        }
+    </script>
+</body>
+
+</html>

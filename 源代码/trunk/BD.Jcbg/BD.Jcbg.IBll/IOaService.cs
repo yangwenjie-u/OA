@@ -369,6 +369,8 @@ namespace BD.Jcbg.IBll
 		/// <returns></returns>
 		IList<IDictionary<string, string>> GetAnnouncementNotice(string recid);
 
+		bool DelAnnouncementNotice(string recids);
+
 		/// <summary>
 		/// 保存通知
 		/// </summary>

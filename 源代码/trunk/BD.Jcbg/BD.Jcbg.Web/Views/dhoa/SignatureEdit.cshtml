@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/oa/css/load.css" />
+    <style>
+        .data-view {
+            text-align: left;
+        }
+
+        .m-role {
+            width: 45%;
+        }
+
+            .m-role .xb {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .m-role .sfsyr {
+                width: 20px;
+                height: 20px;
+                margin-right: 20px;
+            }
+
+            .role-list .m-role input,
+            .m-role select {
+                width: 90%;
+            }
+
+        .role-line {
+            width: 60%;
+            display: inline-block;
+            text-align: center;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .m-role span {
+            text-align: center;
+        }
+
+        .role-list .checkbox {
+            width: 16px;
+            height: 16px;
+        }
+
+        .role-list {
+        }
+
+        #roleLine {
+            border: 1px solid #C6C6C6;
+        }
+
+            #roleLine > div {
+                display: table-cell;
+                width: 50%;
+            }
+
+            #roleLine p {
+                background: #F1F1F1;
+                color: #303030;
+                height: 40px;
+                line-height: 40px;
+                border-bottom: 1px solid #E5E5E5;
+                border-left: 1px solid #E5E5E5;
+            }
+
+            #roleLine div:first-child p {
+                border-left: 0px;
+            }
+
+            #roleLine .role-list span {
+                width: 70%;
+                text-align: left;
+                margin-left: 10px;
+            }
+
+        #roleLeft,
+        #roleRight {
+            height: 300px;
+            overflow: auto;
+            padding: 10px 0;
+            cursor: pointer;
+        }
+
+
+        #roleLine .role-list .close {
+            width: 30px;
+            height: 30px;
+            display: inline-block;
+            background: url('/static/oa/images/close.png') no-repeat;
+            background-position: 7px 7px;
+        }
+
+        #dataView {
+            display: inline-block;
+            margin: 0px 10%;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .m-role input, .m-role select {
+            width: 70%;
+        }
+        /*860px; 700px*/
+    </style>
+</head>
+
+<body>
+    <div id="dataView" class="data-view">
+        <div class="m-role">
+            <label>
+                <span>
+                    印章代码：
+                </span>
+                <input type="text"  id="signaturecode" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>印章名称：</span>
+                <input type="text" id="signaturename" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>所属部门：</span>
+                <select id="departmentbh">
+                    <option value="0">请选择部门</option>
+                </select>
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
+                <span>所属人员：</span>
+                <input type="text" id="ownername"  />
+            </label>
+        </div>
+        <div class="save" style="margin-top: 50px;border: 0px;"><span class="btn">保存</span></div>
+    </div>
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script>
+        var dataId = "@ViewBag.recid";
+        var ksbh = "@ViewBag.departmentbh";
+
+        //signaturecode
+        //signaturename
+        //departmentbh
+        //    departmentname
+        //ownercode
+        //ownername
+        //custodian
+        $(function () {
+            if (dataId) {
+                $("#signaturecode").attr("readonly", true);
+                $("#signaturecode").css({ background: "lightgray" })
+
+                if (dataId) {
+                    $('#signaturecode').val('@ViewBag.signaturecode');
+                    $('#signaturename').val('@ViewBag.signaturename');
+                    $('#departmentbh').val('@ViewBag.departmentbh');
+                    $('#departmentname').val('@ViewBag.departmentbh');
+                    $('#ownercode').val('@ViewBag.ownercode');
+                    $('#ownername').val('@ViewBag.ownername');
+                }
+            }
+
+            ajaxTpl('/dhoa/GetJcjgks', '', function (data) {
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].ksbh + "'>" + data[i].ksmc + "</option>";
+                    }
+                    if (data.length == 1) {
+                        $('#departmentbh').html(str);
+                    } else {
+                        $('#departmentbh').append(str);
+                    }
+                    if (ksbh) {
+                        $('#departmentbh').val(ksbh);
+                    }
+                }
+            });
+        });
+
+        $("#dataView .save").click(function () {
+            var signaturecode = $('#signaturecode').val();
+            var signaturename = $('#signaturename').val();
+            var departmentbh = $('#departmentbh').val();
+            var departmentname = $('#departmentname').val();
+            var ownername = $('#ownername').val();
+          
+            var cpcode = $('#cpcode').val();
+         
+            if (departmentbh == 0) {
+                layer.msg('请选择部门', {
+                    icon: 2,
+                    time: 2000
+                });
+                return;
+            }
+            if (signaturecode.length && signaturename.length && departmentbh.length
+                && ownername.length) {
+                var obj = {
+                    recid: dataId,
+                    signaturecode: signaturecode,
+                    signaturename: signaturename,
+                    departmentbh: departmentbh,
+                    ownername: ownername
+                };
+                save(obj)
+
+            }else {
+                layer.msg('请将表单填写完整', {
+                icon: 2,
+                time: 2000
+                });
+            }
+        });
+
+        function save(obj) {
+            ajaxTpl('/dhoa/SignatureUpdate', obj, function (data) {
+                if (data.code =='0') {
+                    layer.alert('保存成功');
+                    try {
+                        setTimeout(function () {
+                            parent.layer.closeAll();
+                        },1000)
+                    }
+                    catch(e)
+                    {
+                    }
+                }
+                else {
+
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

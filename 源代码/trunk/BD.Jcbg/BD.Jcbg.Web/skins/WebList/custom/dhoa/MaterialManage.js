@@ -7,14 +7,14 @@
 
 
 
-//采购管理
-//添加采购申请单
-function AddPurchaseRequisition() {
+//添加
+function Add(type) {
     try {
+        //type 1: 办公耗材 2 试验耗材
         layer.open({
             type: 2,
-            title: '采购申请',
-            content: '/dhoa/PurchaseOrderEdit?method=add',
+            title: '耗材录入',
+            content: '/dhoa/MaterialConsumptionEdit?type=' + type,
             shadeClose: true,
             shade: 0.8,
             area: ['990px', '350px'],
@@ -26,17 +26,34 @@ function AddPurchaseRequisition() {
         alert(e);
     }
 }
-
-function PurchaseRequisitionEdit(recid, status) {
+//库存清点
+function StockCheck(type) {
     try {
-        if (status != "1") {
-            alert("仅可以修改待审核的记录");
-            return;
-        }
+        alert("功能开发中");
+    } catch (e) {
+        alert(e);
+    }
+}
+//器材耗材申请
+function Apply(type) {
+    try {
+        alert("功能开发中");
+
+    } catch (e) {
+        alert(e);
+    }
+}
+
+function MaterialConsumptionEdit(recid, status) {
+    try {
+        //if (status != "1") {
+        //    alert("仅可以修改待审核的记录");
+        //    return;
+        //}
         layer.open({
             type: 2,
-            title: '采购申请',
-            content: '/dhoa/PurchaseOrderEdit?operType=update&dataType=3&recid=' + recid,
+            title: '修改',
+            content: '/dhoa/MaterialConsumptionEdit?operType=update&dataType=3&recid=' + recid,
             shadeClose: true,
             shade: 0.8,
             area: ['990px', '350px'],
@@ -52,15 +69,15 @@ function PurchaseRequisitionEdit(recid, status) {
 
 
 //删除采购申请记录
-function PurchaseOrderDel(recid, status) {
+function MaterialConsumptionDel(recid, status) {
     try {
-        if (status != "1") {
-            alert("仅可以删除待审核的记录");
-            return;
-        }
+        //if (status != "1") {
+        //    alert("仅可以删除待审核的记录");
+        //    return;
+        //}
         $.ajax({
             type: "POST",
-            url: "/dhoa/PurchaseOrderDelete",
+            url: "/dhoa/MaterialConsumptionDelete",
             data: {
                 recid: recid
             },
@@ -83,12 +100,28 @@ function PurchaseOrderDel(recid, status) {
     }
 }
 
-//采购管理oper
-function FormatOperPurchase(value, row, index) {
+//查看记录
+function RecordView(mreicd,name) {
+    var url = "/WebList/ElementIndex?FormDm=HCRecord&FormStatus=0&FormParam=PARAM--" + encodeURIComponent(mreicd);
+    parent.layer.open({
+        type: 2,
+        title: name + "申领记录",
+        shadeClose: false,
+        shade: 0.8,
+        area: ['95%', '95%'],
+        content: url,
+        end: function () {
+        }
+    })
+}
+
+//oper
+function FormatOper(value, row, index) {
     var imgurl = "";
     try {
-        imgurl += "<a onclick='PurchaseRequisitionEdit(\"" + value + "\",\"" + row.Status + "\")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a>"
-            + " <a onclick = 'PurchaseOrderDel(\"" + value + "\",\"" + row.Status + "\")' style = 'cursor:pointer;color:#169BD5;' alt = '删除' > 删除 </a > ";
+        imgurl += "<a onclick='MaterialConsumptionEdit(\"" + value + "\",\"" + row.Status + "\")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a>"
+            + " <a onclick = 'MaterialConsumptionDel(\"" + value + "\",\"" + row.Status + "\")' style = 'cursor:pointer;color:#169BD5;'  > 删除 </a > "
+            + " <a onclick = 'RecordView(\"" + value + "\",\"" + row.MaterialName + "\")' style = 'cursor:pointer;color:#169BD5;' > 申领记录 </a > ";
 
     } catch (e) {
         alert(e);

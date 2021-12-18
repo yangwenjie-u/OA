@@ -1452,6 +1452,8 @@ namespace BD.Jcbg.Bll
             var dt = CommonDao.GetDataTable(sql);
             return dt;
         }
+
+
         //公告上传图片
         public string UploadAnnouncementFile(byte[] upload)
         {
@@ -1516,7 +1518,7 @@ namespace BD.Jcbg.Bll
             string sql = "";
             if (string.IsNullOrEmpty(recid))
             {
-                 recid = Guid.NewGuid().ToString();
+                 recid = Guid.NewGuid().ToString("N"); 
                 sql = "INSERT INTO [dbo].[OA_PurchaseOrder]([Recid],[MaterialID],[MaterialName],[MaterialUnitID],[MaterialUnit],[Price]," +
                     "[PurchasePrice],[Quantity],[Purpose],[TechnicalRequirement],[Supplier],[Manufacturer],[Requisitioner],[JCJGBH],[Checker]," +
                     "[CheckTime],[CreateTime],[Creator],[UpdateTime],[Updater],[Status]) " +
