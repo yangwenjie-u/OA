@@ -9086,6 +9086,9 @@
     <Content Include="skins\default\ckeditor4\samples\toolbarconfigurator\font\fontello.woff" />
     <Content Include="skins\default\ckeditor4\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="skins\default\ckeditor4\skins\moono-lisa\readme.md" />
+    <Content Include="Views\dhoa\EditModel.cshtml" />
+    <Content Include="Views\dhoa\GZZDLXEdit.cshtml" />
+    <Content Include="Views\dhoa\GZZDEdit.cshtml" />
     <None Include="Web References\RemoteUserService\services.disco" />
     <Content Include="中浩设备sql语句.txt" />
     <None Include="Contents\.DS_Store" />

@@ -106,7 +106,7 @@ namespace BD.Jcbg.Web.Controllers
         }
         #endregion
 
-        //公告通知
+        #region 公告通知
         [LoginAuthorize]
         public ActionResult editor()
         {
@@ -176,6 +176,254 @@ namespace BD.Jcbg.Web.Controllers
             return Json(new { code = code ? "0" : "1", msg }, JsonRequestBehavior.AllowGet);
         }
 
+        #endregion
+
+        #region 规章制度
+
+        #region 规章制度类型
+
+        /// <summary>
+        /// 规章制度类型
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorize]
+        public ActionResult GZZDLXEdit()
+        {
+            string typeid = Request["typeid"].GetSafeString();
+
+            string sql = " select   * from [OA_GZZDLX] where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "' and typeid='" + typeid + "'";
+
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+                ViewBag.id = dt[i]["id"];
+                ViewBag.typeid = dt[i]["typeid"];
+                ViewBag.typename = dt[i]["typename"];
+            }
+            return View();
+        }
+        public void GZZDLXModify()
+        {
+            string msg = "";
+            bool code = false;
+            string sqlStr = "";
+            try
+            {
+                //材料记录唯一号
+                string typeid = Request["typeid"].GetSafeString();
+                string typename = Request["typename"].GetSafeString();
+
+                if (string.IsNullOrEmpty(typeid))  
+                {
+                    typeid = Guid.NewGuid().ToString("N"); ;
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_GZZDLX]([typeid],[typeName],[JCJGBH],[status])" +
+                        "VALUES('" + typeid + "'" +
+                        ",'" + typename + "'" +
+                        ",'" + CurrentUser.Qybh + "'" +
+                        ",'1')");
+                }
+                else
+                {
+                    sqlStr = "update OA_GZZDLX set typeName='" + typename + "'   where typeid='" + typeid + "'";
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+        public void GZZDLXDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string typeid = Request["typeid"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+
+                sqlStr = "update OA_GZZDLX set Status='-1' where typeid='" + typeid + "'";
+
+                code = CommonService.Execsql(sqlStr);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
+        public void GetGZZDName()
+        {
+            string ret = "";
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                sb.Append("[");
+                string sql = "select * from OA_GZZDLX where status <>-1  and JCJGBH ='" + CurrentUser.Qybh + "' order by typename ";
+
+                IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+                for (int i = 0; i < dt.Count; i++)
+                {
+                    sb.Append("{\"typeid\":\"" + dt[i]["typeid"].GetSafeString() + "\",\"name\":\"" + dt[i]["typename"].GetSafeString() + "\"},");
+                }
+
+                if (sb.ToString().EndsWith(","))
+                    sb.Remove(sb.Length - 1, 1);
+                sb.Append("]");
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+            }
+            finally
+            {
+                Response.ContentType = "text/plain";
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                Response.Write(sb.ToString());
+                Response.End();
+            }
+        }
+        
+        #endregion
+
+        #region 规章制度明细
+
+        /// <summary>
+        /// 规章制度
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorize]
+        public ActionResult GZZDEdit()
+        {
+            string typeid = Request["ggzdlxid"].GetSafeString();
+            string gzzdid = Request["gzzdid"].GetSafeString();
+
+            //select* from OA_GZZD
+
+            if (string.IsNullOrEmpty(typeid))
+            {
+                throw new Exception("获取制度类目异常");
+            }
+
+            string sql = " select   * from [OA_GZZD] where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "' and gzzdid='" + gzzdid + "'";
+
+            sql += " and typeid='" + typeid + "'";
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+                ViewBag.gzzdid = dt[i]["gzzdid"];
+                ViewBag.typeid = dt[i]["typeid"];
+                ViewBag.name = dt[i]["name"];
+                ViewBag.fileoss = dt[i]["fileoss"];
+            }
+            return View();
+        }
+        public void GZZDModify()
+        {
+            string msg = "";
+            bool code = false;
+            string sqlStr = "";
+            try
+            {
+                //材料记录唯一号
+                string recid = Request["gzzdid"].GetSafeString();
+                string typeid = Request["typeid"].GetSafeString();
+                string name = Request["name"].GetSafeString();
+                string fileoss = Request["fileoss"].GetSafeString();
+
+                if (string.IsNullOrEmpty(recid))
+                {
+                    recid = Guid.NewGuid().ToString("N"); ;
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_GZZD](gzzdid,[fileoss],[Name],[JCJGBH],[CreateTime],[Creater],[UpdateTime],[Updater],[Status])" +
+                        "VALUES('" + recid + "','" + fileoss + "'" +
+                        ",'" + name + "'" +
+                        ",'" + CurrentUser.Qybh + "'" +
+                        ",getdate()" +
+                        ",'" + CurrentUser.RealName + "'" +
+                       ",getdate()" +
+                        ",'" + CurrentUser.RealName + "'" +
+                        ",'1')");
+                }
+                else
+                {
+                    sqlStr = "update OA_GZZD set typeName='" + name + "',fileoss='" + fileoss + "'," +
+                        " Updater='" + CurrentUser.RealName + "'," +
+                        " UpdateTime=getdate()  where gzzdid=" + recid;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+        public void GZZDDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+
+                IList<string> sqls = new List<string>();
+
+                sqlStr = "update OA_GZZD set Status='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where recid='" + recid + "'";
+
+                code = CommonService.Execsql(sqlStr);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
+        #endregion
+        #endregion
         #region  人员管理-人员信息
 
         /// <summary>

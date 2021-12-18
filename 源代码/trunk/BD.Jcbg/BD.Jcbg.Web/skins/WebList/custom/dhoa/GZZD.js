@@ -1,10 +1,113 @@
 ﻿
 
+//新增制度类型
+function GZLXAdd() {
+    try {
+        layer.open({
+            type: 2,
+            title: '新增制度类目',
+            content: '/dhoa/GZZDLXEdit',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['990px', '350px'],
+            end: function () {
+                searchRecord();
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+function GZLXEdit() {
+    try {
+        var selected = pubselect();
+        if (selected == undefined)
+            return;
+        console.log(selected);
+        layer.open({
+            type: 2,
+            title: '编辑制度类目',
+            content: '/dhoa/GZZDLXEdit?typeid=' + selected.GGZDLXID,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['990px', '350px'],
+            end: function () {
+                searchRecord();
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+function GZLXDel() {
+    try {
+        var selected = pubselect();
+        if (selected == undefined)
+            return;
+        layer.confirm("删除制度类目后相关规章制度全部删除，请确认是否删除", { icon: 3, title: '提示' }, function (index) {
+            ajaxTpl('/dhoa/GZZDLXDelete', {
+                typeid: selected.GGZDLXID
+            }, function (data) {
+                if (data.msg) {
+                    layer.msg(data.msg);
+                }
+                searchRecord();
+            });
+            layer.close(index);
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
+function GZZDAdd() {
+    try {
+        var selected = pubselect();
+        if (selected == undefined)
+            return;
+        layer.open({
+            type: 2,
+            title: '新增制度类型',
+            content: '/dhoa/GZZDEdit?ggzdlxid=' + selected.GGZDLXID,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['990px', '350px'],
+            end: function () {
+                searchRecord();
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
+function GZZDEdit(ggzdlxid) {
+    try {
+      
+        layer.open({
+            type: 2,
+            title: '新增制度类型',
+            content: '/dhoa/GZZDEdit?ggzdlxid='+ ggzdlxid,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['990px', '350px'],
+            end: function () {
+                searchRecord();
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+
 
 function FormatOper(value, row, index) {
     var imgurl = "";
     try {
-        imgurl += "<a onclick='UpdateGZDD(\"" + row.GZDDID + "\")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a><a onclick='DelGZDD(\"" + row.GZDDID + "\")' style='cursor:pointer;color:#169BD5;' alt='删除'> 删除 </a>";
+        if (value != "")
+            imgurl += "<a onclick='GZZDEdit(\"" + row.GGZDLXID + "\")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a><a onclick='DelGZZD(\"" + row.GZZDID + "\")' style='cursor:pointer;color:#169BD5;' alt='删除'> 删除 </a>";
 
     } catch (e) {
         alert(e);
@@ -15,7 +118,6 @@ function FormatOper(value, row, index) {
 function FormatTrueOrFalse(value, row, index) {
     var imgurl = "";
     try {
-        imgurl += "<a onclick='UpdateGZDD(\"" + row.GZDDID + "\")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a><a onclick='DelGZDD(\"" + row.GZDDID + "\")' style='cursor:pointer;color:#169BD5;' alt='删除'> 删除 </a>";
 
     } catch (e) {
         alert(e);
@@ -27,7 +129,8 @@ function FormatTrueOrFalse(value, row, index) {
 function FormatDownOss(value, row, index) {
     var imgurl = "";
     try {
-        imgurl += "<a onclick='DownloadOss(\"" + row.GZDDID + "\")' style='cursor:pointer;color:#169BD5;' alt='下载文件'> 下载文件 </a>";
+        if (value != "")
+            imgurl += "<a onclick='DownloadOss(\"" + row.GZZDID + "\")' style='cursor:pointer;color:#169BD5;' alt='下载文件'> 下载文件 </a>";
     } catch (e) { }
     return imgurl;
 }
@@ -38,13 +141,13 @@ function DownloadOss() {
 }
 
 ///删除规章制度
-function UpdateGZDD(recid) {
+function UpdateGZZD(recid) {
 
 
 
 }
 ///删除规章制度
-function DelGZDD(recid) {
+function DelGZZD(recid) {
 
     alert("暂不支持");
 
