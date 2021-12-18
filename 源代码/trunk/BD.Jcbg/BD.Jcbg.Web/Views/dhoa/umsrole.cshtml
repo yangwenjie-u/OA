@@ -1,0 +1,803 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link type="text/css" rel="Stylesheet" href="/static/common/reset.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/table.css" />
+    <link type="text/css" rel="Stylesheet" href="http://res.jzyglxt.com/app/jcjg/layui/css/layui.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/jcjt/css/load.css" />
+    <link type="text/css" rel="Stylesheet" href="/static/common/tree.css" />
+    <style type="text/css">
+    .role .role-power {
+        margin-top: 110px;
+    }
+
+    .role .role-person {
+        margin-top: 10px;
+    }
+
+    .role p {
+        color: #999999;
+        text-align: center;
+        width: 160px;
+        margin-left: 30px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="top-select">
+        <div class="filter" style="height: 50px ;line-height: 50px; ">
+            <div class="f-ipt" style="margin-left: 200px">
+                <label><span>单位代码</span>
+                    <select id="cpcode">
+                        <option value="0">请选择单位</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="click-btn" id="clickBtn">
+        <span data-btncode="JC_JSGL_JS_新增角色" class="btn add-role roleButton">新增角色</span>
+        <span data-btncode="JC_JSGL_JS_新增人员" class="btn add-person roleButton">新增人员</span>
+        <span data-btncode="JC_JSGL_JS_首页展示项" class="btn add-IndexDiv roleButton">首页展示项</span>
+        <span data-btncode="JC_JSGL_JS_选择人员" class="btn select-person roleButton" >选择人员</span>
+        @*<span data-btncode="JC_JSGL_JS_添加权限" class="btn add-power roleButton" >添加权限</span>*@
+    </div>
+    <div class="role-list" id="roleList">
+    </div>
+    <div id="personList" class="table-warp">
+        <div class="filter" style="margin-top: 40px;">
+            <div class="f-ipt">
+                <label><span>单位代码</span>
+                    <select id="cpcode2">
+                        <option value="0">请选择单位</option>
+                    </select>
+                </label>
+            </div>
+            <div class="f-ipt">
+                <label><span>用户名称</span>
+                    <input type="text" name="username" id="username">
+                </label>
+            </div>
+            <!--             <div class="f-ipt">
+                <label><span>部门代码</span>
+                    <input type="text" name="depcode" id="depcode">
+                </label>
+            </div>
+            <div class="f-ipt">
+                <label><span>用户代码</span>
+                    <input type="text" name="usercode" id="usercode">
+                </label>
+            </div>
+             <div class="f-ipt">
+                <label><span>用户名称</span>
+                    <input type="text" name="username" id="username">
+                </label>
+            </div> -->
+            <div class="btn search" style="margin-left: 20px;border-radius: 20px;">搜索</div>
+            <div id="sureSelect" class="btn" style="margin-left: 20px;border-radius: 20px;background: #D85151">保存</div>
+        </div>
+        <table id="tab" class="add-person table table-border table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">
+                        <input type="checkbox" class="check-all" />
+                    </th>
+                    <th>序号</th>
+                    <th>部门</th>
+                    <th>姓名</th>
+                </tr>
+            </thead>
+            <tbody id="personBody"></tbody>
+            <script id="demo" type="text/html">
+                {{# layui.each(d.data.rows, function(index, item){ }}
+                <tr>
+                    {{# if(item.hasRole === true){ }}
+                    <td>
+                        <input type="checkbox" class="check hasRole" checked="checked" val="{{item.usercode}}" />
+                    </td>
+                    {{# } else { }}
+                    <td>
+                        <input type="checkbox" class="check" val="{{item.usercode}}" />
+                    </td>
+                    {{# } }}
+                    <td>{{item.itemIndex}}</td>
+                    <td>{{ item.depname }}</td>
+                    <td>{{ item.username}}</td>
+                </tr>
+                {{# }); }} {{# if(d.data.rows.length === 0){ }} 无数据 {{# } }}
+            </script>
+        </table>
+        <div id="test" class="page">
+            <span class="count"></span>
+            <div class="layer-page" id="page"></div>
+            <input type="text" class="page-val" value="1" />
+            <span class="sure">确定</span>
+            <!-- <div class="size">每页显示
+                <input type="text" class="page-size" value="10" /> 条
+            </div> -->
+        </div>
+    </div>
+    <div id="addRole" class="add-role-page">
+        <div class="m-role">
+            <span>选择单位</span>
+            <select class="company" id="company">
+                <option value="0">请选择单位</option>
+            </select>
+        </div>
+        <!--         <div class="m-role">
+            <span>选择项目</span>
+            <select class="protype">
+                <option value="0">请选择项目</option>
+            </select>
+        </div> -->
+        <div class="m-role">
+            <span>角色名字</span>
+            <input type="text" name="rolename" class="rolename">
+        </div>
+        <div class="m-role">
+            <span>备注</span>
+            <textarea class="memo"></textarea>
+        </div>
+        <div class="save btn" style="margin-top: 20px;">保存</div>
+    </div>
+    <div id="tree" class="tree"></div>
+    <!--     <div id="personView" class="person-view">
+        <div class="m-role">
+            <label><span>账号</span>
+                <input type="text" name="username" id="username" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label><span>姓名</span>
+                <input type="text" name="realname" id="realname" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label><span>密码</span>
+                <input type="password" name="password" id="password" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label><span>身份证号</span>
+                <input type="text" name="sfzh" id="sfzh" />
+            </label>
+        </div>
+        <div class="save btn" style="margin-top: 20px;">保存</div>
+    </div> -->
+    <script src="/static/lib/jquery-2.0.3.min.js"></script>
+    <script src="/static/lib/layer/layer.js"></script>
+    <script src="/static/lib/layui/layui.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/common/table.js"></script>
+    <script src="/static/jcjt/js/treeforumsrole.js"></script>
+    <script src="/jcjt/roleButton.js"></script>
+
+    <script>
+    var rowData, //角色数据列表
+        rolecode, personData = []; //人员数据列表 
+    var defCpcode = [];
+    $(function() {
+
+        ajaxTpl('/jcjtfun/getcompanys', '', function(data) {
+            if (data.length) {
+                var str = '';
+                for (var i = 0, len = data.length; i < len; i++) {
+                    str += "<option value='" + data[i].CompanyId + "'>" + data[i].CompanyName + "</option>";
+                    defCpcode.push(data[i].CompanyId);
+                }
+                if (data.length == 1) {
+                    $("#cpcode").html(str);
+                    $("#cpcode2").html(str);
+                    $("#company").html(str);
+                    GetRoleList($("#cpcode").val());
+                } else {
+                    $("#cpcode").append(str);
+                    $("#cpcode2").append(str);
+                    $("#company").append(str);
+                    GetRoleList();
+                }
+            }
+        });
+    });
+    $('#cpcode').change(function() {
+        var cpcode = $(this).val();
+        if (cpcode != 0) {
+            GetRoleList(cpcode);
+        } else {
+            GetRoleList();
+        }
+    })
+
+    //添加人员
+    $('#clickBtn .add-person').click(function() {
+        layer.open({
+            type: 2,
+            title: '添加人员',
+            content: '/jcjt/umsedit2',
+            area: ['1000px', '800px']
+        });
+    });
+    //首页展示项配置
+        $('#clickBtn .add-IndexDiv').click(function () {
+            var idx = $('.role.active');
+            if (idx.length) {
+                idx = idx.attr("value");
+
+                var tmpCode = rowData[idx].rolecode;
+                var tmpName = rowData[idx].rolename;
+                var url = "/WebList/ElementIndexV2?FormDm=JSGL_IndexDiv&FormStatus=0&FormParam=PARAM--" + encodeURIComponent(tmpCode) + "|" + encodeURIComponent(tmpName) ;
+                layer.open({
+                    type: 2,
+                    title: '首页展示项配置',
+                    content: url,
+                    area: ['100%', '100%']
+                });
+            } else {
+                layer.msg('请选择1个角色进行人员选择操作', {
+                    icon: 2,
+                    time: 2000
+                });
+            }
+    });
+        
+    $("#personView .save").click(function() {
+        var sfzh = $('#sfzh').val();
+        var username = $('#username').val();
+        var realname = $('#realname').val();
+        var password = $('#password').val();
+
+        if (username.length && realname.length && sfzh.length && password.length) {
+            //身份校验
+            ajaxTpl('/jcjt/UmsApiService', {
+                method: 'User',
+                opt: 'CheckUserBySfzh',
+                sfzh: sfzh
+            }, function(data) {
+                if (data) {
+                    // data false表示唯一码不存在，true表示唯一码已存在
+                    if (data.data == false) {
+                        ajaxTpl('/jcjt/UmsApiService', {
+                            method: 'User',
+                            opt: 'AddUser',
+                            username: username,
+                            realname: realname,
+                            password: password,
+                            sfzh: sfzh
+
+                        }, function(data) {
+                            if (data.success == true) {
+                                layer.msg('保存成功！', {
+                                    icon: 1,
+                                    time: 1500
+                                });
+                            } else {
+                                layer.msg(data.msg, {
+                                    icon: 2,
+                                    time: 2000
+                                });
+                            }
+                        });
+                    } else {
+                        layer.msg(data.msg, {
+                            icon: 2,
+                            time: 2000
+                        });
+                    }
+                }
+            });
+        } else {
+            layer.msg('请将表单填写完整', {
+                icon: 2,
+                time: 2000
+            });
+        }
+    });
+
+    function GetRoleList(cpcode) {
+
+        var obj = {
+            method: 'Role',
+            opt: 'GetRoleList',
+            rows: 10000
+        }
+        if (cpcode) {
+            obj.cpcode = cpcode;
+        } else if ($("#cpcode").val() != 0) {
+            obj.cpcode = $("#cpcode").val();
+        }
+        ajaxTpl('/jcjt/UmsApiService', obj, function (data) {
+            if (data.data && data.data.rows && data.data.rows.length) {
+                var str = '',
+                    tmp;
+                rowData = data.data.rows;
+                for (var i = 0, len = rowData.length; i < len; i++) {
+                    tmp = rowData[i];
+                    if (tmp.rolename!="管理员")
+                        str += '<div class="role" value="' + i + '"><p class="role-power  roleButton" data-btncode="JC_JSGL_JS_拥有权限" num="' + tmp.powernum + '">拥有权限:' + tmp.powernum + '</p><p data-btncode="JC_JSGL_JS_所含人员" class="role-person  roleButton" num="' + tmp.usernum + '">所含人员:' + tmp.usernum + '</p><span>' + tmp.rolename + '</span></div>';
+                }
+                $("#roleList").html(str);
+                var li = $("#roleList").find('.role span');
+                for (var i = 0, len = li.length; i < len; i++) {
+                    tmp = li.eq(i);
+                    if (tmp.height() > 35) {
+                        tmp.parents('.role').addClass('role-2');
+                    }
+                }
+            }
+            showRoleButton()
+        });
+    }
+
+    $("#roleList").on('click', '.role', function() {
+        $(this).addClass('active').siblings().removeClass('active');
+    });
+    $("#roleList").on('click', '.role-power', function(events) {
+        // if ($(this).attr('num') == 0) {
+        //     layer.msg('暂无权限', {
+        //         icon: 2,
+        //         time: 2000
+        //     });
+        //     return;
+        // }
+
+        var idx = $(this).parents('.role').attr('value');
+        var rolecode = rowData[idx].rolecode;
+        var url = '/jcjt/powerlist?rolecode=' + rolecode;
+        layer.open({
+            type: 2,
+            title: '查看权限',
+            content: url,
+            area: ['80%', '80%']
+        });
+
+    });
+    $("#roleList").on('click', '.role-person', function(events) {
+        // if ($(this).attr('num') == 0) {
+        //     layer.msg('暂无人员', {
+        //         icon: 2,
+        //         time: 2000
+        //     });
+        //     return;
+        // }
+
+        var idx = $(this).parents('.role').attr('value');
+        var rolecode = rowData[idx].rolecode;
+        var url = '/jcjt/userlist?edit=1&rolecode=' + rolecode;
+        layer.open({
+            type: 2,
+            title: '查看人员',
+            content: url,
+            area: ['98%', '98%']
+        });
+    });
+
+
+    //****************************************** 新增角色
+    $(".add-role").click(function() {
+        // 查询单位
+        layer.open({
+            type: 1,
+            title: '添加角色',
+            content: $('#addRole'),
+            area: ['500px', '400px']
+        });
+    });
+    // $('.company').change(function() {
+    //     var val = $(this).val();
+    //     if (val != 0) {
+    //         ajaxTpl('/tz/UmsApiService', {
+    //             method: 'Companyprotype',
+    //             opt: 'GetProtypeListByCpcode',
+    //             cpcode: val
+    //         }, function(data) {
+    //             if (data.data) {
+    //                 var str = '<option value="0">请选择项目</option>',
+    //                     tmp;
+    //                 for (var i = 0, len = data.data.length; i < len; i++) {
+    //                     var tmp = data.data[i];
+    //                     str += '<option value="' + tmp.PROCODE + '">' + tmp.PRONAME + '</option>';
+    //                 }
+    //                 $('.protype').html(str);
+    //             }
+    //         });
+    //     } else {
+    //         $('.protype').html('<option value="0">请选择项目</option>');
+    //     }
+    // });
+    $("#addRole .save").click(function() {
+        var cpcode = $('#addRole').find('.company').val();
+        // var procode = $('#addRole').find('.protype').val();
+        var rolename = $('#addRole').find('.rolename').val();
+        var memo = $('#addRole').find('.memo').val();
+
+        if (cpcode != 0 && rolename) {
+            var params = {
+                cpcode: cpcode,
+
+                rolename: rolename,
+                method: 'Role',
+                opt: 'AddRoleInfo'
+            }
+            if (memo) {
+                params.memo = memo;
+            }
+
+            ajaxTpl('/jcjt/UmsApiService', params, function(data) {
+                layer.closeAll();
+                // $('#addRole').find('.protype').html('<option value="0">请选择项目</option>');
+                $('#addRole').find(".rolename").val('');
+                $('#addRole').find(".memo").val('');
+                if (data.success == true) {
+                    GetRoleList();
+                    layer.msg('添加成功!', {
+                        icon: 1,
+                        time: 1500
+                    });
+                } else {
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+            });
+
+        } else {
+            layer.msg('请将表单填写完整!', {
+                icon: 2,
+                time: 2000
+            });
+        }
+    });
+    //****************************************** 新增角色
+
+    //****************************************** 选择人员
+    var selectData = {
+        data: [],
+        del: [],
+        cuur: 0,
+        addData: function() {
+            var checked = $('#personBody').find(":checked");
+            var tmp, val, hasRole;
+            if (checked.length) {
+                for (var i = 0, len = checked.length; i < len; i++) {
+                    tmp = checked.eq(i)
+                    val = tmp.attr("val");
+                    hasRole = tmp.hasClass("hasRole")
+                    if (!hasRole && selectData.data.indexOf(val) == -1) {
+                        selectData.data.push(val);
+                    }
+                }
+            }
+            hasRole = $('#personBody').find(".hasRole").not(":checked");
+            if (hasRole.length) {
+                for (var i = 0, len = hasRole.length; i < len; i++) {
+                    tmp = hasRole.eq(i).attr('val');
+                    selectData.del.push(tmp);
+                }
+            }
+            for (var i = 0, len = selectData.data.length; i < len; i++) {
+                for (var j = 0, len2 = selectData.del.length; j < len2; j++) {
+                    if (selectData.data[i] == selectData.del[j]) {
+                        selectData.data.splice(i, 1);
+                        selectData.del.splice(j, 1);
+                        j--;
+                        i--;
+                        len--;
+                        len2--;
+                        break;
+                    }
+                }
+            }
+        },
+        getData: function() {
+            selectData.addData();
+
+            var ary = [];
+            for (var i = 0, len = selectData.data.length; i < len; i++) {
+                ary.push(JSON.stringify({
+                    usercode: selectData.data[i],
+                    hasRole: true
+                }));
+            }
+            for (var i = 0, len = selectData.del.length; i < len; i++) {
+                ary.push(JSON.stringify({
+                    usercode: selectData.del[i],
+                    hasRole: false
+                }));
+            }
+            return ary;
+        },
+        setData: function() {
+
+            $("#personList").find(".check-all")[0].checked = false;
+
+            var body = $('#personBody').find(".check");
+            for (var i = 0, len = selectData.data.length; i < len; i++) {
+                body.filter("[val='" + selectData.data[i] + "']").click();
+            }
+
+            for (var i = 0, len = selectData.del.length; i < len; i++) {
+                body.filter("[val='" + selectData.del[i] + "']").click().removeClass("hasRole");
+            }
+        },
+        delData: function() {
+            selectData.data = [];
+            selectData.del = [];
+            selectData.cuur = 0;
+        }
+    };
+
+    $('#clickBtn .select-person').click(function() {
+        selectData.delData();
+        findPerson();
+    })
+    $('.search').click(function() {
+        var cpcode = $("#cpcode2").val();
+        var username = $("#username").val();
+        var obj = {}
+        if (cpcode != 0) {
+            obj.cpcode = cpcode;
+        }
+        if (username.length) {
+            obj.username = username;
+        }
+        findPerson(obj);
+    });
+
+    function findPerson(params) {
+        //回调函数
+        var handle = function(data, that) {
+            if (data.data) {
+                personData = data.data.rows;
+                data.count = data.data.total || 10;
+                try {
+                    var page = data.getParams.page;
+                    var rows = data.getParams.rows;
+                    var tmp = (page - 1) * rows;
+                    for (var i = 0, len = data.data.rows.length; i < len; i++) {
+                        data.data.rows[i].itemIndex = tmp + i + 1;
+                    }
+                } catch (e) {}
+
+                layui.use('laytpl', function() {
+                    var getTpl = demo.innerHTML,
+                        view = document.getElementById('personBody');
+                    layui.laytpl(getTpl).render(data, function(html) {
+                        view.innerHTML = html;
+                        selectData.setData();
+                        $("#test").find('.counts').html("共 " + data.length + " 条数据");
+                        if ($('#personList').is(":hidden")) {
+                            layer.open({
+                                type: 1,
+                                content: $('#personList'),
+                                area: ['80%', '80%']
+                            });
+                        }
+                    });
+                });
+            }
+        }
+
+        var idx = $('.role.active');
+        if (idx.length) {
+            idx = idx.attr("value");
+
+            var tmpCode = rowData[idx].rolecode;
+            if (params || (rolecode != tmpCode)) {
+                rolecode = tmpCode;
+                var obj = {
+                    method: 'User',
+                    opt: 'GetOwnerUserListByRolecode',
+                    page: 1,
+                    rows: 10,
+                    rolecode: rolecode,
+                    cpcode: defCpcode.join(',')
+                }
+                if (params) {
+                    obj = $.extend(obj, params);
+                }
+                getTable('/jcjt/UmsApiService', obj, handle, {
+                    doc: $('#personList'),
+                    pageSize: 'rows',
+                    jump: selectData.addData
+                });
+            } else {
+                layer.open({
+                    type: 1,
+                    content: $('#personList'),
+                    area: ['80%', '80%']
+                });
+            }
+        } else {
+            layer.msg('请选择1个角色进行人员选择操作', {
+                icon: 2,
+                time: 2000
+            });
+        }
+    }
+
+    $("#sureSelect").click(function() {
+        var ary = selectData.getData();
+        var idx = $('.role.active').attr('value');
+        var rolecode = rowData[idx].rolecode;
+        if (ary.length) {
+            ajaxTpl('/jcjt/UmsApiService', {
+                method: 'UserRole',
+                opt: 'ModifyUserRoleByRolecodeAndUsercodeList',
+                rolecode: rolecode,
+                usercodelist: "[" + ary.join(",") + ']'
+            }, function(data) {
+                layer.closeAll();
+                if (data.success == true) {
+                    GetRoleList();
+                    layer.msg('保存成功！', {
+                        icon: 1,
+                        time: 1500
+                    });
+                } else {
+                    layer.msg(data.msg, {
+                        icon: 2,
+                        time: 2000
+                    });
+                }
+
+            });
+        } else {
+            layer.msg("请选择人员", {
+                icon: 2,
+                time: 2000
+            })
+        }
+    })
+    $('.check-all').click(function() {
+        var checked = $(this).is(":checked");
+        var tab = $(this).parents('table').find(".check");
+        for (var i = 0, len = tab.length; i < len; i++) {
+            tab[i].checked = checked;
+        }
+    });
+
+    $('body').on('click', '.check', function() {
+        var checked = $(this).is(':checked');
+        var tab = $(this).parents('table');
+        var checked2 = tab.find('.check-all').is(":checked");
+        if (checked && !checked2) { //选中状态
+            var cAll = tab.find("tbody .check:checked").length;
+            var all = tab.find("tbody .check").length;
+            if (cAll == all) {
+                tab.find('.check-all')[0].checked = true;
+            }
+        } else if (!checked && checked2) { //未选中状态
+            tab.find('.check-all')[0].checked = false;
+        }
+    });
+
+
+    //******************************************选择人员
+
+    //******************************************添加权限
+    $('.add-power').click(function() {
+        var role = $("#roleList").find('.active');
+        if (role.length == 1) {
+
+            var idx = role.attr('value');
+
+            var cpcode = rowData[idx].cpcode;
+            var procode = rowData[idx].procode;
+
+            ajaxTpl('/jcjt/UmsApiService', {
+                method: 'Power',
+                opt: 'GetOwnerPowerListByRolecode',
+                rolecode: rowData[idx].rolecode
+            }, function(data) {
+                var ary, tmp;
+                if (data.data && data.data.rows) {
+                    ary = setTreeData(data);
+                }
+                var save = function(ary) {
+                    idx = $("#roleList").find('.active').attr('value');
+                    // var obj = {
+                    //     rolecode: rowData[idx].rolecode,
+                    //     menulist: "[" + ary.join(",") + ']'
+                    // }
+                    // console.log(obj);
+
+                    ajaxTpl('/jcjt/UmsApiService', {
+                        method: 'Power',
+                        opt: 'SavePowerByRolecode',
+                        rolecode: rowData[idx].rolecode,
+                        menulist: "[" + ary.join(",") + ']'
+                    }, function(data) {
+                        selectData.delData();
+                        if (data.success == true) {
+                            GetRoleList();
+                            layer.msg("保存成功！", {
+                                icon: 1,
+                                time: 1500
+                            });
+
+                        } else {
+                            layer.msg(data.msg, {
+                                icon: 2,
+                                time: 2000
+                            });
+                        }
+                    });
+                }
+                $("#tree").setTree({
+                    data: ary,
+                    save: save
+                });
+            });
+        } else {
+            layer.msg("请选择1个角色进行权限操作", {
+                icon: 2,
+                time: 2000
+            });
+        }
+    })
+
+    //数据改为树形结构
+    function setTreeData(data) {
+        var ary = [],
+            tmp;
+        tmp = data.data.rows;
+        for (var i = 0, len = data.data.rows.length; i < len; i++) {
+
+            if (!tmp[i].pmenucode) {
+                ary.push(tmp.splice(i, 1)[0]);
+                i--;
+                len--;
+            }
+        }
+        for (var i = 0, len = tmp.length; i < len; i++) {
+            for (var j = 0, len2 = ary.length; j < len2; j++) {
+                if (ary[j].menucode == tmp[i].pmenucode) {
+                    if (ary[j].child) {
+                        ary[j].child.push(tmp.splice(i, 1)[0]);
+                    } else {
+                        ary[j].child = [tmp.splice(i, 1)[0]];
+                    }
+                    i--;
+                    len--;
+                    break;
+                    //continue;
+                }
+            }
+        }
+        var flag = 0;
+        for (var i = 0, len = tmp.length; i < len; i++) {
+            for (var j = 0, len2 = ary.length; j < len2; j++) {
+                if (ary[j].child) {
+                    for (var k = 0, len3 = ary[j].child.length; k < len3; k++) {
+                        if (ary[j].child[k].menucode == tmp[i].pmenucode) {
+                            if (ary[j].child[k].child) {
+                                ary[j].child[k].child.push(tmp.splice(i, 1)[0]);
+                            } else {
+                                ary[j].child[k].child = [tmp.splice(i, 1)[0]];
+                            }
+                            i--;
+                            len--;
+                            flag = 1;
+                            break;
+                        }
+                    }
+                }
+                if (flag == 1) {
+                    flag = 0;
+                    break;
+                }
+            }
+        }
+        return ary;
+    }
+    //******************************************添加权限
+    </script>
+</body>
+
+</html>
