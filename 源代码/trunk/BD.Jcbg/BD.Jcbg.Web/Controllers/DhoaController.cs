@@ -318,19 +318,11 @@ namespace BD.Jcbg.Web.Controllers
         [LoginAuthorize]
         public ActionResult GZZDEdit()
         {
-            string typeid = Request["ggzdlxid"].GetSafeString();
             string gzzdid = Request["gzzdid"].GetSafeString();
-
-            //select* from OA_GZZD
-
-            if (string.IsNullOrEmpty(typeid))
-            {
-                throw new Exception("获取制度类目异常");
-            }
 
             string sql = " select   * from [OA_GZZD] where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "' and gzzdid='" + gzzdid + "'";
 
-            sql += " and typeid='" + typeid + "'";
+
             IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
             for (int i = 0; i < dt.Count; i++)
             {
@@ -348,17 +340,21 @@ namespace BD.Jcbg.Web.Controllers
             string sqlStr = "";
             try
             {
-                //材料记录唯一号
                 string recid = Request["gzzdid"].GetSafeString();
                 string typeid = Request["typeid"].GetSafeString();
                 string name = Request["name"].GetSafeString();
                 string fileoss = Request["fileoss"].GetSafeString();
 
+                if (string.IsNullOrEmpty(typeid))
+                {
+                    throw new Exception("获取类型异常");
+                }
+                
                 if (string.IsNullOrEmpty(recid))
                 {
                     recid = Guid.NewGuid().ToString("N"); ;
-                    sqlStr = string.Format("INSERT INTO [dbo].[OA_GZZD](gzzdid,[fileoss],[Name],[JCJGBH],[CreateTime],[Creater],[UpdateTime],[Updater],[Status])" +
-                        "VALUES('" + recid + "','" + fileoss + "'" +
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_GZZD](typeid,[fileoss],[Name],[JCJGBH],[CreateTime],[Creater],[UpdateTime],[Updater],[Status])" +
+                        "VALUES('" + typeid + "','" + fileoss + "'" +
                         ",'" + name + "'" +
                         ",'" + CurrentUser.Qybh + "'" +
                         ",getdate()" +
@@ -402,7 +398,7 @@ namespace BD.Jcbg.Web.Controllers
 
                 IList<string> sqls = new List<string>();
 
-                sqlStr = "update OA_GZZD set Status='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where recid='" + recid + "'";
+                sqlStr = "update [OA_GZZD] set Status='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where GZZDID='" + recid + "'";
 
                 code = CommonService.Execsql(sqlStr);
             }
@@ -423,6 +419,15 @@ namespace BD.Jcbg.Web.Controllers
         }
 
         #endregion
+        #endregion
+        #region 科室管理
+
+        [LoginAuthorize]
+        public ActionResult KSGL()
+        {
+            return View();
+        }
+
         #endregion
         #region  人员管理-人员信息
 

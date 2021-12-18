@@ -63,13 +63,10 @@ function GZLXDel() {
 
 function GZZDAdd() {
     try {
-        var selected = pubselect();
-        if (selected == undefined)
-            return;
         layer.open({
             type: 2,
             title: '新增制度类型',
-            content: '/dhoa/GZZDEdit?ggzdlxid=' + selected.GGZDLXID,
+            content: '/dhoa/GZZDEdit' ,
             shadeClose: true,
             shade: 0.8,
             area: ['990px', '350px'],
@@ -83,19 +80,37 @@ function GZZDAdd() {
 }
 
 
-function GZZDEdit(ggzdlxid) {
+function GZZDEdit(gzzdid) {
     try {
-      
+        console.log(1)
+        console.log(gzzdid)
         layer.open({
             type: 2,
-            title: '新增制度类型',
-            content: '/dhoa/GZZDEdit?ggzdlxid='+ ggzdlxid,
+            title: '修改规章制度',
+            content: '/dhoa/GZZDEdit?gzzdid=' + gzzdid,
             shadeClose: true,
             shade: 0.8,
             area: ['990px', '350px'],
             end: function () {
                 searchRecord();
             }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+function GZZDDel(gzzdid) {
+    try {
+        layer.confirm("请确认是否删除", { icon: 3, title: '提示' }, function (index) {
+            ajaxTpl('/dhoa/GZZDDelete', {
+                recid: gzzdid
+            }, function (data) {
+                if (data.msg) {
+                    layer.msg(data.msg);
+                }
+                searchRecord();
+            });
+            layer.close(index);
         });
     } catch (e) {
         alert(e);
@@ -107,7 +122,7 @@ function FormatOper(value, row, index) {
     var imgurl = "";
     try {
         if (value != "")
-            imgurl += "<a onclick='GZZDEdit(\"" + row.GGZDLXID + "\")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a><a onclick='DelGZZD(\"" + row.GZZDID + "\")' style='cursor:pointer;color:#169BD5;' alt='删除'> 删除 </a>";
+            imgurl += "<a onclick='GZZDEdit(\"" + row.GZZDID + "\")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a><a onclick='GZZDDel(\"" + row.GZZDID + "\")' style='cursor:pointer;color:#169BD5;' alt='删除'> 删除 </a>";
 
     } catch (e) {
         alert(e);
@@ -140,16 +155,3 @@ function DownloadOss() {
 
 }
 
-///删除规章制度
-function UpdateGZZD(recid) {
-
-
-
-}
-///删除规章制度
-function DelGZZD(recid) {
-
-    alert("暂不支持");
-
-
-}

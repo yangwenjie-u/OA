@@ -147,7 +147,7 @@
     <script src="/static/lib/layer/layer.js"></script>
     <script>
         var recid = "@ViewBag.gzzdid";
-        var lxid = "@ViewBag.ggzdlxid";
+        var typeid = "@ViewBag.typeid";
 
         $(function () {
             if (recid) {
@@ -155,6 +155,7 @@
                 $('#fileoss').val('@ViewBag.fileoss');
             }
 
+       
             ajaxTpl('/dhoa/GetGZZDName', '', function (data) {
                 if (data.length) {
                     var str = '';
@@ -166,8 +167,8 @@
                     } else {
                         $('#typeid').append(str);
                     }
-                    if (lxid) {
-                        $('#typeid').val(lxid);
+                    if (typeid) {
+                        $('#typeid').val(typeid);
                     }
                 }
             });
@@ -201,8 +202,9 @@
                 return;
             }
             var obj = {
-                typeid: recid,
-                typeid: name,
+                gzzdid: recid,
+                typeid: typeid,
+                name: name,
                 fileoss: fileoss
             };
             save(obj)
@@ -210,7 +212,7 @@
         );
 
         function save(obj) {
-            ajaxTpl('/dhoa/gzzdModify', obj, function (data) {
+            ajaxTpl('/dhoa/GZZDModify', obj, function (data) {
                 if (data.code =='0') {
                     layer.alert('保存成功');
                     try {

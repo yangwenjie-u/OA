@@ -29,7 +29,7 @@
     <IISExpressUseClassicPipelineMode />
     <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
     <UseGlobalApplicationHostFile />
-    <Use64BitIISExpress />
+    <Use64BitIISExpress>false</Use64BitIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -9089,6 +9089,8 @@
     <Content Include="Views\dhoa\EditModel.cshtml" />
     <Content Include="Views\dhoa\GZZDLXEdit.cshtml" />
     <Content Include="Views\dhoa\GZZDEdit.cshtml" />
+    <Content Include="Views\dhoa\ksgl.cshtml" />
+    <Content Include="Views\dhoa\umsrole.cshtml" />
     <None Include="Web References\RemoteUserService\services.disco" />
     <Content Include="中浩设备sql语句.txt" />
     <None Include="Contents\.DS_Store" />
@@ -12742,7 +12744,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:40008</IISUrl>
+          <IISUrl>http://localhost:40001</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
