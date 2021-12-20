@@ -152,6 +152,6 @@ function FormatDownOss(value, row, index) {
 
 //下载oss文件
 function DownloadOss() {
-
+    alert("暂不支持");
 }
 

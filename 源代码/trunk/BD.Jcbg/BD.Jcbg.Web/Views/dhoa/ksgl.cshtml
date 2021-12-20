@@ -13,7 +13,11 @@
     <link rel="stylesheet" href="/skins/WebList/css/element_change.css">
     <script type="text/javascript" src="http://res.jzyglxt.com/app/jcjg/layui/layui.all.js"></script>
     <script type="text/javascript" src="http://res.jzyglxt.com/app/jcjg/jquery.js"></script>
-    <script src="/skins/WebList/custom/jcjt/RWGL_JCJT.js"></script>
+    <script src="/skins/WebList/custom/dhoa/RWGL_JCJT.js"></script>
+    @*<script src="/jcjt/roleButton.js"></script>*@
+
+    @*<script src="/dhoa/roleButton.js"></script>*@
+    @*<script src="/skins/WebList/custom/dhoa/roleButton.js"></script>*@
     <style>
         body,
         html {
@@ -21,9 +25,9 @@
             height: 100%;
         }
 
-        body .el-table th.gutter {
-            display: table-cell !important;
-        }
+            body .el-table th.gutter {
+                display: table-cell !important;
+            }
 
         #app {
             height: 100%;
@@ -98,25 +102,25 @@
             justify-content: space-between;
         }
 
-        .dialog_wrap .item {
-            display: flex;
-            width: 50%;
-            padding: 5px 0;
-            height: 30px;
-            line-height: 30px;
-        }
+            .dialog_wrap .item {
+                display: flex;
+                width: 50%;
+                padding: 5px 0;
+                height: 30px;
+                line-height: 30px;
+            }
 
-        .dialog_wrap .item .label {
-            width: 0 0 150px;
-            color: #000;
-            text-align: right;
-            font-weight: bold;
-        }
+                .dialog_wrap .item .label {
+                    width: 0 0 150px;
+                    color: #000;
+                    text-align: right;
+                    font-weight: bold;
+                }
 
-        .dialog_wrap .item .info {
-            padding-left: 10px;
-            flex: 1;
-        }
+                .dialog_wrap .item .info {
+                    padding-left: 10px;
+                    flex: 1;
+                }
 
         .open_wrap {
             width: 100%;
@@ -141,17 +145,17 @@
             position: relative;
         }
 
-        .open_content::after {
-            display: block;
-            content: "";
-            width: 100%;
-            height: 80px;
-            position: absolute;
-            left: 0;
-            top: 0;
-            background: linear-gradient(180deg, #adcffd, #ffffff);
-            border-radius: 5px 5px 0 0;
-        }
+            .open_content::after {
+                display: block;
+                content: "";
+                width: 100%;
+                height: 80px;
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: linear-gradient(180deg, #adcffd, #ffffff);
+                border-radius: 5px 5px 0 0;
+            }
 
         .open_title {
             color: #0092fc;
@@ -204,7 +208,7 @@
             margin-left: 3px;
         } */
     </style>
-    <title>科室管理</title>
+    <title>部门管理</title>
 </head>
 
 <body>
@@ -212,10 +216,10 @@
         <div class="title_wrap">
             <el-row class="my_el_row" style="box-sizing:border-box;">
                 <el-col :span="24">
-                    <button type="button" data-btncode="JC_KSGL_新增科室" class="layui-btn roleButton" v-on:click="addStatus=true"><span>新增科室</span></button>
-                    <button type="button" data-btncode="JC_KSGL_修改科室" class="layui-btn roleButton" v-on:click="updateItem"><span>修改科室</span></button>
-                    <button type="button" data-btncode="JC_KSGL_添加试验项目" class="layui-btn roleButton" v-on:click="addSyxm"><span>添加试验项目</span></button>
-                    <button type="button" data-btncode="JC_KSGL_查看试验项目" class="layui-btn roleButton" v-on:click="uptSyxm"><span>查看试验项目</span></button>
+                    <button type="button" data-btncode="JC_KSGL_新增部门" class="layui-btn roleButton" v-on:click="addStatus=true"><span>新增部门</span></button>
+                    <button type="button" data-btncode="JC_KSGL_修改部门" class="layui-btn roleButton" v-on:click="updateItem"><span>修改部门</span></button>
+                    <button type="button" data-btncode="JC_KSGL_添加岗位" class="layui-btn roleButton" v-on:click="addGWItem"><span>添加岗位</span></button>
+                    @*<button type="button" data-btncode="JC_KSGL_新增角色" class="layui-btn roleButton" v-on:click="addRole">新增角色</button>*@
                 </el-col>
             </el-row>
         </div>
@@ -232,21 +236,21 @@
                         <div class="title">序号</div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="ksmc" label="科室名称">
+                <el-table-column prop="ksmc" label="部门名称">
                     <template slot="header" slot-scope="scope">
-                        <div class="title">科室名称</div>
+                        <div class="title">部门名称</div>
                         <el-input size="mini" v-model="form.ksmc" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="sytj" label="试验项目数量">
+                <el-table-column prop="gwmc" label="岗位名称">
                     <template slot="header" slot-scope="scope">
-                        <div class="title">试验项目数量</div>
-                        <el-input size="mini" v-model="form.sytj" />
+                        <div class="title">岗位名称</div>
+                        <el-input size="mini" v-model="form.gwmc" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="ksdz" label="科室地址">
+                <el-table-column prop="ksdz" label="部门地址">
                     <template slot="header" slot-scope="scope">
-                        <div class="title">科室地址</div>
+                        <div class="title">部门地址</div>
                         <el-input size="mini" v-model="form.ksdz" />
                     </template>
                 </el-table-column>
@@ -256,50 +260,81 @@
                         <el-input size="mini" v-model="form.lxdh" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="kszxm" label="科室长姓名">
+                <el-table-column prop="kszxm" label="部门长姓名">
                     <template slot="header" slot-scope="scope">
-                        <div class="title">科室长姓名</div>
+                        <div class="title">部门长姓名</div>
                         <el-input size="mini" v-model="form.kszxm" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="jsfzrxm" label="技术负责人姓名">
+
+                <el-table-column prop="oper" label="操作">
                     <template slot="header" slot-scope="scope">
-                        <div class="title">技术负责人姓名</div>
-                        <el-input size="mini" v-model="form.jsfzrxm" />
+                        <div class="title">操作</div>
+                        <el-input size="mini" v-model="form.gwbh" />
                     </template>
-                </el-table-column>
-                <el-table-column prop="zlfzrxm" label="质量负责人姓名">
-                    <template slot="header" slot-scope="scope">
-                        <div class="title">质量负责人姓名</div>
-                        <el-input size="mini" v-model="form.zlfzrxm" />
+                    <template slot-scope="scope">
+                        <el-button type="text" @@click="checkPostPerson(scope.row.gwbh)">查看人员</el-button>
+                        <el-button type="info" @@click="departmentPostModify(scope.row.gwbh)">修改</el-button>
+                        <el-button type="info" @@click="departmentPostDelete(scope.row.gwbh)">删除</el-button>
                     </template>
+
                 </el-table-column>
-                <el-table-column prop="lxdh" label="联系电话">
-                    <template slot="header" slot-scope="scope">
-                        <div class="title">联系电话</div>
-                        <el-input size="mini" v-model="form.lxdh" />
-                    </template>
-                </el-table-column>
+                @*<el-table-column prop="ksdz" label="部门地址">
+                        <template slot="header" slot-scope="scope">
+                            <div class="title">部门地址</div>
+                            <el-input size="mini" v-model="form.ksdz" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="lxdh" label="联系电话">
+                        <template slot="header" slot-scope="scope">
+                            <div class="title">联系电话</div>
+                            <el-input size="mini" v-model="form.lxdh" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="kszxm" label="部门长姓名">
+                        <template slot="header" slot-scope="scope">
+                            <div class="title">部门长姓名</div>
+                            <el-input size="mini" v-model="form.kszxm" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="jsfzrxm" label="技术负责人姓名">
+                        <template slot="header" slot-scope="scope">
+                            <div class="title">技术负责人姓名</div>
+                            <el-input size="mini" v-model="form.jsfzrxm" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="zlfzrxm" label="质量负责人姓名">
+                        <template slot="header" slot-scope="scope">
+                            <div class="title">质量负责人姓名</div>
+                            <el-input size="mini" v-model="form.zlfzrxm" />
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="lxdh" label="联系电话">
+                        <template slot="header" slot-scope="scope">
+                            <div class="title">联系电话</div>
+                            <el-input size="mini" v-model="form.lxdh" />
+                        </template>
+                    </el-table-column>*@
             </el-table>
         </div>
-        <el-dialog title="新增科室信息" :visible.sync="addStatus" width="40%">
+        <el-dialog title="新增部门信息" :visible.sync="addStatus" width="40%">
             <div class="dialog_wrap">
                 <el-form :model="addForm" ref="addForm" style="width: 100%;">
-                    <el-form-item label="科室名称：" class="form_item">
+                    <el-form-item label="部门名称：" class="form_item">
                         <el-input v-model="addForm.ksmc"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室地址：" class="form_item">
+                    <el-form-item label="部门地址：" class="form_item">
                         <el-input v-model="addForm.ksdz"></el-input>
                     </el-form-item>
                     <el-form-item label="联系电话：" class="form_item">
                         <el-input v-model="addForm.lxdh" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室长姓名：" class="form_item">
-                        <el-select v-model="addForm.kszVal" filterable default-first-option placeholder="请选择科室长名称">
-                            <el-option label="请选择科室长名称" value="">
+                    <el-form-item label="部门长姓名：" class="form_item">
+                        <el-select v-model="addForm.kszVal" filterable default-first-option placeholder="请选择部门长名称">
+                            <el-option label="请选择部门长名称" value="">
                             </el-option>
                             <el-option v-for="item in peopleList" :key="item.usercode" :label="item.ryxm"
-                                :value="item.usercode+'|'+item.ryxm">
+                                       :value="item.usercode+'|'+item.ryxm">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -308,7 +343,7 @@
                             <el-option label="请选择科技术负责人" value="">
                             </el-option>
                             <el-option v-for="item in peopleList" :key="item.usercode" :label="item.ryxm"
-                                :value="item.usercode+'|'+item.ryxm">
+                                       :value="item.usercode+'|'+item.ryxm">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -317,7 +352,7 @@
                             <el-option label="请选择质量负责人" value="">
                             </el-option>
                             <el-option v-for="item in peopleList" :key="item.usercode" :label="item.ryxm"
-                                :value="item.usercode+'|'+item.ryxm">
+                                       :value="item.usercode+'|'+item.ryxm">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -331,34 +366,34 @@
                 <el-button type="primary" v-on:click="addItem">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="修改科室信息" :visible.sync="updateStatus" width="40%">
+        <el-dialog title="修改部门信息" :visible.sync="updateStatus" width="40%">
             <div class="dialog_wrap">
                 <el-form :model="updateForm" ref="updateForm" style="width: 100%;">
-                    <el-form-item label="科室名称：" class="form_item">
+                    <el-form-item label="部门名称：" class="form_item">
                         <el-input v-model="updateForm.ksmc" readonly></el-input>
                     </el-form-item>
-                    <el-form-item label="科室地址：" class="form_item">
+                    <el-form-item label="部门地址：" class="form_item">
                         <el-input v-model="updateForm.ksdz"></el-input>
                     </el-form-item>
                     <el-form-item label="联系电话：" class="form_item">
                         <el-input v-model="updateForm.lxdh" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="科室长姓名：" class="form_item">
-                        <el-select v-model="updateForm.kszVal" filterable default-first-option placeholder="请选择科室长名称">
-                            <el-option label="请选择科室长名称" value="">
+                    <el-form-item label="部门长姓名：" class="form_item">
+                        <el-select v-model="updateForm.kszVal" filterable default-first-option placeholder="请选择部门长名称">
+                            <el-option label="请选择部门长名称" value="">
                             </el-option>
                             <el-option v-for="item in peopleList" :key="item.usercode" :label="item.ryxm"
-                                :value="item.usercode+'|'+item.ryxm">
+                                       :value="item.usercode+'|'+item.ryxm">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="技术负责人姓名：" class="form_item">
                         <el-select v-model="updateForm.jsfzrVal" filterable default-first-option
-                            placeholder="请选择科技术负责人">
+                                   placeholder="请选择科技术负责人">
                             <el-option label="请选择科技术负责人" value="">
                             </el-option>
                             <el-option v-for="item in peopleList" :key="item.usercode" :label="item.ryxm"
-                                :value="item.usercode+'|'+item.ryxm">
+                                       :value="item.usercode+'|'+item.ryxm">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -367,7 +402,7 @@
                             <el-option label="请选择质量负责人" value="">
                             </el-option>
                             <el-option v-for="item in peopleList" :key="item.usercode" :label="item.ryxm"
-                                :value="item.usercode+'|'+item.ryxm">
+                                       :value="item.usercode+'|'+item.ryxm">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -381,16 +416,41 @@
                 <el-button type="primary" v-on:click="confirmUpdate">确 定</el-button>
             </span>
         </el-dialog>
+
+        <el-dialog :title="gwViewTitle+'岗位'" :visible.sync="GwStatus" width="40%">
+            <div class="dialog_wrap">
+                <el-form :model="addGWForm" ref="addGWForm" style="width: 100%;">
+
+                    <el-form-item label="部门名称：" class="form_item">
+                        <el-select v-model="addGWForm.ksbh" id="gwview_ksbh" filterable default-first-option placeholder="请选择部门">
+                            <el-option label="请选择部门" value="">
+                            </el-option>
+                            <el-option v-for="item in ksList" :key="item.ksbh" :label="item.ksmc"
+                                       :value="item.ksbh">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="岗位名称：" class="form_item">
+                        <el-input v-model="addGWForm.gwmc"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button v-on:click="GwStatus = false">取 消</el-button>
+                <el-button type="primary" v-on:click="confirmGW">确 定</el-button>
+            </span>
+        </el-dialog>
+        @* 查看人员 *@
+
         <div class="page_wrap">
             <el-pagination style="position:fixed;left:0;bottom:0;" :page-size="limit" v-on:size-change="changeSize"
-                :current-page.sync="page" v-on:current-change="getAllTabList" :page-sizes="[50, 100, 150, 200]"
-                layout="total, sizes, prev, pager, next, jumper" :total="count">
+                           :current-page.sync="page" v-on:current-change="getAllTabList" :page-sizes="[50, 100, 150, 200]"
+                           layout="total, sizes, prev, pager, next, jumper" :total="count">
             </el-pagination>
             <el-button style="position: absolute;left:420px;margin-top: 2px;" v-on:click="getAllTabList"
-                icon="el-icon-refresh" size="mini"></el-button>
+                       icon="el-icon-refresh" size="mini"></el-button>
         </div>
     </div>
-    <script src="/jcjt/roleButton.js"></script>
     <script>
         (function ($) { //序列化成json
             $.fn.serializeJson = function () {
@@ -420,12 +480,15 @@
             el: '#app',
             data: function () {
                 return {
-                    timeout:null,
+                    timeout: null,
                     peopleValue: '',
                     showApp: false,
                     addStatus: false,
                     updateStatus: false,
+                    GwStatus: false,
+                    gwViewTitle: '',
                     tableData: [],
+                    ksList: [],
                     tableDataFP: [],
                     multipleSelection: [],
                     loading: true,
@@ -444,7 +507,7 @@
                         jsfzrxm: '',
                         kszxm: '',
                         ksys: '',
-                        kszVal: '', //科室长拼接
+                        kszVal: '', //部门长拼接
                         jsfzrVal: '', //技术负责人拼接
                         zlfzrVal: '', //质量负责人拼接
                     },
@@ -455,9 +518,16 @@
                         jsfzrxm: '',
                         kszxm: '',
                         ksys: '',
-                        kszVal: '', //科室长拼接
+                        kszVal: '', //部门长拼接
                         jsfzrVal: '', //技术负责人拼接
                         zlfzrVal: '', //质量负责人拼接
+                        ksbh: '',
+                    },
+                    //新增岗位
+                    addGWForm: {
+                        company: "",
+                        gwbh: "",
+                        gwmc: '',
                         ksbh: '',
                     },
                     form: {
@@ -479,7 +549,7 @@
                         jsfzrxm: '',
                         kszxm: '',
                         ksys: '',
-                        kszVal: '', //科室长拼接
+                        kszVal: '', //部门长拼接
                         jsfzrVal: '', //技术负责人拼接
                         zlfzrVal: '', //质量负责人拼接
                     },
@@ -501,55 +571,12 @@
                 }) {
                     return 'background:' + row.ksys
                 },
-                uptSyxm:function(){
-                    if (this.multipleSelection.length == 0) {
-                        layer.msg('请勾选再查看')
-                    } else if (this.multipleSelection.length > 1) {
-                        layer.msg('只能查看一个')
-                    } else {
-                        var that = this;
-                        console.log(that.multipleSelection);
-                        layer.open({
-                            type: 2,
-                            title: '试验项目筛选',
-                            shadeClose: true,
-                            shade: 0.5,
-                            area: ['98%', '98%'],
-                            content: "/jcjt/syxmlbtjKsgl?type=ksgl&view=view&ksbh="+that.multipleSelection[0].ksbh,
-                            end: function (XMLHttpRequest, textStatus) {
-                                that.getAllTabList()
-                            },
-                        });
-                    }
-                },
-                addSyxm: function () {
-                    if (this.multipleSelection.length == 0) {
-                        layer.msg('请勾选再修改')
-                    } else if (this.multipleSelection.length > 1) {
-                        layer.msg('只能修改一个')
-                    } else {
-                        var that = this;
-                        layer.open({
-                            type: 2,
-                            title: '试验项目筛选',
-                            shadeClose: true,
-                            shade: 0.5,
-                            area: ['98%', '98%'],
-                            content: "/jcjt/syxmlbtjKsgl?type=ksgl&ksbh="+that.multipleSelection[0].ksbh,
-                            end: function (XMLHttpRequest, textStatus) {
-                                that.getAllTabList()
-                            },
-                        });
-                    }
-                },
                 addItem: function () {
                     var that = this;
                     var d = that.addForm
-                    console.log(d);
-
                     $.ajax({
                         type: "post",
-                        url: "/jcjt/CreateJcks",
+                        url: "/dhoa/CreateJcks",
                         data: {
                             ksmc: d.ksmc,
                             kszcode: d.kszVal.split('|')[0],
@@ -567,7 +594,7 @@
                         dataType: "json",
                         success: function (data) {
                             if (data.code == "0") {
-                                layer.msg('创建科室成功');
+                                layer.msg('创建部门成功');
                                 that.addStatus = false;
                                 that.getAllTabList();
                                 that.addForm = that.originForm
@@ -580,7 +607,7 @@
                     var d = that.updateForm
                     $.ajax({
                         type: "post",
-                        url: "/jcjt/CreateJcks",
+                        url: "/dhoa/CreateJcks",
                         data: {
                             ksmc: d.ksmc,
                             kszcode: d.kszVal.split('|')[0],
@@ -598,7 +625,7 @@
                         dataType: "json",
                         success: function (data) {
                             if (data.code == "0") {
-                                layer.msg('修改科室成功');
+                                layer.msg('修改部门成功');
                                 that.updateStatus = false;
                                 that.getAllTabList();
                                 that.updateForm = that.originForm
@@ -614,7 +641,6 @@
                     } else {
                         this.updateStatus = true;
                         var d = this.multipleSelection[0]
-                        console.log(d);
                         this.updateForm = {
                             ksmc: d.ksmc,
                             ksdz: d.ksdz,
@@ -623,15 +649,74 @@
                             kszxm: d.kszxm,
                             ksys: d.ksys,
                             kszVal: d.kszcode + '|' + d.kszxm == "|" ? "" : d.kszcode + '|' + d
-                                .kszxm, //科室长拼接
+                                .kszxm, //部门长拼接
                             jsfzrVal: d.jsfzrcode + '|' + d.jsfzrxm == "|" ? "" : d.jsfzrcode + '|' + d
                                 .jsfzrxm, //技术负责人拼接
                             zlfzrVal: d.zlfzrcode + '|' + d.zlfzrxm == "|" ? "" : d.zlfzrcode + '|' + d
                                 .zlfzrxm, //质量负责人拼接
                             ksbh: d.ksbh
                         }
-                        console.log(this.updateForm);
                     }
+                },
+                //新增岗位
+                addGWItem: function () {
+
+                    this.gwViewTitle = "新增";
+                    this.GwStatus = true;
+                },
+                confirmGW: function () {
+                    var that = this;
+                    var d = that.addGWForm
+
+                    var ksbh = d.ksbh;
+                    var gwbh = d.gwbh;
+                    var gwmc = d.gwmc;
+                    var memo = d.memo;
+
+                    if (ksbh == 0) {
+                        layer.msg('请选择部门')
+                        return;
+                    }
+
+                    if (gwmc.length == 0) {
+                        layer.msg('请输入岗位名称')
+                        return;
+                    }
+                    var params = {
+                        ksbh: ksbh,
+                        gwbh: gwbh,
+                        gwmc: gwmc
+                    }
+                    if (memo) {
+                        params.memo = memo;
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: "/dhoa/DepartmentPostModify",
+                        data: params,
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.code == '0') {
+
+                                if (this.gwViewTitle == "新增") {
+                                    layer.msg('添加岗位成功');
+                                }
+                                else {
+                                    layer.msg('修改成功');
+                                }
+                                try {
+                                    setTimeout(function () {
+                                        parent.layer.closeAll();
+                                    }, 1000)
+                                }
+                                catch (e) {
+                                }
+                            }
+                            else {
+                                layer.msg(data.msg);
+                            }
+                        }
+                    });
                 },
                 chooseRow: function (row, column, event) {
                     if (this.multipleSelection.length) {
@@ -668,7 +753,7 @@
                     var where = that.form
                     $.ajax({
                         type: "post",
-                        url: "/jcjt/getJcks",
+                        url: "/dhoa/GetDepartmentPost",
                         data: {
                             // jcjgbh: '',
                             pageindex: that.page,
@@ -681,6 +766,7 @@
                                 var datas = data.datas;
                                 that.tableData = datas;
                                 that.count = data.totalCount;
+
                                 setTimeout(function () {
                                     that.loading = false;
                                 }, 500);
@@ -692,13 +778,93 @@
                     var that = this;
                     $.ajax({
                         type: "post",
-                        url: "/jcjt/GetNbry_jc",
+                        url: "/dhoa/GetNbry_jc",
                         dataType: "json",
                         success: function (data) {
                             if (data.code == "0") {
                                 var datas = data.datas;
                                 that.peopleList = datas;
                                 that.count = data.totalCount;
+                            }
+                        }
+                    });
+                },
+                getAllKSList: function () {
+                    var that = this;
+                    $.ajax({
+                        type: "post",
+                        url: "/dhoa/GetDepartment",
+                        data: {
+                            // jcjgbh: '',
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.code == "0") {
+                                var datas = data.datas;
+                                that.ksList = datas;
+                                setTimeout(function () {
+                                    that.loading = false;
+                                }, 500);
+                            }
+                        }
+                    });
+                },
+                //查看人员信息
+                checkPostPerson: function () {
+                    layer.msg('暂不支持');
+                },
+                //修改岗位信息
+                departmentPostModify: function (val) {
+                    this.gwViewTitle = "修改";
+
+
+                    if (this.multipleSelection.length == 0) {
+                        layer.msg('请勾选再修改')
+                    } else if (this.multipleSelection.length > 1) {
+                        layer.msg('只能修改一个')
+                    } else {
+                        this.GwStatus = true;
+                        var d = this.multipleSelection[0]
+
+                        this.addGWForm = {
+                            ksbh: d.ksbh,
+                            ksmc: d.ksmc,
+                            gwbh: d.gwbh,
+                            gwmc: d.gwmc
+                        }
+                    }
+                },
+                //删除岗位信息
+                departmentPostDelete: function (val) {
+                    var that = this;
+
+                    if (val == "") {
+                        layer.msg('该部门没有岗位信息');
+                        return;
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: "/dhoa/DepartmentPostDelete",
+                        data: {
+                            gwbh: val,
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.code == '0') {
+                                layer.msg('删除成功');
+                                try {
+                                    setTimeout(function () {
+                                        parent.layer.closeAll();
+                                    }, 1000)
+                                 
+                                }
+                                catch (e) {
+                                }
+                                that.getAllTabList();
+                                that.updateForm = that.originForm
+                            }
+                            else {
+                                layer.msg(data.msg);
                             }
                         }
                     });
@@ -729,60 +895,13 @@
             },
             mounted: function () {
                 this.getAllTabList();
+                this.getAllKSList();
                 this.showApp = true;
                 this.getAllPeople();
             }
         })
 
-        function setwtdxf() {
-            try {
-                var wtdrecid = app.wtdrecid;
-                if (wtdrecid == "") {
-                    // layer.alert("委托单唯一号为空");
-                    layer.msg('委托单唯一号为空')
-                    return;
-                }
-                var layerIdx;
-                $.ajax({
-                    type: "POST",
-                    url: "/jcjtfun/SetWtdXf",
-                    data: {
-                        "wtdrecid": wtdrecid
-                    },
-                    dataType: "json",
-                    //async: false,
-                    success: function (data) {
-                        if (data.code == "0") {
-                            if (data.msg == "")
-                                data.msg = "设置成功"
-                            layer.msg('提交成功', {
-                                icon: 1,
-                                time: 1500 //1s后自动关闭
-                            });
-                            app.getAllTabList();
-                        } else {
-                            if (data.msg == "")
-                                data.msg = "设置失败";
-                            layer.msg(data.msg, {
-                                icon: 2,
-                                time: 10000, //10s后自动关闭
-                                btn: ['知道了']
-                            });
-                        }
-                    },
-                    complete: function (XMLHttpRequest, textStatus) {
-                        layer.close(layerIdx);
-                    },
-                    beforeSend: function (XMLHttpRequest) {
-                        layerIdx = layer.load({
-                            icon: 2
-                        });
-                    }
-                });
-            } catch (e) {
-                alert(e);
-            }
-        }
+
     </script>
 
 </body>

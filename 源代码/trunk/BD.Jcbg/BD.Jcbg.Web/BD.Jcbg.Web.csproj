@@ -7915,8 +7915,11 @@
     <Content Include="skins\WebList\custom\BMYDXCX.js" />
     <Content Include="skins\WebList\custom\CXTJ_GZFF.js" />
     <Content Include="skins\WebList\custom\CXTJ_GZFF_DETAIL.js" />
+    <Content Include="skins\WebList\custom\dhoa\AnnouncementNotice.js" />
     <Content Include="skins\WebList\custom\dhoa\CLGL.js" />
     <Content Include="skins\WebList\custom\dhoa\PurchaseOrder.js" />
+    <Content Include="skins\WebList\custom\dhoa\roleButton.js" />
+    <Content Include="skins\WebList\custom\dhoa\RWGL_JCJT.js" />
     <Content Include="skins\WebList\custom\dhoa\YZGL.js" />
     <Content Include="skins\WebList\custom\dhoa\KQGL.js" />
     <Content Include="skins\WebList\custom\dhoa\GZZD.js" />

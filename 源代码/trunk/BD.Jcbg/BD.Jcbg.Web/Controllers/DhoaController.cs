@@ -213,7 +213,7 @@ namespace BD.Jcbg.Web.Controllers
                 string typeid = Request["typeid"].GetSafeString();
                 string typename = Request["typename"].GetSafeString();
 
-                if (string.IsNullOrEmpty(typeid))  
+                if (string.IsNullOrEmpty(typeid))
                 {
                     typeid = Guid.NewGuid().ToString("N"); ;
                     sqlStr = string.Format("INSERT INTO [dbo].[OA_GZZDLX]([typeid],[typeName],[JCJGBH],[status])" +
@@ -306,7 +306,7 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
-        
+
         #endregion
 
         #region 规章制度明细
@@ -349,7 +349,7 @@ namespace BD.Jcbg.Web.Controllers
                 {
                     throw new Exception("获取类型异常");
                 }
-                
+
                 if (string.IsNullOrEmpty(recid))
                 {
                     recid = Guid.NewGuid().ToString("N"); ;
@@ -420,13 +420,194 @@ namespace BD.Jcbg.Web.Controllers
 
         #endregion
         #endregion
-        #region 科室管理
+
+        #region  部门岗位
+
 
         [LoginAuthorize]
         public ActionResult KSGL()
         {
             return View();
         }
+
+
+        [LoginAuthorize]
+        /// <summary>
+        /// 获取部门岗位信息
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetDepartmentPost()
+        {
+            bool code = true;
+            string msg = "";
+
+            string gwbh = Request["gwbh"].GetSafeString();
+            IList<IDictionary<string, string>> datas = new List<IDictionary<string, string>>();
+            try
+            {
+                string qybh = string.IsNullOrEmpty(Request["qybh"].GetSafeString()) ? CurrentUser.Qybh : Request["qybh"].GetSafeString();
+                string sql = "select post.gwbh,post.gwmc,ks.* from h_jcks  ks left join  OA_OperatingPost  post on ks.KSBH =post.ksbh  where  ssdwbh ='" + CurrentUser.Qybh + "' and (post.status <>'-1' or post.status is null) ";
+
+                if (!string.IsNullOrEmpty(gwbh))
+                {
+                    sql += " and  post.gwbh='" + gwbh + "' ";
+                }
+                sql += "  order by xssx ";
+                datas = CommonService.GetDataTable(sql);
+            }
+            catch (Exception e)
+            {
+                msg = e.Message;
+                code = false;
+            }
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            return Json(new { code = code ? "0" : "1", msg = msg, datas = datas }, JsonRequestBehavior.AllowGet);
+        }
+
+        [LoginAuthorize]
+        /// <summary>
+        /// 获取部门信息
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult GetDepartment()
+        {
+            bool code = true;
+            string msg = "";
+
+            string gwbh = Request["gwbh"].GetSafeString();
+            IList<IDictionary<string, string>> datas = new List<IDictionary<string, string>>();
+            try
+            {
+                string qybh = string.IsNullOrEmpty(Request["qybh"].GetSafeString()) ? CurrentUser.Qybh : Request["qybh"].GetSafeString();
+                string sql = "select ks.* from h_jcks  ks   where ssdwbh ='" + CurrentUser.Qybh + "'";
+                sql += "  order by xssx ";
+                datas = CommonService.GetDataTable(sql);
+            }
+            catch (Exception e)
+            {
+                msg = e.Message;
+                code = false;
+            }
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            return Json(new { code = code ? "0" : "1", msg = msg, datas = datas }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [LoginAuthorize]
+        public JsonResult DepartmentPostModify()
+        {
+            string err = "";
+            bool code = false;
+            try
+            {
+                //材料记录唯一号
+                string ksbh = Request["ksbh"].GetSafeString();
+                string gwbh = Request["gwbh"].GetSafeString();
+                string gwmc = Request["gwmc"].GetSafeString();
+                string sqlStr = "";
+                if (string.IsNullOrEmpty(gwbh))
+                {
+                    gwbh = Guid.NewGuid().ToString("N");
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_OperatingPost]([KSBH],[gwbh],[gwmc],[Status])" +
+                        "VALUES ('" + ksbh + "', '" + gwbh + "' , '" + gwmc + "', 1)");
+                }
+                else
+                {
+                    sqlStr = "update OA_OperatingPost set KSBH='" + ksbh + "', gwmc='" + gwmc + "' where gwbh='" + gwbh + "'";
+                }
+
+                code = CommonService.ExecSql(sqlStr, out err);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                err = e.Message;
+                code = false;
+            }
+
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            return Json(new { code = code ? "0" : "1", msg = err }, JsonRequestBehavior.AllowGet);
+
+        }
+        [LoginAuthorize]
+        public JsonResult DepartmentPostDelete()
+        {
+            string err = "";
+            bool code = false;
+            try
+            {
+                //材料记录唯一号
+                string gwbh = Request["gwbh"].GetSafeString();
+                string sqlStr = "";
+                if (!string.IsNullOrEmpty(gwbh))
+                {
+                    sqlStr = "update OA_OperatingPost set status='-1' where gwbh='" + gwbh + "'";
+                    code = CommonService.ExecSql(sqlStr, out err);
+                }
+                else
+                {
+                    err = "删除异常，请联系管理员";
+                }
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                err = e.Message;
+                code = false;
+            }
+
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            return Json(new { code = code ? "0" : "1", msg = err }, JsonRequestBehavior.AllowGet);
+
+        }
+        //获取检测机构内部人员
+        [LoginAuthorize]
+        public JsonResult GetNbry_jc()
+        {
+            bool code = true;
+            string msg = "";
+            IList<IDictionary<string, string>> datas = new List<IDictionary<string, string>>();
+            try
+            {
+                string qybh = CurrentUser.Qybh;
+                string sql = $"select distinct usercode,ryxm from i_m_nbry_jc where jcjgbh in(select qybh from i_m_qy where parentqybh=(select parentqybh from i_m_qy where qybh='{qybh}'))";
+                datas = CommonService.GetDataTable(sql);
+
+            }
+            catch (Exception e)
+            {
+                msg = e.Message;
+                code = false;
+            }
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            return Json(new { code = code ? "0" : "1", msg = msg, datas = datas }, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [LoginAuthorize]
+        public JsonResult GetCurKsSyxm()
+        {
+            bool code = true;
+            string msg = "";
+            IList<IDictionary<string, string>> datas = new List<IDictionary<string, string>>();
+            try
+            {
+                string qybh = CurrentUser.Qybh;
+                string ksbh = Request["ksbh"].GetSafeRequest();
+                string sql = $"select syxmbh from h_jcks where ksbh='{ksbh}' and ssdwbh='{qybh}'";
+                datas = CommonService.GetDataTable(sql);
+            }
+            catch (Exception e)
+            {
+                msg = e.Message;
+                code = false;
+            }
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            return Json(new { code = code ? "0" : "1", msg = msg, datas }, JsonRequestBehavior.AllowGet);
+        }
+
 
         #endregion
         #region  人员管理-人员信息
