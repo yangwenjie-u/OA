@@ -28,9 +28,9 @@ function FormatOper(value, row, index) {
        
         if (value.toLowerCase() == "true")
             //imgurl += "   <div id='zhuxiao' style='display: table - cell;'>注销用户</div>";
-            imgurl += " <span  style='color:#d85151' value='0' usecode='" + row["USERCODE"] + "'  onclick='AccountStatueSet(this)'>注销用户</span>    <span class='modify' style='width: 80px;' usecode='" + row["USERCODE"] + "' onclick='AccountModify(this)'>修改</span>";
+            imgurl += " <span  style='color:#d85151' value='0' usecode='" + row["USERCODE"] + "'  onclick='AccountStatueSet(this)'>注销用户</span>    <span class='modify' style='width: 80px;' usecode='" + row["USERCODE"] + "' onclick='AccountModify(\"" + row.USERCODE + "\")'>修改</span>";
         else
-            imgurl += " <span  style='color:#5180D8' value='1' usecode='" + row["USERCODE"] + "'  onclick='AccountStatueSet(this)'>启用用户</span>    <span class='modify' style='width: 80px;'  usecode='" + row["USERCODE"] + "' onclick='AccountModify(this)'>修改</span>";
+            imgurl += " <span  style='color:#5180D8' value='1' usecode='" + row["USERCODE"] + "'  onclick='AccountStatueSet(this)'>启用用户</span>    <span class='modify' style='width: 80px;'  usecode='" + row["USERCODE"] + "' onclick='AccountModify(\"" + row.USERCODE + "\")'>修改</span>";
 
     } catch (e) {
         alert(e);
@@ -84,8 +84,7 @@ function AccountStatueSet(doc) {
     });
 }
 
-function AccountModify(doc) {
-    var usercode = $(doc).attr("usecode");
+function AccountModify(usercode) {
 
     layer.open({
         type: 2,

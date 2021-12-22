@@ -164,7 +164,7 @@
         <div class="m-role">
             <label>
                 <span>所属部门</span>
-                <select id="depcode">
+                <select id="depcode" onchange="ChangeDepartment(this.value)">
                     <option value="0">请选择部门</option>
                 </select>
             </label>
@@ -251,19 +251,26 @@
                 <input type="text" name="sfzh" id="sfzh" />
             </label>
         </div>
-
+        <div class="m-role">
+            <label>
+                <span>岗位</span>
+                <select id="gwbh">
+                    <option value="0">请选择岗位</option>
+                </select>
+            </label>
+        </div>
 
 
         <div class="m-role" style="width: 100%">
             <div>
-                <span style="vertical-align: top;float: left;">岗位</span>
+                <span style="vertical-align: top;float: left;">角色</span>
                 <div id="roleLine" class="role-line" style="display: table;float: left;width: 80%;">
                     <div>
-                        <p>可选择岗位</p>
+                        <p>可选择角色</p>
                         <ul id="roleLeft"></ul>
                     </div>
                     <div style="border-left: 1px solid #E5E5E5;">
-                        <p>已有岗位</p>
+                        <p>已有角色</p>
                         <ul id="roleRight"></ul>
                     </div>
                     <div style="display: table-row;background: #F1F1F1;height: 40px;">
@@ -275,6 +282,7 @@
         </div>
         <div class="save" style="margin-top: 0px;border: 0px;"><span class="btn">保存</span></div>
     </div>
+
     <script src="/static/lib/jquery-2.0.3.min.js"></script>
     <script src="/static/common/common.js"></script>
     <script src="/static/lib/layer/layer.js"></script>
@@ -282,6 +290,7 @@
         var usercode = "@ViewBag.usercode";
         var cpcode = '@ViewBag.cpcode';
         var ksbh = '@ViewBag.ksbh';
+        var gwbh = '@ViewBag.gwbh';
         $(function () {
             if (usercode)
         {
@@ -323,9 +332,12 @@
                     }
                     if (ksbh) {
                         $('#depcode').val(ksbh);
+                        ChangeDepartment(ksbh)
                     }
                 }
             });
+
+
 
             if (usercode) {
                 $('#password').parents('.m-role').hide();
@@ -339,6 +351,35 @@
             GetRoleList();
         })
 
+        function ChangeDepartment(ksbh) {
+            var obj;
+            obj = {
+                ksbh: ksbh
+            }
+
+            ajaxTpl('/dhoa/GetGWList', obj, function (data) {
+                if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].gwbh + "'>" + data[i].gwmc + "</option>";
+                    }
+                    if (data.length == 1) {
+                        $('#gwbh').html(str);
+                    } else {
+                        $('#gwbh').append(str);
+                    }
+                    if (gwbh) {
+                        $('#gwbh').val(gwbh);
+                    }
+                }
+                else {
+                    materialunitCount = 0;
+                    $('#gwbh').html("<option value='0'>--------</option>");
+                }
+
+            });
+
+        }
         function GetRoleList() {
             var obj;
             if (usercode) {
@@ -396,6 +437,7 @@
 
         $("#personView .save").click(function () {
 
+            console.log("save start");
             var sfzh = $('#sfzh').val();
             if (!IDCardCheck(sfzh)) {
                 layer.msg('身份证格式不正确', {icon: 2,time: 2000});
@@ -434,15 +476,15 @@
             if (username.length && realname.length && rolecodelist.length) {
 
                 var obj = {
-                username: username,
-                realname: realname,
-                sfzh: sfzh,
-                cpcode: cpcode,
-                sjhm: sjhm,
-                xb: xb,
-                sfsyr: sfsyr,
-                depcode: depcode,
-                rolecodelist: rolecodelist.join(',')
+                    username: username, //账号
+                    realname: realname,
+                    sfzh: sfzh,
+                    cpcode: cpcode,
+                    sjhm: sjhm,
+                    xb: xb,
+                    sfsyr: sfsyr,
+                    depcode: depcode
+                
                 };
 
                 if (!usercode) {
@@ -496,18 +538,42 @@
         });
 
         function save(obj) {
-            ajaxTpl('/dhoa/UmsApiService', obj, function (data) {
+            console.log(obj);
+            ajaxTpl('/dhoa/umsapiservice', obj, function (data) {
                 if (data.success == true) {
-                    layer.alert('保存成功');
+                    ////添加人员信息
 
-                    try {
-                        setTimeout(function () {
-                            parent.layer.closeAll();
-                        },1000)
-                    }
-                    catch(e)
-                    {
-                    }
+                    obj.gwbh = gwbh;//岗位编号
+                    //    zc: zc, //职称
+                    obj.zc = $('#zc').val();
+                    // ygxs: ygxs,//用工形式
+                    obj.ygxs = $('#ygxs').val();
+                    // zzmm: zzmm,//政治面貌
+                    obj.zzmm = $('#zzmm').val();
+                    // qrzxl: qrzxl,//全日制学历
+                    obj.qrzxl = $('#qrzxl').val();
+                    // zzxl: zzxl,//在职学历
+                    obj.zzxl = $('#zzxl').val();
+                    // byyx: byyx //毕业院校
+                    obj.byyx = $('#byyx').val();
+                    ajaxTpl('/dhoa/CreateUserArchiveEdit', obj, function (data) {
+                        if (data.code == '0') {
+                            try {
+                                layer.alert('保存成功');
+                                settimeout(function () {
+                                    parent.layer.closeall();
+                                }, 1000)
+                            }
+                            catch (e) {
+                            }
+                        }
+                        else {
+                            layer.msg(data.msg, {
+                                icon: 2,
+                                time: 2000
+                            });
+                        }
+                    });
                 }
                 else {
                     layer.msg(data.msg, {

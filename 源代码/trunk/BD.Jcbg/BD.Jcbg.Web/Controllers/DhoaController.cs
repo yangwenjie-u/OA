@@ -610,6 +610,7 @@ namespace BD.Jcbg.Web.Controllers
 
 
         #endregion
+
         #region  人员管理-人员信息
 
         /// <summary>
@@ -621,8 +622,8 @@ namespace BD.Jcbg.Web.Controllers
         {
 
             string usercode = Request["usercode"].GetSafeString();
-
-            string sql = "select zh,jcjgbh,rybh,ryxm,xb,sfzhm,sjhm,ssksbh,usercode,cpcode,sfsyr from dbo.I_M_NBRY_JC where usingnow=1 and usercode='" + usercode + "'";
+            ViewBag.usercode = usercode;
+            string sql = "select* from[View_OA_RYXXGL] where usercode='" + usercode + "'";
             IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
             for (int i = 0; i < dt.Count; i++)
             {
@@ -637,10 +638,11 @@ namespace BD.Jcbg.Web.Controllers
                 ViewBag.sfsyr = dt[i]["sfsyr"];
             }
 
-            //增加一个获取用户权限，然后丢回去的
+
 
             return View();
         }
+
 
 
 
@@ -696,6 +698,48 @@ namespace BD.Jcbg.Web.Controllers
                 for (int i = 0; i < dt.Count; i++)
                 {
                     sb.Append("{\"ksbh\":\"" + dt[i]["ksbh"].GetSafeString() + "\",\"ksmc\":\"" + dt[i]["ksmc"].GetSafeString() + "\"},");
+                }
+
+                if (sb.ToString().EndsWith(","))
+                    sb.Remove(sb.Length - 1, 1);
+                sb.Append("]");
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+            }
+            finally
+            {
+                Response.ContentType = "text/plain";
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                Response.Write(sb.ToString());
+                Response.End();
+            }
+        }
+
+
+        /// <summary>
+        /// 获取部门列表
+        /// </summary>
+        public void GetGWList()
+        {
+            string ret = "";
+            StringBuilder sb = new StringBuilder();
+            try
+            {
+                string ksbh = Request["ksbh"].GetSafeRequest();
+
+                sb.Append("[");
+                string sql = $"select * from OA_OperatingPost where STATUS =1  ";
+
+                if (!string.IsNullOrEmpty(ksbh))
+                {
+                    sql += " AND  ksbh='" + ksbh + "'";
+                }
+                IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+                for (int i = 0; i < dt.Count; i++)
+                {
+                    sb.Append("{\"gwbh\":\"" + dt[i]["gwbh"].GetSafeString() + "\",\"gwmc\":\"" + dt[i]["gwmc"].GetSafeString() + "\"},");
                 }
 
                 if (sb.ToString().EndsWith(","))
@@ -995,7 +1039,94 @@ namespace BD.Jcbg.Web.Controllers
             }
         }
 
+        /// <summary>
+        /// 添加人员资料
+        /// </summary>
+        public void CreateUserArchiveEdit()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
 
+                string recid = Request["recid"].GetSafeString();
+                string cpcode = Request["cpcode"].GetSafeString();
+                string sfzh = Request["sfzh"].GetSafeString();
+                string depcode = Request["depcode"].GetSafeString();
+                string xb = Request["xb"].GetSafeString();
+                string ksbh = Request["ksbh"].GetSafeString();
+                string sjhm = Request["sjhm"].GetSafeString();
+                string gwbh = Request["gwbh"].GetSafeString();//岗位编号
+                string zc = Request["zc"].GetSafeString();//岗位编号
+                string ygxs = Request["ygxs"].GetSafeString();//用工形式
+                string zzmm = Request["zzmm"].GetSafeString();//政治面貌
+                string qrzxl = Request["qrzxl"].GetSafeString();//全日制学历
+                string zzxl = Request["zzxl"].GetSafeString();//在职学历
+                string byyx = Request["byyx"].GetSafeString();//毕业院校
+                string jcjgbh = CurrentUser.Qybh;
+
+                IList<string> sqls = new List<string>();
+
+
+                string sqrStr = "";
+
+
+                if (string.IsNullOrEmpty(sfzh))
+                {
+                    code = false;
+                    msg = "获取不到身份证信息";
+                    return;
+                }
+                //从I_M_NBRY_JC获取用户信息
+                sqrStr = $" select* from I_M_NBRY_JC where SFZHM = '{sfzh}' and jcjgbh='{jcjgbh}'";
+
+                var datas = CommonService.GetDataTable(sqrStr);
+
+                foreach (var item in datas)
+                {
+                    if (string.IsNullOrEmpty(recid))
+                    {
+                        var acrhievsRecid = Guid.NewGuid().ToString("N");
+                        sqlStr = $"INSERT INTO [dbo].[OA_UserArchievs]([Recid],[RYBH],[RYMC],[KSBH],[GWBH],[UseType],[ZZMM],[QRZXL],[ZZXL],[BYYX],[ZC],[LXSS],[JSDAID],[JCJGBH])" +
+                            $"VALUES('{acrhievsRecid}'" +
+                            $",'{item["usercode"].ToString()}'" +
+                            $",'{item["ryxm"].ToString()}'" +
+                            $",'{ksbh}'" +
+                            $",'{gwbh}'" +
+                            $",'{ygxs}'" +
+                            $",'{zzmm}" +
+                            $",'{qrzxl}'" +
+                            $",'{zzxl}'" +
+                            $",'{byyx}'" +
+                            $",'{zc}'" +
+                            $",'{sjhm}'" +
+                            $",''" +
+                            $",'{jcjgbh}')";
+                    }
+                    else
+                    {
+
+                    }
+                }
+
+                code = CommonService.Execsql(sqlStr);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
 
         #endregion
 
