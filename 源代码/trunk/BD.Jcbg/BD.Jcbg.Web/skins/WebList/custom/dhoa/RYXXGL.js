@@ -107,7 +107,20 @@ function FormatJsda(value, row, index) {
     return imgurl;
 }
 
-
+//用工类型
+function FormatYGXS(value, row, index) {
+    var imgurl = "";
+    try {
+        //1 合约 0在编
+        if (value == "1")
+            imgurl += "<center>合约</center>";
+        else if (value == "0")
+            imgurl += "<center>在编</center>";
+    } catch (e) {
+        imgurl = value;
+    }
+    return imgurl;
+}
 function showZzDiv(qybh) {
     parent.layer.open({
         type: 2,

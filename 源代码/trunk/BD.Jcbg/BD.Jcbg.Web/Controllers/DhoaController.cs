@@ -634,8 +634,18 @@ namespace BD.Jcbg.Web.Controllers
                 ViewBag.sfzh = dt[i]["sfzhm"].Replace('\\', '-');
                 ViewBag.sjhm = dt[i]["sjhm"].Replace('\\', '-');
                 ViewBag.cpcode = dt[i]["cpcode"];
-                ViewBag.ksbh = dt[i]["ssksbh"];
+                ViewBag.ksbh = dt[i]["ksbh"];
+                ViewBag.gwbh = dt[i]["gwbh"];
+                ViewBag.ygxs = dt[i]["usetype"];
+                ViewBag.zzmm = dt[i]["zzmm"];
+                ViewBag.qrzxl = dt[i]["qrzxl"];
+                ViewBag.zzxl = dt[i]["zzxl"];
+                ViewBag.byyx = dt[i]["byyx"]; 
+                ViewBag.zc = dt[i]["userzc"]; 
                 ViewBag.sfsyr = dt[i]["sfsyr"];
+
+                ViewBag.sfsyr = dt[i]["sfsyr"];
+
             }
 
 
@@ -1042,15 +1052,13 @@ namespace BD.Jcbg.Web.Controllers
         /// <summary>
         /// 添加人员资料
         /// </summary>
-        public void CreateUserArchiveEdit()
+        public void UserArchiveEdit()
         {
             bool code = true;
             string msg = "";
             string sqlStr = "";
             try
             {
-
-                string recid = Request["recid"].GetSafeString();
                 string cpcode = Request["cpcode"].GetSafeString();
                 string sfzh = Request["sfzh"].GetSafeString();
                 string depcode = Request["depcode"].GetSafeString();
@@ -1085,17 +1093,20 @@ namespace BD.Jcbg.Web.Controllers
 
                 foreach (var item in datas)
                 {
-                    if (string.IsNullOrEmpty(recid))
+
+                    var acrhievsData = CommonService.GetDataTable($"select  * from OA_UserArchievs where RYBH='{item["usercode"]}'");
+
+                    if (acrhievsData!=null&& acrhievsData.Count==0)
                     {
                         var acrhievsRecid = Guid.NewGuid().ToString("N");
                         sqlStr = $"INSERT INTO [dbo].[OA_UserArchievs]([Recid],[RYBH],[RYMC],[KSBH],[GWBH],[UseType],[ZZMM],[QRZXL],[ZZXL],[BYYX],[ZC],[LXSS],[JSDAID],[JCJGBH])" +
                             $"VALUES('{acrhievsRecid}'" +
-                            $",'{item["usercode"].ToString()}'" +
-                            $",'{item["ryxm"].ToString()}'" +
+                            $",'{item["usercode"]}'" +
+                            $",'{item["ryxm"]}'" +
                             $",'{ksbh}'" +
                             $",'{gwbh}'" +
                             $",'{ygxs}'" +
-                            $",'{zzmm}" +
+                            $",'{zzmm}'" +
                             $",'{qrzxl}'" +
                             $",'{zzxl}'" +
                             $",'{byyx}'" +
@@ -1106,11 +1117,13 @@ namespace BD.Jcbg.Web.Controllers
                     }
                     else
                     {
+                        sqlStr = $"update OA_UserArchievs set KSBH='{ksbh}',gwbh='{gwbh}',UseType='{ygxs}',zzmm='{zzmm}',qrzxl='{qrzxl}'" +
+                            $",zzxl='{zzxl}',byyx='{byyx}',zc='{zc}' where RYBH='{item["usercode"]}'";
 
                     }
                 }
 
-                code = CommonService.Execsql(sqlStr);
+                code = CommonService.ExecSql(sqlStr, out msg);
             }
             catch (Exception e)
             {

@@ -204,7 +204,7 @@
             <span>用工形式</span>
             <select id="ygxs">
                 <option value="0">在编</option>
-                <option value="0">合约</option>
+                <option value="1">合约</option>
             </select>
         </div>
 
@@ -212,7 +212,10 @@
         <div class="m-role">
             <label>
                 <span>政治面貌</span>
-                <input type="text" name="zzmm" id="zzmm" />
+                <select id="zzmm">
+                    <option value="群众">群众</option>
+                    <option value="党员">党员</option>
+                </select>
             </label>
         </div>
         <div class="m-role">
@@ -293,14 +296,14 @@
         var gwbh = '@ViewBag.gwbh';
         $(function () {
             if (usercode)
-        {
-            $("#username").attr("readonly", true);
-            $("#realname").attr("readonly", true);
-            $("#sfzh").attr("readonly", true);
-            $("#username").css({ background: "lightgray" })
-            $("#realname").css({ background: "lightgray" })
-            $("#sfzh").css({ background: "lightgray" })
-        }
+            {
+                $("#username").attr("readonly", true);
+                $("#realname").attr("readonly", true);
+                $("#sfzh").attr("readonly", true);
+                $("#username").css({ background: "lightgray" })
+                $("#realname").css({ background: "lightgray" })
+                $("#sfzh").css({ background: "lightgray" })
+            }
             ajaxTpl('/jcjtfun/GetCompanys', '', function (data) {
                 if (data.length) {
                     var str = '';
@@ -347,6 +350,18 @@
                 $('#sjhm').val('@ViewBag.sjhm');
                 $('.xb').filter('[value="@ViewBag.xb"]').attr("checked", true);
                 $('.sfsyr').filter('[value="@ViewBag.sfsyr"]').attr("checked", true);
+
+                @*$('#cpcode').val('@ViewBag.username');
+                $('#ksbh').val('@ViewBag.username');
+                $('#gwbh').val('@ViewBag.username');*@
+                $('#ygxs').val('@ViewBag.ygxs');
+                $('#zzmm').val('@ViewBag.zzmm');
+                $('#qrzxl').val('@ViewBag.qrzxl');
+                $('#zzxl').val('@ViewBag.zzxl');
+                $('#byyx').val('@ViewBag.byyx');
+                $('#zc').val('@ViewBag.zc');
+
+
             }
             GetRoleList();
         })
@@ -437,7 +452,6 @@
 
         $("#personView .save").click(function () {
 
-            console.log("save start");
             var sfzh = $('#sfzh').val();
             if (!IDCardCheck(sfzh)) {
                 layer.msg('身份证格式不正确', {icon: 2,time: 2000});
@@ -466,6 +480,7 @@
                 return;
             }
             var ary = $("#roleRight").children();
+            console.log(ary)
             var rolecodelist = [];
             if (ary.length) {
                 for (var i = 0, len = ary.length; i < len; i++) {
@@ -483,8 +498,9 @@
                     sjhm: sjhm,
                     xb: xb,
                     sfsyr: sfsyr,
-                    depcode: depcode
-                
+                    depcode: depcode,
+                    ksbh: ksbh,
+                    rolecodelist: rolecodelist.join(',')
                 };
 
                 if (!usercode) {
@@ -538,13 +554,12 @@
         });
 
         function save(obj) {
-            console.log(obj);
-            ajaxTpl('/dhoa/umsapiservice', obj, function (data) {
+            ajaxTpl('/dhoa/UmsApiService', obj, function (data) {
                 if (data.success == true) {
                     ////添加人员信息
-
-                    obj.gwbh = gwbh;//岗位编号
-                    //    zc: zc, //职称
+                    obj.ksbh = $('#depcode').val();//
+                    obj.gwbh = $('#gwbh').val();;//岗位编号
+                    // zc: zc, //职称
                     obj.zc = $('#zc').val();
                     // ygxs: ygxs,//用工形式
                     obj.ygxs = $('#ygxs').val();
@@ -556,12 +571,14 @@
                     obj.zzxl = $('#zzxl').val();
                     // byyx: byyx //毕业院校
                     obj.byyx = $('#byyx').val();
-                    ajaxTpl('/dhoa/CreateUserArchiveEdit', obj, function (data) {
+
+                    console.log(obj);
+                    ajaxTpl('/dhoa/UserArchiveEdit', obj, function (data) {
                         if (data.code == '0') {
                             try {
                                 layer.alert('保存成功');
-                                settimeout(function () {
-                                    parent.layer.closeall();
+                                setTimeout(function () {
+                                    parent.layer.closeAll();
                                 }, 1000)
                             }
                             catch (e) {
