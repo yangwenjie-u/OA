@@ -1094,12 +1094,12 @@ namespace BD.Jcbg.Web.Controllers
                 foreach (var item in datas)
                 {
 
-                    var acrhievsData = CommonService.GetDataTable($"select  * from OA_UserArchievs where RYBH='{item["usercode"]}'");
+                    var acrhievsData = CommonService.GetDataTable($"select  * from OA_UserArchives where RYBH='{item["usercode"]}'");
 
                     if (acrhievsData!=null&& acrhievsData.Count==0)
                     {
                         var acrhievsRecid = Guid.NewGuid().ToString("N");
-                        sqlStr = $"INSERT INTO [dbo].[OA_UserArchievs]([Recid],[RYBH],[RYMC],[KSBH],[GWBH],[UseType],[ZZMM],[QRZXL],[ZZXL],[BYYX],[ZC],[LXSS],[JSDAID],[JCJGBH])" +
+                        sqlStr = $"INSERT INTO [dbo].[OA_UserArchives]([Recid],[RYBH],[RYMC],[KSBH],[GWBH],[UseType],[ZZMM],[QRZXL],[ZZXL],[BYYX],[ZC],[LXSS],[JSDAID],[JCJGBH])" +
                             $"VALUES('{acrhievsRecid}'" +
                             $",'{item["usercode"]}'" +
                             $",'{item["ryxm"]}'" +
@@ -1117,7 +1117,7 @@ namespace BD.Jcbg.Web.Controllers
                     }
                     else
                     {
-                        sqlStr = $"update OA_UserArchievs set KSBH='{ksbh}',gwbh='{gwbh}',UseType='{ygxs}',zzmm='{zzmm}',qrzxl='{qrzxl}'" +
+                        sqlStr = $"update OA_UserArchives set KSBH='{ksbh}',gwbh='{gwbh}',UseType='{ygxs}',zzmm='{zzmm}',qrzxl='{qrzxl}'" +
                             $",zzxl='{zzxl}',byyx='{byyx}',zc='{zc}' where RYBH='{item["usercode"]}'";
 
                     }
@@ -1142,7 +1142,6 @@ namespace BD.Jcbg.Web.Controllers
         }
 
         #endregion
-
 
         #region 材料管理
         #region 采购订单
@@ -1257,41 +1256,37 @@ namespace BD.Jcbg.Web.Controllers
         }
         #endregion
 
-        #region 材料消耗
+        #region 检测派遣
         /// <summary>
         /// 采购订单
         /// </summary>
         /// <returns></returns>
         [LoginAuthorize]
-        public ActionResult MaterialConsumptionEdit()
+        public ActionResult DispatchRecoreEdit()
         {
-            //类型  办公耗材 BGHC  试验耗材：SYHC
-            string method = Request["method"].GetSafeString();
-            //1：办公消耗 2：试验消耗
-            ViewBag.type = Request["type"].GetSafeString();
 
             string recid = Request["recid"].GetSafeString();
             ViewBag.recid = recid;
 
 
-            string sql = "select * from dbo.OA_MateriaInfo where Status<>'-1' and Recid='" + recid + "'";
+            string sql = "select * from dbo.OA_DispatchRecord where Status<>'-1' and Recid='" + recid + "'";
             IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
             for (int i = 0; i < dt.Count; i++)
             {
 
-                ViewBag.recid = dt[i]["recid"];
-                ViewBag.type = dt[i]["type"];
-                ViewBag.materialname = dt[i]["materialname"];
-                ViewBag.materialunit = dt[i]["materialunit"];
+                //ViewBag.recid = dt[i]["recid"];
+                //ViewBag.type = dt[i]["type"];
+                //ViewBag.materialname = dt[i]["materialname"];
+                //ViewBag.materialunit = dt[i]["materialunit"];
 
-                ViewBag.materialid = dt[i]["materialid"];
-                ViewBag.materialunitid = dt[i]["materialunitid"];
-                ViewBag.price = dt[i]["price"];
-                ViewBag.quantity = dt[i]["quantity"];
-                ViewBag.technicalrequirement = dt[i]["technicalrequirement"];
-                ViewBag.supplier = dt[i]["supplier"];
-                ViewBag.manufacturer = dt[i]["manufacturer"];
-                ViewBag.purpose = dt[i]["purpose"];
+                //ViewBag.materialid = dt[i]["materialid"];
+                //ViewBag.materialunitid = dt[i]["materialunitid"];
+                //ViewBag.price = dt[i]["price"];
+                //ViewBag.quantity = dt[i]["quantity"];
+                //ViewBag.technicalrequirement = dt[i]["technicalrequirement"];
+                //ViewBag.supplier = dt[i]["supplier"];
+                //ViewBag.manufacturer = dt[i]["manufacturer"];
+                //ViewBag.purpose = dt[i]["purpose"];
             }
             return View();
         }
@@ -1477,7 +1472,6 @@ namespace BD.Jcbg.Web.Controllers
             }
         }
         #endregion
-
 
         #region  考勤管理
 

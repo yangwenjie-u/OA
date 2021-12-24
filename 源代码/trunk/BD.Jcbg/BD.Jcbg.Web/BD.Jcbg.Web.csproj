@@ -7920,6 +7920,7 @@
     <Content Include="skins\WebList\custom\dhoa\PurchaseOrder.js" />
     <Content Include="skins\WebList\custom\dhoa\roleButton.js" />
     <Content Include="skins\WebList\custom\dhoa\RWGL_JCJT.js" />
+    <Content Include="skins\WebList\custom\dhoa\JCPQ.js" />
     <Content Include="skins\WebList\custom\dhoa\YZGL.js" />
     <Content Include="skins\WebList\custom\dhoa\KQGL.js" />
     <Content Include="skins\WebList\custom\dhoa\GZZD.js" />
@@ -9094,6 +9095,7 @@
     <Content Include="Views\dhoa\GZZDEdit.cshtml" />
     <Content Include="Views\dhoa\ksgl.cshtml" />
     <Content Include="Views\dhoa\umsrole.cshtml" />
+    <Content Include="Views\dhoa\DispatchEdit.cshtml" />
     <None Include="Web References\RemoteUserService\services.disco" />
     <Content Include="中浩设备sql语句.txt" />
     <None Include="Contents\.DS_Store" />
@@ -12747,7 +12749,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:40003</IISUrl>
+          <IISUrl>http://localhost:40004</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
