@@ -174,7 +174,6 @@ function DispatchClose() {
     }
 }
 
-
 //查看使用记录
 function UseRecord(id, code, name) {
     var url = "/WebList/ElementIndex?FormDm=YZGL_YZGL&FormStatus=1&FormParam=PARAM--" + encodeURIComponent(mid);
@@ -202,4 +201,24 @@ function FormatOper(value, row, index) {
     return imgurl;
 }
 
+
+function FormatStatus(value, row, index) {
+    var imgurl = "";
+    try {
+        //-1 删除 1待审批 2 已审批 3外出中 4已完成
+
+        if (value == "1")
+            imgurl += "<center>待审批</center>";
+        else if (value == "2")
+            imgurl += "<center>已审批</center>";
+        else if (value == "3")
+            imgurl += "<center>外出中</center>";
+        else if (value == "4")
+            imgurl += "<center>已完成</center>";
+
+    } catch (e) {
+        imgurl = value;
+    }
+    return imgurl;
+}
 

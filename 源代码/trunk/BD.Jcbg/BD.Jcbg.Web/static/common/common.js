@@ -1,4 +1,4 @@
-﻿function ajaxTpl(url, params, handle,complete) {
+﻿function ajaxTpl(url, params, handle, complete) {
     //var index = layer.load(2, { time: 10000 });
     $.ajax({
         url: url,
@@ -13,8 +13,8 @@
             //layer.close(index);
             //console.log(err);
         },
-         complete:function(){
-            if(complete){
+        complete: function () {
+            if (complete) {
                 complete();
             }
         }
@@ -22,7 +22,7 @@
 }
 
 function ajaxGet(url, params, handle) {
-     //var index = layer.load(2, { time: 10000 });
+    //var index = layer.load(2, { time: 10000 });
     $.ajax({
         url: url,
         type: 'get',
@@ -114,4 +114,55 @@ function formatYesNo(value, row, index) {
         imgurl = value;
     }
     return imgurl;
+}
+
+
+function getDateString(value, row, index) {
+    var ret = "";
+    try {
+        var ttDate = value.match(/\d{4}.\d{1,2}.\d{1,2}/mg).toString();
+        ttDate = ttDate.replace(/[^0-9]/mg, '-');
+        if (ttDate.indexOf("1900") == -1)
+            ret = ttDate;
+    } catch (e) {
+        ret = value;
+    }
+    return ret;
+}
+
+
+function DateFormat(value, row, index) { //author: meizz
+
+    var ret = new Date();
+    try {
+        if (value.length == 0) {
+            ret = new Date("1900-01-01 00:00:00");
+        }
+        else {
+            var ttDate = new Date(value.replace(/-/g, "/"));
+            ret = ttDate;
+        }
+
+    } catch (e) {
+        ret = new Date("1900-01-01 00:00:00");
+
+    }
+
+    var o = {
+        "M+": ret.getMonth() + 1,                 //月份
+        "d+": ret.getDate(),                    //日
+        "h+": ret.getHours(),                   //小时
+        "m+": ret.getMinutes(),                 //分
+        "s+": ret.getSeconds(),                 //秒
+        "q+": Math.floor((ret.getMonth() + 3) / 3), //季度
+        "S": ret.getMilliseconds()             //毫秒
+    };
+    var fmt = "yyyy-MM-dd hh:mm:ss";
+
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (ret.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
 }

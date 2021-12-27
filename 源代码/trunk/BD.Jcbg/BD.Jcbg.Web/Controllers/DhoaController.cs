@@ -640,8 +640,8 @@ namespace BD.Jcbg.Web.Controllers
                 ViewBag.zzmm = dt[i]["zzmm"];
                 ViewBag.qrzxl = dt[i]["qrzxl"];
                 ViewBag.zzxl = dt[i]["zzxl"];
-                ViewBag.byyx = dt[i]["byyx"]; 
-                ViewBag.zc = dt[i]["userzc"]; 
+                ViewBag.byyx = dt[i]["byyx"];
+                ViewBag.zc = dt[i]["userzc"];
                 ViewBag.sfsyr = dt[i]["sfsyr"];
 
                 ViewBag.sfsyr = dt[i]["sfsyr"];
@@ -1096,7 +1096,7 @@ namespace BD.Jcbg.Web.Controllers
 
                     var acrhievsData = CommonService.GetDataTable($"select  * from OA_UserArchives where RYBH='{item["usercode"]}'");
 
-                    if (acrhievsData!=null&& acrhievsData.Count==0)
+                    if (acrhievsData != null && acrhievsData.Count == 0)
                     {
                         var acrhievsRecid = Guid.NewGuid().ToString("N");
                         sqlStr = $"INSERT INTO [dbo].[OA_UserArchives]([Recid],[RYBH],[RYMC],[KSBH],[GWBH],[UseType],[ZZMM],[QRZXL],[ZZXL],[BYYX],[ZC],[LXSS],[JSDAID],[JCJGBH])" +
@@ -2201,6 +2201,166 @@ namespace BD.Jcbg.Web.Controllers
             }
         }
         #endregion
+        
+        #region 流程-添加
+        /// <summary>
+        /// 添加考勤信息
+        /// </summary>
+        public void AttendanceInformationAdd()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                string type = Request["type"].GetSafeString();
+                string ksbh = Request["ksbh"].GetSafeString();
+                string rybh = Request["rybh"].GetSafeString();
+                string startTime = Request["startTime"].GetSafeString();
+                string predictEndTime = Request["predictEndTime"].GetSafeString();//计划返回时间
+                string endTime = Request["endTime"].GetSafeString();//返回时间
+                string remark = Request["remark"].GetSafeString();
+                string peopleTogether = Request["peopleTogether"].GetSafeString();//同去人
+                string WFDD = Request["WFDD"].GetSafeString();//往返地点
+                string hours = Request["hours"].GetSafeString(); //预计时间
+                string dispatchDuration = Request["dispatchDuration"].GetSafeString(); //派遣时长
+                string roomCount = Request["roomCount"].GetSafeString(); //房间数量
+                string isStay = Request["isStay"].GetSafeString(); //是否住宿
+                string stayDays = Request["stayDays"].GetSafeString(); //住宿天数
+                string invoiceHolder = Request["invoiceHolder"].GetSafeString(); //发票持有人
+                string invoiceAmount = Request["invoiceAmount"].GetSafeString(); //发票金额
+                string lx = Request["lx"].GetSafeString(); //请假类型
 
+                string reviewerbh = Request["reviewerbh"].GetSafeString(); //审核人
+                string reviewTime = Request["invoiceHolder"].GetSafeString(); //审核时间
+
+                IList<string> sqls = new List<string>();
+                if (string.IsNullOrEmpty(recid))
+                {
+                    recid = Guid.NewGuid().ToString("N");
+                    sqlStr = $"INSERT INTO [dbo].[OA_AttendanceManage]([Recid],[Type],[RYBH],[RYXM],[StartTime],[EndTime],[Remark],[Status],[Hours],[LX],[PeopleTogether],[WFDD],[CreateTime],[Creater],[UpdateTime],[Updater],[JCJGBH]) " +
+                        $"VALUES ('{recid}','{type}'" +
+                        $",'{rybh}'" +
+                        $",'{CurrentUser.RealName}'" +// RYXM, varchar(255),>
+                        $",'{startTime}'" +// StartTime, datetime2(7),>
+                        $",'{endTime}'" +// EndTime, datetime2(7),>
+                        $",'{remark}'" +// Remark, nvarchar(255),>
+                        $",'1'" +// Status, varchar(4),>
+                        $",'{hours}'" +// Hours, decimal(10, 2),>
+                        $",'{lx}'" +// LX, varchar(8),>
+                        $",'{peopleTogether}'" +// PeopleTogether, nvarchar(50),>
+                        $",'{WFDD}'" +// WFDD, nvarchar(50),>
+                        $",getdate()" +// CreateTime, datetime2(7),>
+                        $",'{CurrentUser.RealName}'" +// Creater, varchar(255),>
+                        $",getdate()" +// UpdateTime, datetime2(7),>
+                        $",'{CurrentUser.RealName}'" +// Updater, varchar(255),>
+                        $",'{CurrentUser.Qybh}')";// JCJGBH, varchar(32),>)
+                }
+                else
+                {
+                    //sqlStr = "update OA_AttendanceManage set applicant='" + applicant + "', totalkilometers='" + totalkilometers + "'," +
+                    //    " maintenancetime='" + maintenancetime + "' where id=" + dataId;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
+        /// <summary>
+        /// 添加检查派遣
+        /// </summary>
+        public void DispatchRecordAdd()
+        {
+            bool code = false;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                string ksbh = Request["ksbh"].GetSafeString();
+                string htbh = Request["htbh"].GetSafeString();
+                string startTime = Request["startTime"].GetSafeString();
+                string returnTime = Request["returnTime"].GetSafeString();//返回时间
+                string peopleTogether = Request["peopleTogether"].GetSafeString();//同去人
+                string GZDQ = Request["GZDQ"].GetSafeString();//工作地区
+                string GCMC = Request["GCMC"].GetSafeString();//往返地点
+                string JCXM = Request["JCXM"].GetSafeString();//检测项目
+                string GCL = Request["GCL"].GetSafeString();//工程量
+                string carId = Request["carId"].GetSafeString(); //车牌号
+                string dispatchDuration = Request["dispatchDuration"].GetSafeString(); //派遣时长
+                string roomCount = Request["roomCount"].GetSafeString(); //房间数量
+                string isStay = Request["isStay"].GetSafeString(); //是否住宿
+                string stayDays = Request["stayDays"].GetSafeString(); //住宿天数
+                string invoiceHolder = Request["invoiceHolder"].GetSafeString(); //发票持有人
+                string invoiceAmount = Request["invoiceAmount"].GetSafeString(); //发票金额
+                string reviewerbh = Request["reviewerbh"].GetSafeString(); //审核人
+                string reviewTime = Request["invoiceHolder"].GetSafeString(); //审核时间
+
+                IList<string> sqls = new List<string>();
+                if (string.IsNullOrEmpty(recid))
+                {
+                    recid = Guid.NewGuid().ToString("N");
+                    sqlStr = $"INSERT INTO [dbo].[OA_DispatchRecord]([Recid],[HTBH],[RYMC],[RYBH],[GZDQ],[GCMC],[JCXM],[GCL],[StartTime],[ReturnTime],[CarId],[PeopleTogether],[StayDays],[InvoiceHolder],[InvoiceAmount],[JCJGBH],[CreateTime],[Creator],[UpdateTime],[Updater],[Status])" +
+                        $"VALUES('{recid}'" +
+                        $",'{htbh}'" +
+                        $",'{CurrentUser.RealName}'" +//< RYMC, varchar(255),>
+                        $",'{CurrentUser.UserCode}'" +//< RYBH, varchar(255),>
+                        $",'{GZDQ}'" +//< GZDQ, varchar(255),>
+                        $",'{GCMC}'" +//< GCMC, varchar(255),>
+                        $",'{JCXM}'" +//< JCXM, varchar(255),>
+                        $",'{GCL}'" +//< GCL, varchar(255),>
+                        $",'{startTime}'" +//< StartTime, datetime2(7),>
+                        $",'{returnTime}'" +//< ReturnTime, datetime2(7),>
+                        $",'{carId}'" +//< CarId, int,>
+                        $",'{peopleTogether}'" +//< PeopleTogether, varchar(255),>
+                        $",'{stayDays}'" +//< StayDays, decimal(18, 0),>
+                        $",'{invoiceHolder}'" +//< InvoiceHolder, varchar(255),>
+                        $",'{invoiceAmount}'" +//< InvoiceAmount, varchar(255),>
+                        $",'{CurrentUser.Qybh}'" +//< JCJGBH, varchar(255),>
+                        $",getdate()" +//< CreateTime, datetime2(7),>
+                        $",'{CurrentUser.RealName}'" +//< Creator, varchar(255),>
+                        $",getdate()" +//< UpdateTime, datetime2(7),>
+                        $",'{CurrentUser.RealName}'" +//< Updater, nvarchar(255),>
+                        $",'1')";
+                }
+                else
+                {
+                    //sqlStr = "update OA_DispatchRecord set applicant='" + applicant + "', totalkilometers='" + totalkilometers + "'," +
+                    //    " maintenancetime='" + maintenancetime + "' where id=" + dataId;
+                }
+
+                code = CommonService.ExecSql(sqlStr, out msg);
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+        #endregion
     }
 }

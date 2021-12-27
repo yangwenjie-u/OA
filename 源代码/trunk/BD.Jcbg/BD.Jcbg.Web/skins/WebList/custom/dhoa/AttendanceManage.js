@@ -6,11 +6,10 @@ function  GCAdd() {
         var workurl = "/workflow/startwork?processid=40";
         var gcbh = "222";
         var bcode = new Base64();
-        var title = "检测派遣";
+        var title = "出差管理";
         var extrainfo1 = bcode.encode("view_i_m_gc|" + bcode.encode("gcbh='2323'"));
         var extrainfo2 = bcode.encode('[' + "42432" + ']');
         var extrainfo3 = bcode.encode(gcbh);
-        console.log();
         gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
     } catch (e) {
         alert(e);
@@ -33,14 +32,13 @@ function GCReview() {
 function QJAdd() {
     try {
 
-        var workurl = "/workflow/startwork?processid=39";
+        var workurl = "/workflow/startwork?processid=41";
         var gcbh = "222";
         var bcode = new Base64();
-        var title = "检测派遣";
+        var title = "请假";
         var extrainfo1 = bcode.encode("view_i_m_gc|" + bcode.encode("gcbh='2323'"));
         var extrainfo2 = bcode.encode('[' + "42432" + ']');
         var extrainfo3 = bcode.encode(gcbh);
-        console.log();
         gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
     } catch (e) {
         alert(e);
@@ -62,15 +60,13 @@ function QJReview() {
 
 function JBAdd() {
     try {
-
-        var workurl = "/workflow/startwork?processid=39";
+        var workurl = "/workflow/startwork?processid=42";
         var gcbh = "222";
         var bcode = new Base64();
-        var title = "检测派遣";
+        var title = "加班";
         var extrainfo1 = bcode.encode("view_i_m_gc|" + bcode.encode("gcbh='2323'"));
         var extrainfo2 = bcode.encode('[' + "42432" + ']');
         var extrainfo3 = bcode.encode(gcbh);
-        console.log();
         gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
     } catch (e) {
         alert(e);
@@ -88,6 +84,7 @@ function JBReview() {
     }
 
 }
+
 function gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, extrainfo4, fgcmc) {
     try {
         var rdm = Math.random();
@@ -255,4 +252,23 @@ function FormatOper(value, row, index) {
     return imgurl;
 }
 
-
+//请假
+function FormatStatus(value, row, index) {
+    var imgurl = "";
+    try {
+        //
+        if (value == "1")
+            imgurl += "<center>待审批</center>";
+        else if (value == "10")
+            imgurl += "<center>休假中</center>";
+        else if (value == "20")
+            imgurl += "<center>加班中</center>";
+        else if (value == "30")
+            imgurl += "<center>外出中</center>";
+        else if (value == "2")
+            imgurl += "<center>已完成</center>";
+    } catch (e) {
+        alert(e);
+    }
+    return imgurl;
+}

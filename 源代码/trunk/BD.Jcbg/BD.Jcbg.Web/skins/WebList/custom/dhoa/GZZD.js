@@ -23,7 +23,6 @@ function GZLXEdit() {
         var selected = pubselect();
         if (selected == undefined)
             return;
-        console.log(selected);
         layer.open({
             type: 2,
             title: '编辑制度类目',
