@@ -81,8 +81,6 @@ function GZZDAdd() {
 
 function GZZDEdit(gzzdid) {
     try {
-        console.log(1)
-        console.log(gzzdid)
         layer.open({
             type: 2,
             title: '修改规章制度',

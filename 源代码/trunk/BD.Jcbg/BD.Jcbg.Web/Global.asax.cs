@@ -95,12 +95,12 @@ namespace BD.Jcbg.Web
             //Func.Zhwx.StartSend();
             //Func.BHZ.StartGet();
 
-            Func.Phone.StartSend();
-            Func.YSSQAutoFinish.StartSend();
-            //短信通知
-            Func.SmsSend.StartSend();
-            //考勤时间
-            Func.KqjThread.StartSendMsg();
+            //Func.Phone.StartSend();
+            //Func.YSSQAutoFinish.StartSend();
+            ////短信通知
+            //Func.SmsSend.StartSend();
+            ////考勤时间
+            //Func.KqjThread.StartSendMsg();
 
             //Func.WebSocket.InitSocket();
 

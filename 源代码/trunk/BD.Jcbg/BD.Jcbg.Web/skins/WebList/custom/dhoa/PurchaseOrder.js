@@ -1,27 +1,18 @@
 ﻿
-//d
-
-//采购管理，耗材管理
-
-//公共功能
-
-
 
 //采购管理
 //添加采购申请单
 function AddPurchaseRequisition() {
     try {
-        layer.open({
-            type: 2,
-            title: '采购申请',
-            content: '/dhoa/PurchaseOrderEdit?method=add',
-            shadeClose: true,
-            shade: 0.8,
-            area: ['990px', '350px'],
-            end: function () {
-                searchRecord();
-            }
-        });
+        var workurl = "/workflow/startwork?processid=43";
+        var gcbh = "";
+        var bcode = new Base64();
+        var title = "采购申请";
+        var extrainfo1 = bcode.encode("OA_PurchaseOrder|" + bcode.encode("recid=''"));
+        var extrainfo2 = bcode.encode('[' + "商品采购" + ']');
+        var extrainfo3 = bcode.encode(gcbh);
+
+        gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
     } catch (e) {
         alert(e);
     }
@@ -49,6 +40,55 @@ function PurchaseRequisitionEdit(recid, status) {
         alert(e);
     }
 }
+//添加商品
+function ProductAdd() {
+    try {
+        layer.open({
+            type: 2,
+            title: '添加商品',
+            content: '/dhoa/ProductEdit' ,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['990px', '350px'],
+
+            end: function () {
+                searchRecord();
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+
+
+//入库
+function InsertToStorage() {
+    try {
+        var selected = pubselect();
+        if (selected == undefined)
+            return; 
+
+        if (selected.Status != "5") {
+            alert("请选择待入库的记录");
+            return;
+        }
+        layer.open({
+            type: 2,
+            title: '入库',
+            content: '/dhoa/PurchaseOrderEdit?method=storage&recid=' + selected.Recid,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['990px', '350px'],
+
+            end: function () {
+                searchRecord();
+            }
+        });
+    } catch (e) {
+        alert(e);
+    }
+}
+
 
 
 //删除采购申请记录
@@ -99,11 +139,18 @@ function FormatOperPurchase(value, row, index) {
 function FormatStatus(value, row, index) {
     var imgurl = "";
     try {
-        //1 待审核 5待入库 9 已完成
+        //-1 删除 1 待审核 2 主管驳回 3财务审核 4财务驳回  5待入库 6主管终止 7财务终止 9 已完成
+        //valueFixed--,,1|待审核,1,0|主管驳回,2,0|财务审核,3,0|财务驳回,4,0|待入库,5,0|主管终止,6,0|财务终止,7,0|已完成,9,0
         if (value == "1")
             imgurl += "<center>待审核</center>";
+        else if (value == "2" || value == "4" )
+            imgurl += "<center>驳回</center>";
+        else if (value == "3")
+            imgurl += "<center>财务审核</center>";
         else if (value == "5")
             imgurl += "<center>待入库</center>";
+        else if (value == "6" || value == "7")
+            imgurl += "<center>已终止</center>";
         else if (value == "9")
             imgurl += "<center>已完成</center>";
 

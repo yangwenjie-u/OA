@@ -153,9 +153,14 @@
             if (recid) {
                 $('#name').val('@ViewBag.name');
                 $('#fileoss').val('@ViewBag.fileoss');
+
+            }
+            if (typeid) {
+                $("#typeid").attr("readonly", true);
+                $("#typeid").css({ background: "lightgray" })
             }
 
-       
+            
             ajaxTpl('/dhoa/GetGZZDName', '', function (data) {
                 if (data.length) {
                     var str = '';

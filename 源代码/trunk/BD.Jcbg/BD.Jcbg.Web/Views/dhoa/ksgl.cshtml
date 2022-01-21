@@ -370,7 +370,7 @@
             <div class="dialog_wrap">
                 <el-form :model="updateForm" ref="updateForm" style="width: 100%;">
                     <el-form-item label="部门名称：" class="form_item">
-                        <el-input v-model="updateForm.ksmc" readonly></el-input>
+                        <el-input v-model="updateForm.ksmc" ></el-input>
                     </el-form-item>
                     <el-form-item label="部门地址：" class="form_item">
                         <el-input v-model="updateForm.ksdz"></el-input>
@@ -421,8 +421,9 @@
             <div class="dialog_wrap">
                 <el-form :model="addGWForm" ref="addGWForm" style="width: 100%;">
 
-                    <el-form-item label="部门名称：" class="form_item">
-                        <el-select v-model="addGWForm.ksbh" id="gwview_ksbh" filterable default-first-option placeholder="请选择部门">
+                    <el-form-item label="部门名称：" class="form_item" >
+                        <el-select v-model="addGWForm.ksbh"  id="gwview_ksbh" filterable default-first-option placeholder="请选择部门"
+                                    :disabled="gwViewTitle==='修改'?true:false" >
                             <el-option label="请选择部门" value="">
                             </el-option>
                             <el-option v-for="item in ksList" :key="item.ksbh" :label="item.ksmc"
@@ -451,6 +452,7 @@
                        icon="el-icon-refresh" size="mini"></el-button>
         </div>
     </div>
+
     <script>
         (function ($) { //序列化成json
             $.fn.serializeJson = function () {
@@ -598,6 +600,10 @@
                                 that.addStatus = false;
                                 that.getAllTabList();
                                 that.addForm = that.originForm
+
+                                setTimeout(function () {
+                                    parent.layer.closeAll();
+                                }, 1000)
                             }
                         }
                     });
@@ -629,6 +635,7 @@
                                 that.updateStatus = false;
                                 that.getAllTabList();
                                 that.updateForm = that.originForm
+                               
                             }
                         }
                     });
@@ -663,6 +670,7 @@
 
                     this.gwViewTitle = "新增";
                     this.GwStatus = true;
+                    this.$refs['addGWForm'].resetFields()
                 },
                 confirmGW: function () {
                     var that = this;
@@ -704,13 +712,9 @@
                                 else {
                                     layer.msg('修改成功');
                                 }
-                                try {
-                                    setTimeout(function () {
-                                        parent.layer.closeAll();
-                                    }, 1000)
-                                }
-                                catch (e) {
-                                }
+                                that.GwStatus = false
+
+                                that.getAllTabList();
                             }
                             else {
                                 layer.msg(data.msg);
@@ -816,8 +820,6 @@
                 //修改岗位信息
                 departmentPostModify: function (val) {
                     this.gwViewTitle = "修改";
-
-
                     if (this.multipleSelection.length == 0) {
                         layer.msg('请勾选再修改')
                     } else if (this.multipleSelection.length > 1) {
@@ -852,14 +854,6 @@
                         success: function (data) {
                             if (data.code == '0') {
                                 layer.msg('删除成功');
-                                try {
-                                    setTimeout(function () {
-                                        parent.layer.closeAll();
-                                    }, 1000)
-                                 
-                                }
-                                catch (e) {
-                                }
                                 that.getAllTabList();
                                 that.updateForm = that.originForm
                             }

@@ -236,7 +236,7 @@ namespace BD.Jcbg.Web.Controllers
         {
             return View();
         }
-        
+
         /// <summary>
         /// 新改的蓝色背景
         /// </summary>
@@ -260,7 +260,7 @@ namespace BD.Jcbg.Web.Controllers
         [Authorize]
         public ActionResult Main()
         {
-			/*
+            /*
 			if (CurrentUser.CurUser.DepartmentId.Equals("DP201405000001") || CurrentUser.CurUser.DepartmentId.Equals("DP201802000003")) //信访/政府部门
             {
                 ViewData["Welcome"] = "/welcome/welcomezf";
@@ -325,7 +325,7 @@ namespace BD.Jcbg.Web.Controllers
         {
             return View();
         }
-        
+
         [Authorize]
         public ActionResult WelcomeBg()
         {
@@ -377,7 +377,7 @@ namespace BD.Jcbg.Web.Controllers
         {
             return View();
         }
-		[Authorize]
+        [Authorize]
         public ActionResult MainWz()
         {
             if (CurrentUser.CurUser.DepartmentId.Equals("wgryDP201405000001") || CurrentUser.CurUser.DepartmentId.Equals("wgryDP201802000003") || CurrentUser.CurUser.DepartmentId.Equals("DP201707000005")) //信访/政府部门
@@ -448,12 +448,13 @@ namespace BD.Jcbg.Web.Controllers
             {
                 phone = dt[0]["sjhm"];
                 if (GlobalVariable.RySfzEncode)
-                    sfzhm =CryptFun.LrDecode(dt[0]["sfzhm"]);
+                    sfzhm = CryptFun.LrDecode(dt[0]["sfzhm"]);
             }
             else
             {
                 IList<IDictionary<string, string>> dtt = CommonService.GetDataTable("select phone,idno from userinfo where username='" + CurrentUser.RealUserName + "' ");
-                if (dtt.Count > 0){
+                if (dtt.Count > 0)
+                {
                     phone = dtt[0]["phone"];
                     sfzhm = dtt[0]["idno"];
                 }
@@ -960,7 +961,7 @@ namespace BD.Jcbg.Web.Controllers
                 string username = Request["username"].GetSafeString();
                 if (sign == MD5Util.StringToMD5Hash(signstr, true))
                 {
-                    bool ret = Remote.UserService.LoginWithOutPassWord(username,Configs.AppId, out err);
+                    bool ret = Remote.UserService.LoginWithOutPassWord(username, Configs.AppId, out err);
 
                     // 登录成功
                     if (ret)
@@ -991,23 +992,23 @@ namespace BD.Jcbg.Web.Controllers
                         // 企业及个人用户企业编号
                         Session["USERQYBH"] = JcService.GetQybh(CurrentUser.UserCode);
                         //Session["MenuCode"] = "QYGL_QYBA";
-					    //设置当前登录劳资账号所在工程的jdzch
+                        //设置当前登录劳资账号所在工程的jdzch
                         SetJDZCH(CurrentUser.UserName);
                         CurrentUser.SetSession("DEPCODE", CurrentUser.CurUser.DepartmentId);
                         // 设置用户桌面项
                         bool status = SystemService.InitUserDesktopItem(CurrentUser.UserName, CurrentUser.UserRights, out err);
                         if (!status)
                             SysLog4.WriteLog(err);
-                    
+
                         // 获取页面跳转类型
-                        IList<IDictionary<string, string>>  dt = CommonService.GetDataTable("select zhlx from i_m_qyzh where yhzh='" + CurrentUser.UserName + "'");
+                        IList<IDictionary<string, string>> dt = CommonService.GetDataTable("select zhlx from i_m_qyzh where yhzh='" + CurrentUser.UserName + "'");
                         if (dt.Count > 0)
                             CurrentUser.CurUser.UrlJumpType = dt[0]["zhlx"];
                         else
                             CurrentUser.CurUser.UrlJumpType = "SYS";
                     }
 
-                
+
                     BD.Log.DataModal.Entities.SysLog log = new BD.Log.DataModal.Entities.SysLog()
                     {
                         ClientType = LogConst.ClientType,
@@ -1026,11 +1027,11 @@ namespace BD.Jcbg.Web.Controllers
                 {
                     url = "/oa/error";
                 }
-                
+
             }
-            catch(Exception e)
-            {  }
-            url = HttpUtility.UrlEncode(url);         
+            catch (Exception e)
+            { }
+            url = HttpUtility.UrlEncode(url);
             return new RedirectResult("/user/ifr?url=" + url);
         }
 
@@ -1106,11 +1107,11 @@ namespace BD.Jcbg.Web.Controllers
                             menu2.MenuId = subitem.MenuCode;
                             menu2.MenuUrl = subitem.MenuUrl;
                             menu2.two_caidan_three = "false";
-                            menu2.IsOut = ((count++) == 0 ) ? "true" : "false";
+                            menu2.IsOut = ((count++) == 0) ? "true" : "false";
                         }
                     }
 
-                    if (menu1.two_caidan.Count > 0 || item.Memo =="1")
+                    if (menu1.two_caidan.Count > 0 || item.Memo == "1")
                         ret.one_caidan.Add(menu1);
 
                 }
@@ -1588,18 +1589,18 @@ namespace BD.Jcbg.Web.Controllers
                 }
             }
             catch (Exception ex)
-            {                
+            {
                 code = false;
                 msg = ex.Message;
                 SysLog4.WriteLog(ex);
             }
             finally
             {
-                
+
             }
 
             IDictionary<string, object> ret = new Dictionary<string, object>();
-            ret.Add("code", code?"0":"1");
+            ret.Add("code", code ? "0" : "1");
             ret.Add("msg", msg);
             ret.Add("username", username);
             ret.Add("realname", realname);
@@ -1631,7 +1632,7 @@ namespace BD.Jcbg.Web.Controllers
                     if (dt.Count > 0)
                     {
                         realname = dt[0]["qymc"];
-                    }      
+                    }
                     ret = Remote.UserService.Login(username, realname, password, out err);
                     // 登录成功
                     if (ret)
@@ -1650,17 +1651,17 @@ namespace BD.Jcbg.Web.Controllers
                                 RealName = CurrentUser.CurUser.RealName,
                                 UserName = CurrentUser.CurUser.UserName
                             }, null);
-						Session["UserPowerList"] = null;
+                        Session["UserPowerList"] = null;
                         // 设置录入界面用户
-						Session["USERCODE"] = CurrentUser.UserCode;
-						Session["USERNAME"] = CurrentUser.UserName;
-						Session["REALNAME"] = CurrentUser.RealName;
-						Session["CPCODE"] = CurrentUser.CompanyCode;
-						Session["CPNAME"] = CurrentUser.CompanyName;
-						Session["DEPCODE"] = CurrentUser.CurUser.DepartmentId;
-						Session["DEPNAME"] = CurrentUser.CurUser.DepartmentName;
-						Session["MANAGEDEP"] = CurrentUser.CurUser.ManageDep;
-						Session["SJHM"] = SystemService.GetUserMobile(CurrentUser.UserCode);
+                        Session["USERCODE"] = CurrentUser.UserCode;
+                        Session["USERNAME"] = CurrentUser.UserName;
+                        Session["REALNAME"] = CurrentUser.RealName;
+                        Session["CPCODE"] = CurrentUser.CompanyCode;
+                        Session["CPNAME"] = CurrentUser.CompanyName;
+                        Session["DEPCODE"] = CurrentUser.CurUser.DepartmentId;
+                        Session["DEPNAME"] = CurrentUser.CurUser.DepartmentName;
+                        Session["MANAGEDEP"] = CurrentUser.CurUser.ManageDep;
+                        Session["SJHM"] = SystemService.GetUserMobile(CurrentUser.UserCode);
                         // 企业及个人用户所属企业编号
                         Session["USERQYBH"] = JcService.GetQybh(CurrentUser.UserCode);
                         Session["USERQYMC"] = JcService.GetQymc(Session["USERQYBH"].ToString());
@@ -1679,7 +1680,7 @@ namespace BD.Jcbg.Web.Controllers
                         dt = CommonService.GetDataTable("select zhlx,qybh from i_m_qyzh where yhzh='" + CurrentUser.UserName + "'");
 
                         var qyzhbh = string.Empty;
-                        
+
                         if (dt.Count > 0)
                         {
                             CurrentUser.CurUser.UrlJumpType = dt[0]["zhlx"];
@@ -1727,7 +1728,7 @@ namespace BD.Jcbg.Web.Controllers
                     LogService.SaveLog(log);
                 }
 
-                
+
             }
             catch (Exception e)
             {
@@ -1823,7 +1824,7 @@ namespace BD.Jcbg.Web.Controllers
             finally
             {
                 Response.ContentType = "text/plain";
-                
+
                 if (err == "" && ret)
                     err = JsonFormat.GetRetString(ret, CurrentUser.CurUser.UserName);
                 else
@@ -1946,9 +1947,9 @@ namespace BD.Jcbg.Web.Controllers
                 string oldusername = CurrentUser.RealUserName.GetSafeString();
                 ret = ChangeRealnameByUserCode(usercode, CurrentUser.RealName.GetSafeString(), realname, oldusername, out err);
 
-                
+
                 if (ret)
-                   ret = ChangeUsernameByUserCode(usercode, oldusername, username, out err) ;    
+                    ret = ChangeUsernameByUserCode(usercode, oldusername, username, out err);
 
 
                 if (ret)
@@ -1971,7 +1972,7 @@ namespace BD.Jcbg.Web.Controllers
                         IList<IDictionary<string, string>> dt2 = CommonService.GetDataTable("select sjhm, rybh from i_m_ry where sptg=1 and zh='" + username + "' ");
                         if (dt2.Count > 0)
                         {
-                            sql = string.Format("update i_m_ry set sjhm='{0}',sfzhm='{2}' where sptg=1 and zh='{1}'", phone, username,sfzhm);
+                            sql = string.Format("update i_m_ry set sjhm='{0}',sfzhm='{2}' where sptg=1 and zh='{1}'", phone, username, sfzhm);
                             // 修改完手机号码之后，更新该人员所有在建工程的手机号码
                             string rybh = dt2[0]["rybh"].GetSafeString();
                             if (rybh != "")
@@ -2596,7 +2597,7 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
-		/// <summary>
+        /// <summary>
         /// 设置登陆的劳资专管员的qybh和jdzch
         /// </summary>
         /// <param name="loginname"></param>
@@ -2627,7 +2628,7 @@ namespace BD.Jcbg.Web.Controllers
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
 
             }
@@ -2637,7 +2638,7 @@ namespace BD.Jcbg.Web.Controllers
                 Session["GC_GCBH"] = gcbh;
                 Session["GC_QYBH"] = qybh;
 
-                CurrentUser.CurUser.Qybh=qybh;
+                CurrentUser.CurUser.Qybh = qybh;
                 CurrentUser.CurUser.Jdzch = jdzch;
                 CurrentUser.CurUser.GCBH = gcbh;
             }
@@ -2649,9 +2650,9 @@ namespace BD.Jcbg.Web.Controllers
         /// <param name="zhlx"></param>
         /// <param name="qybh"></param>
         [Authorize]
-        public void SetCurQybh(string zhlx,string qybh)
+        public void SetCurQybh(string zhlx, string qybh)
         {
-            if(zhlx.ToLower()=="q")
+            if (zhlx.ToLower() == "q")
             {
                 CurrentUser.CurUser.Qybh = qybh;
                 string sql = "select qymc from I_M_QY where qybh='" + qybh + "'";
@@ -2673,7 +2674,7 @@ namespace BD.Jcbg.Web.Controllers
                 }
 
             }
-          
+
         }
         /// <summary>
         /// 保存内部用户的虹膜模板
@@ -3178,7 +3179,7 @@ namespace BD.Jcbg.Web.Controllers
                     var obj = HttpRuntime.Cache.Get(key);
                     if (obj != null)
                     {
-                        IDictionary<string, object> cacheItem =obj as IDictionary<string,object>;
+                        IDictionary<string, object> cacheItem = obj as IDictionary<string, object>;
                         int timediff = (int)(cacheItem["time"].GetSafeDate().AddMinutes(validMinutes).Subtract(DateTime.Now).TotalSeconds);
                         var timeDesc = "";
                         if (timediff > 60)
@@ -3207,8 +3208,8 @@ namespace BD.Jcbg.Web.Controllers
                                     contentVar = new SmsVarVerifyCode()
                                     {
                                         code = verifycode,
-                                        name= realname,
-                                        time = validMinutes+"分钟"
+                                        name = realname,
+                                        time = validMinutes + "分钟"
                                     }
                                 };
                                 if (SmsService.SendMessage(GlobalVariable.GetSmsBaseAppId(), new Guid().ToString(), phone, (new JavaScriptSerializer()).Serialize(smsParam), out msg))

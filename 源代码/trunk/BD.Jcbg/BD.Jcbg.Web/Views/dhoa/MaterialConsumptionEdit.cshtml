@@ -164,7 +164,7 @@
         <div class="m-role">
             <label>
                 <span>型号规格</span>
-                <select id="materialunit">
+                <select id="materialspec">
                     <option value="0">请选择规格</option>
                 </select>
             </label>
@@ -175,6 +175,14 @@
                 <input type="text" name="price" id="price" oninput="value=value.replace(/[^\d]/g,'')" />
             </label>
         </div>
+        <div class="m-role">
+            <label>
+                <span>采购价格</span>
+                <input type="text" name="purchasePrice" id="purchasePrice" oninput="value=value.replace(/[^\d]/g,'')" />
+            </label>
+        </div>
+
+
 
         <div class="m-role">
             <label>
@@ -217,14 +225,20 @@
     <script>
         var recordRecid = "@ViewBag.recid";
         var materId = "@ViewBag.materialid";
-        var materialunit = "@ViewBag.materialunitid";
+        var materbh = "@ViewBag.materialbh";
+        var materialspec = "@ViewBag.materialspecid";
          //1：办公消耗 2：试验消耗
         var recordType = "@ViewBag.type";
-        var materialunitCount = 0;
+        var materialspecCount = 0;
 
         $(function () {
 
-            ajaxTpl('/dhoa/GetMaterial', '', function (data) {
+            var obj;
+            obj = {
+                type: '1'
+            }
+
+            ajaxTpl('/dhoa/GetMaterialInfo', obj, function (data) {
                 if (data.length) {
                     var str = '';
                     for (var i = 0, len = data.length; i < len; i++) {
@@ -237,14 +251,15 @@
                     }
                     if (materId) {
                         $('#materialname').val(materId);
-                        ChangeMaterial(materId)
+                        GetMaterialSpec(materId)
                     }
                 }
             });
+
             if (recordRecid) {
 
                 @*$('#materialname').val('@ViewBag.materialid');
-                $('#materialunit').val('@ViewBag.materialunitid');*@
+                $('#materialspec').val('@ViewBag.materialspecid');*@
                 $('#price').val('@ViewBag.price');
                 $('#quantity').val('@ViewBag.quantity');
                 $('#technicalrequirement').val('@ViewBag.technicalrequirement');
@@ -259,36 +274,68 @@
             obj = {
                 materialId: materialId
             }
-            ajaxTpl('/dhoa/Getmaterialunit', obj, function (data) {
+            ajaxTpl('/dhoa/GetMaterialInfoSpec', obj, function (data) {
 
                 if (data.length) {
                     var str = '';
                     for (var i = 0, len = data.length; i < len; i++) {
-                        str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                        str += "<option value='" + data[i].id + "' data-bh='" + data[i].bh +"' >" + data[i].name + "</option>";
                     }
                     if (data.length == 1) {
-                        $('#materialunit').html(str);
+                        $('#materialspec').html(str);
                     } else {
-                        $('#materialunit').html("<option value='0'>请选择规格</option>");
-                        $('#materialunit').append(str);
+                        $('#materialspec').html("<option value='0'>请选择规格</option>");
+                        $('#materialspec').append(str);
                     }
-                    if (materialunit) {
-                        $('#materialunit').val(materialunit);
+                    if (materialspec) {
+                        $('#materialspec').val(materialspec);
                     }
                 }
                 else {
-                    materialunitCount = 0;
-                    $('#materialunit').html("<option value='0'>--------</option>");
+                    materialspecCount = 0;
+                    $('#materialspec').html("<option value='0'>--------</option>");
                 }
             });
         }
 
+
+        //function ChangeMaterial(materialId) {
+        //    var obj;
+        //    obj = {
+        //        materialId: materialId
+        //    }
+        //    ajaxTpl('/dhoa/GetMaterialSpec', obj, function (data) {
+
+        //        if (data.length) {
+        //            var str = '';
+        //            for (var i = 0, len = data.length; i < len; i++) {
+        //                str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+        //            }
+        //            if (data.length == 1) {
+        //                $('#materialspec').html(str);
+        //            } else {
+        //                $('#materialspec').html("<option value='0'>请选择规格</option>");
+        //                $('#materialspec').append(str);
+        //            }
+        //            if (materialspec) {
+        //                $('#materialspec').val(materialspec);
+        //            }
+        //        }
+        //        else {
+        //            materialspecCount = 0;
+        //            $('#materialspec').html("<option value='0'>--------</option>");
+        //        }
+        //    });
+        //}
+
         $("#mainView .save").click(function () {
+            var matBH = $('#materialspec').find("option:selected").attr("data-bh");
             var matId = $("#materialname option:selected").val();
             var matName = $("#materialname option:selected").text();
-            var unitId = $("#materialunit option:selected").val();
-            var unitName = $("#materialunit option:selected").text();
+            var unitId = $("#materialspec option:selected").val();
+            var unitName = $("#materialspec option:selected").text(); 
             var price = $("#price").val();
+            var purchasePrice = $("#purchasePrice").val();
             var quantity = $("#quantity").val();
             var technicalRequirement = $("#technicalrequirement").val();
             var supplier = $("#supplier").val();
@@ -303,7 +350,7 @@
                 return;
             }
 
-            if (materialunitCount != 0 && unitId == 0) {
+            if (materialspecCount != 0 && unitId == 0) {
                 layer.msg('请选择规格', {
                     icon: 2,
                     time: 2000
@@ -317,7 +364,7 @@
                 });
                 return;
             }
-      
+
             if (quantity.length == 0) {
                 layer.msg('请输入数量', {
                     icon: 2,
@@ -328,7 +375,8 @@
 
             var obj = {
                 recid: recordRecid,
-                type: recordType,
+                type: recordType, 
+                matBH: matBH, 
                 matId: matId,
                 matName: matName,
                 unitId: unitId,

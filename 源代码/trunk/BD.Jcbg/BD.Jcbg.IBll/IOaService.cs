@@ -404,7 +404,7 @@ namespace BD.Jcbg.IBll
 		/// <param name="manufacturer"></param>
 		/// <param name="requisitioner"></param>
 		/// <returns></returns>
-		bool PurchaseOrderModify(string recid, string materId, string materName, string unitId, string unitName,
+		bool PurchaseOrderModify(string recid,string serialRecid, string materBH, string materId, string materName, string unitId, string unitName,
 					string price, string purchasePrice, string quantity, string purpose, string technicalRequirement, string supplier, string manufacturer, string requisitioner);
 
 	}

@@ -199,7 +199,7 @@ namespace BD.Jcbg.Common
             {
                 if (CurUser != null)
                     return CurUser.Qybh;
-                return "";
+                return "JCQ007001";
             }
         }
         /// <summary>
@@ -224,7 +224,8 @@ namespace BD.Jcbg.Common
             {
                 if (CurUser != null)
                     return CurUser.UserCode;
-                return "";
+                return "URCQ1uHnsuOjIN";
+                //return "";
             }
         }
         // 页面跳转类型

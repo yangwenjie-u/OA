@@ -243,14 +243,12 @@
                 $("#signaturecode").attr("readonly", true);
                 $("#signaturecode").css({ background: "lightgray" })
 
-                if (dataId) {
-                    $('#signaturecode').val('@ViewBag.signaturecode');
-                    $('#signaturename').val('@ViewBag.signaturename');
-                    $('#departmentbh').val('@ViewBag.departmentbh');
-                    $('#departmentname').val('@ViewBag.departmentbh');
-                    $('#ownercode').val('@ViewBag.ownercode');
-                    $('#ownername').val('@ViewBag.ownername');
-                }
+                $('#signaturecode').val('@ViewBag.signaturecode');
+                $('#signaturename').val('@ViewBag.signaturename');
+                $('#departmentbh').val('@ViewBag.departmentbh');
+                $('#departmentname').val('@ViewBag.departmentbh');
+                $('#ownercode').val('@ViewBag.ownercode');
+                $('#ownername').val('@ViewBag.ownername');
             }
 
             ajaxTpl('/dhoa/GetJcjgks', '', function (data) {
@@ -277,7 +275,7 @@
             var departmentbh = $('#departmentbh').val();
             var departmentname = $('#departmentname').val();
             var ownername = $('#ownername').val();
-          
+
             if (departmentbh == 0) {
                 layer.msg('请选择部门', {
                     icon: 2,

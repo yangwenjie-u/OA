@@ -154,31 +154,41 @@
     <div id="mainView" class="main-view">
         <div class="m-role">
             <label>
+                <span>编号</span>
+                <input type="text" id="materialbh" />
+            </label>
+        </div>
+        <div class="m-role">
+            <label>
                 <span>名称</span>
-                <select id="materialname" onchange="ChangeMaterial(this.value)">
+                <input type="text" id="materialname" />
+                @*<select id="materialname" onchange="ChangeMaterial(this.value)">
                     <option value="0">请选择采购物品</option>
-                </select>
+                </select>*@
             </label>
         </div>
 
         <div class="m-role">
             <label>
                 <span>型号规格</span>
-                <select id="materialunit">
-                    <option value="0">请选择规格</option>
-                </select>
+                <input type="text" id="materialspecname" />
+
+                @*<select id="materialspecname">
+            <option value="0">请选择规格</option>
+        </select>*@
             </label>
         </div>
         <div class="m-role">
             <label>
                 <span>单价</span>
-                <input type="text" name="price" id="price" oninput="value=value.replace(/[^\d]/g,'')" />
+                @*<input type="text" name="price" id="price" oninput="value=value.replace(/[^\d]/g,'') " />*@
+                <input type="text" name="price" id="price" onkeyup="ClearNoNum(this)" />
             </label>
         </div>
         <div class="m-role">
             <label>
                 <span>购入价格</span>
-                <input type="text" name="purchasePrice" id="purchaseprice" oninput="value=value.replace(/[^\d]/g,'')" />
+                <input type="text" name="purchasePrice" id="purchaseprice" onkeyup="ClearNoNum(this)" />
             </label>
         </div>
 
@@ -186,7 +196,7 @@
         <div class="m-role">
             <label>
                 <span>数量</span>
-                <input type="text" name="quantity" id="quantity" oninput="value=value.replace(/[^\d]/g,'')" />
+                <input type="text" name="quantity" id="quantity" onkeyup="ClearNoNum(this)" />
             </label>
         </div>
         <div class="m-role">
@@ -216,40 +226,31 @@
         </div>
 
 
-        <div class="save" style="margin-top: 0px; border: 0px; float: right; display: inline-flex "><span class="btn">保存</span></div>
+        <div class="save" style="margin-top: 0px; border: 0px; float: right; display: inline-flex ">
+            <span class="btn" id="btn_save">保存</span>
+        </div>
     </div>
     <script src="/static/lib/jquery-2.0.3.min.js"></script>
     <script src="/static/common/common.js"></script>
     <script src="/static/lib/layer/layer.js"></script>
     <script>
-        var materialRecid = "@ViewBag.recid";
+        var method = "@ViewBag.method";
+        var orderRecid = "@ViewBag.orderRecid";
         var materId = "@ViewBag.materialid";
         var materialunit = "@ViewBag.materialunitid";
         var materialunitCount = 0;
 
         $(function () {
+            if (method == "storage") {
+                $("#btn_save").html("提交");
+            }
 
-            ajaxTpl('/dhoa/GetMaterial', '', function (data) {
-                if (data.length) {
-                    var str = '';
-                    for (var i = 0, len = data.length; i < len; i++) {
-                        str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
-                    }
-                    if (data.length == 1) {
-                        $('#materialname').html(str);
-                    } else {
-                        $('#materialname').append(str);
-                    }
-                    if (materId) {
-                        $('#materialname').val(materId);
-                        ChangeMaterial(materId) 
-                    }
-                }
-            });
-            if (materialRecid) {
 
-                @*$('#materialname').val('@ViewBag.materialid');
-                $('#materialunit').val('@ViewBag.materialunitid');*@
+            if (orderRecid) {
+                $('#materialbh').val('@ViewBag.materialBH');
+                $('#materialname').val('@ViewBag.price');
+                $('#materialspecname').val('@ViewBag.price');
+
                 $('#price').val('@ViewBag.price');
                 $('#purchaseprice').val('@ViewBag.purchaseprice');
                 $('#quantity').val('@ViewBag.quantity');
@@ -257,123 +258,136 @@
                 $('#supplier').val('@ViewBag.supplier');
                 $('#manufacturer').val('@ViewBag.manufacturer');
                 $('#purpose').val('@ViewBag.purpose');
+
+                //入库操作 仅展示数据
+                if (method == "storage") {
+                    $("#materialbh").attr("disabled", "disabled");
+                    $("#materialname").attr("disabled", "disabled");
+                    $("#materialspecname").attr("disabled", "disabled");
+                    $("#price").attr("disabled", "disabled");
+                    $("#purchaseprice").attr("disabled", "disabled");
+                    $("#quantity").attr("disabled", "disabled");
+                    $("#technicalrequirement").attr("disabled", "disabled");
+                    $("#supplier").attr("disabled", "disabled");
+                    $("#manufacturer").attr("disabled", "disabled");
+                    $("#purpose").attr("disabled", "disabled");
+                }
             }
         })
 
-        function ChangeMaterial(materialId) {
-            var obj;
-            obj = {
-                materialId: materialId
-            }
-            ajaxTpl('/dhoa/Getmaterialunit', obj, function (data) {
-
-                if (data.length) {
-                    var str = '';
-                    for (var i = 0, len = data.length; i < len; i++) {
-                        str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
-                    }
-                    if (data.length == 1) {
-                        $('#materialunit').html(str);
-                    } else {
-                        $('#materialunit').html("<option value='0'>请选择规格</option>");
-                        $('#materialunit').append(str);
-                    }
-                    if (materialunit) {
-                        $('#materialunit').val(materialunit);
-                    }
-                }
-                else {
-                    materialunitCount = 0;
-                    $('#materialunit').html("<option value='0'>--------</option>");
-                }
-            });
-        }
-
         $("#mainView .save").click(function () {
-            var matId = $("#materialname option:selected").val();
-            var matName = $("#materialname option:selected").text();
-            var unitId = $("#materialunit option:selected").val();
-            var unitName = $("#materialunit option:selected").text();
-            var price = $("#price").val();
-            var quantity = $("#quantity").val();
-            var purchasePrice = $("#purchaseprice").val();
-            var technicalRequirement = $("#technicalrequirement").val();
-            var supplier = $("#supplier").val();
-            var manufacturer = $("#manufacturer").val();
-            var purpose = $("#purpose").val();
-
-            if (matId == 0) {
-                layer.msg('请选择材料', {
-                    icon: 2,
-                    time: 2000
-                });
-                return;
-            }
-
-            if (materialunitCount != 0 && unitId == 0) {
-                layer.msg('请选择规格', {
-                    icon: 2,
-                    time: 2000
-                });
-                return;
-            }
-            if (price.length==0) {
-                layer.msg('请输入价格', {
-                    icon: 2,
-                    time: 2000
-                });
-                return;
-            }
-            if (purchasePrice.length == 0) {
-                layer.msg('请输入购入价格', {
-                    icon: 2,
-                    time: 2000
-                });
-                return;
-            }
-            if (quantity.length == 0) {
-                layer.msg('请输入数量', {
-                    icon: 2,
-                    time: 2000
-                });
-                return;
-            }
-
-            var obj = {
-                recid: materialRecid,
-                matId: matId,
-                matName: matName,
-                unitId: unitId,
-                unitName: unitName,
-                price: price,
-                price: price,
-                quantity: quantity,
-                purchasePrice: purchasePrice,
-                technicalRequirement: technicalRequirement,
-                supplier: supplier,
-                manufacturer: manufacturer,
-                purpose: purpose
-            }
-
-            ajaxTpl('/dhoa/PurchaseOrderModify', obj, function (data) {
-                if (data.code == '0') {
-                    layer.alert('保存成功');
-                    try {
-                        setTimeout(function () {
-                            parent.layer.closeAll();
-                        }, 1000)
-                    }
-                    catch (e) {
-                    }
+            if (method == "storage") {
+                var obj = {
+                    recid: orderRecid,
+                    productbh: $('#materialbh').val(),
+                    quantity: $("#quantity").val(),
+                    method: "InStorage"
                 }
-                else {
+                ajaxTpl('/dhoa/ProductInStorage', obj, function (data) {
+                    if (data.code == '0') {
+                        layer.alert('已成功入库');
+                        try {
+                            setTimeout(function () {
+                                parent.layer.closeAll();
+                            }, 1000)
+                        }
+                        catch (e) {
+                        }
+                    }
+                    else {
+                        layer.msg(data.msg, {
+                            icon: 2,
+                            time: 2000
+                        });
+                    }
+                });
+                return;
+            }
 
-                    layer.msg(data.msg, {
-                        icon: 2,
-                        time: 2000
-                    });
-                }
-            });
+            //var matId = $("#materialname option:selected").val();
+            //var matName = $("#materialname option:selected").text();
+            //var unitId = $("#materialunit option:selected").val();
+            //var unitName = $("#materialunit option:selected").text();
+            //var price = $("#price").val();
+            //var quantity = $("#quantity").val();
+            //var purchasePrice = $("#purchaseprice").val();
+            //var technicalRequirement = $("#technicalrequirement").val();
+            //var supplier = $("#supplier").val();
+            //var manufacturer = $("#manufacturer").val();
+            //var purpose = $("#purpose").val();
+
+            //if (matId == 0) {
+            //    layer.msg('请选择材料', {
+            //        icon: 2,
+            //        time: 2000
+            //    });
+            //    return;
+            //}
+
+            //if (materialunitCount != 0 && unitId == 0) {
+            //    layer.msg('请选择规格', {
+            //        icon: 2,
+            //        time: 2000
+            //    });
+            //    return;
+            //}
+            //if (price.length==0) {
+            //    layer.msg('请输入价格', {
+            //        icon: 2,
+            //        time: 2000
+            //    });
+            //    return;
+            //}
+            //if (purchasePrice.length == 0) {
+            //    layer.msg('请输入购入价格', {
+            //        icon: 2,
+            //        time: 2000
+            //    });
+            //    return;
+            //}
+            //if (quantity.length == 0) {
+            //    layer.msg('请输入数量', {
+            //        icon: 2,
+            //        time: 2000
+            //    });
+            //    return;
+            //}
+
+            //var obj = {
+            //    recid: orderRecid,
+            //    matId: matId,
+            //    matName: matName,
+            //    unitId: unitId,
+            //    unitName: unitName,
+            //    price: price,
+            //    price: price,
+            //    quantity: quantity,
+            //    purchasePrice: purchasePrice,
+            //    technicalRequirement: technicalRequirement,
+            //    supplier: supplier,
+            //    manufacturer: manufacturer,
+            //    purpose: purpose
+            //}
+
+            //ajaxTpl('/dhoa/PurchaseOrderModify', obj, function (data) {
+            //    if (data.code == '0') {
+            //        layer.alert('保存成功');
+            //        try {
+            //            setTimeout(function () {
+            //                parent.layer.closeAll();
+            //            }, 1000)
+            //        }
+            //        catch (e) {
+            //        }
+            //    }
+            //    else {
+
+            //        layer.msg(data.msg, {
+            //            icon: 2,
+            //            time: 2000
+            //        });
+            //    }
+            //});
         });
 
     </script>

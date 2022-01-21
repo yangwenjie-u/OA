@@ -65,6 +65,7 @@
     <Compile Include="Entities\KqjUserDayLogDetail.cs" />
     <Compile Include="Entities\KqjUserLog.cs" />
     <Compile Include="Entities\KqjUserMonthLog.cs" />
+    <Compile Include="Entities\MateriaInfo.cs" />
     <Compile Include="Entities\MessageAct.cs" />
     <Compile Include="Entities\MessageInfoList.cs" />
     <Compile Include="Entities\MessageReceive.cs" />
