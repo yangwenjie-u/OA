@@ -248,8 +248,8 @@
 
             if (orderRecid) {
                 $('#materialbh').val('@ViewBag.materialBH');
-                $('#materialname').val('@ViewBag.price');
-                $('#materialspecname').val('@ViewBag.price');
+                $('#materialname').val('@ViewBag.materialname');
+                $('#materialspecname').val('@ViewBag.materialspecname');
 
                 $('#price').val('@ViewBag.price');
                 $('#purchaseprice').val('@ViewBag.purchaseprice');
@@ -264,13 +264,13 @@
                     $("#materialbh").attr("disabled", "disabled");
                     $("#materialname").attr("disabled", "disabled");
                     $("#materialspecname").attr("disabled", "disabled");
-                    $("#price").attr("disabled", "disabled");
-                    $("#purchaseprice").attr("disabled", "disabled");
-                    $("#quantity").attr("disabled", "disabled");
-                    $("#technicalrequirement").attr("disabled", "disabled");
-                    $("#supplier").attr("disabled", "disabled");
-                    $("#manufacturer").attr("disabled", "disabled");
-                    $("#purpose").attr("disabled", "disabled");
+                    //$("#price").attr("disabled", "disabled");
+                    //$("#purchaseprice").attr("disabled", "disabled");
+                    //$("#quantity").attr("disabled", "disabled");
+                    //$("#technicalrequirement").attr("disabled", "disabled");
+                    //$("#supplier").attr("disabled", "disabled");
+                    //$("#manufacturer").attr("disabled", "disabled");
+                    //$("#purpose").attr("disabled", "disabled");
                 }
             }
         })
@@ -281,6 +281,8 @@
                     recid: orderRecid,
                     productbh: $('#materialbh').val(),
                     quantity: $("#quantity").val(),
+                    price: $('#price').val(),
+                    purchasePrice: $('#purchaseprice').val(),
                     method: "InStorage"
                 }
                 ajaxTpl('/dhoa/ProductInStorage', obj, function (data) {

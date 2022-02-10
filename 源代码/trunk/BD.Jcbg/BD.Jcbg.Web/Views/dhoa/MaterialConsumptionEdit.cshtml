@@ -155,7 +155,7 @@
         <div class="m-role">
             <label>
                 <span>名称</span>
-                <select id="materialname" onchange="ChangeMaterial(this.value)">
+                <select id="materialname" onchange="ChangeMaterial()">
                     <option value="0">请选择采购物品</option>
                 </select>
             </label>
@@ -230,12 +230,11 @@
          //1：办公消耗 2：试验消耗
         var recordType = "@ViewBag.type";
         var materialspecCount = 0;
-
         $(function () {
 
             var obj;
             obj = {
-                type: '1'
+                materialType: recordType
             }
 
             ajaxTpl('/dhoa/GetMaterialInfo', obj, function (data) {
@@ -246,15 +245,18 @@
                     }
                     if (data.length == 1) {
                         $('#materialname').html(str);
+                        ChangeMaterial();
+
                     } else {
                         $('#materialname').append(str);
                     }
                     if (materId) {
                         $('#materialname').val(materId);
-                        GetMaterialSpec(materId)
+                        ChangeMaterial()
                     }
                 }
             });
+
 
             if (recordRecid) {
 
@@ -269,10 +271,11 @@
             }
         })
 
-        function ChangeMaterial(materialId) {
+        function ChangeMaterial() {
             var obj;
             obj = {
-                materialId: materialId
+                materialId: $("#materialname option:selected").val(),
+                materialType: recordType
             }
             ajaxTpl('/dhoa/GetMaterialInfoSpec', obj, function (data) {
 
@@ -332,8 +335,9 @@
             var matBH = $('#materialspec').find("option:selected").attr("data-bh");
             var matId = $("#materialname option:selected").val();
             var matName = $("#materialname option:selected").text();
-            var unitId = $("#materialspec option:selected").val();
-            var unitName = $("#materialspec option:selected").text(); 
+            var specId = $("#materialspec option:selected").val();
+            var specName = $("#materialspec option:selected").text();
+            var unitName = "";
             var price = $("#price").val();
             var purchasePrice = $("#purchasePrice").val();
             var quantity = $("#quantity").val();
@@ -375,13 +379,15 @@
 
             var obj = {
                 recid: recordRecid,
-                type: recordType, 
-                matBH: matBH, 
+                type: recordType,
+                matBH: matBH,
                 matId: matId,
                 matName: matName,
-                unitId: unitId,
+                specId: specId,
+                specName: specName,
                 unitName: unitName,
                 price: price,
+                purchasePrice: purchasePrice,
                 quantity: quantity,
                 technicalRequirement: technicalRequirement,
                 supplier: supplier,

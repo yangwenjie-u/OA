@@ -9097,6 +9097,8 @@
     <Content Include="Views\dhoa\umsrole.cshtml" />
     <Content Include="Views\dhoa\DispatchEdit.cshtml" />
     <Content Include="Views\dhoa\ProductEdit.cshtml" />
+    <Content Include="Views\dhoa\ProductBaseInfoEdit.cshtml" />
+    <Content Include="Views\dhoa\ProductSpecEdit.cshtml" />
     <None Include="Web References\RemoteUserService\services.disco" />
     <Content Include="中浩设备sql语句.txt" />
     <None Include="Contents\.DS_Store" />

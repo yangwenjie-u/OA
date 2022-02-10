@@ -50,7 +50,6 @@ function ProductAdd() {
             shadeClose: true,
             shade: 0.8,
             area: ['990px', '350px'],
-
             end: function () {
                 searchRecord();
             }

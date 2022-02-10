@@ -5300,7 +5300,6 @@ namespace BD.Jcbg.Web.Controllers
         {
             string msg = "";
             bool code = true;
-            string ret = "";
             StringBuilder sb = new StringBuilder();
             IList<IDictionary<string, string>> dt = new List<IDictionary<string, string>>();
             int totalcount = 0;

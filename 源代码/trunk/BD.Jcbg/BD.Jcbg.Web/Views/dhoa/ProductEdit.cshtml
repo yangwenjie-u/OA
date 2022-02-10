@@ -44,12 +44,13 @@
         .m-role span {
             text-align: center;
         }
-       
+
 
         .role-list .checkbox {
             width: 16px;
             height: 16px;
         }
+
         .role-list {
         }
 
@@ -80,14 +81,14 @@
                 text-align: left;
                 margin-left: 10px;
             }
-         
-        #roleLine .role-list .close {
-            width: 30px;
-            height: 30px;
-            display: inline-block;
-            background: url('/static/oa/images/close.png') no-repeat;
-            background-position: 7px 7px;
-        }
+
+            #roleLine .role-list .close {
+                width: 30px;
+                height: 30px;
+                display: inline-block;
+                background: url('/static/oa/images/close.png') no-repeat;
+                background-position: 7px 7px;
+            }
 
         #roleRight .role-list:hover {
             background: #E5E5E5;
@@ -129,7 +130,7 @@
         <div class="m-role">
             <label>
                 <span>产品类型</span>
-                <select id="materialtype" >
+                <select id="materialtype">
                     <option value="1">办公消耗</option>
                     <option value="2">试验消耗</option>
                 </select>
@@ -152,16 +153,19 @@
                 </select>
             </label>
         </div>
-        <div class="m-role">
+        @*<div class="m-role">
             <label>
                 <span>单位</span>
                 <input type="text" name="materialunit" id="materialunit" />
             </label>
-        </div>
+        </div>*@
         <div class="m-role">
             <label>
                 <span>状态</span>
-                <input type="text" name="status" id="status" />
+                <select name="status" id="status">
+                    <option value="1">启用</option>
+                    <option value="0">禁用</option>
+                </select>
             </label>
         </div>
 
@@ -175,13 +179,18 @@
     <script>
         var recid = "@ViewBag.recid";
         var materialbh = "@ViewBag.materialbh";
+        var materialtype = "@ViewBag.materialtype";
         var materId = "@ViewBag.materialid";
-        var materialSpecName = "@ViewBag.materialspecname";
+
+        var materialSpecID = "@ViewBag.materialspecid";
         var materialSpecNameCount = 0;
 
         $(function () {
-
-            ajaxTpl('/dhoa/GetMaterial', '', function (data) {
+            var obj;
+            obj = {
+                status: ""
+            }
+            ajaxTpl('/dhoa/GetMaterial', obj, function (data) {
                 if (data.length) {
                     var str = '';
                     for (var i = 0, len = data.length; i < len; i++) {
@@ -200,18 +209,26 @@
             });
 
             if (recid) {
-                $('#productbh').val('@ViewBag.productbh');
-                $('#materialname').val('@ViewBag.materialname');
-                $('#materialspecname').val('@ViewBag.materialspecname');
-                $('#materialunit').val('@ViewBag.materialunit');
+                $("#productbh").attr("readonly", true);
+                $("#productbh").css({ background: "lightgray" })
+                $('#productbh').val(materialbh);
 
+                //$('#materialunit').val('@ViewBag.materialunit');
+                $('#materialtype').val(materialtype);
+
+                $('#materialname').val(materId);
+
+                $('#materialspecname').val(materialSpecID);
             }
+
+
         })
 
         function ChangeMaterial(materialId) {
             var obj;
             obj = {
-                materialId: materialId
+                materialId: materialId,
+                status: ""
             }
             ajaxTpl('/dhoa/GetMaterialSpec', obj, function (data) {
 
@@ -226,8 +243,8 @@
                         $('#materialspecname').html("<option value='0'>请选择规格</option>");
                         $('#materialspecname').append(str);
                     }
-                    if (materialSpecName) {
-                        $('#materialspecname').val(materialSpecName);
+                    if (materialSpecID) {
+                        $('#materialspecname').val(materialSpecID);
                     }
                 }
                 else {
@@ -254,11 +271,11 @@
             var matName = $("#materialname option:selected").text();
             var specId = $("#materialspecname option:selected").val();
             var specName = $("#materialspecname option:selected").text();
-            var unit = $("#materialunit").val();
+            //var unit = $("#materialunit").val();
             var status = $("#status").val();
             var productbh = $("#productbh").val();
             var materialtype = $("#materialtype option:selected").val();
-            
+
             if (matId == 0) {
                 layer.msg('请选择材料', {
                     icon: 2,
@@ -282,7 +299,7 @@
                 materialName: matName,
                 materialSpecId: specId,
                 materialSpecName: specName,
-                materialUnit: unit,
+                //materialUnit: unit,
                 status: status
             }
 

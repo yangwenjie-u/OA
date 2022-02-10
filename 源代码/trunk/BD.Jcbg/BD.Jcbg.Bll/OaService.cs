@@ -1548,7 +1548,7 @@ namespace BD.Jcbg.Bll
             }
 
             sqls.Add(sql);
-            sqls.Add($" update OA_MateriaInfo set LastPrice='{price}',PurchasePrice='{purchasePrice}',Purpose='{purpose}',TechnicalRequirement='{technicalRequirement}'" +
+            sqls.Add($" update OA_MaterialInfo set LastPrice='{price}',PurchasePrice='{purchasePrice}',Purpose='{purpose}',TechnicalRequirement='{technicalRequirement}'" +
                 $",Supplier='{supplier}',Manufacturer='{manufacturer}',Requisitioner='{requisitioner}'" +
                 $",UpdateTime=getdate() ,Updater='{CurrentUser.RealName }'" +
                 $" where  MaterialBH='{materBH}'");

@@ -671,7 +671,6 @@ namespace BD.Jcbg.Web.Controllers
         [LoginAuthorize]
         public void GetCompanys()
         {
-            string ret = "";
             StringBuilder sb = new StringBuilder();
             try
             {
@@ -706,7 +705,6 @@ namespace BD.Jcbg.Web.Controllers
         /// </summary>
         public void GetJcjgks()
         {
-            string ret = "";
             StringBuilder sb = new StringBuilder();
             try
             {
@@ -742,7 +740,6 @@ namespace BD.Jcbg.Web.Controllers
         /// </summary>
         public void GetGWList()
         {
-            string ret = "";
             StringBuilder sb = new StringBuilder();
             try
             {
@@ -1213,7 +1210,8 @@ namespace BD.Jcbg.Web.Controllers
                 ViewBag.materialname = dt[i]["materialname"];
                 ViewBag.materialspecid = dt[i]["materialspecid"];
                 ViewBag.materialspecname = dt[i]["materialspecname"];
-                ViewBag.materialunit = dt[i]["materialunit"];
+                //ViewBag.materialunit = dt[i]["materialunit"];
+                ViewBag.materialtype = dt[i]["type"];
 
             }
             return View();
@@ -1233,7 +1231,7 @@ namespace BD.Jcbg.Web.Controllers
                 string materialName = Request["materialName"].GetSafeString();
                 string materialSpecId = Request["materialSpecId"].GetSafeString();
                 string materialSpecName = Request["materialSpecName"].GetSafeString();
-                string materialUnit = Request["materialUnit"].GetSafeString();
+                //string materialUnit = Request["materialUnit"].GetSafeString();
                 string status = Request["status"].GetSafeString();
 
                 List<string> sqls = new List<string>();
@@ -1246,27 +1244,26 @@ namespace BD.Jcbg.Web.Controllers
                     return;
                 }
 
-                //新增时，判断编号是否重复
+
+                sqlStr = $" select * from OA_MaterialInfo where Materialid='{materialId}' and  MaterialSpecID='{materialSpecId}' and  type='{materialtype}'  and JCJGBH ='{CurrentUser.Qybh}'";
+
+                var datas = CommonService.GetDataTable(sqlStr);
+                if (datas.Count > 0)
+                {
+                    msg = "已存在相同类型的产品！";
+                    return;
+                }
                 if (string.IsNullOrEmpty(recid))
                 {
+                    //新增时判断编号是否重复
                     sqlStr = $" select * from OA_MaterialInfo where MaterialBH='{productBH}' and JCJGBH ='{CurrentUser.Qybh}'";
 
-                    var datas = CommonService.GetDataTable(sqlStr);
+                    datas = CommonService.GetDataTable(sqlStr);
                     if (datas.Count > 0)
                     {
                         msg = "产品编号重复！";
                         return;
                     }
-                    sqlStr = $" select * from OA_MaterialInfo where Materialid='{materialId}' and  MaterialSpecID='{materialSpecId}' and  type='{materialtype}'  and JCJGBH ='{CurrentUser.Qybh}'";
-
-                    datas = CommonService.GetDataTable(sqlStr);
-                    if (datas.Count > 0)
-                    {
-                        msg = "添加失败，已存在相同类型的产品！";
-                        return;
-                    }
-
-
                     recid = Guid.NewGuid().ToString("N");
                     sqls.Add($"INSERT INTO [dbo].[OA_MaterialInfo]([Recid],[type],[MaterialBH],[MaterialID],[MaterialName],[MaterialUnit],[MaterialSpecID],[MaterialSpecName]" +
                         $",[JCJGBH],[CreateTime],[Creator],[Status]) " +
@@ -1276,7 +1273,7 @@ namespace BD.Jcbg.Web.Controllers
                         $",'{productBH}'" +
                         $",'{materialId}'" +
                         $",'{materialName}'" +
-                        $",'{materialUnit}'" +
+                        //$",'{materialUnit}'" +
                         $",'{materialSpecId}'" +
                         $",'{materialSpecName}'" +
                         $",'{CurrentUser.Qybh}'" +
@@ -1286,7 +1283,7 @@ namespace BD.Jcbg.Web.Controllers
                 }
                 else
                 {
-                    sqls.Add(string.Format(" update OA_MaterialInfo set MaterialName='" + materialName + "'  ,materialUnit='" + materialUnit + "'" +
+                    sqls.Add(string.Format(" update OA_MaterialInfo set MaterialName='" + materialName + "'" +
                         ",materialSpecName='" + materialSpecName + "'" +
                         ",UpdateTime=getdate() ,Updater='" + CurrentUser.RealName + "' ,status='" + status + "'" +
                         "  where  recid='" + recid + "'"));
@@ -1448,10 +1445,15 @@ namespace BD.Jcbg.Web.Controllers
             try
             {
                 //材料记录唯一号
+                string recid = Request["recid"].GetSafeString();
                 string productbh = Request["productbh"].GetSafeString();
                 //申请：applyfor 入库：instorage
                 string method = Request["method"].GetSafeString();
                 decimal quantity = Request["quantity"].GetSafeDecimal();
+                decimal price = Request["price"].GetSafeDecimal();
+                decimal purchasePrice = Request["purchasePrice"].GetSafeDecimal();
+                string warehouseBH = Request["warehouseBH"].GetSafeString();
+
 
                 if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(productbh))
                 {
@@ -1460,14 +1462,8 @@ namespace BD.Jcbg.Web.Controllers
                 }
 
                 //更新商品库存
-                ret = ProductInventoryOperation(productbh, method, quantity, out err);
+                ret = ProductInventoryOperation(recid, productbh, method, warehouseBH, quantity, price, purchasePrice, out err);
 
-                //更新材料消耗信息
-
-                if (method.ToLower() == InventoryOper.InStorage)
-                {
-                    MaterialConsumeUpdate(productbh, quantity, out err);
-                }
             }
             catch (Exception e)
             {
@@ -1539,21 +1535,34 @@ namespace BD.Jcbg.Web.Controllers
         /// <param name="operQuantity"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool MaterialConsumeUpdate(string productBH, decimal operQuantity, out string msg)
+        public bool MaterialConsumeUpdate(string method, string warehouseBH, string productBH, decimal operQuantity, decimal price, decimal purchasePrice, out List<string> sqls, out string msg)
         {
             msg = "";
             bool ret = false;
 
-            List<string> sqls = new List<string>();
+            sqls = new List<string>();
             string sqlStr = string.Empty;
 
-            string warehouseBH = "";
-            string warehouseName = "";
             //操作类型 1：入库 10领取
             string operType = "1";
             //库存数量
             decimal inventoryQuantity = 0;
             string recid = string.Empty;
+
+
+            if (method.ToLower() == InventoryOper.InStorage)
+            {
+                operType = "1";
+            }
+            else if (method.ToLower() == InventoryOper.Applyfor)
+            {
+                operType = "10";
+            }
+            else
+            {
+                msg = "更新类型异常，请选择入库或领取类型";
+                return false;
+            }
 
             try
             {
@@ -1565,7 +1574,7 @@ namespace BD.Jcbg.Web.Controllers
                 }
 
                 #region 
-                sqlStr = $"select * from OA_MaterialInfo where materialbh='{productBH}'";
+                sqlStr = $"select * from OA_MaterialInfo where materialbh='{productBH}'  ";
                 var materialData = CommonService.GetDataTable(sqlStr);
 
                 if (materialData.Count == 0)
@@ -1575,28 +1584,216 @@ namespace BD.Jcbg.Web.Controllers
                     return false;
                 }
 
+                //获取库存信息
+
+                //入库时，往材料消耗信息表中添加记录
+                if (method.ToLower() == InventoryOper.InStorage)
+                {
+                    operType = "1";
+                    sqlStr = $"select * from MaterialConsume where materialbh='{productBH}'";
+                    var consumeData = CommonService.GetDataTable(sqlStr);
+                    if (consumeData.Count == 0)
+                    {
+                        recid = Guid.NewGuid().ToString("N");
+                        sqlStr = $"INSERT INTO [dbo].[OA_MaterialConsume]([Recid],type,[MaterialBH],[Price]," +
+                            $"[PurchasePrice],[Quantity],[Purpose],[TechnicalRequirement],[Supplier],[Manufacturer],[JCJGBH],[Checker]," +
+                            $"[CheckTime],[CreateTime],[Creator],[UpdateTime],[Updater],[Status]) " +
+                            $"VALUES('{recid}','{materialData[0]["type"]}'" +
+                            $",'{materialData[0]["materialbh"]}'" +
+                            $",'{price}'" +
+                            $",'{purchasePrice}'" +
+                            $",'{operQuantity}'" +
+                            $",'{materialData[0]["purpose"]}'" +
+                            $",'{materialData[0]["technicalrequirement"]}'" +
+                            $",'{materialData[0]["supplier"]}'" +
+                            $",'{materialData[0]["manufacturer"]}'" +
+                            $",'{CurrentUser.Qybh}'" +
+                            $",''" +
+                            $",null" +
+                            $",getdate()" +
+                            $",'" + CurrentUser.RealName + "'" +
+                            $",getdate()" +
+                            $",'" + CurrentUser.RealName + "',1)";
+                        sqls.Add(sqlStr);
+                    }
+                }
+
+
+
+                #endregion
+
+                #region 更新库存信息
+                //decimal inventoryStock = 0;
+                //sqlStr = $"select * from OA_InventoryInfo where ProductBH='{productBH}' and jcjgbh ='{CurrentUser.Qybh}'";
+                //var inventoryData = CommonService.GetDataTable(sqlStr);
+
+                //if (inventoryData.Count == 0)
+                //{
+                //    //库存表中没有记录，直接插入
+                //    sqlStr = ($"INSERT INTO [dbo].[OA_InventoryInfo]([Recid],[WarehouseBH],[ProductBH],[ProductID],[ProductName]," +
+                //        $"[ProductSpecID],[ProductSpecName],[ProductUnit],[Stock],[Price],[PurchasePrice],[UpdateTime],[Updater],[JCJGBH])" +
+                //        $"VALUES (" +
+                //        $"'{Guid.NewGuid().ToString("N")}'" +
+                //        $",'{warehouseBH}'" +
+                //        $",'{productBH}'" +
+                //        $",'{materialData[0]["materialid"]}'" +
+                //        $",'{materialData[0]["materialname"]}'" +
+                //        $",'{materialData[0]["materialspecid"]}'" +
+                //        $",'{materialData[0]["materialspecname"]}'" +
+                //        //$",'{materialData[0]["materialunit"]}'" +
+                //        $",''" +
+                //        $",'{operQuantity}'" +
+                //        $",'{price}'" +
+                //        $",'{purchasePrice}'" +
+                //        $",getdate()" +
+                //        $",'{CurrentUser.RealName}'" +
+                //        $",'{CurrentUser.Qybh}')");
+                //}
+                //else if (inventoryData.Count == 1)
+                //{
+                //    inventoryStock = inventoryData[0]["stock"].GetSafeDecimal();
+                //    //库存表中一条记录，更新库存信息
+                //    #region 库存数量判断
+                //    if (method.ToLower() == InventoryOper.InStorage)
+                //    {
+                //        inventoryQuantity = inventoryStock + operQuantity;
+                //        //入库
+                //    }
+                //    else if (method.ToLower() == InventoryOper.Applyfor)
+                //    {
+                //        //领取
+                //        inventoryQuantity = inventoryStock - operQuantity;
+                //    }
+                //    else
+                //    {
+
+                //    }
+                //    #endregion
+
+                //    sqls.Add($"update OA_InventoryInfo set Stock='{inventoryQuantity}' ,UpdateTime=getdate(),Updater='{CurrentUser.Qybh}'" +
+                //        $" where  recid='{inventoryData[0]["recid"]}'");
+                //}
+                //else
+                //{
+                //    //库存表中有多条记录，正常不存在这种情况
+                //}
+
+
+                ////添加库存记录
+                //sqls.Add($"INSERT INTO [dbo].[OA_InventoryRecord]([Recid],[WarehouseBH],[ProductBH],[ProductID],[ProductName],[ProductSpecID],[ProductSpecName]," +
+                //    $"[ProductUnit],[Quantity],Stock,[Price],[PurchasePrice],[CreateTime],[Creator],[JCJGBH],[OperType]) " +
+                //    $"VALUES ('{Guid.NewGuid().ToString("N")}'" +
+                //    $",'{warehouseBH}'" +
+                //    $",'{productBH}'" +
+                //    $",'{materialData[0]["materialid"]}'" +
+                //    $",'{materialData[0]["materialname"]}'" +
+                //    $",'{materialData[0]["materialspecid"]}'" +
+                //    $",'{materialData[0]["materialspecname"]}'" +
+                //    $",''" +
+                //    $",'{operQuantity}'" +
+                //    $",'{inventoryStock}'" +
+                //    $",'{price}'" +
+                //    $",'{purchasePrice}'" +
+                //    $",getdate()" +
+                //    $",'{CurrentUser.RealName}'" +
+                //    $",'{CurrentUser.Qybh}'" +
+                //    $",'{operType}')");
+
+                //CommonService.ExecTrans(sqls, out msg);
+                //if (string.IsNullOrEmpty(msg))
+                //{
+                //    ret = true;
+                //}
+                #endregion
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                msg = "方法调用异常" + ex.Message;
+                SysLog4.WriteLog($"方法【ProductInventoryOperation】中异常：" + msg);
+                return false;
+            }
+            return ret;
+        }
+
+        /// <summary>
+        /// 更新材料耗材信息
+        /// </summary>
+        /// <param name="productBH"></param>
+        /// <param name="method"></param>
+        /// <param name="operQuantity"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public bool MaterialConsumeUpdate(string warehouseBH, string productBH, decimal operQuantity, decimal price, decimal purchasePrice, out string msg)
+        {
+            msg = "";
+            bool ret = false;
+
+            List<string> sqls = new List<string>();
+            string sqlStr = string.Empty;
+
+            //操作类型 1：入库 10领取
+            string operType = "1";
+            //库存数量
+            decimal inventoryQuantity = 0;
+            string recid = string.Empty;
+
+            string method = "";
+
+            if (method.ToLower() == InventoryOper.InStorage)
+            {
+                operType = "1";
+            }
+            else if (method.ToLower() == InventoryOper.Applyfor)
+            {
+                operType = "10";
+            }
+            else
+            {
+                msg = "更新类型异常，请选择入库或领取类型";
+                return false;
+            }
+
+            try
+            {
+                if (string.IsNullOrEmpty(productBH))
+                {
+                    msg = "操作异常";
+                    SysLog4.WriteLog($"方法【MaterialConsumeUpdate】中异常：" + msg);
+                    return false;
+                }
+
+                #region 
+                sqlStr = $"select * from OA_MaterialInfo where materialbh='{productBH}'  ";
+                var materialData = CommonService.GetDataTable(sqlStr);
+
+                if (materialData.Count == 0)
+                {
+                    msg = "找不到产品信息";
+                    SysLog4.WriteLog($"方法【MaterialConsumeUpdate】中异常：" + msg);
+                    return false;
+                }
+
+                //获取库存信息
+
                 //入库时，往材料消耗信息表中添加记录
                 sqlStr = $"select * from MaterialConsume where materialbh='{productBH}'";
                 var consumeData = CommonService.GetDataTable(sqlStr);
                 if (consumeData.Count == 0)
                 {
                     recid = Guid.NewGuid().ToString("N");
-                    sqlStr = $"INSERT INTO [dbo].[OA_MaterialConsume]([Recid],type,[MaterialID],[MaterialName],[MaterialSpecID],[MaterialSpec],[Price]," +
-                        $"[PurchasePrice],[Quantity],[Purpose],[TechnicalRequirement],[Supplier],[Manufacturer],[Requisitioner],[JCJGBH],[Checker]," +
+                    sqlStr = $"INSERT INTO [dbo].[OA_MaterialConsume]([Recid],type,[MaterialBH],[Price]," +
+                        $"[PurchasePrice],[Quantity],[Purpose],[TechnicalRequirement],[Supplier],[Manufacturer],[JCJGBH],[Checker]," +
                         $"[CheckTime],[CreateTime],[Creator],[UpdateTime],[Updater],[Status]) " +
-                        $"VALUES('{recid}','{consumeData[0]["type"]}'" +
-                        $",'{consumeData[0]["matId"]}'" +
-                        $",'{consumeData[0]["matName"]}'" +
-                        $",'{consumeData[0]["unitId"]}'" +
-                        $",'{consumeData[0]["unitName"]}'" +
-                        $",'{consumeData[0]["price"]}'" +
-                        $",'{consumeData[0]["PurchasePrice"]}'" +
-                        $",'{consumeData[0]["quantity"]}'" +
-                        $",'{consumeData[0]["purpose"]}'" +
-                        $",'{consumeData[0]["technicalRequirement"]}'" +
-                        $",'{consumeData[0]["supplier"]}'" +
-                        $",'{consumeData[0]["manufacturer"]}'" +
-                        $",'{consumeData[0]["requisitioner"]}'" +
+                        $"VALUES('{recid}','{materialData[0]["type"]}'" +
+                        $",'{materialData[0]["materialbh"]}'" +
+                        $",'{price}'" +
+                        $",'{purchasePrice}'" +
+                        $",'{operQuantity}'" +
+                        $",'{materialData[0]["purpose"]}'" +
+                        $",'{materialData[0]["technicalrequirement"]}'" +
+                        $",'{materialData[0]["supplier"]}'" +
+                        $",'{materialData[0]["manufacturer"]}'" +
                         $",'{CurrentUser.Qybh}'" +
                         $",''" +
                         $",null" +
@@ -1604,74 +1801,60 @@ namespace BD.Jcbg.Web.Controllers
                         $",'" + CurrentUser.RealName + "'" +
                         $",getdate()" +
                         $",'" + CurrentUser.RealName + "',1)";
+                    sqls.Add(sqlStr);
+
                 }
 
-                //添加库存记录
-                sqls.Add($"INSERT INTO [dbo].[OA_InventoryRecord]([Recid],[WarehouseBH],[WarehouseName],[ProductBH],[ProductID],[ProductName],[ProductSpecID],[ProductSpecName]," +
-                    $"[ProductUnit],[Quantity],[Price],[PurchasePrice],[CreateTime],[Creator],[JCJGBH],[OperType]) " +
-                    $"VALUES ('{Guid.NewGuid().ToString("N")}'" +
-                    $",'{warehouseBH}'" +
-                    $",'{warehouseName}'" +
-                    $",'{productBH}'" +
-                    $",'{materialData[0]["materialid"]}'" +
-                    $",'{materialData[0]["materialname"]}'" +
-                    $",'{materialData[0]["materialspecid"]}'" +
-                    $",'{materialData[0]["materialspecname"]}'" +
-                    $",'{materialData[0]["materialunit"]}'" +
-                    $",'{operQuantity}'" +
-                    $",'{materialData[0]["price"]}'" +
-                    $",'{materialData[0]["purchaseprice"]}'" +
-                    $",getdate()" +
-                    $",'{CurrentUser.RealName}'" +
-                    $",'{CurrentUser.Qybh}'" +
-                    $",'{operType}')");
+
 
                 #endregion
 
                 #region 更新库存信息
-                sqlStr = $"select * from OA_InventoryInfo where ProductBH='{productBH}' andjcjgbh ='{CurrentUser.Qybh}'";
+                decimal inventoryStock = 0;
+                sqlStr = $"select * from OA_InventoryInfo where ProductBH='{productBH}' and jcjgbh ='{CurrentUser.Qybh}'";
                 var inventoryData = CommonService.GetDataTable(sqlStr);
 
                 if (inventoryData.Count == 0)
                 {
                     //库存表中没有记录，直接插入
-                    sqlStr=($"INSERT INTO [dbo].[OA_InventoryInfo]([Recid],[WarehouseBH],[WarehouseName],[ProductBH],[ProductID],[ProductName]," +
+                    sqlStr = ($"INSERT INTO [dbo].[OA_InventoryInfo]([Recid],[WarehouseBH],[ProductBH],[ProductID],[ProductName]," +
                         $"[ProductSpecID],[ProductSpecName],[ProductUnit],[Stock],[Price],[PurchasePrice],[UpdateTime],[Updater],[JCJGBH])" +
                         $"VALUES (" +
                         $"'{Guid.NewGuid().ToString("N")}'" +
                         $",'{warehouseBH}'" +
-                        $",'{warehouseName}'" +
                         $",'{productBH}'" +
                         $",'{materialData[0]["materialid"]}'" +
                         $",'{materialData[0]["materialname"]}'" +
                         $",'{materialData[0]["materialspecid"]}'" +
                         $",'{materialData[0]["materialspecname"]}'" +
-                        $",'{materialData[0]["materialunit"]}'" +
+                        //$",'{materialData[0]["materialunit"]}'" +
+                        $",''" +
                         $",'{operQuantity}'" +
-                        $",'{materialData[0]["price"]}'" +
-                        $",'{materialData[0]["purchaseprice"]}'" +
+                        $",'{price}'" +
+                        $",'{purchasePrice}'" +
                         $",getdate()" +
                         $",'{CurrentUser.RealName}'" +
                         $",'{CurrentUser.Qybh}')");
                 }
                 else if (inventoryData.Count == 1)
                 {
+                    inventoryStock = inventoryData[0]["stock"].GetSafeDecimal();
                     //库存表中一条记录，更新库存信息
                     #region 库存数量判断
-                    //if (method.ToLower() == InventoryOper.InStorage)
-                    //{
-                    //    inventoryQuantity = inventoryData[0]["stock"].GetSafeDecimal() + operQuantity;
-                    //    //入库
-                    //}
-                    //else if (method.ToLower() == InventoryOper.Applyfor)
-                    //{
-                    //    //领取
-                    //    inventoryQuantity = inventoryData[0]["stock"].GetSafeDecimal() + operQuantity;
-                    //}
-                    //else
-                    //{
+                    if (method.ToLower() == InventoryOper.InStorage)
+                    {
+                        inventoryQuantity = inventoryStock + operQuantity;
+                        //入库
+                    }
+                    else if (method.ToLower() == InventoryOper.Applyfor)
+                    {
+                        //领取
+                        inventoryQuantity = inventoryStock - operQuantity;
+                    }
+                    else
+                    {
 
-                    //}
+                    }
                     #endregion
 
                     sqls.Add($"update OA_InventoryInfo set Stock='{inventoryQuantity}' ,UpdateTime=getdate(),Updater='{CurrentUser.Qybh}'" +
@@ -1682,6 +1865,26 @@ namespace BD.Jcbg.Web.Controllers
                     //库存表中有多条记录，正常不存在这种情况
                 }
 
+
+                //添加库存记录
+                sqls.Add($"INSERT INTO [dbo].[OA_InventoryRecord]([Recid],[WarehouseBH],[ProductBH],[ProductID],[ProductName],[ProductSpecID],[ProductSpecName]," +
+                    $"[ProductUnit],[Quantity],Stock,[Price],[PurchasePrice],[CreateTime],[Creator],[JCJGBH],[OperType]) " +
+                    $"VALUES ('{Guid.NewGuid().ToString("N")}'" +
+                    $",'{warehouseBH}'" +
+                    $",'{productBH}'" +
+                    $",'{materialData[0]["materialid"]}'" +
+                    $",'{materialData[0]["materialname"]}'" +
+                    $",'{materialData[0]["materialspecid"]}'" +
+                    $",'{materialData[0]["materialspecname"]}'" +
+                    $",''" +
+                    $",'{operQuantity}'" +
+                    $",'{inventoryStock}'" +
+                    $",'{price}'" +
+                    $",'{purchasePrice}'" +
+                    $",getdate()" +
+                    $",'{CurrentUser.RealName}'" +
+                    $",'{CurrentUser.Qybh}'" +
+                    $",'{operType}')");
 
                 CommonService.ExecTrans(sqls, out msg);
                 if (string.IsNullOrEmpty(msg))
@@ -1698,15 +1901,20 @@ namespace BD.Jcbg.Web.Controllers
             }
             return ret;
         }
+
         /// <summary>
         /// 商品库存信息更新
         /// </summary>
+        /// <param name="purchaseOrderRecid">采购订单唯一号</param>
         /// <param name="productBH">商品编号</param>
         /// <param name="method">标记入库\领取</param>
+        /// <param name="warehouseBH"></param>
         /// <param name="operQuantity">入库或领取数量</param>
+        /// <param name="price"></param>
+        /// <param name="purchasePrice"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public bool ProductInventoryOperation(string productBH, string method, decimal operQuantity, out string msg)
+        public bool ProductInventoryOperation(string purchaseOrderRecid, string productBH, string method, string warehouseBH, decimal operQuantity, decimal price, decimal purchasePrice, out string msg)
         {
             msg = "";
             bool ret = false;
@@ -1714,17 +1922,12 @@ namespace BD.Jcbg.Web.Controllers
             List<string> sqls = new List<string>();
             string sqlStr = string.Empty;
 
-            string warehouseBH = "";
-            string warehouseName = "";
             //操作类型 1：入库 10领取
-            string operType = "1";
+            string operType = "10";
             //库存数量
             decimal inventoryQuantity = 0;
-            //更新数量
-            //operQuantity = 0;
 
-            //商品编号
-            //productBH = "";
+
             try
             {
                 if (string.IsNullOrEmpty(method) || string.IsNullOrEmpty(productBH))
@@ -1734,88 +1937,72 @@ namespace BD.Jcbg.Web.Controllers
                     return false;
                 }
 
-                //入库操作
-                if (method.ToLower() == "applyfor")
+                //领取操作
+                if (method.ToLower() == InventoryOper.InStorage)
                 {
-                    operType = "10";
+                    operType = "1";
+                    //设置采购订单已完成
+                    sqls.Add($" update OA_PurchaseOrder set status='9' where recid ='{purchaseOrderRecid}'");
                 }
 
                 #region 添加库存记录
                 sqlStr = $"select * from OA_MaterialInfo where materialbh='{productBH}'";
                 var materialData = CommonService.GetDataTable(sqlStr);
-                //List<MateriaInfo> sdf = materialData as List<MateriaInfo>;
                 if (materialData.Count == 0)
                 {
                     msg = "找不到产品信息";
                     SysLog4.WriteLog($"方法【ProductInventoryOperation】中异常：" + msg);
                     return false;
                 }
-                productBH = materialData[0]["materialbh"];
-                sqls.Add($"INSERT INTO [dbo].[OA_InventoryRecord]([Recid],[WarehouseBH],[WarehouseName],[ProductBH],[ProductID],[ProductName],[ProductSpecID],[ProductSpecName]," +
-                    $"[ProductUnit],[Quantity],[Price],[PurchasePrice],[CreateTime],[Creator],[JCJGBH],[OperType]) " +
-                    $"VALUES ('{Guid.NewGuid().ToString("N")}'" +
-                    $",'{warehouseBH}'" +
-                    $",'{warehouseName}'" +
-                    $",'{productBH}'" +
-                    $",'{materialData[0]["materialid"]}'" +
-                    $",'{materialData[0]["materialname"]}'" +
-                    $",'{materialData[0]["materialspecid"]}'" +
-                    $",'{materialData[0]["materialspecname"]}'" +
-                    $",'{materialData[0]["materialunit"]}'" +
-                    $",'{operQuantity}'" +
-                    $",'{materialData[0]["price"]}'" +
-                    $",'{materialData[0]["purchaseprice"]}'" +
-                    $",getdate()" +
-                    $",'{CurrentUser.RealName}'" +
-                    $",'{CurrentUser.Qybh}'" +
-                    $",'{operType}')");
+                //productBH = materialData[0]["materialbh"];
 
                 #endregion
 
                 #region 更新库存信息
-                sqlStr = $"select * from OA_InventoryInfo where ProductBH='{productBH}' andjcjgbh ='{CurrentUser.Qybh}'";
+                sqlStr = $"select * from OA_InventoryInfo where ProductBH='{productBH}' and jcjgbh ='{CurrentUser.Qybh}'";
                 var inventoryData = CommonService.GetDataTable(sqlStr);
-
+                decimal inventoryStock = 0;
                 if (inventoryData.Count == 0)
                 {
                     if (method.ToLower() == InventoryOper.Applyfor)
                     {
                         //正常不存在领取的情况
                     }
-
+                    inventoryStock = operQuantity;
                     //库存表中没有记录，直接插入
-                    sqls.Add($"INSERT INTO [dbo].[OA_InventoryInfo]([Recid],[WarehouseBH],[WarehouseName],[ProductBH],[ProductID],[ProductName]," +
+                    sqls.Add($"INSERT INTO [dbo].[OA_InventoryInfo]([Recid],[WarehouseBH],[ProductBH],[ProductID],[ProductName]," +
                         $"[ProductSpecID],[ProductSpecName],[ProductUnit],[Stock],[Price],[PurchasePrice],[UpdateTime],[Updater],[JCJGBH])" +
                         $"VALUES (" +
                         $"'{Guid.NewGuid().ToString("N")}'" +
                         $",'{warehouseBH}'" +
-                        $",'{warehouseName}'" +
                         $",'{productBH}'" +
                         $",'{materialData[0]["materialid"]}'" +
                         $",'{materialData[0]["materialname"]}'" +
                         $",'{materialData[0]["materialspecid"]}'" +
                         $",'{materialData[0]["materialspecname"]}'" +
-                        $",'{materialData[0]["materialunit"]}'" +
+                        $",''" +
                         $",'{operQuantity}'" +
-                        $",'{materialData[0]["price"]}'" +
-                        $",'{materialData[0]["purchaseprice"]}'" +
+                        $",'{price}'" +
+                        $",'{purchasePrice}'" +
                         $",getdate()" +
                         $",'{CurrentUser.RealName}'" +
                         $",'{CurrentUser.Qybh}')");
                 }
                 else if (inventoryData.Count == 1)
                 {
+                    inventoryStock = inventoryData[0]["stock"].GetSafeDecimal();
+
                     //库存表中一条记录，更新库存信息
                     #region 库存数量判断
                     if (method.ToLower() == InventoryOper.InStorage)
                     {
-                        inventoryQuantity = inventoryData[0]["stock"].GetSafeDecimal() + operQuantity;
+                        inventoryQuantity = inventoryStock + operQuantity;
                         //入库
                     }
                     else if (method.ToLower() == InventoryOper.Applyfor)
                     {
                         //领取
-                        inventoryQuantity = inventoryData[0]["stock"].GetSafeDecimal() + operQuantity;
+                        inventoryQuantity = inventoryStock - operQuantity;
                     }
                     else
                     {
@@ -1830,6 +2017,42 @@ namespace BD.Jcbg.Web.Controllers
                 {
                     //库存表中有多条记录，正常不存在这种情况
                 }
+
+                sqls.Add($"INSERT INTO [dbo].[OA_InventoryRecord]([Recid],[WarehouseBH],[ProductBH],[ProductID],[ProductName],[ProductSpecID],[ProductSpecName]," +
+                $"[ProductUnit],[Quantity],Stock,[Price],[PurchasePrice],[CreateTime],[Creator],[JCJGBH],[OperType]) " +
+                $"VALUES ('{Guid.NewGuid().ToString("N")}'" +
+                $",'{warehouseBH}'" +
+                $",'{productBH}'" +
+                $",'{materialData[0]["materialid"]}'" +
+                $",'{materialData[0]["materialname"]}'" +
+                $",'{materialData[0]["materialspecid"]}'" +
+                $",'{materialData[0]["materialspecname"]}'" +
+                $",''" +
+                $",'{operQuantity}'" +
+                $",'{inventoryStock}'" +
+                $",'{price}'" +
+                $",'{purchasePrice}'" +
+                $",getdate()" +
+                $",'{CurrentUser.RealName}'" +
+                $",'{CurrentUser.Qybh}'" +
+                $",'{operType}')");
+
+
+                //更新材料消耗信息
+                List<string> sqlList = new List<string>();
+                //更新材料耗材信息
+                ret = MaterialConsumeUpdate(method, warehouseBH, productBH, operQuantity, price, purchasePrice, out sqlList, out msg);
+
+                if (ret == false)
+                {
+                    return false;
+                }
+                sqls.AddRange(sqlList);
+
+                //if ( method.ToLower() == InventoryOper.InStorage)
+                //{
+
+                //}
 
 
                 CommonService.ExecTrans(sqls, out msg);
@@ -1849,7 +2072,7 @@ namespace BD.Jcbg.Web.Controllers
         }
         #endregion
 
-        #region 耗材
+        #region 耗材管理
         /// <summary>
         /// 耗材管理
         /// </summary>
@@ -1899,8 +2122,9 @@ namespace BD.Jcbg.Web.Controllers
                 string matBH = Request["matBH"].GetSafeString();
                 string matId = Request["matId"].GetSafeString();
                 string matName = Request["matName"].GetSafeString();
-                string unitId = Request["unitId"].GetSafeString();
-                string unitName = Request["unitName"].GetSafeString();
+                string specId = Request["specId"].GetSafeString();
+                string specName = Request["specName"].GetSafeString();
+                //string unitName = Request["unitName"].GetSafeString();
                 string price = Request["price"].GetSafeString("0");
                 string quantity = Request["quantity"].GetSafeString("0");
                 string purchasePrice = Request["purchasePrice"].GetSafeString("0");
@@ -1913,7 +2137,8 @@ namespace BD.Jcbg.Web.Controllers
                 string sqlStr = "";
 
                 ///产品库存数量
-                decimal productInventortQuantity = 0;
+                decimal productInventoryQuantity = 0;
+                decimal inventoryStock = 0;
                 List<string> sqls = new List<string>();
                 if (string.IsNullOrEmpty(recid))
                 {
@@ -1923,12 +2148,19 @@ namespace BD.Jcbg.Web.Controllers
 
                     if (inventDatas.Count == 0)
                     {
-                        sqls.Add($"INSERT INTO [dbo].[OA_InventoryInfo]([Recid],[WarehouseBH],[ProductBH]," +
+                        inventoryStock = quantity.GetSafeDecimal();
+
+                        sqls.Add($"INSERT INTO [dbo].[OA_InventoryInfo]([Recid],[WarehouseBH],[ProductBH],ProductID,ProductName,ProductSpecID,ProductSpecName,ProductUnit," +
                             $"[Stock],[Price],[PurchasePrice],[UpdateTime],[Updater],[JCJGBH])" +
                            $"VALUES (" +
                            $"'{Guid.NewGuid().ToString("N")}'" +
                            $",'{warehouseBH}'" +
                            $",'{matBH}'" +
+                           $",'{matId}'" +
+                           $",'{matName}'" +
+                           $",'{specId}'" +
+                           $",'{specName}'" +
+                           $",''" +
                            $",'{quantity}'" +
                            $",'{price}'" +
                            $",'{purchasePrice}'" +
@@ -1939,8 +2171,10 @@ namespace BD.Jcbg.Web.Controllers
                     }
                     else if (inventDatas.Count == 1)
                     {
-                        productInventortQuantity = inventDatas[0]["stock"].GetSafeDecimal() + quantity.GetSafeDecimal();
-                        sqlStr = $"update OA_InventoryInfo set Stock='{productInventortQuantity}' ,UpdateTime=getdate(),Updater='{CurrentUser.RealUserName}'" +
+                        productInventoryQuantity = inventDatas[0]["stock"].GetSafeDecimal() + quantity.GetSafeDecimal();
+                        inventoryStock = productInventoryQuantity;
+
+                        sqlStr = $"update OA_InventoryInfo set Stock='{productInventoryQuantity}' ,UpdateTime=getdate(),Updater='{CurrentUser.RealUserName}'" +
                        $" where  ProductBH='{matBH}' and ISNULL(WarehouseBH,'') ='{warehouseBH}'and jcjgbh='{CurrentUser.Qybh}'";
                         sqls.Add(sqlStr);
                     }
@@ -1949,7 +2183,7 @@ namespace BD.Jcbg.Web.Controllers
                         //正常情况不存在的
                     }
 
-               
+
                     #endregion
 
                     #region 更新产品消耗信息
@@ -1960,18 +2194,18 @@ namespace BD.Jcbg.Web.Controllers
                     {
                         recid = Guid.NewGuid().ToString("N");
 
-                        sqlStr = "INSERT INTO [dbo].[OA_MaterialConsume]([Recid],type,MaterialBH,[MaterialID],[MaterialName],[MaterialSpecID],[MaterialSpecName],[Price]," +
+                        sqlStr = "INSERT INTO [dbo].[OA_MaterialConsume]([Recid],type,MaterialBH,[Price]," +
                             "[PurchasePrice],[Quantity],[Purpose],[TechnicalRequirement],[Supplier],[Manufacturer],[Requisitioner],[JCJGBH],[Checker]," +
                             "[CheckTime],[CreateTime],[Creator],[UpdateTime],[Updater],[Status]) " +
                             "VALUES(" +
-                            "'" + recid + "','" + type + "','" + matBH + "','" + matId + "','" + matName + "','" + unitId + "','" + unitName + "','" + price + "','" + purchasePrice + "','" + quantity + "'" +
+                            "'" + recid + "','" + type + "','" + matBH + "','" + price + "','" + purchasePrice + "','" + quantity + "'" +
                             ",'" + purpose + "','" + technicalRequirement + "','" + supplier + "','" + manufacturer + "','" + requisitioner + "','" + CurrentUser.Qybh + "'" +
                             ",null,null,getdate(),'" + CurrentUser.RealName + "',getdate(),'" + CurrentUser.RealName + "',1)";
                         sqls.Add(sqlStr);
                     }
                     else if (datas.Count() == 1)
                     {
-                        sqlStr = $" update OA_MaterialConsume set quantity='{productInventortQuantity}'  where MaterialBH ='{matBH}' and ISNULL(warehouseBH,'') ='{warehouseBH}' and jcjgbh='{CurrentUser.Qybh}'";
+                        sqlStr = $" update OA_MaterialConsume set quantity='{productInventoryQuantity}'  where MaterialBH ='{matBH}' and ISNULL(warehouseBH,'') ='{warehouseBH}' and jcjgbh='{CurrentUser.Qybh}'";
                         sqls.Add(sqlStr);
                     }
                     else
@@ -1980,14 +2214,19 @@ namespace BD.Jcbg.Web.Controllers
                     }
                     #endregion
 
-
                     //添加入库记录
-                    sqlStr = $"INSERT INTO [dbo].[OA_InventoryRecord]([Recid],[WarehouseBH],[ProductBH]," +
-                        $"[Quantity],[Price],[PurchasePrice],[CreateTime],[Creator],[JCJGBH],[OperType]) " +
+                    sqlStr = $"INSERT INTO [dbo].[OA_InventoryRecord]([Recid],[WarehouseBH],[ProductBH],[ProductID],[ProductName],[ProductSpecID],[ProductSpecName],ProductUnit," +
+                        $"[Quantity],Stock,[Price],[PurchasePrice],[CreateTime],[Creator],[JCJGBH],[OperType]) " +
                         $"VALUES ('{Guid.NewGuid().ToString("N")}'" +
                         $",'{warehouseBH}'" +
                         $",'{matBH}'" +
+                        $",'{matId}'" +
+                        $",'{matName}'" +
+                        $",'{specId}'" +
+                        $",'{specName}'" +
+                        $",''" +
                         $",'{quantity.GetSafeDecimal()}'" +
+                        $",'{inventoryStock}'" +
                         $",'{price}'" +
                         $",'{purchasePrice}'" +
                         $",getdate()" +
@@ -2068,7 +2307,16 @@ namespace BD.Jcbg.Web.Controllers
             string sqlWhere = "";
             try
             {
-                sqlWhere = " and  status <>'-1' ";
+                string status = Request["status"].GetSafeString();
+
+                if (string.IsNullOrEmpty(status))
+                {
+                    sqlWhere = " and  status <>'-1' ";
+                }
+                else
+                {
+                    sqlWhere = " and  status ='1' ";
+                }
                 sb.Append("[");
                 string sql = "select * from OA_Material where   jcjgbh ='" + CurrentUser.Qybh + "'" + sqlWhere;
 
@@ -2096,7 +2344,6 @@ namespace BD.Jcbg.Web.Controllers
             }
         }
 
-
         /// <summary>
         /// 获取材料规格
         /// </summary>
@@ -2107,14 +2354,23 @@ namespace BD.Jcbg.Web.Controllers
             string sqlWhere = "";
             try
             {
-                sqlWhere = " and  status <>'-1' ";
+                string status = Request["status"].GetSafeString();
+
+                if (string.IsNullOrEmpty(status))
+                {
+                    sqlWhere = " and  status <>'-1' ";
+                }
+                else
+                {
+                    sqlWhere = " and  status ='1' ";
+                }
 
                 if (string.IsNullOrEmpty(materialId))
                 {
                     sb.Append("");
                     return;
                 }
-                sqlWhere += " and materialId=" + materialId;
+                sqlWhere += $" and  ProductRecid  in (select  recid from OA_Material  where id='{materialId}')";
                 sb.Append("[");
                 string sql = "select * from OA_MaterialSpec where    jcjgbh ='" + CurrentUser.Qybh + "'" + sqlWhere;
 
@@ -2141,6 +2397,56 @@ namespace BD.Jcbg.Web.Controllers
             }
         }
 
+        //流程中使用
+
+        public void GetMaterialSpecById()
+        {
+            StringBuilder sb = new StringBuilder();
+            string materialid = Request["materialId"].GetSafeString();
+            string materialType = Request["materialType"].GetSafeString();
+            string sqlWhere = "";
+            try
+            {
+                sqlWhere = " and  status ='1' ";
+
+                if (string.IsNullOrEmpty(materialid))
+                {
+                    sb.Append("[]");
+                    return;
+                }
+                sqlWhere += " and materialid='" + materialid + "'";
+
+
+                if (!string.IsNullOrEmpty(materialType))
+                {
+                    sqlWhere += $" and type='{materialType}' ";
+                }
+
+                sb.Append("[");
+                string sql = "select distinct materialBH  ,Materialspecid   ,Materialspecname  from OA_MaterialInfo where    jcjgbh ='" + CurrentUser.Qybh + "'" + sqlWhere;
+
+                IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+                for (int i = 0; i < dt.Count; i++)
+                {
+                    sb.Append("{\"id\":\"" + dt[i]["materialspecid"].GetSafeString() + "\",\"name\":\"" + dt[i]["materialspecname"].GetSafeString() + "\",\"materialBH\":\"" + dt[i]["materialbh"].GetSafeString() + "\"},");
+                }
+
+                if (sb.ToString().EndsWith(","))
+                    sb.Remove(sb.Length - 1, 1);
+                sb.Append("]");
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+            }
+            finally
+            {
+                Response.ContentType = "text/plain";
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                Response.Write(sb.ToString());
+                Response.End();
+            }
+        }
         /// <summary>
         /// 获取材料规格
         /// </summary>
@@ -2151,11 +2457,11 @@ namespace BD.Jcbg.Web.Controllers
             string sqlWhere = "";
             try
             {
-                sqlWhere = " and  status <>'-1' ";
+                sqlWhere = " and  status ='1' ";
 
                 if (string.IsNullOrEmpty(materialBH))
                 {
-                    sb.Append("");
+                    sb.Append("[]");
                     return;
                 }
                 sqlWhere += " and materialBH='" + materialBH + "'";
@@ -2193,11 +2499,11 @@ namespace BD.Jcbg.Web.Controllers
             StringBuilder sb = new StringBuilder();
 
             string sqlWhere = "";
-            string type = Request["type"].GetSafeString();
+            string type = Request["materialType"].GetSafeString();
 
             try
             {
-                sqlWhere = $" and type='{type}' and  status <>'-1'  ";
+                sqlWhere = $" and type='{type}' and status ='1'  ";
                 sb.Append("[");
                 string sql = "select distinct materialid, materialname from OA_MaterialInfo where   jcjgbh ='" + CurrentUser.Qybh + "'" + sqlWhere;
 
@@ -2224,16 +2530,18 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
+        /// <summary>
         /// 获取材料规格
         /// </summary>
         public void GetMaterialInfoSpec()
         {
             StringBuilder sb = new StringBuilder();
             string materialId = Request["materialId"].GetSafeString();
+            string materialType = Request["materialType"].GetSafeString();
             string sqlWhere = "";
             try
             {
-                sqlWhere = " and  status <>'-1' ";
+                sqlWhere = " and  status ='1' ";
 
                 if (string.IsNullOrEmpty(materialId))
                 {
@@ -2241,6 +2549,11 @@ namespace BD.Jcbg.Web.Controllers
                     return;
                 }
                 sqlWhere += " and materialId=" + materialId;
+
+                if (!string.IsNullOrEmpty(materialType))
+                {
+                    sqlWhere += $" and type='{materialType}' ";
+                }
                 sb.Append("[");
                 string sql = "select * from OA_MaterialInfo where jcjgbh ='" + CurrentUser.Qybh + "'" + sqlWhere;
 
@@ -2266,8 +2579,512 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
+
+        /// <summary>
+        /// 设置产品禁用启用状态
+        /// </summary>
+        public void SetProductInfoStatus()
+        {
+            bool code = true;
+            string msg = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                string status = Request["status"].GetSafeString();
+                string sql = $" update  OA_MaterialInfo set status='{status}'  where recid='{recid}' ";
+                CommonService.ExecSql(sql, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+                msg = "更新成功";
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+
+        }
+
         #endregion
 
+        #region 材料基本信息
+        /// <summary>
+        /// 产品信息编辑
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorize]
+        public ActionResult ProductBaseInfoEdit()
+        {
+            string recid = Request["recid"].GetSafeString();
+
+            string sql = $"select * from OA_Material  where  recid ='{recid}' and  JCJGBH='" + CurrentUser.Qybh + "'";
+
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+                ViewBag.id = dt[i]["id"];
+                ViewBag.productName = dt[i]["materialname"];
+                ViewBag.productStatus = dt[i]["status"];
+                //ViewBag.productUnit = dt[i]["unit"];
+            }
+            ViewBag.recid = recid;
+
+            return View();
+
+        }
+
+
+        /// <summary>
+        /// 更新产品信息
+        /// </summary>
+        public void ProductBaseInfoUpdate()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                string productName = Request["productName"].GetSafeString();
+                string productStatus = Request["productStatus"].GetSafeString("1");
+                //string productUnit = Request["productUnit"].GetSafeString();
+                IList<string> sqls = new List<string>();
+
+                if (string.IsNullOrEmpty(recid))
+                {
+                    //检测材料是否已经存在
+                    sqlStr = $" select * from OA_Material where MaterialName='{productName}' and jcjgbh='{CurrentUser.Qybh}'";
+
+                    var datas = CommonService.GetDataTable(sqlStr);
+                    if (datas.Count != 0)
+                    {
+                        code = false;
+                        msg = "添加失败，已存在相同产品！";
+                        return;
+                    }
+
+                    recid = Guid.NewGuid().ToString("N");
+                    sqlStr = string.Format($"INSERT INTO [dbo].[OA_Material](recid,[MaterialName],[Status],[JCJGBH]) " +
+                        $"VALUES ('{recid}','{productName}', '{productStatus}', '{CurrentUser.Qybh}')");
+                }
+                else
+                {
+                    sqlStr = $"update OA_Material set MaterialName='{productName}', Status='{productStatus}'  where recid='{recid}'";
+                }
+
+                CommonService.ExecSql(sqlStr, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = "保存失败，请查看日志";
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+
+            }
+        }
+
+        public void ProductBaseInfoDelete()
+        {
+            bool code = true;
+            string msg = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                string sql = $" delete  OA_Material where  recid='{recid}' and  jcjgbh ='" + CurrentUser.Qybh + "'";
+                CommonService.ExecSql(sql, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+
+        }
+
+        /// <summary>
+        /// 设置产品禁用启用状态
+        /// </summary>
+        public void SetProductStatus()
+        {
+            bool code = true;
+            string msg = "";
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                string status = Request["status"].GetSafeString();
+                string sql = $" update  OA_Material set status='{status}'  where recid='{recid}' ";
+                CommonService.ExecSql(sql, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+                msg = "更新成功";
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+
+        }
+
+        /// <summary>
+        /// 设置产品规格禁用启用状态
+        /// </summary>
+        public void SetProductSpecStatus()
+        {
+            bool code = true;
+            string msg = "";
+            try
+            {
+                string id = Request["id"].GetSafeString();
+                string status = Request["status"].GetSafeString();
+                string sql = $" update  OA_MaterialSpec set status='{status}'  where id='{id}' ";
+                CommonService.ExecSql(sql, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+
+                msg = "更新成功";
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+
+        }
+
+        /// <summary>
+        /// 产品规格
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorize]
+        public ActionResult ProductSpecEdit()
+        {
+            string productRecid = Request["productRecid"].GetSafeString();
+            string specId = Request["specId"].GetSafeString();
+
+            string sqlWhere = "";
+
+            if (string.IsNullOrEmpty(specId))
+            {
+                sqlWhere = $" and   ProductRecid ='{productRecid}' ";
+                ViewBag.ProductRecid = productRecid;
+
+                return View();
+            }
+            else
+            {
+                sqlWhere = $" and   id ='{specId}' ";
+
+            }
+            string sql = $"select * from OA_MaterialSpec  where 1=1  {sqlWhere} and  JCJGBH='" + CurrentUser.Qybh + "'";
+
+            IList<IDictionary<string, string>> dt = CommonService.GetDataTable(sql);
+            for (int i = 0; i < dt.Count; i++)
+            {
+                ViewBag.Id = dt[i]["id"];
+                ViewBag.SpecName = dt[i]["spec"];
+                ViewBag.SpecStatus = dt[i]["status"];
+            }
+            ViewBag.ProductRecid = productRecid;
+
+            return View();
+
+        }
+
+        /// <summary>
+        /// 更新规格信息
+        /// </summary>
+        public void ProductSpecUpdate()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string specId = Request["specId"].GetSafeString();
+                string productRecid = Request["productRecid"].GetSafeString();
+                string specName = Request["specName"].GetSafeString();
+                string specStatus = Request["specStatus"].GetSafeString("1");
+                IList<string> sqls = new List<string>();
+
+                if (string.IsNullOrEmpty(specId))
+                {
+                    //判断是否存在
+                    sqlStr = $"select * from OA_MaterialSpec where JCJGBH ='{CurrentUser.Qybh}' and Spec='{specName}' and productRecid  ='{productRecid}'";
+
+                    var datas = CommonService.GetDataTable(sqlStr);
+
+                    if (datas.Count != 0)
+                    {
+                        code = false;
+                        msg = $"规格【{specName}】已存在";
+                        return;
+                    }
+
+                    sqlStr = string.Format($"INSERT INTO [dbo].[OA_MaterialSpec](Spec,[ProductRecid],[Status],[JCJGBH]) " +
+                        $"VALUES ('{specName}','{productRecid}', '{specStatus}','{CurrentUser.Qybh}')");
+                }
+                else
+                {
+                    sqlStr = "update OA_MaterialSpec set Spec='" + specName + "', Status='" + specStatus + "'  where id=" + specId;
+                }
+
+                CommonService.ExecSql(sqlStr, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = "保存失败，请查看日志";
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+
+            }
+        }
+
+        /// <summary>
+        /// 删除产品规格
+        /// </summary>
+        public void ProductSpecDelete()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = "";
+            try
+            {
+                string specID = Request["id"].GetSafeString();
+                sqlStr = $"delete OA_MaterialSpec  where id='{specID}'";
+                code = CommonService.ExecSql(sqlStr, out msg);
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog("删除产品规格失败:" + e);
+                code = false;
+                msg = "删除失败，请查看日志";
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+
+            }
+        }
+
+        #endregion
+
+        #region 耗材申请
+
+        /// <summary>
+        /// 撤销申请记录
+        /// </summary>
+        public void MaterialApplyForCancel()
+        {
+
+            bool code = true;
+            string sql = "";
+            List<string> sqlList = new List<string>();
+            string msg = "";
+            string serialNo = string.Empty;
+            try
+            {
+                string recid = Request["recid"].GetSafeString();
+                if (string.IsNullOrEmpty(recid))
+                {
+                    code = false;
+                    msg = "获取数据异常，请联系管理员！";
+                    return;
+                }
+
+                //获取对应的流水号
+                sql = $"select * from OA_MaterialApplyForRecord where id ='{recid}'";
+                var datas = CommonService.GetDataTable(sql);
+
+                if (datas.Count == 0)
+                {
+                    //正常不存在的情况
+                    code = false;
+                    msg = "操作异常！";
+                    return;
+                }
+
+                if ("1,5".Contains(datas[0]["status"]) == false)
+                {
+                    //仅待审核的记录可以撤销
+                    code = false;
+                    msg = "仅待审核或已驳回的申请记录可以撤销！";
+                    return;
+                }
+                serialNo = datas[0]["serialno"];
+                decimal applyforQuantity = datas[0]["quantity"].GetSafeDecimal();
+
+                sql = $" update  STForm set DoState='3'  where serialNo='{serialNo}'; ";
+
+                sqlList.Add(sql);
+
+                sql = $"select top 1 *  from  STDoneTasks where serialNo='{serialNo}' order by TaskID desc ;";
+                datas = CommonService.GetDataTable(sql);
+
+                if (datas.Count == 0)
+                {
+                    //正常不存在的情况
+                    code = false;
+                    msg = "操作异常！";
+                    return;
+                }
+                string preActivityID = datas[0]["preactivityid"];
+                string curActivityID = datas[0]["curactivityid"];
+                string preTaskID = datas[0]["pretaskid"];
+                string grantorRealName = datas[0]["grantorrealname"];
+
+                sql = $" delete STToDoTasks  where serialNo='{serialNo}'; ";
+                sqlList.Add(sql);
+                sql = $"INSERT INTO[dbo].[STDoneTasks]([SerialNo],[PreActivityID],[CurActivityID],[UserID],[GrantorID],[CompletionFlag]," +
+                    $"[DateCreated],[DateAccepted],[DateCompleted],[Opinion],[PreTaskID],[UserRealName],[GrantorRealName],[IsBack],[TaskName]," +
+                    $"[HostedUserID],[HostedUserRealName]) " +
+                    $"VALUES(" +
+                    $"'{serialNo}'" +
+                    $",'{preActivityID}','{curActivityID}','','{CurrentUser.UserCode}'" +
+                    $",'1'" +
+                    $",getdate()" +
+                    $",getdate()" +
+                    $",getdate()" +
+                    $",''" +
+                    $",'{ preTaskID}'" +
+                    $",'{ CurrentUser.RealUserName}'" +
+                    $",'{ grantorRealName}'" +
+                    $",'0'" +
+                    $",'撤销申请'" +
+                    $",''" +
+                    $",'');";
+                sqlList.Add(sql);
+
+                //更新申请记录状态，修改为已撤销
+                sql = $" update  OA_MaterialApplyForRecord  set Status='4' where serialNo='{serialNo}'; ";
+                sqlList.Add(sql);
+
+                //更新材料消耗统计记录,撤销申领数量
+                sql = $" update OA_MaterialConsume set  applyingCount= case when convert(decimal(18,2),applyingCount)-convert(decimal(18,2),{applyforQuantity}) <0  then 0  else convert(decimal(18,2),applyingCount)-convert(decimal(18,2),{applyforQuantity}) end  where Recid = '5cfe4aa719ae44498d1e7649cf7e3ecb'; ";
+                sqlList.Add(sql);
+
+
+                CommonService.ExecTrans(sqlList, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+                msg = "操作成功";
+
+                SysLog4.WriteLog("撤销耗材申请，申请记录Id：" + recid);
+
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteError(e.Message);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
+        /// <summary>
+        /// 删除材料消耗记录
+        /// </summary>
+        public void MaterialConsumptionRecordDelete() { }
+
+        /// <summary>
+        /// 删除材料消耗记录
+        /// </summary>
+        public void MaterialConsumptionRecordUpdate() { }
+        #endregion
         #endregion
 
         #region  考勤管理
