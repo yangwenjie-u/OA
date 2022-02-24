@@ -8,7 +8,7 @@ function  GCAdd() {
         var bcode = new Base64();
         var title = "出差管理";
         var extrainfo1 = bcode.encode("view_i_m_gc|" + bcode.encode("gcbh='2323'"));
-        var extrainfo2 = bcode.encode('[' + "42432" + ']');
+        var extrainfo2 = bcode.encode('[' + "出差管理" + ']');
         var extrainfo3 = bcode.encode(gcbh);
         gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
     } catch (e) {
@@ -16,6 +16,8 @@ function  GCAdd() {
     }
 
 }
+//FlowOAUpdateAttendanceManageStatus('30',#serial#, '#FORM-serialRecid#',#username#,#realname-#username##)
+
 
 //审核
 function GCReview() {
@@ -28,7 +30,7 @@ function GCReview() {
 
 }
 
-//公出
+//请假
 function QJAdd() {
     try {
 
@@ -37,9 +39,11 @@ function QJAdd() {
         var bcode = new Base64();
         var title = "请假";
         var extrainfo1 = bcode.encode("view_i_m_gc|" + bcode.encode("gcbh='2323'"));
-        var extrainfo2 = bcode.encode('[' + "42432" + ']');
+        var extrainfo2 = bcode.encode('[' + "请假管理" + ']');
         var extrainfo3 = bcode.encode(gcbh);
         gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
+        searchRecord();
+
     } catch (e) {
         alert(e);
     }
@@ -65,25 +69,106 @@ function JBAdd() {
         var bcode = new Base64();
         var title = "加班";
         var extrainfo1 = bcode.encode("view_i_m_gc|" + bcode.encode("gcbh='2323'"));
-        var extrainfo2 = bcode.encode('[' + "42432" + ']');
+        var extrainfo2 = bcode.encode('[' + "加班管理" + ']');
         var extrainfo3 = bcode.encode(gcbh);
         gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
+        searchRecord();
     } catch (e) {
         alert(e);
     }
 
 }
+
+
+    function FormatJBYF(value, row, index) {
+    var imgurl = "";
+    try {
+        imgurl += "<a onclick='ViewJBRecord(\"" + value + "\",\"" + row.RYBH + "\",\"" + row.RYXM + "\")' style='cursor:pointer;color:red;'> " + value+" </a>";
+
+    } catch (e) {
+        alert(e);
+    }
+    return imgurl;
+}
+//查看加班记录
+function ViewJBRecord(jbyf, rybh,rymc) {
+
+    //& FormParam=PARAM--" + htid + " & ddrecids=" + encodeURIComponent(codes);
+    var url = "/WebList/ElementIndex?FormDm=RYGL_JB&FormStatus=0&FormParam=PARAM--" + encodeURIComponent(rybh) + "|" + encodeURIComponent(jbyf) ;
+    parent.layer.open({
+        type: 2,
+        title: rymc + " " + jbyf + "加班记录",
+        shadeClose: false,
+        shade: 0.8,
+        area: ['70%', '70%'],
+        content: url,
+        end: function () {
+        }
+    })
+}
+
 
 //审核
 function JBReview() {
     try {
-
-
+        var url = "/WebList/ElementIndex?FormDm=YZGL_YZGL&FormStatus=1&FormParam=PARAM--" + encodeURIComponent(id);
+        parent.layer.open({
+            type: 2,
+            title: code + "-" + name + "用章记录",
+            shadeClose: false,
+            shade: 0.8,
+            area: ['95%', '95%'],
+            content: url,
+            end: function () {
+            }
+        })
     } catch (e) {
         alert(e);
     }
 
 }
+
+function FormatStatus(value, row, index) {
+    var imgurl = "";
+    try {
+        //
+        if (value == "1")
+            imgurl += "<center>待审批</center>";
+        else if (value == "10")
+            imgurl += "<center>休假中</center>";
+        else if (value == "30")
+            imgurl += "<center>已驳回</center>";
+        else if (value == "40")
+            imgurl += "<center>不通过</center>";
+        else if (value == "2")
+            imgurl += "<center>已完成</center>";
+    } catch (e) {
+        alert(e);
+    }
+    return imgurl;
+}
+//请假
+//valueFixed--,, 1 | 待审批, 1, 0 | 已驳回, 30, 0 | 不通过, 40, 0 | 已完成, 2, 0
+function FormatStatusQJ(value, row, index) {
+    var imgurl = "";
+    try {
+        //
+        if (value == "1")
+            imgurl += "<center>待审批</center>";
+        else if (value == "10")
+            imgurl += "<center>休假中</center>";
+        else if (value == "30")
+            imgurl += "<center>已驳回</center>";
+        else if (value == "40")
+            imgurl += "<center>不通过</center>";
+        else if (value == "2")
+            imgurl += "<center>已完成</center>";
+    } catch (e) {
+        alert(e);
+    }
+    return imgurl;
+}
+
 
 function gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, extrainfo4, fgcmc) {
     try {
@@ -222,53 +307,3 @@ function Base64() {
     }
 }
 
-
-
-
-//查看使用记录
-function UseRecord(id, code, name) {
-    var url = "/WebList/ElementIndex?FormDm=YZGL_YZGL&FormStatus=1&FormParam=PARAM--" + encodeURIComponent(mid);
-    parent.layer.open({
-        type: 2,
-        title: code + "-" + name + "用章记录",
-        shadeClose: false,
-        shade: 0.8,
-        area: ['95%', '95%'],
-        content: url,
-        end: function () {
-        }
-    })
-}
-
-function FormatOper(value, row, index) {
-    var imgurl = "";
-    try {
-        imgurl += "<a onclick='Edit(" + value + ")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a>"
-            + "<a onclick='UseRecord((\"" + value + "\",\"" + row.SignatureCode + "\",\"" + row.SignatureName + "\")' style='cursor:pointer;color:#169BD5;'> 查看使用记录 </a>";
-
-    } catch (e) {
-        alert(e);
-    }
-    return imgurl;
-}
-
-//请假
-function FormatStatus(value, row, index) {
-    var imgurl = "";
-    try {
-        //
-        if (value == "1")
-            imgurl += "<center>待审批</center>";
-        else if (value == "10")
-            imgurl += "<center>休假中</center>";
-        else if (value == "20")
-            imgurl += "<center>加班中</center>";
-        else if (value == "30")
-            imgurl += "<center>外出中</center>";
-        else if (value == "2")
-            imgurl += "<center>已完成</center>";
-    } catch (e) {
-        alert(e);
-    }
-    return imgurl;
-}

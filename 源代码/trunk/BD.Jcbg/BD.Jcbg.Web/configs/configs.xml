@@ -13,4 +13,9 @@
   <!--视频文件后缀-->
   <videoext>flv</videoext>
 
+  <OssCdnCodeWtd>jcjtwtd</OssCdnCodeWtd>
+  <!--录入界面上传文件返回oss地址-->
+  <FileOssCdn>121.42.40.1:18010</FileOssCdn>
+  <!--录入界面文件OssCode-->
+  <OssCdnCodeWj>jcjtpt</OssCdnCodeWj>
 </configs>

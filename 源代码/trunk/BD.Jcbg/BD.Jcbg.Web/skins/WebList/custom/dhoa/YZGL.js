@@ -79,7 +79,7 @@ function Del() {
 
 //查看使用记录
 function UseRecord(id, code, name) {
-    var url = "/WebList/ElementIndex?FormDm=YZGL_YZGL&FormStatus=1&FormParam=PARAM--" + encodeURIComponent(mid);
+    var url = "/WebList/ElementIndex?FormDm=YZGL_YZGL&FormStatus=1&FormParam=PARAM--" + encodeURIComponent(id);
     parent.layer.open({
         type: 2,
         title: code + "-" + name + "用章记录",
@@ -96,7 +96,7 @@ function FormatOper(value, row, index) {
     var imgurl = "";
     try {
         imgurl += "<a onclick='Edit(" + value + ")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a>"
-            + "<a onclick='UseRecord((\"" + value + "\",\"" + row.SignatureCode + "\",\"" + row.SignatureName + "\")' style='cursor:pointer;color:#169BD5;'> 查看使用记录 </a>";
+            + "<a onclick='UseRecord(\"" + value + "\",\"" + row.SignatureCode + "\",\"" + row.SignatureName + "\")' style='cursor:pointer;color:#169BD5;'> 查看使用记录 </a>";
 
     } catch (e) {
         alert(e);

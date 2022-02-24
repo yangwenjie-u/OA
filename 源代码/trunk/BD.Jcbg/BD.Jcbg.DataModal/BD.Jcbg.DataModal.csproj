@@ -98,6 +98,7 @@
     <Compile Include="Entities\ViewSelfDesktopItem.cs" />
     <Compile Include="Entities\Xcsj.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VirutalEntity\ArchivesDetails.cs" />
     <Compile Include="VirutalEntity\CreateZh.cs" />
     <Compile Include="VirutalEntity\EasyParam.cs" />
     <Compile Include="VirutalEntity\IBasicDataBase.cs" />

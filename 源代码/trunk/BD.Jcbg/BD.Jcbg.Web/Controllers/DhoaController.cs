@@ -533,6 +533,7 @@ namespace BD.Jcbg.Web.Controllers
             return Json(new { code = code ? "0" : "1", msg = err }, JsonRequestBehavior.AllowGet);
 
         }
+
         [LoginAuthorize]
         public JsonResult DepartmentPostDelete()
         {
@@ -1083,7 +1084,6 @@ namespace BD.Jcbg.Web.Controllers
                 IList<string> sqls = new List<string>();
 
 
-                string sqrStr = "";
 
 
                 if (string.IsNullOrEmpty(sfzh))
@@ -1093,9 +1093,9 @@ namespace BD.Jcbg.Web.Controllers
                     return;
                 }
                 //从I_M_NBRY_JC获取用户信息
-                sqrStr = $" select* from I_M_NBRY_JC where SFZHM = '{sfzh}' and jcjgbh='{jcjgbh}'";
+                sqlStr = $" select* from I_M_NBRY_JC where SFZHM = '{sfzh}' and jcjgbh='{jcjgbh}'";
 
-                var datas = CommonService.GetDataTable(sqrStr);
+                var datas = CommonService.GetDataTable(sqlStr);
 
                 foreach (var item in datas)
                 {
@@ -1118,7 +1118,7 @@ namespace BD.Jcbg.Web.Controllers
                             $",'{byyx}'" +
                             $",'{zc}'" +
                             $",'{sjhm}'" +
-                            $",''" +
+                            $",'{Guid.NewGuid().ToString("N")}'" +
                             $",'{jcjgbh}')";
                     }
                     else
@@ -1146,6 +1146,105 @@ namespace BD.Jcbg.Web.Controllers
                 Response.End();
             }
         }
+
+
+        /// <summary>
+        /// 编辑人员技术档案
+        /// </summary>
+        public void UserArchiveDetailsEdit()
+        {
+            bool code = true;
+            string msg = "";
+            string sqlStr = string.Empty;
+            IList<string> sqls = new List<string>();
+
+            try
+            {
+                //人员档案唯一号
+                string userRecid = string.Empty;
+                string ArchivesData = Request["sfzh"].GetSafeString();
+
+                string jsonStr = Request["data"].GetSafeString();
+                jsonStr = HttpUtility.UrlDecode(jsonStr);
+                ArchivesDetails archivesDetails = Newtonsoft.Json.JsonConvert.DeserializeObject<ArchivesDetails>(jsonStr);
+
+                if (archivesDetails == null)
+                {
+                    code = false;
+                    msg = "解析json数据异常。";
+                    return;
+                }
+
+                userRecid = archivesDetails.UserRecid;
+
+                //档案信息
+                List<ArchivesData> archives = archivesDetails.ArchivesData;
+
+                IList<IDictionary<string, string>> retData = new List<IDictionary<string, string>>();
+                List<AnnexData> annexData = new List<AnnexData>();
+                string annexUrl = string.Empty;
+                //string annexUrl = string.Empty;
+
+                foreach (var item in archives)
+                {
+                    annexData = new List<AnnexData>();
+                    annexData = item.AnnexData;
+
+                    foreach (var annex in annexData)
+                    {
+                        annexUrl = $"{annex.FileName},{annex.OssUrl}|";
+                    }
+                    annexUrl = annexUrl.TrimEnd('|');
+
+                    sqlStr = $"select 1 from OA_UserArchivesDetails where recid ='{item.Recid}' ";
+                    retData = CommonService.GetDataTable(sqlStr);
+                    if (retData.Count == 0)
+                    {
+                        sqls.Add($"update OA_UserArchivesDetails set ArchivesName='{item.ArchivesName}',ArchivesType='{item.ArchivesType}',AnnexUrl='{annexUrl}',Remark='{item.Remark}', " +
+                            $"updater='{CurrentUser.RealUserName}',UpdaterCode='{CurrentUser.UserCode}',UpdateTime='getdate()'" +
+                            $" where recid ='{item.Recid}';");
+                    }
+                    else
+                    {
+
+                        sqls.Add($" INSERT INTO[dbo].[OA_UserArchivesDetails]([Recid],[UserArchivesRecid],[ArchivesIndex],[ArchivesName],[ArchivesType],[AnnexUrl],[Remark]," +
+                            $"[CreatorCode],[Creator],[CreateTime])VALUES(" +
+                            $"'{Guid.NewGuid().ToString("N")}','{item.Recid}','{item.ArchivesIndex}'" +
+                            $",'{item.ArchivesName}'" +
+                            $",'{item.ArchivesType}'" +
+                            $",'{annexUrl}'" +
+                            $",'{item.Remark}'" +
+                            $",'{CurrentUser.UserCode}'" +
+                            $",'{CurrentUser.RealUserName}'" +
+                            $",getdate())");
+                    }
+
+
+                }
+
+                CommonService.ExecTrans(sqls, out msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
+            }
+            catch (Exception e)
+            {
+                SysLog4.WriteLog(e);
+                code = false;
+                msg = e.Message;
+            }
+            finally
+            {
+                JavaScriptSerializer jss = new JavaScriptSerializer();
+                jss.MaxJsonLength = Int32.MaxValue;
+                Response.ContentEncoding = System.Text.Encoding.UTF8;
+                Response.Write(string.Format("{{\"code\":\"{0}\", \"msg\":\"{1}\"}}", code ? "0" : "1", msg));
+                Response.End();
+            }
+        }
+
 
 
         /// <summary>
@@ -3832,13 +3931,14 @@ namespace BD.Jcbg.Web.Controllers
                 string type = Request["type"].GetSafeString();
                 string ksbh = Request["ksbh"].GetSafeString();
                 string rybh = Request["rybh"].GetSafeString();
+                string ryxm = Request["ryxm"].GetSafeString();
                 string startTime = Request["startTime"].GetSafeString();
                 string predictEndTime = Request["predictEndTime"].GetSafeString();//计划返回时间
                 string endTime = Request["endTime"].GetSafeString();//返回时间
                 string remark = Request["remark"].GetSafeString();
                 string peopleTogether = Request["peopleTogether"].GetSafeString();//同去人
                 string WFDD = Request["WFDD"].GetSafeString();//往返地点
-                string hours = Request["hours"].GetSafeString(); //预计时间
+                string hours = Request["hours"].GetSafeString(); //预计时间\请假时间
                 string dispatchDuration = Request["dispatchDuration"].GetSafeString(); //派遣时长
                 string roomCount = Request["roomCount"].GetSafeString(); //房间数量
                 string isStay = Request["isStay"].GetSafeString(); //是否住宿
@@ -3848,16 +3948,30 @@ namespace BD.Jcbg.Web.Controllers
                 string lx = Request["lx"].GetSafeString(); //请假类型
 
                 string reviewerbh = Request["reviewerbh"].GetSafeString(); //审核人
-                string reviewTime = Request["invoiceHolder"].GetSafeString(); //审核时间
+                string reviewTime = Request["reviewTime"].GetSafeString(); //审核时间
 
                 IList<string> sqls = new List<string>();
+
+
+                IList<IDictionary<string, string>> datas = new List<IDictionary<string, string>>();
+                if (!string.IsNullOrEmpty(serialRecid))
+                {
+                    sqlStr = $" select * from OA_AttendanceManage where serialRecid='{serialRecid}'";
+
+                    datas = CommonService.GetDataTable(sqlStr);
+
+                    if (datas.Count != 0)
+                    {
+                        recid = datas[0]["recid"];
+                    }
+                }
                 if (string.IsNullOrEmpty(recid))
                 {
                     recid = Guid.NewGuid().ToString("N");
                     sqlStr = $"INSERT INTO [dbo].[OA_AttendanceManage]([Recid],[Type],[RYBH],[RYXM],[StartTime],[EndTime],[Remark],[Status],[Hours],[LX],[PeopleTogether],[WFDD],[CreateTime],[Creater],[UpdateTime],[Updater],serialRecid,[JCJGBH]) " +
                         $"VALUES ('{recid}','{type}'" +
                         $",'{rybh}'" +
-                        $",'{CurrentUser.RealName}'" +// RYXM, varchar(255),>
+                        $",'{ryxm}'" +// RYXM, varchar(255),>
                         $",'{startTime}'" +// StartTime, datetime2(7),>
                         $",'{endTime}'" +// EndTime, datetime2(7),>
                         $",'{remark}'" +// Remark, nvarchar(255),>
@@ -3875,8 +3989,9 @@ namespace BD.Jcbg.Web.Controllers
                 }
                 else
                 {
-                    //sqlStr = "update OA_AttendanceManage set applicant='" + applicant + "', totalkilometers='" + totalkilometers + "'," +
-                    //    " maintenancetime='" + maintenancetime + "' where id=" + dataId;
+                    sqlStr = $"update OA_AttendanceManage set RYBH='{rybh}', StartTime='{startTime}',EndTime='{endTime}',Remark='{remark}',Hours='{hours}'" +
+                        $",PeopleTogether='{peopleTogether}',WFDD='{WFDD}'" +
+                        $",UpdateTime=getdate(),Updater='{CurrentUser.RealName}' where recid='{recid}'";
                 }
 
                 code = CommonService.ExecSql(sqlStr, out msg);
@@ -3919,19 +4034,36 @@ namespace BD.Jcbg.Web.Controllers
                 string JCXM = Request["JCXM"].GetSafeString();//检测项目
                 string GCL = Request["GCL"].GetSafeString();//工程量
                 string carId = Request["carId"].GetSafeString(); //车牌号
-                string dispatchDuration = Request["dispatchDuration"].GetSafeString(); //派遣时长
+                string dispatchDurationDay = Request["dispatchDurationDay"].GetSafeString(); //派遣时长(天)
+                string dispatchDurationHour = Request["dispatchDurationHour"].GetSafeString(); //派遣时长（小时）
                 string roomCount = Request["roomCount"].GetSafeString(); //房间数量
                 string isStay = Request["isStay"].GetSafeString(); //是否住宿
                 string stayDays = Request["stayDays"].GetSafeString(); //住宿天数
                 string invoiceHolder = Request["invoiceHolder"].GetSafeString(); //发票持有人
                 string invoiceAmount = Request["invoiceAmount"].GetSafeString(); //发票金额
                 string reviewerbh = Request["reviewerbh"].GetSafeString(); //审核人
-                string reviewTime = Request["invoiceHolder"].GetSafeString(); //审核时间
+                //string reviewTime = Request["invoiceHolder"].GetSafeString(); //审核时间
 
                 IList<string> sqls = new List<string>();
+
+                IList<IDictionary<string, string>> datas = new List<IDictionary<string, string>>();
+                if (!string.IsNullOrEmpty(serialRecid))
+                {
+                    sqlStr = $" select * from OA_DispatchRecord where SerialRecid='{serialRecid}'";
+
+                    datas = CommonService.GetDataTable(sqlStr);
+
+                    if (datas.Count != 0)
+                    {
+                        recid = datas[0]["recid"];
+                    }
+                }
+
                 if (string.IsNullOrEmpty(recid))
                 {
                     recid = Guid.NewGuid().ToString("N");
+
+
                     sqlStr = $"INSERT INTO [dbo].[OA_DispatchRecord]([Recid],SerialRecid,[HTBH],[RYMC],[RYBH],[GZDQ],[GCMC],[JCXM],[GCL],[StartTime],[ReturnTime],[CarId],[PeopleTogether],[StayDays],[InvoiceHolder],[InvoiceAmount],[JCJGBH],[CreateTime],[Creator],[UpdateTime],[Updater],[Status])" +
                         $"VALUES('{recid}'" +
                         $",'{serialRecid}'" +
@@ -3946,7 +4078,7 @@ namespace BD.Jcbg.Web.Controllers
                         $",'{returnTime}'" +//< ReturnTime, datetime2(7),>
                         $",'{carId}'" +//< CarId, int,>
                         $",'{peopleTogether}'" +//< PeopleTogether, varchar(255),>
-                        $",'{stayDays}'" +//< StayDays, decimal(18, 0),>
+                        $",'{stayDays}'" +
                         $",'{invoiceHolder}'" +//< InvoiceHolder, varchar(255),>
                         $",'{invoiceAmount}'" +//< InvoiceAmount, varchar(255),>
                         $",'{CurrentUser.Qybh}'" +//< JCJGBH, varchar(255),>
@@ -3958,8 +4090,9 @@ namespace BD.Jcbg.Web.Controllers
                 }
                 else
                 {
-                    //sqlStr = "update OA_DispatchRecord set applicant='" + applicant + "', totalkilometers='" + totalkilometers + "'," +
-                    //    " maintenancetime='" + maintenancetime + "' where id=" + dataId;
+                    sqlStr = $"update OA_DispatchRecord set HTBH='{htbh}', GZDQ='{GZDQ}',GCMC='{GCMC}',JCXM='{JCXM}',GCL='{GCL}'" +
+                        $",StartTime='{startTime}',ReturnTime='{returnTime}',CarId='{carId}',PeopleTogether='{peopleTogether}',StayDays='{stayDays}',InvoiceHolder='{invoiceHolder}',InvoiceAmount='{invoiceAmount}'" +
+                        $",UpdateTime=getdate(),Updater='{CurrentUser.RealName}' where recid='{recid}'";
                 }
 
                 code = CommonService.ExecSql(sqlStr, out msg);
@@ -4822,6 +4955,123 @@ namespace BD.Jcbg.Web.Controllers
             }
         }
         #endregion
+
+        #endregion
+
+        #region 上传文件
+
+
+        public void UploadFile(string fileUrl)
+        {
+            string dataId = Request["file"].GetSafeString();
+            fileUrl = @"C:\Users\yangwenjie\Pictures\Camera Roll\232.jpg";
+            var fileByte = GetFileData(fileUrl);
+            var filess = Request.Files["file"];
+            var filwewe = Request.Files["file"];
+
+            var files = Request.Files["file"];
+
+            foreach (string upload in Request.Files.AllKeys)
+            {
+                HttpPostedFileBase filsse22 = Request.Files[upload];  //file可能为null
+                MemoryStream target = new MemoryStream();
+                Request.Files[upload].InputStream.CopyTo(target);
+                fileByte = target.ToArray();
+            }
+            //return;
+            OSS_CDN oss = new OSS_CDN();
+            //var result = oss.UploadFile(Configs.OssCdnCodeBg, fileByte, string.Format("bg_{0}.pdf", GetRecid()));
+            var result = oss.UploadFile("jcjtsb", fileByte, string.Format("cs{0}.jpg", GetRecid()));
+            // File.Delete(newUrl);
+            if (!result.success)
+            {
+                throw new Exception("上传文件失败");
+            }
+            var dfd = result.fileId;
+
+            // 保存文件到数据库
+            //WorkFlow.DataModal.Entities.StFile file = new WorkFlow.DataModal.Entities.StFile()
+            //{
+            //    Activityid = 0,
+            //    FileContent = fileByte,
+            //    Fileid = 0,
+            //    FileNewName = "测试的文件",
+            //    FileOrgName = "新建文本文档.html",
+            //    FileSize = fileByte.Length,
+            //    Formid = 0,
+            //    //StorageType = osstype.Equals("OSS", StringComparison.OrdinalIgnoreCase) ? "OSS" : ""
+            //    StorageType = "OSS"
+            //};
+            WorkFlow.DataModal.Entities.StFile file = new WorkFlow.DataModal.Entities.StFile();
+
+
+            if (file == null)
+            {
+                //msg = "文件保存失败";
+
+            }
+            else
+            {
+                var msg = file.Fileid.ToString();
+            }
+
+            var asdfa = WorkFlowService.GetFile(7);
+            //上传报告成功
+            string mergepdfurl = result.Url;
+
+            if (file != null)
+            {
+                var ret = file.FileContent;
+                var filename = file.FileOrgName;
+                var filesize = DataFormat.GetSafeLong(file.FileSize);
+
+                string mime = MimeMapping.GetMimeMapping(filename);
+                Response.Clear();
+                Response.ContentType = mime;
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + HttpUtility.UrlEncode(filename));
+                //Response.AddHeader("Content-Length", filesize.ToString());
+                Response.BinaryWrite(ret);
+                Response.Flush();
+                Response.End();
+            }
+        }
+
+
+
+        protected byte[] GetFileData(string fileUrl)
+        {
+            FileStream fs = new FileStream(fileUrl, FileMode.Open, FileAccess.Read);
+            try
+            {
+                byte[] buffur = new byte[fs.Length];
+                fs.Read(buffur, 0, (int)fs.Length);
+
+                return buffur;
+            }
+            catch (Exception ex)
+            {
+                //MessageBoxHelper.ShowPrompt(ex.Message);
+                return null;
+            }
+            finally
+            {
+                if (fs != null)
+                {
+
+                    //关闭资源
+                    fs.Close();
+                }
+            }
+        }
+
+
+        private string GetRecid()
+        {
+            //string recid = DateTime.Now.ToString("yyMM") + BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0);
+            string recid = DateTime.Now.ToString("yyMM") + BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0);
+            return recid;
+        }
+
 
         #endregion
 

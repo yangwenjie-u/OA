@@ -86,16 +86,56 @@ function AccountStatueSet(doc) {
 
 function AccountModify(usercode) {
 
-    layer.open({
-        type: 2,
-        title: '修改人员',
-        content: '/dhoa/umsedit2?usercode=' + usercode,
-        area: ['1230px', '85%'],
-        end: function () {
-            searchRecord();
+    //layer.open({
+    //    type: 2,
+    //    title: '修改人员',
+    //    content: '/dhoa/umsedit2?usercode=' + usercode,
+    //    area: ['1230px', '85%'],
+    //    end: function () {
+    //        searchRecord();
+    //    }
+    //});
+
+    var dataObj = "{\"UserRecid\":\"f4afa014d93349b2a1e5d4658ba1b22f\",\"ArchivesData\":[{\"Recid\":\"\",\"ArchivesIndex\":\"1\",\"ArchivesType\":\"1\",\"ArchivesName\":\"肯德基档案\",\"AnnexData\":{\"FileName\":\"232\",\"OssUrl\":\"\"},\"Remark\":\"备注\"},{\"ArchivesIndex\":\"1\",\"ArchivesType\":\"1\",\"ArchivesName\":\"肯德基档案\",\"AnnexData\":{\"FileName\":\"\",\"OssUrl\":\"\"},\"Remark\":\"备注\"}]}";
+
+    ajaxTpl('/dhoa/UserArchiveDetailsEdit', dataObj, function (data) {
+        if (data.code == '0') {
+            layer.alert('保存成功');
+            try {
+                setTimeout(function () {
+                    parent.layer.closeAll();
+                }, 1000)
+            }
+            catch (e) {
+            }
+        }
+        else {
+
+            layer.msg(data.msg, {
+                icon: 2,
+                time: 2000
+            });
         }
     });
+
+  //  $.ajax({
+  //      url: '/dhoa/UserArchiveDetailsEdit',
+  //      data: data,
+  //      type: 'post',
+  //      dataType: "json",
+  //      contentType: "application/json",
+  //      success: function (json) {
+  //          layer.msg(data.msg, {
+  //              icon: 2,
+  //              time: 2000
+  //          });
+        
+  //      }
+
+  //});
 }
+
+
 
 
 

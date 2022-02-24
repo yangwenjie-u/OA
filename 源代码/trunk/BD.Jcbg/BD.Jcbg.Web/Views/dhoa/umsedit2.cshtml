@@ -153,7 +153,7 @@
 
 <body>
     <div id="personView" class="person-view">
-        <div class="m-role" >
+        <div class="m-role">
             <label>
                 <span>所属企业</span>
                 <select id="cpcode">
@@ -263,6 +263,16 @@
             </label>
         </div>
 
+        <div class="m-role layui-upload">
+            <label>
+                <span>材料名称</span>
+            </label>
+            <label id="lb"></label><br>
+            <input type="button" value="选取文件" class="layui-btn layui-btn-normal" onclick="getFile()">
+            <input style="display: none" type="file" name="file" id="getF" onchange="clickF()">
+            <button type="submit" class="layui-btn" id="test9"onclick="UploadFiles()">开始上传</button>
+        </div>
+      
 
         <div class="m-role" style="width: 100%">
             <div>
@@ -366,6 +376,48 @@
             GetRoleList();
         })
 
+        function getFile() {
+            $("#getF").click();
+        }
+
+        var filename = "";
+        function clickF() {
+            filename = $("#getF").val();
+            var filenames = filename.split("\\");
+            filename = filenames[filenames.length - 1];
+            $("#lb").text(filename);
+        }
+
+        function UploadFiles() {
+
+            var operatorId = '123';
+            var formData = new FormData();
+            console.log("121");
+
+            formData.append("file", $("#getF").get(0).files[0]);  //上传一个files对象
+            formData.append("operatorId", operatorId);//需要上传的多个参数
+            $.ajax({//jQuery方法，此处可以换成其它请求方式
+                url: 'http://localhost:40001//Dhoa/UploadFile',
+                dataType: "json",
+                type: "post",
+                data: formData,
+                processData: false,//不去处理发送的数据
+                contentType: false,//不去设置Content-Type请求头
+                error: function (res) {
+                    console.log(11);
+                    console.log(res);
+
+                    return;
+                },
+                success: function (res) {
+                    console.log(res);
+
+                    return;
+                }
+
+            })
+        }
+      
         function ChangeDepartment(ksbh) {
             var obj;
             obj = {
@@ -395,6 +447,7 @@
             });
 
         }
+
         function GetRoleList() {
             var obj;
             if (usercode) {
@@ -439,7 +492,6 @@
         function getRig(tmp) {
             return "<li class='role-list' value='" + tmp.rolecode + "' text='" + tmp.rolename + "'><span>" + tmp.rolename + "</span><span class='close'></span></li>";
         }
-
 
         function getLf(tmp) {
             return "<li class='role-list' value='" + tmp.rolecode + "' text='" + tmp.rolename + "' ><label><input type='checkbox'  class='checkbox' /><span>" + tmp.rolename + "</span></label></li>";
@@ -679,7 +731,6 @@
                 return true;
             }
         };
-
 
         $("#selectRole").click(function () {
 

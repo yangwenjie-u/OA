@@ -1,0 +1,258 @@
+<style type="text/css">
+	body {
+		position: relative;
+	}
+
+	.table_1 td {
+		height: 50px;
+		vertical-align: middle;
+		text-align: center;
+		font-size: 20px;
+		font-weight: bolder;
+	}
+
+	.table_2 td {
+		height: 40px;
+		vertical-align: middle;
+		font-size: 14px;
+		font-weight: normal;
+	}
+
+	.table_3 {
+		border-right: solid 1px #888888;
+		border-top: solid 1px #888888;
+	}
+
+	.table_3 th {
+		border-left: solid 1px #888888;
+		border-bottom: solid 1px #888888;
+		background-image: none;
+		background-color: #f0f0f0;
+		color: #000;
+		font-size: 14px;
+		padding: 5px;
+		text-align: left;
+	}
+
+	.no_data {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 1119991999;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, .5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #fff;
+		font-weight: bold;
+		font-size: 50px;
+	}
+
+	.table_3 td {
+		border-left: solid 1px #888888;
+		border-bottom: solid 1px #888888;
+		font-size: 14px;
+		text-align: left;
+		height: 40px;
+		vertical-align: middle;
+		padding: 5px;
+	}
+</style>
+<span>
+	<input displaysteps="1" type="hidden" id="startApply" value="1"></input>
+	<input type="hidden" id="serialRecid" name="serialRecid" value="#FORM-serialRecid#"></input>
+	<!-- <input   name="serialRecixcd" value="#realname-#username##"></input> -->
+
+</span>
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td align="center">
+				<table cellspacing="1" width="1000">
+					<tbody>
+						<tr>
+							<td>
+								<table cellspacing="0" width="100%" class="table_1">
+									<tbody>
+										<tr>
+											<td>请假申请单</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table cellspacing="0" width="100%" class="table_3">
+									<tbody>
+										<tr>
+											<th width="10%">所属科室</th>
+											<td width="20%">
+												#CTRL-ksbh-S-1-H_JCKS|KSBH,KSMC|SSDWBH in( select JCJGBH from
+												I_M_NBRY_JC
+												where USERCODE='#username#')-S#
+											</td>
+											<th width="10%">申请人员</th>
+											<td width="20%">
+												#CTRL-USER-rybh-S-1---#username#--#username##
+											</td>
+											<th width="10%">剩余天数</th>
+											<td width="200">
+												<input id="surplusDays" name="SurplusDays" style="width:90%" disabled />
+											</td>
+										</tr>
+										<tr>
+											<th>请假时间</th>
+											<td colspan="3">
+												<input id="startTime" class="easyui-datetimebox" displaysteps="1"
+													name="startTime" data-options="required:true,showSeconds:false"
+													editable="false" style="width:150px" />
+												至
+												<input id="endTime" class="easyui-datetimebox" displaysteps="1"
+													name="endTime" data-options="required:true,showSeconds:false"
+													editable="false" style="width:150px" />
+												共
+												<input id="day" displaysteps="1" name="day" style="width:30px" value="0"
+													class="easyui-numberbox"
+													data-options="required:true,min:0,precision:1" />天
+												<input id="hour" displaysteps="1" name="hour" style="width:30px"
+													value="0" class="easyui-numberbox"
+													data-options="required:true,min:0,precision:1" />小时
+											</td>
+											<th>请假类型</th>
+											<td width="200">
+												<select style="width:30%" id="lx" name="lx" displaysteps="1">
+													<option value="事假">事假</option>
+													<option value="病假">病假</option>
+													<option value="婚假">婚假</option>
+													<option value="丧假">丧假</option>
+													<option value="产假">产假</option>
+													<option value="年休假">年休假</option>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<th>请假理由</th>
+											<td colspan="5"><input id="remark" displaysteps="1" name="remark"
+													style="width:90%" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<script language="javascript" type="text/javascript">
+	g_init = "";
+	$(function () {
+		try {
+
+			if ($("#lx").val() !="") {
+				console.log(222)
+				$("#lx").val($("#lx").val())
+
+            }
+			if (g_init == "") {
+			}
+
+		} catch (e) {
+			alert(e);
+		}
+
+	});
+
+	$(function () {
+		try {
+			if ($("#idate").length > 0) {
+
+				$('#idate').datebox('setValue', getCurDate());
+			}
+		} catch (e) {
+			alert(e);
+		}
+	});
+
+	function getExtraParams() {
+		if ($("#rybh").length > 0)
+			return "realname=" + encodeURIComponent($("#rybh").find("option:selected").text());
+		return "";
+	}
+	function checkSubmit() {
+
+		if ($("#day").length > 0 && $("#hour").length > 0 && $("#day").numberbox('getValue') * 6 + $("#hour").numberbox('getValue') == 0) {
+			alert("请输入有效的时间！")
+			return false;
+		}
+		if ($("#startTime").length > 0) {
+			var now = new Date();
+			var d1 = new Date($("#startTime").datetimebox('getValue').replace("-", "/"));
+			if ($("#endTime").length > 0) {
+				var d2 = new Date($("#endTime").datetimebox('getValue').replace("-", "/"));
+				if (d1 >= d2) {
+					alert("请输入有效的请假时间！开始时间必须小于结束时间")
+					return false;
+				}
+			}
+		}
+		if ($("#remark").val() == "") {
+			alert("请输入请假理由")
+			return false;
+		}
+		//发起申请时，创建记录
+		var retFlag = true;
+		var guid = NewGuid();
+		if ($("#startApply").val() == "1") {
+
+			if ($("#serialRecid").val() != "") {
+				guid = $("#serialRecid").val();
+			}
+			else {
+				$("#serialRecid").val(guid)
+			}
+
+			var dataObj = {
+				type: '1',
+				guid: guid,
+				ksbh: $("#ksbh").val(),
+				rybh: $("#rybh").val(),
+				RYXM: $("#rybh").find("option:selected").text(),
+				lx: $("#lx").val(),//请假类型
+				startTime: $("#startTime").datetimebox('getValue'),
+				endTime: $("#endTime").datetimebox('getValue'), //返回时间
+				remark: $("#remark").val(),
+				hours: $("#day").val() + "天" + $("#hour").val() + "小时"
+			};
+			$.ajax({
+				type: "POST",
+				url: "/dhoa/AttendanceInformationAdd",
+				data: dataObj,
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					if (data.code == "0") {
+
+					} else {
+						alert(data.msg)
+						retFlag = false;
+					}
+				}
+			});
+		}
+		return retFlag;
+	}
+
+	function NewGuid() {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		});
+	}
+</script>

@@ -6,7 +6,7 @@ function DispatchAdd() {
         var bcode = new Base64();
         var title = "检测派遣";
         var extrainfo1 = bcode.encode("view_i_m_gc|" + bcode.encode("gcbh=''"));
-        var extrainfo2 = bcode.encode('[' + "" + ']');
+        var extrainfo2 = bcode.encode('[' + "检测派遣" + ']');
         var extrainfo3 = bcode.encode(gcbh);
        
         gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
@@ -78,14 +78,14 @@ function FormatOper(value, row, index) {
 function FormatStatus(value, row, index) {
     var imgurl = "";
     try {
-        //-1 删除 1待审批 2 已审批 3外出中 4已完成
+        //-1 删除 1待审批 2 已审批 3已驳回 4已完成
 
         if (value == "1")
             imgurl += "<center>待审批</center>";
         else if (value == "2")
             imgurl += "<center>已审批</center>";
         else if (value == "3")
-            imgurl += "<center>外出中</center>";
+            imgurl += "<center>已驳回</center>";
         else if (value == "4")
             imgurl += "<center>已完成</center>";
 

@@ -245,7 +245,6 @@ namespace BD.Jcbg.Web.Controllers
         }
         #endregion
 
-
         #region 页面
         [Authorize]
         public ActionResult index()

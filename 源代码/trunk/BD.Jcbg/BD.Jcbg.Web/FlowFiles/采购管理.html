@@ -1,0 +1,409 @@
+<style type="text/css">
+	body {
+		position: relative;
+	}
+
+	.table_1 td {
+		height: 50px;
+		vertical-align: middle;
+		text-align: center;
+		font-size: 20px;
+		font-weight: bolder;
+	}
+
+	.table_2 {
+		width: 1000px;
+		border-right: solid 1px #888888;
+		border-top: solid 1px #888888;
+	}
+
+	.table_2 th {
+		border-left: solid 1px #888888;
+		border-bottom: solid 1px #888888;
+		background-image: none;
+		background-color: #f0f0f0;
+		color: #000;
+		font-size: 14px;
+		padding: 5px;
+		text-align: center;
+	}
+
+	.table_2 td {
+		border-left: solid 1px #888888;
+		border-bottom: solid 1px #888888;
+		font-size: 14px;
+		text-align: left;
+		height: 40px;
+		vertical-align: middle;
+		padding: 5px;
+	}
+</style>
+<span>
+	<input displaysteps="1" type="hidden" id="startApply" value="1"></input>
+	<input type="hidden" id="hid_specName" name="hid_specName" value="#FORM-hid_specName#"></input>
+	<input type="hidden" id="hid_specID" name="hid_specID" value="#FORM-hid_specID#"></input>
+	<input type="hidden" id="serialRecid" name="serialRecid" value="#FORM-serialRecid#"></input>
+	<input type="hidden" id="hid_serialNo" name="hid_serialNo" value="#serial#"></input>
+	<input type="hidden" id="hid_materialID" name="hid_materialID" value="#FORM-materialID#"></input>
+	<input type="hidden" id="hid_materialName" name="hid_materialName" value="#FORM-hid_materialName#"></input>
+	<input type="hidden" id="hid_materialType" name="hid_materialType" value="#FORM-materialType#"></input>
+	<input type="hidden" id="hid_materialTypeName" name="hid_materialTypeName" value="#FORM-hid_materialTypeName#"></input>
+
+	 
+</span>
+<table width="100%" border="0">
+	<tbody>
+		<tr displaysteps="1">
+			<td align="center">
+				<h3>采购申请</h3>
+			</td>
+		</tr>
+		<tr displaysteps="2">
+			<td align="center">
+				<h3>主管部门审核</h3>
+			</td>
+		</tr>
+
+		<tr displaysteps="4">
+			<td align="center">
+				<h3>财务审核</h3>
+			</td>
+		</tr>
+		<tr>
+			<td align="center">
+				<table cellspacing="0" class="table_2" displaysteps="1,2,4">
+					<tbody>
+						<tr displaysteps="1,2,4">
+							<th width="15%">采购类型：</th>
+							<td width="35%" colspan="3" displaysteps="1">
+								<select id="materialType" name="materialType">
+									<option value="1">办公消耗</option>   
+									<option value="2">试验消耗</option>
+								</select>
+							</td>
+							<td width="35%" colspan="3" displaysteps="2,4">
+								<input displaysteps="1" name="hid_materialTypeName" value="#FORM-hid_materialTypeName#" />
+							</td>
+						</tr>
+
+						<tr displaysteps="1,2,4">
+							<th width="15%">名称：</th>
+							<td width="35%" displaysteps="1">
+								<select id="materialID" name="materialID">
+									<option value="0">请选择材料</option>
+								</select>
+							</td>
+							<td width="35%" displaysteps="2,4">
+								<input displaysteps="1" name="hid_materialName" value="#FORM-hid_materialName#" />
+							</td>
+							<th width="15%">型号规格：</th>
+							<td displaysteps="1">
+								<select id="materialspec" name="materialspec">
+									<option value="0">请选择规格</option>
+								</select>
+							</td>
+							<td displaysteps="2,4">
+								<input displaysteps="1" name="hid_specName" value="#FORM-hid_specName#" />
+							</td>
+
+						</tr>
+						<tr>
+							<th>单价：</th>
+							<td>
+								<input id="price" name="price" displaysteps="1" onkeyup="ClearNoNum(this)"
+									style="width:90%" />
+							</td>
+							<th>购入单价：</th>
+							<td>
+								<input id="purchasePrice" name="purchasePrice" displaysteps="1"
+									onkeyup="ClearNoNum(this)" style="width:90%" />
+							</td>
+						</tr>
+						<tr>
+							<th>数量：</th>
+							<td>
+								<input id="quantity" name="quantity" displaysteps="1" onkeyup="ClearNoNum(this)"
+									style="width:90%" />
+							</td>
+							<th>技术要求：</th>
+							<td><input displaysteps="1" id="technicalRequirement" name="technicalRequirement"
+									style="width:90%" />
+							</td>
+
+						</tr>
+						<tr>
+							<th>供货单位：</th>
+							<td><input displaysteps="1" id="supplier" name="supplier" style="width:90%" />
+							</td>
+							<th>生产厂家：</th>
+							<td><input displaysteps="1" id="manufacturer" name="manufacturer" style="width:90%" />
+							</td>
+						</tr>
+						<tr>
+							<th>用途：</th>
+							<td colspan="3"><input displaysteps="1" id="purpose" name="purpose" style="width:90%" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<script language="javascript" type="text/javascript">
+	g_init = "";
+	var materialspecCount = 0;
+	window.onload = function () {
+		try {
+		
+			if ($("#startApply").val() == "1") {
+				GetMaterialInfo()
+				$('#materialID').attr('onchange', 'materialChange()');
+				$('#materialType').attr('onchange', 'GetMaterialInfo()');
+
+			
+				if ($('#hid_materialType').val()!='') {
+					$('#materialType').val($('#hid_materialType').val());
+					GetMaterialInfo()
+				}
+			} 
+			
+		} catch (e) {
+			alert(e);
+		}
+	}
+
+	function GetMaterialInfo() {
+		$('#materialID').html("<option value='0'>请选择材料</option>");
+		var obj = {
+			materialType:$("#materialType option:selected").val()
+		}
+		$.ajax({
+			type: "POST",
+			url: "/dhoa/GetMaterialInfo",
+			data: obj,
+			dataType: "json",
+			async: false,
+			success: function (data) {
+				if (data.length) {
+                    var str = '';
+                    for (var i = 0, len = data.length; i < len; i++) {
+                        str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+                    }
+
+                    if (data.length == 1) {
+                        $('#materialID').html(str);
+						materialChange();
+
+                    } else {
+                        $('#materialID').append(str);
+                    }
+					if ($('#hid_materialID').val()!='') {
+						$('#materialID').val($('#hid_materialID').val())
+						materialChange();
+				}
+				
+					
+                }
+				else {
+					$('#materialID').html("<option value='0'>--------</option>");
+				}
+
+			}
+		});
+	};
+
+
+	function materialChange() {
+		var obj = {
+			materialId: $("#materialID option:selected").val(),
+			materialType:$("#materialType option:selected").val()
+		}
+		$.ajax({
+			type: "POST",
+			url: "/dhoa/GetMaterialSpecById",
+			data: obj,
+			dataType: "json",
+			async: false,
+			success: function (data) {
+				if (data.length) {
+					materialspecCount = data.length;
+					var str = '';
+					for (var i = 0, len = data.length; i < len; i++) {
+						str += "<option value='" + data[i].id + "' matbh='"+ data[i].materialBH +"'>" + data[i].name + "</option>";
+
+					}
+					if (data.length == 1) {
+						$('#materialspec').html(str);
+					} else {
+						$('#materialspec').html("<option value='0'>请选择规格</option>");
+						$('#materialspec').append(str);
+					}
+					if ( $("#hid_specID").val() != "") {
+						$("#materialspec").val($("#hid_specID").val());
+					}
+				}
+				else {
+					materialspecCount = 0;
+					$('#materialspec').html("<option value='0'>--------</option>");
+				}
+
+
+			}
+		});
+	};
+
+	function checkSubmit() {
+
+		//发起申请时，创建记录
+		var retFlag = true;
+		var guid = NewGuid();
+		if ($("#startApply").val() == "1") {
+
+			if ($("#serialRecid").val() == "") {
+				$("#serialRecid").val(guid)
+			}
+
+			// var recid =$("#orderRecid").val();  
+			var matId = $("#materialID option:selected").val();
+			var matName = $("#materialID option:selected").text();
+			var matbh = $('#materialspec').find("option:selected").attr("matbh");
+			var specId = $("#materialspec option:selected").val();
+			var specName = $("#materialspec option:selected").text();
+			var price = $("#price").val();
+			var purchasePrice = $("#purchasePrice").val();
+			var quantity = $("#quantity").val();
+			var technicalRequirement = $("#technicalRequirement").val();
+			var supplier = $("#supplier").val();
+			var manufacturer = $("#manufacturer").val();
+			var purpose = $("#purpose").val();
+
+			$("#hid_specID").val(specId)
+			$("#hid_specName").val(specName)
+			$("#hid_materialName").val(matName)
+			$("#hid_materialTypeName").val($("#materialType option:selected").text())
+			
+			if (matbh == 0) {
+				layer.msg('请选择材料', {
+					icon: 2,
+					time: 2000
+				});
+				return;
+			}
+
+			if (materialspecCount != 0 && specId == 0) {
+				layer.msg('请选择规格', {
+					icon: 2,
+					time: 2000
+				});
+				return;
+			}
+			if (price.length == 0) {
+				layer.msg('请输入价格', {
+					icon: 2,
+					time: 2000
+				});
+				return;
+			}
+			if (purchasePrice.length == 0) {
+				layer.msg('请输入购入价格', {
+					icon: 2,
+					time: 2000
+				});
+				return;
+			}
+			if (quantity.length == 0) {
+				layer.msg('请输入数量', {
+					icon: 2,
+					time: 2000
+				});
+				return;
+			}
+
+			var obj = {
+				guid: $("#serialRecid").val(),
+				// recid: recid,
+				matbh: matbh,
+				matId: matId,
+				matName: matName,
+				specId: specId,
+				specName: specName,
+				price: price,
+				purchasePrice: purchasePrice,
+				quantity: quantity,
+				technicalRequirement: technicalRequirement,
+				supplier: supplier,
+				manufacturer: manufacturer,
+				purpose: purpose
+			}
+
+			$.ajax({
+				type: "POST",
+				url: "/dhoa/PurchaseOrderModify",
+				data: obj,
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					if (data.code == "0") {
+
+					} else {
+						alert(data.msg)
+						retFlag = false;
+					}
+				}
+
+			});
+		}
+
+		return retFlag;
+	}
+
+
+	function NewGuid() {
+		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+			var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+			return v.toString(16);
+		});
+	}
+
+	function ChangeMaterial(materialId) {
+		var obj;
+		obj = {
+			materialId: materialId
+		}
+		ajaxTpl('/dhoa/Getmaterialspec', obj, function (data) {
+			if (data.length) {
+				var str = '';
+				for (var i = 0, len = data.length; i < len; i++) {
+					str += "<option value='" + data[i].id + "'>" + data[i].name + "</option>";
+				}
+				if (data.length == 1) {
+					$('#materialspec').html(str);
+				} else {
+					$('#materialspec').html("<option value='0'>请选择规格</option>");
+					$('#materialspec').append(str);
+				}
+				if (materialspec) {
+					$('#materialspec').val(materialspec);
+				}
+			}
+			else {
+				materialspecCount = 0;
+				$('#materialspec').html("<option value='0'>--------</option>");
+			}
+		});
+	}
+
+	function ClearNoNum(obj) {
+		obj.value = obj.value.replace(/[^\d.]/g, "");  //清除“数字”和“.”以外的字符  
+
+		obj.value = obj.value.replace(/^\./g, "");  //验证第一个字符是数字而不是. 
+
+		obj.value = obj.value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的.   
+
+		obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+
+	}
+
+</script>

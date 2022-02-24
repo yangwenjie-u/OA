@@ -1,0 +1,271 @@
+<style type="text/css">
+    body {
+        position: relative;
+    }
+
+    .table_1 td {
+        height: 50px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bolder;
+    }
+
+    .table_2 td {
+        height: 40px;
+        vertical-align: middle;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+    .table_3 {
+        border-right: solid 1px #888888;
+        border-top: solid 1px #888888;
+    }
+
+    .table_3 th {
+        border-left: solid 1px #888888;
+        border-bottom: solid 1px #888888;
+        background-image: none;
+        background-color: #f0f0f0;
+        color: #000;
+        font-size: 14px;
+        padding: 5px;
+        text-align: left;
+    }
+
+    .no_data {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1119991999;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 50px;
+    }
+
+    .table_3 td {
+        border-left: solid 1px #888888;
+        border-bottom: solid 1px #888888;
+        font-size: 14px;
+        text-align: left;
+        height: 40px;
+        vertical-align: middle;
+        padding: 5px;
+    }
+</style>
+<span>
+    <input displaysteps="1" type="hidden" id="startApply" value="1"></input>
+    <input type="hidden" id="serialRecid" name="serialRecid" value="#FORM-serialRecid#"></input>
+    <input type="hidden" id="serialReci1d" name="serialRecid1" value="#FORM-serialRecid#"></input>
+    <!-- <input   name="serialRecixcd" value="#realname-#username##"></input> -->
+    var mid=";";
+    var recordId=";";
+</span>
+<table width="100%" border="0">
+    <tbody>
+        <tr>
+            <td align="center">
+                <table cellspacing="1" width="1000">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <table cellspacing="0" width="100%" class="table_1">
+                                    <tbody>
+                                        <tr>
+                                            <td>用车申请</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table cellspacing="0" width="100%" class="table_3">
+                                    <tbody>
+                                        <tr>
+                                            <th width="10%">用车部门</th>
+                                            <td width="20%">
+                                                #CTRL-department-S-1-H_JCKS|KSBH,KSMC|SSDWBH in( select JCJGBH from
+                                                I_M_NBRY_JC
+                                                where USERCODE='#username#')-S#
+                                            </td>
+                                            <th width="10%">申请人</th>
+                                            <td width="20%">
+                                                #CTRL-USER-applicant-S-1---#username#--#username##
+                                            </td>
+                                            <th width="10%">同车人</th>
+                                            <td width="200">
+                                                <input displaysteps="1" id="copassenger" name="copassenger"
+                                                    style="width:90%" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>目的地</th>
+                                            <td>
+                                                <input displaysteps="1" id="destination" name="destination"
+                                                    style="width:90%" />
+                                            </td>
+                                            <th>出车用途</th>
+                                            <td>
+                                                <input displaysteps="1" id="usefor" name="usefor" style="width:90%" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>出车时间</th>
+                                            <td>
+                                                <input id="outtime" class="easyui-datetimebox" displaysteps="1"
+                                                    name="outtime" data-options="required:true,showSeconds:false"
+                                                    editable="false" style="width:150px" />
+                                            </td>
+                                            <th>返回时间</th>
+                                            <td width="200">
+                                                <input id="returntime" class="easyui-datetimebox" displaysteps="1"
+                                                    name="returntime" data-options="required:true,showSeconds:false"
+                                                    editable="false" style="width:150px" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>行驶公里</th>
+                                            <td><input id="kilometers" displaysteps="1" name="kilometers"
+                                                    class="easyui-numberbox" data-options="min:0,precision:2"
+                                                    style="width:90%" />
+                                            </td>
+                                            <th>加油（升）</th>
+                                            <td><input id="oilcost" displaysteps="1" name="oilcost"
+                                                    class="easyui-numberbox" data-options="min:0,precision:2"
+                                                    style="width:90%" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>过路过桥费</th>
+                                            <td><input id="roadtoll" displaysteps="1" name="roadtoll"
+                                                    class="easyui-numberbox" data-options="min:0,precision:2"
+                                                    style="width:90%" />
+                                            </td>
+                                            <th>备注</th>
+                                            <td><input id="remark" displaysteps="1" name="remark" style="width:90%" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<script language="javascript" type="text/javascript">
+    g_init = "";
+    $(function () {
+        try {
+
+            if (g_init == "") {
+            }
+
+        } catch (e) {
+            alert(e);
+        }
+
+    });
+
+    $(function () {
+        try {
+            if ($("#idate").length > 0) {
+
+                $('#idate').datebox('setValue', getCurDate());
+            }
+        } catch (e) {
+            alert(e);
+        }
+    });
+
+    function getExtraParams() {
+        if ($("#rybh").length > 0)
+            return "realname=" + encodeURIComponent($("#rybh").find("option:selected").text());
+        return "";
+    }
+    function checkSubmit() {
+
+        if ($("#day").length > 0 && $("#hour").length > 0 && $("#day").numberbox('getValue') * 6 + $("#hour").numberbox('getValue') == 0) {
+            alert("请输入有效的时间！")
+            return false;
+        }
+        if ($("#startTime").length > 0) {
+            var now = new Date();
+            var d1 = new Date($("#startTime").datetimebox('getValue').replace("-", "/"));
+            if ($("#endTime").length > 0) {
+                var d2 = new Date($("#endTime").datetimebox('getValue').replace("-", "/"));
+                if (d1 >= d2) {
+                    alert("请输入有效的请假时间！开始时间必须小于结束时间")
+                    return false;
+                }
+            }
+        }
+
+        //发起申请时，创建记录
+        var retFlag = true;
+        var guid = NewGuid();
+        if ($("#startApply").val() == "1") {
+
+            if ($("#serialRecid").val() != "") {
+                guid = $("#serialRecid").val();
+            }
+            else {
+                $("#serialRecid").val(guid)
+            }
+
+var mid=";";
+var recordId=";";
+            var dataObj = {
+              
+                mid: mid,
+                id: recordId,
+                department: $("#department").val() ,
+                copassenger:  $("#copassenger").val(),
+                applicant:  $("#applicant").val(),
+                destination: $("#destination").val(),
+                usefor: $("#usefor").val(),
+                outtime: $("#outtime").val(),
+                returntime: $("#returntime").val(),
+                kilometers: $("#kilometers").val(),
+                oilcost: $("#oilcost").val(),
+                roadtoll: $("#roadtoll").val(),
+                remark: $("#remark").val()
+
+            };
+            $.ajax({
+                type: "POST",
+                url: "/dhoa/CarRecordUpdate",
+                data: dataObj,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+
+                    } else {
+                        alert(data.msg)
+                        retFlag = false;
+                    }
+                }
+            });
+        }
+        return retFlag;
+    }
+
+    function NewGuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+</script>

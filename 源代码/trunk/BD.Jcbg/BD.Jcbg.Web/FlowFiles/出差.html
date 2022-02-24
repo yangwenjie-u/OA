@@ -1,0 +1,304 @@
+<style type="text/css">
+	body {
+		position: relative;
+	}
+
+	.table_1 td {
+		height: 50px;
+		vertical-align: middle;
+		text-align: center;
+		font-size: 20px;
+		font-weight: bolder;
+	}
+
+	.table_2 td {
+		height: 40px;
+		vertical-align: middle;
+		font-size: 14px;
+		font-weight: normal;
+	}
+
+	.table_3 {
+		border-right: solid 1px #888888;
+		border-top: solid 1px #888888;
+	}
+
+	.table_3 th {
+		border-left: solid 1px #888888;
+		border-bottom: solid 1px #888888;
+		background-image: none;
+		background-color: #f0f0f0;
+		color: #000;
+		font-size: 14px;
+		padding: 5px;
+		text-align: left;
+	}
+
+	.no_data {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 1119991999;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, .5);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #fff;
+		font-weight: bold;
+		font-size: 50px;
+	}
+
+	.table_3 td {
+		border-left: solid 1px #888888;
+		border-bottom: solid 1px #888888;
+		font-size: 14px;
+		text-align: left;
+		height: 40px;
+		vertical-align: middle;
+		padding: 5px;
+	}
+</style>
+<span>
+	<!-- -->
+	<input displaysteps="1" type="hidden" id="startApply" value="1"></input>
+</span>
+<table width="100%" border="0">
+	<tbody>
+		<tr>
+			<td align="center">
+				<table cellspacing="1" width="1000">
+					<tbody>
+						<tr>
+							<td>
+								<table cellspacing="0" width="100%" class="table_1">
+									<tbody>
+										<tr>
+											<td>员工出差单</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table cellspacing="0" width="100%" class="table_2">
+									<tbody>
+										<tr>
+											<td style="TEXT-ALIGN: right; ">
+												<input id="idate" class="easyui-datebox" style="width:100px"
+													displaysteps="1,2,3" name="idate" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table cellspacing="0" width="100%" class="table_3">
+									<tbody>
+										<tr>
+											<th width="10%">所属科室</th>
+											<td width="20%">
+												#CTRL-ksbh-S-1,2-H_JCKS|KSBH,KSMC|SSDWBH in( select JCJGBH from
+												I_M_NBRY_JC
+												where USERCODE='#username#')-S#
+											</td>
+											<th width="10%">申请人员</th>
+											<td width="20%">
+												#CTRL-USER-rybh-S-1---#username#--#username##
+											</td>
+											<th width="10%">同去人员</th>
+											<td width="200">
+												<input displaysteps="1,2,3" id="peopleTogether" name="peopleTogether"
+													style="width:100%" />
+											</td>
+										</tr>
+										<tr>
+											<th>往返地点</th>
+											<td><input displaysteps="1,2,3" id="WFDD" name="WFDD" /> </td>
+											<th>计划外出时间</th>
+											<td colspan="3">
+												<input id="startTime" class="easyui-datetimebox" displaysteps="1,2,3"
+													name="startTime" data-options="required:true,showSeconds:false"
+													editable="false" />
+												至
+												<input id="predictEndTime" class="easyui-datetimebox"
+													displaysteps="1,2,3" name="predictEndTime"
+													data-options="required:true,showSeconds:false" editable="false" />
+												共
+												<input id="day" displaysteps="1,2,3" name="day" style="width:30px"
+													value="0" class="easyui-numberbox"
+													data-options="required:true,min:0,precision:1" />天
+												<input id="hour" displaysteps="1,2,3" name="hour" style="width:30px"
+													value="0" class="easyui-numberbox"
+													data-options="required:true,min:0,precision:1" />小时
+											</td>
+										</tr>
+										<tr>
+											<th>出差详情</th>
+											<td colspan="5"><input id="remark" displaysteps="1,2,3" name="remark"
+													style="width:100%" /></td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table cellspacing="0" width="100%" class="table_3">
+									<tbody>
+										<tr>
+											<th width="10%">返回时间</th>
+											<td width="20%">
+												<input id="endTime" class="easyui-datetimebox" displaysteps="1"
+													name="endTime" data-options="required:true,showSeconds:false"
+													editable="false" />
+											</td>
+											<th width="10%">派遣时长</th>
+											<td width="20%">
+												<input id="dispatchDuration_day" displaysteps="1" name="day"
+													style="width:30px" value="0" class="easyui-numberbox"
+													data-options="required:true,min:0,precision:1" />天
+												<input id="dispatchDuration_hour" displaysteps="1" name="hour"
+													style="width:30px" value="0" class="easyui-numberbox"
+													data-options="required:true,min:0,precision:1" />小时
+												<!-- <input displaysteps="1,2,3" id="dispatchDuration"
+													class="easyui-numberbox" disabled /> -->
+											</td>
+											<th width="10%">是否住宿</th>
+											<td width="200">
+												<input name="isStay" type="radio" value="1" />是 </label>
+												<input name="isStay" type="radio" value="0" />否 </label>
+											</td>
+										</tr>
+										<tr>
+											<th>房间数量</th>
+											<td><input displaysteps="1,2,3" id="roomCount" name="roomCount"
+													class="easyui-numberbox" /> </td>
+											<th>住宿天数</th>
+											<td><input displaysteps="1,2,3" id="stayDays" name="stayDays"
+													class="easyui-numberbox" /> </td>
+											<th>发票持有人</th>
+											<td><input displaysteps="1,2,3" id="invoiceHolder" name="invoiceHolder"
+													style="width:100%" />
+											</td>
+
+										</tr>
+										<tr>
+											<th>发票金额：</th>
+											<td><input displaysteps="1,2,3" id="invoiceAmount" name="invoiceAmount" />
+											</td>
+											<th>发票附件</th>
+											<td colspan="3">#FILECTRL-invoice-1-60-0-0# </td>
+										</tr>
+										<tr>
+											<br>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<script language="javascript" type="text/javascript">
+	g_init = "";
+	$(function () {
+		try {
+			if (g_init == "") {
+			}
+
+		} catch (e) {
+			alert(e);
+		}
+
+	});
+
+	$(function () {
+		try {
+			if ($("#idate").length > 0) {
+
+				$('#idate').datebox('setValue', getCurDate());
+			}
+		} catch (e) {
+			alert(e);
+		}
+	});
+
+	function getExtraParams() {
+		if ($("#rybh").length > 0)
+			return "realname=" + encodeURIComponent($("#rybh").find("option:selected").text());
+		return "";
+	}
+	function checkSubmit() {
+
+		if ($("#day").length > 0 && $("#hour").length > 0 && $("#day").numberbox('getValue') * 6 + $("#hour").numberbox('getValue') == 0) {
+			alert("请输入有效的时间！")
+			return false;
+		}
+		if ($("#startTime").length > 0) {
+			var now = new Date();
+			var d1 = new Date($("#startTime").datetimebox('getValue').replace("-", "/"));
+			var d2 = new Date($("#predictEndTime").datetimebox('getValue').replace("-", "/"));
+			if (d1 >= d2) {
+				alert("请输入有效的时间！开始时间必须小于结束时间")
+				return false;
+			}
+			if ($("#endTime").length > 0) {
+				d2 = new Date($("#endTime").datetimebox('getValue').replace("-", "/"));
+				if (d1 >= d2) {
+					alert("请输入有效的时间！开始时间必须小于结束时间")
+					return false;
+				}
+			}
+		}
+		//发起申请时，创建记录
+		var retFlag = true;
+		if ($("#startApply").val() == "1") {
+			var dataObj = {
+				type: '3',
+				ksbh: $("#ksbh").val(),
+				rybh: $("#rybh").val(),
+				RYXM: "",
+				startTime: $("#startTime").datetimebox('getValue'),
+				predictEndTime: $("#predictEndTime").datetimebox('getValue'),//计划返回时间
+				endTime: $("#endTime").datetimebox('getValue'), //返回时间
+				remark: $("#remark").val(),
+				peopleTogether: $("#peopleTogether").val(),//同去人
+				WFDD: $("#WFDD").val(), //往返地点
+				hours: $("#day").val() + "天" + $("#hour").val() + "小时",
+				dispatchDuration: $("#dispatchDuration").val(), //派遣时长
+				isStay: $("[name='isStay']").filter(":checked").val(), //是否住宿
+				roomCount: $("#roomCount").val(), //房间数量
+				stayDays: $("#stayDays").val(), //住宿天数
+				invoiceHolder: $("#invoiceHolder").val(), //发票持有人
+				invoiceAmount: $("#invoiceAmount").val(), //发票金额
+			};
+			$.ajax({
+				type: "POST",
+				url: "/dhoa/AttendanceInformationAdd",
+				data: dataObj,
+				dataType: "json",
+				async: false,
+				success: function (data) {
+					if (data.code == "0") {
+
+					} else {
+						alert(data.msg)
+						retFlag = false;
+					}
+				}
+
+			});
+		}
+
+		return retFlag;
+	}
+
+</script>

@@ -1,0 +1,283 @@
+<style type="text/css">
+    body{
+        position: relative;
+    }
+        .table_1{
+        }
+        .table_1 td{
+            height:50px;
+            vertical-align:middle;
+            text-align:center;
+            font-size:20px;
+            font-weight:bolder;
+        }
+        .table_2{
+        }
+        .table_2 td{
+            height:40px;
+            vertical-align:middle;
+            font-size:14px;
+            font-weight:normal;
+        }
+        .table_3{
+            border-right:solid 1px #888888;
+            border-top:solid 1px #888888;
+        }
+        .table_3 th{
+            border-left:solid 1px #888888;
+            border-bottom:solid 1px #888888;
+            background-image:none;
+            background-color:#f0f0f0;
+            color:#000 ;
+            font-size:14px;
+            padding:5px;
+            text-align:left;
+        }
+        .no_data{
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1119991999;
+            width:100%;
+            height:100%;
+            background-color: rgba(0, 0, 0, .5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 50px;
+        }
+        .table_3 td{
+            border-left:solid 1px #888888;
+            border-bottom:solid 1px #888888;
+            font-size:14px;
+            text-align:left;
+            height:40px;
+            vertical-align:middle;
+            padding:5px;
+        }</style>
+    <span displaysteps="1,2,3">
+        <input type="hidden" displaysteps="1,2,3" name="nextrycodes" id="nextrycodes" />
+        <input type="hidden" displaysteps="1,2,3" name="jcjgbh" id="jcjgbh" />
+    </span>
+    <span id="cur_step1" type="hidden" displaysteps="1" name="cur_step1"></span>
+    <span id="cur_step2" type="hidden" displaysteps="2" name="cur_step2"></span>
+    <span id="cur_step3" type="hidden" displaysteps="3" name="cur_step3"></span>
+    <table width="100%" border="0">
+        <tbody>
+            <tr>
+                <td align="center">
+                <table cellspacing="1" width="800">
+                    <tbody>
+                        <tr>
+                            <td>
+                            <table cellspacing="0" width="100%" class="table_1">
+                                <tbody>
+                                    <tr>
+                                        <td>员工出差单</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table cellspacing="0" width="100%" class="table_2">
+                                <tbody>
+                                    <tr>
+                                         <td style="TEXT-ALIGN: right; ">
+                                            <input id="idate" class="easyui-datebox" style="width:100px" displaysteps="1" name="idate" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table cellspacing="0" width="100%" class="table_3">
+                                <tbody>
+                                    <tr>
+                                        <th width="100">出差人姓名</th>
+                                        <td width="200">
+                                            #CTRL-USER-UserName-S-1---#username#--#username## </td>
+                                        <th width="100">往返地点</th>
+                                        <td>
+                                            <input id="destarea" displaysteps="1" name="destarea" /> </td>
+                                    </tr>
+                                    <tr>
+                                        <th>出差时间</th>
+                                        <td colspan="3">
+                                            <input id="date1" class="easyui-datetimebox" style="width:150px" displaysteps="1" name="date1" data-options="required:true,showSeconds:false" editable="false" />
+                                            至
+                                            <input id="date2" class="easyui-datetimebox" style="width:150px" displaysteps="1" name="date2" data-options="required:true,showSeconds:false" editable="false"/>
+                                              
+                                            共
+                                            <input id="day" displaysteps="1" name="day" style="width:30px" value="0" class="easyui-numberbox" data-options="required:true,min:0,precision:1"/>天
+                                            <input id="hour" displaysteps="1" name="hour" style="width:30px" value="0" class="easyui-numberbox" data-options="required:true,min:0,precision:1"/>小时
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>出差详情</th>
+                                        <td colspan="3"><input id="reason" displaysteps="1" name="reason" style="width:600px" /></td>
+                                    </tr>
+                                    <tr>                               
+                                        <th>工作交接情况</th>
+                                        <td colspan="3"><input id="workstate" displaysteps="1" name="workstate" value="已交接" /></td>
+                                    </tr>
+                                    <tr>
+                                        <th>申请人</th>
+                                        <td colspan="3">#realname-#CHK-1-USERNAME##</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script language="javascript" type="text/javascript">
+            g_init="";
+            $(function () {
+                try{
+                    if(g_init=="")
+                    {
+                        GetNextRY();
+                    }
+                
+                }catch(e){
+                    alert(e);
+                }
+    
+            });
+            
+            // 获取当前步骤
+            function getCurStep() {
+                var step = "";
+                $('span[id^="cur_step"]').each(function () {
+                    step = $(this).attr("id").replace("cur_step", "");
+                    return false;
+                });
+                return step;
+            }
+            $(function () {
+                    
+                    try{
+                        if ($("#idate").length>0){
+                            
+                            $('#idate').datebox('setValue',getCurDate());
+                        }
+                        if ($("#bdate").length>0){
+                            
+                            $('#bdate').val(getCurDate()+' '+getCurTime());
+                        }
+    
+                    }catch(e){
+                        alert(e);
+                    }
+            });
+            function getExtraParams(){
+                    if ($("#UserName").length>0)
+                        return "realname="+encodeURIComponent($("#UserName").find("option:selected").text());
+                    return "";
+            }
+            function checkSubmit(){
+                    if ($("#day").length>0 && $("#hour").length>0 && $("#day").numberbox('getValue')*6+$("#hour").numberbox('getValue')==0)
+                    {
+                        alert("请输入有效的时间！")
+                        return false;
+                    }
+                    if($("#date1").length>0)
+                    {
+                        var now = new Date();
+                        var d1 = new Date($("#date1").datetimebox('getValue').replace("-", "/"));
+                        var d2 = new Date($("#date2").datetimebox('getValue').replace("-", "/"));
+                        if(d1>=d2)
+                        {
+                            alert("请输入有效的时间！开始时间必须小于结束时间")
+                            return false;
+                        }
+                    }
+                    return true;
+            }
+            
+            function GetNextRY()
+            {
+                var step = "";
+                $('span[id^="cur_step"]').each(function () {
+                    step = $(this).attr("id").replace("cur_step", "");
+                    return false;
+                });
+                var jcjgbh="";
+                $.ajax({
+                    type: "POST",
+                    url: "/jcjtfun/GetCurJcjgbh",
+                    dataType : 'json',            
+                    cache: false,
+                    success: function (data) {
+                        if (data.code == 0) {
+                            //var obj=data.datas;
+                            jcjgbh =data.datas;
+    
+                            var objv1 = document.getElementById("jcjgbh");	
+                            if(objv1!=null)
+                                objv1.value=jcjgbh;
+                            $.ajax({
+                                    type: "POST",
+                                    url: "/jcjtfun/GetDdLcNextRy",
+                                    data: {
+                                        jcjgbh:jcjgbh,
+                                        id:"32",
+                                        nextid:step
+                                    },
+                                    dataType : 'json',            
+                                    cache: false,
+                                    success: function (data) {
+                                        if (data.code == 0) {
+                                            var obj=data.datas;
+                                            var nextrycodes=obj.nextrycode;
+                                            var objv = document.getElementById("nextrycodes");	
+                                            if(objv!=null)
+                                                objv.value=nextrycodes;
+                                        }
+                                        else
+                                            // layer.alert(data.msg);                
+                                            $('body').append('<div class="no_data">'+data.msg+'</div>')
+                                    },
+                                    complete: function (XMLHttpRequest, textStatus) {
+                                     
+                                    },
+                                    beforeSend: function (XMLHttpRequest) {
+                                       
+                                    }
+                                });
+                        }
+                    },
+                    complete: function (XMLHttpRequest, textStatus) {
+                     
+                    },
+                    beforeSend: function (XMLHttpRequest) {
+                       
+                    }
+                });
+                
+            }
+    </script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

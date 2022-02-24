@@ -1,0 +1,395 @@
+<style type="text/css">
+    body {
+        position: relative;
+    }
+
+    .table_1 td {
+        height: 50px;
+        vertical-align: middle;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bolder;
+    }
+
+    .table_2 td {
+        height: 40px;
+        vertical-align: middle;
+        font-size: 14px;
+        font-weight: normal;
+    }
+
+    .table_3 {
+        border-right: solid 1px #888888;
+        border-top: solid 1px #888888;
+    }
+
+    .table_3 th {
+        border-left: solid 1px #888888;
+        border-bottom: solid 1px #888888;
+        background-image: none;
+        background-color: #f0f0f0;
+        color: #000;
+        font-size: 14px;
+        padding: 5px;
+        text-align: left;
+    }
+
+    .no_data {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1119991999;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: bold;
+        font-size: 50px;
+    }
+
+    .table_3 td {
+        border-left: solid 1px #888888;
+        border-bottom: solid 1px #888888;
+        font-size: 14px;
+        text-align: left;
+        height: 40px;
+        vertical-align: middle;
+        padding: 5px;
+    }
+</style>
+<span>
+    <!-- -->
+    <input displaysteps="1" type="hidden" id="startApply" value="1"></input>
+    <input type="hidden" id="serialRecid" name="serialRecid" value="#FORM-serialRecid#"></input>
+
+</span>
+<table width="100%" border="0">
+    <tbody>
+        <tr>
+            <td align="center">
+                <table cellspacing="1" width="1000">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <table cellspacing="0" width="100%" class="table_1">
+                                    <tbody>
+                                        <tr>
+                                            <td>检测派遣申请单</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <!-- <tr>
+                            <td>
+                                <table cellspacing="0" width="100%" class="table_2">
+                                    <tbody>
+                                        <tr>
+                                            <td style="TEXT-ALIGN: right; ">
+                                                <input id="idate" class="easyui-datebox" style="width:100px"
+                                                    displaysteps="1" name="idate" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td>
+                                <table cellspacing="0" width="100%" class="table_3">
+                                    <tbody>
+                                        <tr>
+                                            <th width="10%">所属部门：</th>
+                                            <td width="20%">
+                                                #CTRL-ksbh-S-1-H_JCKS|KSBH,KSMC|SSDWBH in( select JCJGBH from
+                                                I_M_NBRY_JC
+                                                where USERCODE='#username#')-S#
+                                            </td>
+                                            <th width="15%">委托合同编号：</th>
+                                            <td width="20%">
+                                                <input displaysteps="1" id="htbh" name="htbh" style="width:100%" />
+                                            </td>
+                                            <th width="10%">工作地区：</th>
+                                            <td width="200">
+                                                <input displaysteps="1" id="GZDQ" name="GZDQ" style="width:100%" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>工程名称：</th>
+                                            <td><input displaysteps="1" id="GCMC" name="GCMC" /> </td>
+                                            <th>检测内容：</th>
+                                            <td>
+                                                <input displaysteps="1" id="JCXM" name="JCXM" style="width:100%" />
+                                            </td>
+                                            <th>工程量：</th>
+                                            <td>
+                                                <input displaysteps="1" id="GCL" name="GCL" style="width:100%" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th width="10%">出发时间：</th>
+                                            <td width="20%">
+                                                <input id="startTime" class="easyui-datetimebox" displaysteps="1"
+                                                    name="startTime" data-options="required:true,showSeconds:false"
+                                                    editable="false" style="width: 140px;" />
+                                            </td>
+                                            <th>派出车辆牌号：</th>
+                                            <td><input id="carId" displaysteps="1" name="carId" style="width:100%" />
+                                            </td>
+                                            <th>同去人：</th>
+                                            <td><input id="peopleTogether" displaysteps="1" name="peopleTogether"
+                                                    style="width:100%" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table cellspacing="0" width="100%" class="table_3">
+                                    <tbody>
+                                        <tr>
+                                            <th width="10%">返回时间：</th>
+                                            <td width="20%">
+                                                <input id="returnTime" class="easyui-datetimebox" displaysteps="1"
+                                                    name="returnTime" data-options="required:true,showSeconds:false"
+                                                    editable="false" style="width: 140px;" />
+                                            </td>
+                                            <th width="15%">派遣时长：</th>
+                                            <td width="20%">
+                                                <input id="dispatchDuration_day" displaysteps="1" name="day"
+                                                    style="width:30px" value="0" class="easyui-numberbox"
+                                                    data-options="required:true,min:0,precision:1" />天
+                                                <input id="dispatchDuration_hour" displaysteps="1" name="hour"
+                                                    style="width:30px" value="0" class="easyui-numberbox"
+                                                    data-options="required:true,min:0,precision:1" />小时
+                                                <!-- <input displaysteps="1" id="dispatchDuration"
+                                                    class="easyui-numberbox" disabled /> -->
+                                            </td>
+                                            <th width="10%">是否住宿：</th>
+                                            <td width="200">
+                                                <input name="isStay" type="radio" value="1" checked />是 </label>
+                                                <input name="isStay" type="radio" value="0" />否 </label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>房间数量：</th>
+                                            <td><input displaysteps="1" id="roomCount" name="roomCount"
+                                                    class="easyui-numberbox" /> </td>
+                                            <th>住宿天数：</th>
+                                            <td><input displaysteps="1" id="stayDays" name="stayDays"
+                                                    class="easyui-numberbox" /> </td>
+                                            <th>发票持有人：</th>
+                                            <td><input displaysteps="1" id="invoiceHolder" name="invoiceHolder"
+                                                    style="width:100%" />
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <th>发票金额：</th>
+                                            <td><input displaysteps="1" id="invoiceAmount" name="invoiceAmount"
+                                                    class="easyui-numberbox" data-options="min:0,precision:2" />
+                                            </td>
+                                            <th>发票附件：</th>
+                                            <td colspan="3" align="left">#FILECTRL-invoiceAnnex-1-60-0-0#</td>
+                                        </tr>
+                                        <tr>
+                                            <br>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<script language="javascript" type="text/javascript">
+    g_init = "";
+    $(function () {
+        try {
+            if (g_init == "") {
+            }
+
+        } catch (e) {
+            alert(e);
+        }
+
+    });
+
+    $(function () {
+        try {
+            if ($("#idate").length > 0) {
+
+                $('#idate').datebox('setValue', getCurDate());
+            }
+            if ($("#startTime").length > 0) {
+
+                $('#startTime').datebox('setValue', getCurDate());
+            }
+            if ($("#returnTime").length > 0) {
+
+                $('#returnTime').datebox('setValue', getCurDate());
+            }
+        } catch (e) {
+            alert(e);
+        }
+    });
+
+    function getExtraParams() {
+        if ($("#rybh").length > 0)
+            return "realname=" + encodeURIComponent($("#rybh").find("option:selected").text());
+        return "";
+    }
+
+    $('#startTime').datebox({
+        stopFirstChangeEvent: true,
+        onChange: function () {
+            var options = $(this).datebox('options');
+            if (options.stopFirstChangeEvent) {
+                options.stopFirstChangeEvent = false;
+                return;
+            }
+
+            // DateTimeChange();
+
+        }
+    });
+
+    $('#returnTime').datebox({
+        stopFirstChangeEvent: true,
+        onChange: function () {
+            var options = $(this).datebox('options');
+            if (options.stopFirstChangeEvent) {
+                options.stopFirstChangeEvent = false;
+                return;
+            }
+            // DateTimeChange();
+        }
+    });
+
+    function DateTimeChange() {
+
+        if ($("#startTime").length > 0 && $("#returnTime").length > 0) {
+
+            var startDate = new Date($("#startTime").datebox('getValue').replace("-", "/"));
+            var endDate = new Date($("#returnTime").datebox('getValue').replace("-", "/"));
+
+            if (startDate > endDate) {
+                alert("请输入有效的时间！开始时间必须小于结束时间")
+                return false;
+            }
+
+            if (startDate == endDate) {
+                $("#dispatchDuration").val(1)
+
+            }
+            else {
+                var days = (endDate - startDate) / (1 * 24 * 60 * 60 * 1000) + 1;
+
+                $("#dispatchDuration").val(days)
+
+            }
+        }
+
+    }
+    function checkSubmit() {
+
+        if ($("#startApply").val() != "1") {
+            return true;
+        }
+
+        if ($("#startTime").length > 0 && $("#returnTime").length > 0) {
+            var now = new Date();
+            var d1 = new Date($("#startTime").datetimebox('getValue').replace("-", "/"));
+
+
+            var d2 = new Date($("#returnTime").datetimebox('getValue').replace("-", "/"));
+            if (d1 > d2) {
+                alert("请输入有效的时间！开始时间必须小于结束时间")
+                return false;
+            }
+
+        }
+
+        if ($("#dispatchDuration_day").val() == 0 && $("#dispatchDuration_hour").val() == 0) {
+            alert("请输入派遣时长")
+            return false;
+        }
+        if ($("#htbh").length == 0) {
+            alert("请输入委托合同编号")
+            return false;
+        }
+        if ($("#GZDQ").length == 0) {
+            alert("请输入工作地区")
+            return false;
+        }
+        if ($("#GCMC").length == 0) {
+            alert("请输入工程名称")
+            return false;
+        }
+
+        //发起申请时，创建记录
+        var retFlag = true;
+        var guid = NewGuid();
+        if ($("#startApply").val() == "1") {
+            if ($("#serialRecid").val() != "") {
+                guid = $("#serialRecid").val();
+            }
+            else {
+                $("#serialRecid").val(guid)
+            }
+
+            var dataObj = {
+                guid: guid,
+                ksbh: $("#ksbh").val(),
+                htbh: $("#htbh").val(), //委托合同编号
+                startTime: $("#startTime").datetimebox('getValue'),
+                returnTime: $("#returnTime").datetimebox('getValue'), //返回时间
+                GZDQ: $("#GZDQ").val(),//工作地区
+                GCMC: $("#GCMC").val(),//工程名称
+                JCXM: $("#JCXM").val(),//检测项目
+                GCL: $("#GCL").val(),//工程量
+                carId: $("#carId").val(),//车牌号
+                peopleTogether: $("#peopleTogether").val(),//同去人
+                dispatchDurationDay: $("#dispatchDuration_day").val(), //派遣时长
+                dispatchDurationHour: $("#dispatchDuration_hour").val(), //派遣时长
+                isStay: $("[name='isStay']").filter(":checked").val(), //是否住宿
+                roomCount: $("#roomCount").val(), //房间数量
+                stayDays: $("#stayDays").val(), //住宿天数
+                invoiceHolder: $("#invoiceHolder").val(), //发票持有人
+                invoiceAmount: $("#invoiceAmount").val(), //发票金额
+            };
+            $.ajax({
+                type: "POST",
+                url: "/dhoa/DispatchRecordAdd",
+                data: dataObj,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.code == "0") {
+
+                    } else {
+                        alert("添加失败！" + data.msg)
+                        retFlag = false;
+                    }
+                }
+
+            });
+        }
+
+        return retFlag;
+    }
+
+    function NewGuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+</script>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ToolsVersionPromptShown>1.8</ToolsVersionPromptShown>
     <UseIISExpress>true</UseIISExpress>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
