@@ -74,18 +74,68 @@ function CarRecordAdd() {
             alert("选择的车辆已经被申请，请查看用车记录");
             return;
         }
-        layer.open({
-            type: 2,
-            title: '用车申请',
-            content: '/dhoa/CarRecordEdit?method=applyfor&mid=' + selected.id,
-            shadeClose: true,
-            shade: 0.8,
-            area: ['1000px', '75%'],
+       
+        var workurl = "/workflow/startwork?processid=46";
+        var bcode = new Base64();
+        var title = "用车申请";
+        var extrainfo1 = bcode.encode("OA_CarInfomation|" + bcode.encode("id='" + selected.id+"'"));
+        var extrainfo2 = bcode.encode('[' + title + ']');
+        var extrainfo3 = bcode.encode(selected.id);
+        gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, "", "");
 
-            end: function () {
-                searchRecord();
-            }
-        });
+        searchRecord();
+
+
+        //function gotoStarkWork(workurl, title, extrainfo1, extrainfo2, extrainfo3, extrainfo4, fgcmc) {
+        //    try {
+        //        var rdm = Math.random();
+        //        var url = workurl +
+        //            // 加密的条件信息（表单中用到）
+        //            "&extrainfo=" + encodeURIComponent(extrainfo1) +
+        //            // 流程中显示的主体信息
+        //            "&extrainfo2=" + encodeURIComponent(extrainfo2) +
+        //            // 流程中用到的跟工程关联的主键
+        //            "&extrainfo3=" + encodeURIComponent(extrainfo3) +
+        //            // 流程中用到的分工程主键
+        //            "&extrainfo4=" + encodeURIComponent(extrainfo4) +
+        //            "&fgcmc=" + encodeURIComponent(fgcmc) +
+        //            "&callbackjs=" + encodeURIComponent("parent.layer.closeAll();") +
+        //            "&_=" + rdm;
+
+        //        parent.layer.open({
+        //            type: 2,
+        //            title: title,
+        //            shadeClose: true,
+        //            shade: 0.8,
+        //            area: ['95%', '95%'],
+        //            content: url,
+        //            end: function () {
+        //                searchRecord();
+        //            }
+        //        });
+
+        //    }
+        //    catch (ex) {
+        //        alert(ex);
+        //    }
+        //}
+
+        //if (selected.isUsing == "1") {
+        //    alert("选择的车辆已经被申请，请查看用车记录");
+        //    return;
+        //}
+        //layer.open({
+        //    type: 2,
+        //    title: '用车申请',
+        //    content: '/dhoa/CarRecordEdit?method=applyfor&mid=' + selected.id,
+        //    shadeClose: true,
+        //    shade: 0.8,
+        //    area: ['1000px', '75%'],
+
+        //    end: function () {
+        //        searchRecord();
+        //    }
+        //});
     } catch (e) {
         alert(e);
     }
@@ -202,10 +252,10 @@ function FormatOperCarUserRecord(value, row, index) {
 
     var imgurl = "";
     try {
-        imgurl += "<a onclick='CarRecordDetail(" + value + "," + row.Status + ")' style='cursor:pointer;color:#169BD5;' alt='修改'> 修改 </a>"
-            + "<a onclick='CarRecordDel(" + value + "," + row.Status + ")' style='cursor:pointer;color:#169BD5;' alt='删除'> 删除 </a>"
-            + "<a onclick='CarRecordEdit(" + value + ")' style='cursor:pointer;color:#169BD5;' alt='记录'> 记录 </a>"
-            + "<a onclick='CarRecordReview(" + value + ")' style='cursor:pointer;color:#169BD5;' alt='审核'> 审核 </a>";
+        imgurl += "<a onclick='CarRecordDetail(" + value + "," + row.Status + ")' style='cursor:pointer;color:red;' alt='修改'> 修改 </a>"
+            + "<a onclick='CarRecordDel(" + value + "," + row.Status + ")' style='cursor:pointer;color:red;' alt='删除'> 删除 </a>"
+            + "<a onclick='CarRecordEdit(" + value + ")' style='cursor:pointer;color:red;' alt='记录'> 记录 </a>"
+            + "<a onclick='CarRecordReview(" + value + ")' style='cursor:pointer;color:red;' alt='审核'> 审核 </a>";
 
     } catch (e) {
         alert(e);
@@ -232,15 +282,20 @@ function FormatCarUserArea(value, row, index) {
 function FormatCarUserStatus(value, row, index) {
     var imgurl = "";
     try {
-        /*状态（-1：无效数据 ，1：待审核 2 未出发 3外出中 4完成）*/
+        //状态（-1：无效数据 ，1：待审核 2 未出发 3外出中 4完成 30 已驳回 40不通过）
         if (value == "1")
             imgurl += "<center>待审核</center>";
         else if (value == "2")
             imgurl += "<center>未出发</center>";
         else if (value == "3")
             imgurl += "<center>外出中</center>";
+
         else if (value == "4")
             imgurl += "<center>完成</center>";
+        else if (value == "30")
+            imgurl += "<center>已驳回</center>";
+        else if (value == "40")
+            imgurl += "<center>不通过</center>";
     } catch (e) {
         imgurl = value;
     }
@@ -258,7 +313,6 @@ function CarMaintenanceAdd() {
         return;
     try {
 
-        console.log(selected);
         layer.open({
             type: 2,
             title: '维保申请',

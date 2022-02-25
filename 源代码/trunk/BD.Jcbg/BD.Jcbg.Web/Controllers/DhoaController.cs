@@ -3420,7 +3420,7 @@ namespace BD.Jcbg.Web.Controllers
             ViewBag.applicant = CurrentUser.RealName;
             ViewBag.mid = mid;
 
-            string sql = " select   * from [OA_CarIUseRecord]    where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "'";
+            string sql = " select   * from [OA_CarUseRecord]    where   Status <>-1 and   JCJGBH='" + CurrentUser.Qybh + "'";
 
             if (method == "applyfor")
             {
@@ -3486,14 +3486,18 @@ namespace BD.Jcbg.Web.Controllers
 
                 string dataId = Request["id"].GetSafeString();
                 string mId = Request["mid"].GetSafeString();
+                string serialRecid = Request["serialRecid"].GetSafeString();
                 //用车部门
-                string department = Request["department"].GetSafeString();
+                string department = Request["department"].GetSafeString(); 
+                string departmentName = Request["departmentName"].GetSafeString(); 
                 //申请人
                 string applicant = Request["applicant"].GetSafeString();
                 //同车人
                 string copassenger = Request["copassenger"].GetSafeString();
                 //目的地
                 string destination = Request["destination"].GetSafeString();
+                //用车区域 （1市内 2 市外）
+                string useRegion = Request["useRegion"].GetSafeString("1");
                 //出车用途
                 string usefor = Request["usefor"].GetSafeString();
                 //出车时间
@@ -3512,22 +3516,40 @@ namespace BD.Jcbg.Web.Controllers
 
                 IList<string> sqls = new List<string>();
 
+                IList<IDictionary<string, string>> datas = new List<IDictionary<string, string>>();
+              
+                if (string.IsNullOrEmpty(mId))
+                {
+                    msg = "车辆信息不存在";
+                    throw new Exception();
+                }
+
+                if (!string.IsNullOrEmpty(serialRecid))
+                {
+
+                    sqlStr = $"select * from OA_CarUseRecord where serialRecid='{serialRecid}'";
+
+                    datas = CommonService.GetDataTable(sqlStr);
+
+                    if (datas.Count != 0)
+                    {
+                        dataId = datas[0]["id"];
+                    }
+                }
 
                 if (string.IsNullOrEmpty(dataId))
                 {
-                    if (string.IsNullOrEmpty(mId))
-                    {
-                        msg = "车辆信息不存在";
-                        throw new Exception();
-                    }
-                    sqlStr = string.Format("INSERT INTO [dbo].[OA_CarIUseRecord]([MId],[UseRegion],[UseFor],[Status]," +
-                        "[Applicant],[Department],[Destination],[OutTime],[ReturnTime],[CoPassenger],[Driver],[Kilometers],[OilCost],[RoadToll],[CreateTime],[Creator],[UpdateTime],[JCJGBH],[Updater],[Remark])" +
+                   
+                    sqlStr = string.Format("INSERT INTO [dbo].[OA_CarUseRecord]([MId],[UseRegion],[UseFor],[Status]," +
+                        "[Applicant],[Department],departmentName,[Destination],[OutTime],[ReturnTime],[CoPassenger],[Driver],[Kilometers],[OilCost],[RoadToll],[CreateTime]," +
+                        "[Creator],[UpdateTime],[JCJGBH],[Updater],[Remark],serialRecid)" +
                         "VALUES('" + mId + "'" +
-                        ",'1'" + //使用范围（1室内 2 市外）
+                        ",'" + useRegion + "'" + //使用范围（1市内 2 市外）
                         ",'" + usefor + "'" + //用途
                         ",'1'" +//< status, int,>
                         ",'" + applicant + "'" +
                         ",'" + department + "'" +
+                        ",'" + departmentName + "'" +
                         ",'" + destination + "'" +
                         ",'" + outtime + "'" +
                         ",'" + returntime + "'" +
@@ -3541,11 +3563,12 @@ namespace BD.Jcbg.Web.Controllers
                         ",getdate()" +
                         ",'" + CurrentUser.Qybh + "'" +
                         ",'" + CurrentUser.RealName + "'" +
-                        ",'" + remark + "')");
+                        ",'" + remark + "'" +
+                        ",'" + serialRecid + "')");
                 }
                 else
                 {
-                    sqlStr = "update OA_CarIUseRecord set department='" + department + "', applicant='" + applicant + "', copassenger='" + copassenger + "'" +
+                    sqlStr = "update OA_CarUseRecord set department='" + department + "', departmentName='" + departmentName + "', applicant='" + applicant + "', copassenger='" + copassenger + "'" +
                         ", destination='" + destination + "'" +
                         ", usefor='" + usefor + "'" +
                         ", outtime='" + outtime + "'" +
@@ -3553,10 +3576,24 @@ namespace BD.Jcbg.Web.Controllers
                         ", kilometers='" + kilometers + "'" +
                         ", oilcost='" + oilcost + "'" +
                         ", roadtoll='" + roadtoll + "'" +
-                        ", remark='" + remark + "',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where id=" + dataId;
+                        ", remark='" + remark + "',UpdateTime=getdate(),Updater='" + CurrentUser.RealName + "' where id=" + dataId;
                 }
 
-                code = CommonService.ExecSql(sqlStr, out msg);
+                sqls.Add(sqlStr);
+
+                //更新主表数据
+                //流程中更新
+                //sqlStr = $"update  OA_CarInfomation set IsUsing =1,[Destination]='{destination}',[OutTime]='{outtime}',returntime='{returntime}' ,Updater='同步用车记录' ,UpdateTime='getdate()' " +
+                //    $"where ID='{mId}' and JCJGBH='{CurrentUser.Qybh}'";
+                //sqls.Add(sqlStr);
+
+                sqlStr = $"update  OA_CarInfomation set IsUsing =1 where ID='{mId}' and JCJGBH='{CurrentUser.Qybh}'";
+                sqls.Add(sqlStr);
+                CommonService.ExecTrans(sqls, out msg);
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    code = false;
+                }
             }
             catch (Exception e)
             {
@@ -3593,7 +3630,7 @@ namespace BD.Jcbg.Web.Controllers
                 }
                 else
                 {
-                    sqlStr = "update OA_CarIUseRecord set  status ='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where id=" + dataId;
+                    sqlStr = "update OA_CarUseRecord set  status ='-1',UpdateTime=getdate(),Updater='" + CurrentUser.UserName + "' where id=" + dataId;
                 }
 
                 code = CommonService.ExecSql(sqlStr, out msg);
